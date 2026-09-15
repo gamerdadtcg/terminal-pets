@@ -11,7 +11,7 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: `Art pass · ${SITE.name}`,
   description:
-    "Per-species faces. Bird glasses sit on the eyes. Dino is a front-facing catalog pet with ridge, snout, and tail. Unrevealed teaser reel, spotted mystery egg, Ignite crack animation.",
+    "Per-species faces in the Sep 11 Awaken Pet V2 chrome. Fill-forward pets, split PET // footer, dark bezel. Scarf and Pack stay gone. Unrevealed teaser reel, spotted mystery egg, Ignite crack animation.",
 };
 
 const WAKE = [
@@ -73,7 +73,7 @@ const COMBOS = [
     id: 49,
     src: "/art-pass/DinoGrin-id49-lit.svg",
     png: "/art-pass/DinoGrin-id49-lit.png",
-    note: "Glasses on both eyes. Front-facing body with ridge spikes and a bubbly tail.",
+    note: "Glasses on both eyes. Fill-forward dino with ridge spikes and a soft tail.",
   },
   {
     name: "Bird glasses",
@@ -125,7 +125,7 @@ const DINO_FACES = [
     id: 12,
     src: "/art-pass/Dino-id12-lit.svg",
     png: "/art-pass/Dino-id12-lit.png",
-    note: "Spark eyes, smile, blush, cap. Round body, ridge, snout bump, bubbly tail.",
+    note: "Spark eyes, smile, blush, cap. Round fill-forward body, ridge, snout, soft tail.",
   },
   {
     name: "Dino oh + glasses",
@@ -188,11 +188,12 @@ export default function ArtPassPage() {
           <p className="text-muted-foreground">
             Eyes, mouth, brows, and blush follow trait rolls and sit on that
             species’ face — Dino ridge and tail, Bird beak, Frog bumps, Robot
-            visor. Bird glasses are thin rims on the pupils with a short arch
-            above the eyes, not a second pair of discs. Dino Lit is a
-            front-facing catalog pet like Cat: round body, snout bump, ridge
-            spikes, bubbly tail. The handheld still does not change
-            from Dormant to Lit. OpenSea Lit metadata is the hatched pet.
+            visor. Chrome is the Sep 11 Awaken Pet V2 look: fill-forward pets,
+            dark screen bezel, speaker dots, gloss, and a split{" "}
+            <span className="font-mono">PET //</span> footer. Scarf and Pack
+            stay gone. Bird glasses are thin rims on the pupils with a short
+            arch. The handheld still does not change from Dormant to Lit.
+            OpenSea Lit metadata is the hatched pet.
           </p>
           <p className="text-muted-foreground">
             Need every option, not a random combo? The{" "}
@@ -329,7 +330,7 @@ export default function ArtPassPage() {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="/art-pass/dino-faces-sheet.png"
-                alt="Six Dino Lit stills: front-facing catalog body plus different eyes, mouths, brows, and accessories"
+                alt="Six Dino Lit stills: fill-forward V2 body plus different eyes, mouths, ears, and accessories"
                 className="w-full"
               />
             </div>

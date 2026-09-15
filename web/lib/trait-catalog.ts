@@ -10,7 +10,7 @@ export const TRAIT_SHEETS: TraitSheet[] = [
   {
     id: "species",
     title: "Species",
-    blurb: "All 12 silhouettes. Same Round/Sky chassis, Mint body, smile, no accessory.",
+    blurb: "All 12 fill-forward silhouettes in Awaken Pet V2 chrome. Same Round/Sky chassis, Mint body, smile, no accessory.",
     group: "pet",
     options: 12,
   },
@@ -66,7 +66,7 @@ export const TRAIT_SHEETS: TraitSheet[] = [
   {
     id: "belly",
     title: "Belly",
-    blurb: "Belly patch on most species. Not drawn for Ghost or Robot (OpenSea value is n/a). Match uses the body color.",
+    blurb: "Belly/muzzle patch on most species. Not drawn for Ghost or Robot (OpenSea value is n/a). Match uses the body color.",
     group: "pet",
     options: 4,
   },
@@ -80,7 +80,7 @@ export const TRAIT_SHEETS: TraitSheet[] = [
   {
     id: "eyes-dino",
     title: "Eyes · Dino",
-    blurb: "Each eye type on the front-facing Dino head.",
+    blurb: "Each eye type on the fill-forward Dino head.",
     group: "face",
     options: 6,
   },
@@ -157,7 +157,7 @@ export const TRAIT_SHEETS: TraitSheet[] = [
   {
     id: "brows",
     title: "Brows (ears roll) · Cat",
-    blurb: "On-chain trait is Ears. Round draws no brow.",
+    blurb: "On-chain trait is Ears. Round draws nothing extra; Point, Horn, Floppy, and Tuft add head shapes.",
     group: "face",
     options: 5,
   },
@@ -178,7 +178,7 @@ export const TRAIT_SHEETS: TraitSheet[] = [
   {
     id: "accessory-dino",
     title: "Accessories · Dino",
-    blurb: "Hats, glasses, and halo on the front-facing Dino.",
+    blurb: "Hats, glasses, and halo on the fill-forward Dino.",
     group: "accessory",
     options: 6,
   },
