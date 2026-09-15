@@ -3,7 +3,7 @@ export const SITE = {
   symbol: "TERM",
   petName: "Terminal Pets",
   tagline: "Handheld pets that sleep until you Ignite them.",
-  description:
+    description:
     "On-chain Tamagotchi terminals on Robinhood Chain. Mint on OpenSea. Pets mint Sealed for 24 hours: placeholder art, Ignite off, $TERM trading off, and 7.5% secondary royalties all to TermFund. Reveal flips art, Ignite, trading, and royalties to 5% Hopper / 2.5% treasury. Hopper claims stay locked 7 days after reveal while ETH accrues. Each pet comes with a $TERM Ignite allotment. Ignite splits that 1,000 $TERM 37.5% burn / 25% Hopper (as ETH) / 37.5% allotment refill, plus 0.002 ETH split 50% buy-and-burn $TERM / 50% Hopper. Team earns 0 from that ETH fee. Dial up to 3 Stock Tokens. Pulse pays Dialed Lit in Stock Tokens and undialed Lit in $TERM — typically to the TBA. Hopper stays ETH.",
   disclaimer:
     "Dial and Pulse Stock Token rewards are promotional on-chain rewards. They are not dividends, equity, shareholder rights, or ownership of any underlying company. Holding a pet or receiving Stock Tokens confers no legal interest in those companies. Not financial or investment advice.",
@@ -109,3 +109,78 @@ export function publicLinks() {
     process.env.NEXT_PUBLIC_EXPLORER_URL?.trim() || SITE.explorer;
   return { opensea, x, explorer };
 }
+
+export const FAQ = [
+  {
+    q: "When can I mint?",
+    a: "After the contracts land on Robinhood Chain and the OpenSea collection is imported. Mint price is TBD. Public supply is 4,244. Team reserve is 200. Each pet mints Sealed (placeholder metadata) with a TBA and a one-time $TERM Ignite allotment. Art, Ignite, and $TERM trading unlock at reveal.",
+  },
+  {
+    q: "What is $TERM?",
+    a: "Terminal Pets’ own ERC-20 memecoin on Robinhood Chain. Symbol $TERM. Not AGENT / freights.one. Collection NFT symbol stays TERM. Each pet’s allotment covers the $TERM half of one Ignite from token supply. Ignite splits the 1,000 $TERM fee 37.5% burn / 25% to Hopper as ETH / 37.5% back into the allotment escrow (pool refill — that tokenId stays consumed). Plus 0.002 ETH: 50% buys $TERM and burns, 50% to Hopper. Team earns 0 from that ETH fee. $TERM is not fee-on-transfer. When the canonical TERM/ETH pool is live, TermMarket skims 3% of that pool’s swap volume: 1.5% to Hopper (as ETH), 1% buy/burn, 0.5% treasury.",
+  },
+  {
+    q: "Do I need to buy $TERM to Ignite?",
+    a: "Not for the $TERM half of the first wake. Minting a pet reserves 1,000 $TERM (placeholder) in the IgniteModule escrow for that tokenId. Ignite spends the allotment directly — no DEX buy. You can instead claimIgniteAllotment while Dormant, then approve and Ignite from your wallet. You still send 0.002 ETH with Ignite: 50% buys $TERM and burns, 50% goes to Hopper. Team earns 0 from that ETH fee. 25% of the $TERM fee becomes Hopper ETH once a swap router is set (otherwise it parks until flush). 37.5% of the fee returns to the allotment pool for other pets. After this token’s allotment is used, that id cannot claim again. v1 Lit stays Lit on transfer.",
+  },
+  {
+    q: "What is Ignite?",
+    a: "A one-way wake, off until reveal. Hybrid fee: 1,000 $TERM (allotment or wallet) split 37.5% burned, 25% converted to ETH for the Hopper, 37.5% returned to the Ignite allotment escrow — not treasury — plus exactly 0.002 ETH, half buy-and-burn $TERM, half Hopper. Team earns 0 from the ETH fee. The pet turns Lit and stays Lit on transfer. You cannot un-Ignite.",
+  },
+  {
+    q: "What is Dial?",
+    a: "Lit holders pick up to 3 Robinhood Chain Stock Tokens and set weights that sum to 100%. You can change Dial until the next Pulse snapshot. No Dial means that Lit pet’s Pulse share buys $TERM (to the TBA, or the owner if TBA delivery is off) — not ETH.",
+  },
+  {
+    q: "What are Stock Tokens here?",
+    a: "Robinhood Chain tokens Pulse may buy with Hopper ETH according to each Lit pet’s Dial. They credit the pet’s TBA (or the owner wallet if TBA delivery is off). They travel with the NFT; the owner can withdraw.",
+  },
+  {
+    q: "Do I own the stock company?",
+    a: "No. Dial and Pulse Stock Token rewards are promotional on-chain rewards. They are not dividends, equity, shareholder rights, or ownership of any underlying company. Holding a pet or receiving Stock Tokens confers no legal interest in those companies. Not financial or investment advice.",
+  },
+  {
+    q: "What if I don’t Dial?",
+    a: "That Lit pet’s Pulse share buys $TERM via the market router and credits the TBA (or the owner wallet if TBA delivery is off). Not ETH. Dormant pets cannot Dial and earn nothing on Pulse.",
+  },
+  {
+    q: "What is the Hopper?",
+    a: "A locked ETH pot with no admin withdraw. After reveal it fills from 5% of each secondary NFT sale via the RoyaltySplitter, from 50% of each Ignite 0.002 ETH fee, from 25% of each Ignite $TERM fee (swapped to ETH when a router is set), and — once the canonical $TERM market is live — from a 1.5% TermMarket swap skim. During the 24h sealed window, secondary royalties do not enter the Hopper — they go 100% to TermFund. After reveal, Hopper claims and Pulse payouts stay locked for 7 days (timer from reveal, not from first Ignite) while ETH still accrues. Then claims open. The other 50% of Ignite ETH buys $TERM and burns. Hopper stays ETH until Pulse.",
+  },
+  {
+    q: "What is TermFund?",
+    a: "The $TERM liquidity pot. Pre-reveal, 100% of the 7.5% secondary royalty stream lands here to seed LP. Ignite’s 0.002 ETH does not. Ignite’s 37.5% $TERM refill stays on IgniteModule as allotment escrow, not here. Team can later seedLiquidity with fund ETH plus treasury $TERM — manual ops, not an automatic Hopper divert. No owner withdraw.",
+  },
+  {
+    q: "How does the Pulse ladder work?",
+    a: "Not a fixed 0.5 ETH line. Bootstrap (once): Hopper available() must hit 0.1 ETH, then 0.2, 0.3 … up to 1.0 ETH, stepping 0.1 each successful Pulse. After the Pulse at 1.0 during bootstrap, the next threshold is 0.5 ETH — never 0.1 again. Then it cycles 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, back to 0.5, forever.",
+  },
+  {
+    q: "Who earns from Pulse?",
+    a: "Lit terminals only, pro-rata at the snapshot. Pulse reads each Dial, swaps Hopper ETH into the demanded Stock Tokens, and credits TBAs (or owner wallets). Undialed Lit get $TERM the same way. Dormant earn nothing. The Hopper pot itself stays ETH.",
+  },
+  {
+    q: "What is a TBA?",
+    a: "A token-bound account (ERC-6551) attached at mint. Pulse typically delivers Stock Tokens or $TERM there. Those assets travel with the NFT. The owner can withdraw. Delivery to the owner wallet is used if TBA delivery is off.",
+  },
+  {
+    q: "Why don’t OpenSea thumbs move?",
+    a: "The art is on-chain SVG with SMIL (blink, idle, Zzz). Marketplace cards and PNGs are a frozen frame. Open the Gallery to watch the live files.",
+  },
+  {
+    q: "Where do royalties go?",
+    a: "Depends when you sell. Pre-reveal (mint → activation): the full 7.5% creator royalty goes to TermFund for $TERM LP — nothing to Hopper, nothing to treasury from that stream. After CollectionNFT.reveal(): 5% Hopper / 2.5% team treasury. Always point OpenSea earnings at the RoyaltySplitter.",
+  },
+  {
+    q: "Are contract addresses live?",
+    a: "Contracts are ready to deploy and not broadcast. No live addresses yet. Hybrid Ignite, TermFund, TermMarket skim (off until TERM_POOL + router), 24h sealed reveal, Dial, Pulse ladder are in the repo. Robinhood Chain deploy waits until someone says go.",
+  },
+  {
+    q: "How does the 24h reveal work?",
+    a: "Tokens mint Sealed — placeholder metadata, Ignite off, $TERM public transfers off. Secondary royalties (7.5%) go entirely to TermFund. After 24 hours anyone can call reveal(); the owner can call it earlier. Reveal flips art live, turns on Ignite and $TERM trading, and switches royalties to 5% Hopper / 2.5% treasury. Hopper payouts then stay locked 7 days from that reveal timestamp so people can Ignite and see their Lit pets before claims open. ETH from Ignite and post-reveal royalties still accrues in the pot. LP is seeded later from TermFund (pre-reveal royalties + optional treasury $TERM), not by draining the Hopper or taking Ignite ETH.",
+  },
+  {
+    q: "How do $TERM trading fees work?",
+    a: "Not a transfer tax — $TERM stays a normal ERC-20 so Uniswap-style routers keep working. Public transfers are off until reveal. After that, the canonical TERM/ETH pool calls TermMarket.onSwap. Default skim is 3% of input: 1.5% converted to ETH for the Hopper (Pulse fuel), 1.0% bought as $TERM and burned (or burned directly on sells), 0.5% treasury. Inactive until owner sets TERM_POOL and TERM_SWAP_ROUTER. Other pools are untaxed unless they opt in.",
+  },
+] as const;
