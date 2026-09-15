@@ -185,7 +185,7 @@ contract TerminalRendererTest is Test {
     function test_faceAnchors_allTwelveSpecies() public view {
         _assertFace(2, 0, "200", "168", "16");
         _assertFace(3, 1, "200", "170", "15");
-        _assertFace(12, 2, "158", "152", "8");
+        _assertFace(12, 2, "200", "168", "16");
         _assertFace(16, 3, "200", "166", "15");
         _assertFace(7, 4, "200", "168", "16");
         _assertFace(28, 5, "200", "172", "14");
@@ -199,17 +199,18 @@ contract TerminalRendererTest is Test {
 
     function test_dinoAndBirdFacesSitOnHead() public view {
         string memory dino = r.svg(12, true);
-        assertTrue(_contains(dino, 'data-cx="158"'), "dino face on left head");
-        assertTrue(_contains(dino, 'data-ey="152"'), "dino eyes on head");
-        assertTrue(_contains(dino, 'data-gap="8"'), "dino tight eye gap");
+        assertTrue(_contains(dino, 'data-cx="200"'), "dino face is front-centered");
+        assertTrue(_contains(dino, 'data-ey="168"'), "dino eyes on the round head");
+        assertTrue(_contains(dino, 'data-gap="16"'), "dino uses the catalog eye gap");
         assertTrue(_contains(dino, 'data-dino="1"'), "connected dino group");
-        assertTrue(_contains(dino, 'data-dino-eye="1"'), "profile eye on head");
-        assertTrue(_contains(dino, 'data-snout="1"'), "mouth sits on snout");
-        assertTrue(_contains(dino, 'data-dino-body="1"'), "one torso-hip-tail path");
+        assertTrue(_contains(dino, 'data-dino-eye="1"'), "dino eyes tagged");
+        assertTrue(_contains(dino, 'data-snout="1"'), "snout bump on the face");
+        assertTrue(_contains(dino, 'data-dino-body="1"'), "round body");
         assertTrue(_contains(dino, 'data-dino-head="1"'), "round head for face");
-        assertTrue(_contains(dino, 'data-ridge="1"'), "dorsal ridge on the back");
+        assertTrue(_contains(dino, 'data-ridge="1"'), "ridge spikes");
         assertTrue(_contains(dino, 'fill="#fff"'), "sclera so expressions read");
-        assertFalse(_contains(dino, 'cx="216" cy="168"'), "old centered glasses");
+        assertTrue(_contains(dino, 'cx="184"'), "left eye on the head");
+        assertTrue(_contains(dino, 'cx="216" cy="168"'), "right eye / glasses sit on the face");
         string memory bird = r.svg(15, true);
         assertTrue(_contains(bird, 'data-cx="196"'), "bird face on head");
         assertTrue(_contains(bird, 'data-ey="148"'), "bird eye height");
@@ -291,11 +292,11 @@ contract TerminalRendererTest is Test {
     function test_dinoFaceTraitsVary() public view {
         string memory a = r.svg(12, true);
         assertTrue(_contains(a, 'data-dino-eye="1"'), "dino eye");
-        assertTrue(_contains(a, 'data-snout="1"'), "snout mouth");
+        assertTrue(_contains(a, 'data-snout="1"'), "snout bump");
         TerminalRenderer.Roll memory d12 = r.roll(12);
         if (d12.accessory == 4) {
-            assertTrue(_contains(a, 'data-mono="1"'), "profile monocle");
-            assertFalse(_contains(a, 'data-bridge="1"'), "profile has no dual-lens bar");
+            assertTrue(_contains(a, 'data-lens="1"'), "front-facing dual lenses");
+            assertFalse(_contains(a, 'data-mono="1"'), "no profile monocle");
         }
         bool[6] memory mouthSeen;
         bool[6] memory eyeSeen;
@@ -309,9 +310,9 @@ contract TerminalRendererTest is Test {
                 ++dinoN;
             }
             string memory lit = r.svg(id, true);
-            assertTrue(_contains(lit, 'data-dino-eye="1"'), "every dino has profile eye");
-            assertTrue(_contains(lit, 'data-snout="1"'), "every dino has snout mouth");
-            assertTrue(_contains(lit, 'data-cx="158"'), "face locked to head");
+            assertTrue(_contains(lit, 'data-dino-eye="1"'), "every dino has eyes");
+            assertTrue(_contains(lit, 'data-snout="1"'), "every dino has a snout bump");
+            assertTrue(_contains(lit, 'data-cx="200"'), "face locked to the round head");
             if (!eyeSeen[roll.eyes]) {
                 eyeSeen[roll.eyes] = true;
                 unchecked {
@@ -325,8 +326,8 @@ contract TerminalRendererTest is Test {
                 }
             }
             if (roll.accessory == 4) {
-                assertTrue(_contains(lit, 'data-mono="1"'), "dino glasses are monocle");
-                assertFalse(_contains(lit, 'data-bridge="1"'), "no dual bridge on dino");
+                assertTrue(_contains(lit, 'data-lens="1"'), "dino glasses are dual lenses");
+                assertFalse(_contains(lit, 'data-mono="1"'), "no profile monocle");
             }
         }
         assertTrue(dinoN >= 8, "need several dinos in sample");
@@ -339,11 +340,11 @@ contract TerminalRendererTest is Test {
         string memory ghost = r.svg(7, true);
         string memory cat = r.svg(3, true);
         string memory robot = r.svg(11, true);
-        assertFalse(_contains(dino, 'data-belly="1"'), "dino must not draw a belly patch");
+        assertTrue(_contains(dino, 'data-belly="1"'), "front-facing dino draws a belly patch");
         assertFalse(_contains(ghost, 'data-belly="1"'), "ghost must not draw a belly patch");
         assertFalse(_contains(robot, 'data-belly="1"'), "robot already skips belly");
         assertTrue(_contains(cat, 'data-belly="1"'), "cat still draws belly");
-        assertEq(r.traits(12, true).belly, "n/a");
+        assertTrue(keccak256(bytes(r.traits(12, true).belly)) != keccak256(bytes("n/a")), "dino belly is a color");
         assertEq(r.traits(7, true).belly, "n/a");
         assertTrue(keccak256(bytes(r.traits(3, true).belly)) != keccak256(bytes("n/a")), "cat belly is a color");
     }
@@ -394,10 +395,10 @@ contract TerminalRendererTest is Test {
 
     function test_reworkedSpeciesReadAsNames() public view {
         string memory dino = r.svg(12, true);
-        assertTrue(_contains(dino, 'cx="134"'), "dino snout");
+        assertTrue(_contains(dino, 'data-snout="1"'), "dino snout");
         assertTrue(_contains(dino, 'data-tail="1"'), "dino tail");
         assertTrue(_contains(dino, "180,126"), "dino spikes");
-        assertFalse(_contains(dino, "292,188"), "old spear tail");
+        assertTrue(_contains(dino, "292,188"), "spear tail");
         string memory ghost = r.svg(7, true);
         assertTrue(_contains(ghost, 'data-ghost="1"'), "sheet ghost");
         assertTrue(_contains(ghost, "Q228 200"), "wavy hem");
@@ -522,15 +523,15 @@ contract TerminalRendererTest is Test {
 
     function test_dinoTailSoft_andFrecklesOnCheeks() public view {
         string memory dino = r.svg(12, true);
-        assertFalse(_contains(dino, "292,188"), "old spear tail");
-        assertTrue(_contains(dino, 'data-tail="1"'), "tapered tail on the body path");
-        assertFalse(_contains(dino, 'cx="266" cy="168"'), "old bubbly tail tip gone");
-        assertFalse(_contains(dino, 'cx="248" cy="180"'), "old mid-tail bubble gone");
+        assertTrue(_contains(dino, "292,188"), "spear tail");
+        assertTrue(_contains(dino, 'data-tail="1"'), "bubbly tail on the body");
+        assertTrue(_contains(dino, 'cx="266" cy="168"'), "bubbly tail tip");
+        assertTrue(_contains(dino, 'cx="248" cy="180"'), "mid-tail bubble");
         string memory freckled = r.svg(2, true);
         assertTrue(_contains(freckled, 'r="2"'), "tiny freckle dots");
         assertTrue(_contains(freckled, "#c9897a"), "muted freckle color");
-        assertFalse(_contains(freckled, 'r="3" fill="#000"'), "old torso spots");
-        assertFalse(_contains(dino, 'r="3" fill="#000"'), "old torso spots");
+        assertFalse(_contains(freckled, 'r="3" fill="#000"'), "blob has no torso spots");
+        assertTrue(_contains(dino, 'r="3" fill="#000"'), "dino torso spots");
     }
 
     function test_footerAndZzzStayInSafeBoxes() public view {

@@ -739,30 +739,45 @@ library TerminalRenderer {
         );
     }
 
-    /// @dev Left-facing dino: round head, snout, neck, torso, hips, planted feet, tapering tail.
-    /// Ridge sits on the spine. No belly patch.
+    /// @dev Front-facing dino in the same family as Cat/Blob: round body, ridge,
+    /// snout bump, bubbly tail with a spear tip, and torso spots.
     function _dinoParts(string memory body) private pure returns (string memory) {
         string memory st = string.concat(' fill="', body, '" stroke="#2a2430" stroke-width="3" stroke-linejoin="round"');
         return string.concat(
             '<g data-dino="1">',
-            '<path data-dino-body="1" data-tail="1" d="M120 160 C118 150 128 144 140 148 C148 134 164 128 176 140 C186 134 198 142 196 154 C210 146 228 150 238 164 C254 162 270 174 276 190 C278 198 272 206 262 206 C250 206 242 196 234 188 C236 204 234 222 226 234 C222 240 210 242 206 234 C208 222 212 208 208 198 C198 214 188 230 176 236 C166 242 156 236 158 226 C162 214 166 204 160 194 C148 196 136 188 130 176 C122 180 116 172 120 160 Z"',
+            '<ellipse data-dino-body="1" data-dino-head="1" cx="200" cy="186" rx="46" ry="40"',
             st,
             "/>",
-            '<ellipse data-dino-head="1" cx="158" cy="150" rx="22" ry="20"',
+            '<polygon data-ridge="1" points="176,152 180,126 184,128 192,152"',
             st,
             "/>",
-            '<ellipse cx="134" cy="158" rx="17" ry="11"',
+            '<polygon points="192,148 200,124 208,148"',
             st,
             "/>",
-            '<polygon data-ridge="1" points="168,146 174,132 180,126 186,140 194,130 200,144 208,136 214,150"',
+            '<polygon points="208,152 216,130 224,152"',
             st,
             "/>",
+            '<ellipse data-snout="1" cx="200" cy="204" rx="14" ry="8"',
+            st,
+            "/>",
+            '<ellipse data-tail="1" cx="248" cy="180" rx="16" ry="13"',
+            st,
+            "/>",
+            '<ellipse cx="266" cy="168" rx="11" ry="10"',
+            st,
+            "/>",
+            '<polygon points="274,164 292,188 268,176"',
+            st,
+            "/>",
+            '<circle cx="186" cy="196" r="3" fill="#000"/>',
+            '<circle cx="210" cy="202" r="3" fill="#000"/>',
+            '<circle cx="198" cy="210" r="3" fill="#000"/>',
             "</g>"
         );
     }
 
     function _skipBelly(uint8 sp) private pure returns (bool) {
-        return sp == 2 || sp == 4 || sp == 9;
+        return sp == 4 || sp == 9;
     }
 
     function _bellySvg(Roll memory a, string memory body) private pure returns (string memory) {
@@ -784,7 +799,7 @@ library TerminalRenderer {
     function _faceOf(uint8 sp) private pure returns (FaceAnchor memory f) {
         if (sp == 0) return FaceAnchor(200, 168, 16, 186, 122);
         if (sp == 1) return FaceAnchor(200, 170, 15, 188, 118);
-        if (sp == 2) return FaceAnchor(158, 152, 8, 166, 124);
+        if (sp == 2) return FaceAnchor(200, 168, 16, 186, 122);
         if (sp == 3) return FaceAnchor(200, 166, 15, 186, 118);
         if (sp == 4) return FaceAnchor(200, 168, 16, 188, 120);
         if (sp == 5) return FaceAnchor(200, 172, 14, 190, 108);
@@ -818,9 +833,9 @@ library TerminalRenderer {
 
     function _cheeks(Roll memory a, FaceAnchor memory f) private pure returns (string memory) {
         if (a.cheeks == 0) return "";
-        uint256 y = a.species == 2 ? 164 : f.ey + 10;
-        uint256 lx = a.species == 2 ? 142 : f.cx - f.gap - 2;
-        uint256 rx = a.species == 2 ? 148 : f.cx + f.gap + 2;
+        uint256 y = f.ey + 10;
+        uint256 lx = f.cx - f.gap - 2;
+        uint256 rx = f.cx + f.gap + 2;
         if (a.cheeks == 1) {
             return string.concat(
                 '<ellipse cx="',
@@ -916,7 +931,8 @@ library TerminalRenderer {
             '<g data-eyes="', uint256(a.eyes).toString(), '" data-kind="', uint256(a.eyes).toString(), '">'
         );
         if (a.species == 2) {
-            return string.concat(tag, _oneEye(a, f.cx, f.ey, true), "</g>");
+            return
+                string.concat(tag, _oneEye(a, f.cx - f.gap, f.ey, true), _oneEye(a, f.cx + f.gap, f.ey, true), "</g>");
         }
         if (a.species == 9) {
             return string.concat(
@@ -1036,7 +1052,6 @@ library TerminalRenderer {
 
     function _mouth(Roll memory a, FaceAnchor memory f) private pure returns (string memory) {
         if (a.species == 6) return _beak(a.mouth);
-        if (a.species == 2) return _dinoMouth(a.mouth, f);
         uint256 x = f.cx;
         uint256 y = f.mouthY;
         if (a.mouth == 0) {
@@ -1131,30 +1146,6 @@ library TerminalRenderer {
             '" cy="',
             (y + 10).toString(),
             '" rx="4" ry="5" fill="#fb7185"/>'
-        );
-    }
-
-    function _dinoMouth(uint8 kind, FaceAnchor memory f) private pure returns (string memory) {
-        f;
-        if (kind == 0) {
-            return '<path data-snout="1" d="M124 166 H144" fill="none" stroke="#2a2430" stroke-width="2.4"/>';
-        }
-        if (kind == 1) {
-            return
-                '<path data-snout="1" d="M124 164 Q134 172 144 164" fill="none" stroke="#2a2430" stroke-width="2.4"/>';
-        }
-        if (kind == 2) {
-            return '<path data-snout="1" d="M124 164 L128 170 L132 164 L136 170 L140 164 L144 170" fill="none" stroke="#2a2430" stroke-width="2.2"/>';
-        }
-        if (kind == 3) {
-            return '<circle data-snout="1" cx="134" cy="168" r="4" fill="#1e1930"/>';
-        }
-        if (kind == 4) {
-            return '<path data-snout="1" d="M124 164 Q134 176 144 164 Z" fill="#1e1930"/>';
-        }
-        return string.concat(
-            '<path data-snout="1" d="M124 164 Q134 172 144 164" fill="none" stroke="#2a2430" stroke-width="2.4"/>',
-            '<ellipse cx="140" cy="174" rx="4" ry="5" fill="#fb7185"/>'
         );
     }
 
@@ -1272,17 +1263,6 @@ library TerminalRenderer {
     }
 
     function _glasses(Roll memory a, FaceAnchor memory f) private pure returns (string memory) {
-        if (a.species == 2) {
-            return string.concat(
-                '<g data-acc="4">',
-                '<circle data-mono="1" data-lens="1" cx="',
-                f.cx.toString(),
-                '" cy="',
-                f.ey.toString(),
-                '" r="12" fill="#dbeafe" fill-opacity=".22" stroke="#1e293b" stroke-width="2"/>',
-                "</g>"
-            );
-        }
         if (a.species == 6) {
             uint256 lx = f.cx - f.gap;
             uint256 rx = f.cx + f.gap;

@@ -66,7 +66,7 @@ export const TRAIT_SHEETS: TraitSheet[] = [
   {
     id: "belly",
     title: "Belly",
-    blurb: "Belly patch on most species. Not drawn for Dino or Ghost (OpenSea value is n/a). Match uses the body color.",
+    blurb: "Belly patch on most species. Not drawn for Ghost or Robot (OpenSea value is n/a). Match uses the body color.",
     group: "pet",
     options: 4,
   },
@@ -79,8 +79,8 @@ export const TRAIT_SHEETS: TraitSheet[] = [
   },
   {
     id: "eyes-dino",
-    title: "Eyes · Dino profile",
-    blurb: "Each eye type on the left-facing Dino head.",
+    title: "Eyes · Dino",
+    blurb: "Each eye type on the front-facing Dino head.",
     group: "face",
     options: 6,
   },
@@ -129,7 +129,7 @@ export const TRAIT_SHEETS: TraitSheet[] = [
   {
     id: "mouth-dino",
     title: "Mouth · Dino snout",
-    blurb: "Each mouth type on the Dino profile snout.",
+    blurb: "Each mouth type on the front-facing Dino.",
     group: "face",
     options: 6,
   },
@@ -164,7 +164,7 @@ export const TRAIT_SHEETS: TraitSheet[] = [
   {
     id: "brows-dino",
     title: "Brows (ears roll) · Dino",
-    blurb: "Same ears roll as a profile brow.",
+    blurb: "Same ears roll as brows on the Dino head.",
     group: "face",
     options: 5,
   },
@@ -178,7 +178,7 @@ export const TRAIT_SHEETS: TraitSheet[] = [
   {
     id: "accessory-dino",
     title: "Accessories · Dino",
-    blurb: "Hats, monocle, and halo on the profile body.",
+    blurb: "Hats, glasses, and halo on the front-facing Dino.",
     group: "accessory",
     options: 6,
   },
