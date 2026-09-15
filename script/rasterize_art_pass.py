@@ -4,7 +4,9 @@
 from __future__ import annotations
 
 import io
+import os
 import re
+import sys
 from pathlib import Path
 
 import cairosvg
@@ -288,7 +290,9 @@ def main() -> None:
     glasses_sheet(src)
     bird_glasses_sheet(src)
     dino_faces_sheet(src)
-    sample_100_sheet(src)
+    # sample-100 is opt-in — skip unless SAMPLE_100=1 or --sample-100.
+    if os.environ.get("SAMPLE_100") == "1" or "--sample-100" in sys.argv:
+        sample_100_sheet(src)
 
 
 def sample_100_sheet(src: Path) -> None:

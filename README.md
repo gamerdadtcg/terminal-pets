@@ -228,7 +228,7 @@ Regenerate stills (no chain): `forge script script/ExportArtPass.s.sol && python
 
 Trait catalog (every option on a frozen base pet): `mkdir -p artifacts/art-pass/traits web/public/art-pass/traits && forge script script/ExportTraitCatalog.s.sol && python3 script/rasterize_trait_catalog.py` then open **http://127.0.0.1:43147/art-pass/traits**.
 
-100-pet combo sheet: `mkdir -p artifacts/art-pass/sample-100 web/public/art-pass/sample-100 && forge script script/ExportSample100.s.sol && python3 script/rasterize_art_pass.py` then open **http://127.0.0.1:43147/art-pass/sample-100**.
+100-pet combo sheet (opt-in only): `mkdir -p artifacts/art-pass/sample-100 web/public/art-pass/sample-100 && forge script script/ExportSample100.s.sol && SAMPLE_100=1 python3 script/rasterize_art_pass.py` then open **http://127.0.0.1:43147/art-pass/sample-100**. Skip unless explicitly asked.
 
 Metadata `name` is `Terminal Pet #{id}`. Collection `contractURI` name is `Terminal Pets`. `tokenTraits` returns Shell, Shell Color, Buttons, Antenna, Wallpaper, Species, Body, Eyes, Accessory, Generation, and State.
 

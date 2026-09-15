@@ -69,9 +69,8 @@ contract ExportTraitCatalog is Script {
     }
 
     function _shellColors() internal {
-        string[12] memory names = [
-            "Pink", "Sky", "Gold", "Lime", "Lilac", "Orange", "Slate", "Coral", "Mint", "Navy", "Cherry", "Sand"
-        ];
+        string[12] memory names =
+            ["Pink", "Sky", "Gold", "Lime", "Lilac", "Orange", "Slate", "Coral", "Mint", "Navy", "Cherry", "Sand"];
         for (uint256 i; i < 12; ++i) {
             TerminalRenderer.Roll memory r = _base();
             r.shellColor = uint8(i);

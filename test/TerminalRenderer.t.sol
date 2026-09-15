@@ -139,7 +139,9 @@ contract TerminalRendererTest is Test {
         assertTrue(_contains(d1, 'data-egg="1"'), "dormant egg");
         assertTrue(_contains(d1, "#e8e0d4"), "egg fill");
         assertTrue(_contains(d1, 'y="120"'), "zzz stays");
-        assertTrue(_contains(l1, 'data-acc="') || _contains(l1, "#86efac") || _contains(l1, "<ellipse"), "lit still rich");
+        assertTrue(
+            _contains(l1, 'data-acc="') || _contains(l1, "#86efac") || _contains(l1, "<ellipse"), "lit still rich"
+        );
         string memory d2 = r.svg(2, false);
         string memory l2 = r.svg(2, true);
         assertFalse(_contains(d2, 'r="2"'), "dormant freckle dots");
@@ -351,8 +353,8 @@ contract TerminalRendererTest is Test {
         assertTrue(_contains(bird, 'data-beak="1"'), "bird draws a beak");
         assertTrue(_contains(bird, "246,"), "beak still reaches 246");
         string memory m = r.traits(15, true).mouth;
-        bool colorName = _eq(m, "Amber") || _eq(m, "Coral") || _eq(m, "Sky") || _eq(m, "Gold") || _eq(m, "Rose")
-            || _eq(m, "Ink");
+        bool colorName =
+            _eq(m, "Amber") || _eq(m, "Coral") || _eq(m, "Sky") || _eq(m, "Gold") || _eq(m, "Rose") || _eq(m, "Ink");
         assertTrue(colorName, "bird mouth attr is a beak color");
         string memory catMouth = r.traits(3, true).mouth;
         bool expr = _eq(catMouth, "Flat") || _eq(catMouth, "Smile") || _eq(catMouth, "W") || _eq(catMouth, "Oh")

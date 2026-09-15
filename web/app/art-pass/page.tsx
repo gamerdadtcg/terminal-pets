@@ -132,7 +132,7 @@ const DINO_FACES = [
     id: 49,
     src: "/art-pass/DinoGrin-id49-lit.svg",
     png: "/art-pass/DinoGrin-id49-lit.png",
-    note: "Spark eye, open-O on the snout, monocle. Floppy brow.",
+    note: "Spark eye, filled snout grin, monocle. Floppy brow.",
   },
   {
     name: "Dino closed",
@@ -146,7 +146,7 @@ const DINO_FACES = [
     id: 179,
     src: "/art-pass/DinoOh-id179-lit.svg",
     png: "/art-pass/DinoOh-id179-lit.png",
-    note: "Dot eye, filled snout grin, star. Profile face on the new body.",
+    note: "Dot eye, open-O on the snout, star. Profile face on the new body.",
   },
   {
     name: "Dino teeth",
@@ -160,7 +160,7 @@ const DINO_FACES = [
     id: 267,
     src: "/art-pass/DinoTall-id267-lit.svg",
     png: "/art-pass/DinoTall-id267-lit.png",
-    note: "Tall lid-heavy eye, open-O, monocle.",
+    note: "Tall lid-heavy eye, filled snout grin, monocle.",
   },
 ] as const;
 
