@@ -11,7 +11,7 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: `Art pass · ${SITE.name}`,
   description:
-    "Per-species faces in the Sep 11 Awaken Pet V2 chrome. Fill-forward pets, split PET // footer, dark bezel. Scarf and Pack stay gone. Unrevealed teaser reel, spotted mystery egg, Ignite crack animation.",
+    "Per-species faces. Bird glasses sit on the eyes. Dino is a coherent left-facing silhouette. Unrevealed teaser reel, spotted mystery egg, Ignite crack animation.",
 };
 
 const WAKE = [
@@ -73,7 +73,7 @@ const COMBOS = [
     id: 49,
     src: "/art-pass/DinoGrin-id49-lit.svg",
     png: "/art-pass/DinoGrin-id49-lit.png",
-    note: "Glasses on both eyes. Fill-forward dino with ridge spikes and a soft tail.",
+    note: "Side-profile monocle on the head. Body is one left-facing silhouette: head, neck, torso, hips, legs, tail.",
   },
   {
     name: "Bird glasses",
@@ -125,42 +125,42 @@ const DINO_FACES = [
     id: 12,
     src: "/art-pass/Dino-id12-lit.svg",
     png: "/art-pass/Dino-id12-lit.png",
-    note: "Spark eyes, smile, blush, cap. Round fill-forward body, ridge, snout, soft tail.",
+    note: "Spark eye, snout smile, blush, cap. Round head, neck, torso, hips, planted feet, tapering tail.",
   },
   {
     name: "Dino oh + glasses",
     id: 49,
     src: "/art-pass/DinoGrin-id49-lit.svg",
     png: "/art-pass/DinoGrin-id49-lit.png",
-    note: "Spark eyes, grin, glasses on both pupils. Floppy brow.",
+    note: "Spark eye, filled snout grin, monocle. Floppy brow.",
   },
   {
     name: "Dino closed",
     id: 99,
     src: "/art-pass/DinoClosed-id99-lit.svg",
     png: "/art-pass/DinoClosed-id99-lit.png",
-    note: "Wide almond eyes, closed mouth, horn brow, cap.",
+    note: "Wide almond eye, closed snout line, horn brow, cap.",
   },
   {
     name: "Dino grin",
     id: 179,
     src: "/art-pass/DinoOh-id179-lit.svg",
     png: "/art-pass/DinoOh-id179-lit.png",
-    note: "Dot eyes, open-O mouth, star. Front-facing catalog body.",
+    note: "Dot eye, open-O on the snout, star. Profile face on the new body.",
   },
   {
     name: "Dino teeth",
     id: 25,
     src: "/art-pass/DinoTeeth-id25-lit.svg",
     png: "/art-pass/DinoTeeth-id25-lit.png",
-    note: "Zigzag teeth, tuft brow, star.",
+    note: "Zigzag snout teeth, tuft brow, star.",
   },
   {
     name: "Dino tall eye",
     id: 267,
     src: "/art-pass/DinoTall-id267-lit.svg",
     png: "/art-pass/DinoTall-id267-lit.png",
-    note: "Tall lid-heavy eyes, grin, glasses on both pupils.",
+    note: "Tall lid-heavy eye, filled snout grin, monocle.",
   },
 ] as const;
 
@@ -187,13 +187,12 @@ export default function ArtPassPage() {
           </h1>
           <p className="text-muted-foreground">
             Eyes, mouth, brows, and blush follow trait rolls and sit on that
-            species’ face — Dino ridge and tail, Bird beak, Frog bumps, Robot
-            visor. Chrome is the Sep 11 Awaken Pet V2 look: fill-forward pets,
-            dark screen bezel, speaker dots, gloss, and a split{" "}
-            <span className="font-mono">PET //</span> footer. Scarf and Pack
-            stay gone. Bird glasses are thin rims on the pupils with a short
-            arch. The handheld still does not change from Dormant to Lit.
-            OpenSea Lit metadata is the hatched pet.
+            species’ face — Dino profile, Bird beak, Frog bumps, Robot visor.
+            Bird glasses are thin rims on the pupils with a short arch above
+            the eyes, not a second pair of discs. Dino Lit is one left-facing
+            creature: head, neck, torso, hips, legs, and a tapering tail, with
+            the ridge sitting on the back. The handheld still does not change
+            from Dormant to Lit. OpenSea Lit metadata is the hatched pet.
           </p>
           <p className="text-muted-foreground">
             Need every option, not a random combo? The{" "}
@@ -322,7 +321,7 @@ export default function ArtPassPage() {
         <Card>
           <CardHeader>
             <CardTitle className="text-base">
-              Dino · ridge, tail, and trait faces
+              Dino body · silhouette + trait faces
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
@@ -330,7 +329,7 @@ export default function ArtPassPage() {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="/art-pass/dino-faces-sheet.png"
-                alt="Six Dino Lit stills: fill-forward V2 body plus different eyes, mouths, ears, and accessories"
+                alt="Six Dino Lit stills: coherent body silhouette plus different eyes, snout mouths, brows, and accessories"
                 className="w-full"
               />
             </div>

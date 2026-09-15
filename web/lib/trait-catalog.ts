@@ -10,7 +10,7 @@ export const TRAIT_SHEETS: TraitSheet[] = [
   {
     id: "species",
     title: "Species",
-    blurb: "All 12 fill-forward silhouettes in Awaken Pet V2 chrome. Same Round/Sky chassis, Mint body, smile, no accessory.",
+    blurb: "All 12 silhouettes. Same Round/Sky chassis, Mint body, smile, no accessory.",
     group: "pet",
     options: 12,
   },
@@ -66,7 +66,7 @@ export const TRAIT_SHEETS: TraitSheet[] = [
   {
     id: "belly",
     title: "Belly",
-    blurb: "Belly/muzzle patch on most species. Not drawn for Ghost or Robot (OpenSea value is n/a). Match uses the body color.",
+    blurb: "Belly patch on most species. Not drawn for Dino or Ghost (OpenSea value is n/a). Match uses the body color.",
     group: "pet",
     options: 4,
   },
@@ -79,8 +79,8 @@ export const TRAIT_SHEETS: TraitSheet[] = [
   },
   {
     id: "eyes-dino",
-    title: "Eyes · Dino",
-    blurb: "Each eye type on the fill-forward Dino head.",
+    title: "Eyes · Dino profile",
+    blurb: "Each eye type on the left-facing Dino head.",
     group: "face",
     options: 6,
   },
@@ -129,7 +129,7 @@ export const TRAIT_SHEETS: TraitSheet[] = [
   {
     id: "mouth-dino",
     title: "Mouth · Dino snout",
-    blurb: "Each mouth type on the front-facing Dino.",
+    blurb: "Each mouth type on the Dino profile snout.",
     group: "face",
     options: 6,
   },
@@ -157,14 +157,14 @@ export const TRAIT_SHEETS: TraitSheet[] = [
   {
     id: "brows",
     title: "Brows (ears roll) · Cat",
-    blurb: "On-chain trait is Ears. Round draws nothing extra; Point, Horn, Floppy, and Tuft add head shapes.",
+    blurb: "On-chain trait is Ears. Round draws no brow.",
     group: "face",
     options: 5,
   },
   {
     id: "brows-dino",
     title: "Brows (ears roll) · Dino",
-    blurb: "Same ears roll as brows on the Dino head.",
+    blurb: "Same ears roll as a profile brow.",
     group: "face",
     options: 5,
   },
@@ -178,7 +178,7 @@ export const TRAIT_SHEETS: TraitSheet[] = [
   {
     id: "accessory-dino",
     title: "Accessories · Dino",
-    blurb: "Hats, glasses, and halo on the fill-forward Dino.",
+    blurb: "Hats, monocle, and halo on the profile body.",
     group: "accessory",
     options: 6,
   },
