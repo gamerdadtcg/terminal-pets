@@ -35,7 +35,7 @@ SHEETS: list[dict] = [
     {
         "id": "shell",
         "title": "Shell / chassis",
-        "blurb": "Handheld outline. Pet inside is the same Cat.",
+        "blurb": "Fill-only chassis. Pet inside is the same Cat.",
         "prefix": "shell-",
         "cols": 4,
     },
