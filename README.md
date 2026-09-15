@@ -206,7 +206,7 @@ Read the comments at the top of `src/Hopper.sol`.
 
 ### Art / metadata
 
-**Main art lock:** the morning `faces3` + `traits` archive is canonical until the user explicitly changes direction. See [`docs/MAIN_ART_LOCK.md`](docs/MAIN_ART_LOCK.md) (md5s, `ACC_N=6`, do not overwrite with fill-only / Look A / pixel / approximate regen).
+**Main art lock:** commit `3a194a4` scarf/pack-removal stills (not the morning `faces3` archive). See [`docs/MAIN_ART_LOCK.md`](docs/MAIN_ART_LOCK.md) (md5s, `ACC_N=6`, renderer blob `e1a358c4`, do not overwrite with morning-archive / fill-only / Look A / pixel / approximate regen).
 
 Token art is on-chain SVG (no IPFS) — Tamagotchi-style handheld pets. Traits are derived from `keccak256(abi.encodePacked("AWAKEN_PET_V2", tokenId))` (seed unchanged). **Three visual states:**
 
