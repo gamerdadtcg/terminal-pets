@@ -200,44 +200,13 @@ export default function ArtPassPage() {
               trait catalog
             </Link>{" "}
             shows each rolled value on a frozen Cat (and on Dino / Bird / Frog
-            / Robot / Ghost when the face is species-specific). A{" "}
-            <Link className="underline" href="/art-pass/pixel">
-              128×128 pixel-pet preview
-            </Link>{" "}
-            keeps the handheld chrome and only chunkifies the creature. The{" "}
+            / Robot / Ghost when the face is species-specific). The{" "}
             <Link className="underline" href="/art-pass/sample-100">
               100-pet sheet
             </Link>{" "}
             is token ids 1–100 Lit, for combo review.
           </p>
         </section>
-
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base">
-              Pixel preview · 128×128 creature, vector chrome
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <Link href="/art-pass/pixel" className="block overflow-hidden rounded-xl bg-[#07080b]">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/art-pass/pixel/pixel-vs-vector-sheet.png"
-                alt="Vector Lit pets beside the same tokens with 128 pixel creatures"
-                className="w-full"
-              />
-            </Link>
-            <p className="text-sm text-muted-foreground">
-              Preview only — does not replace on-chain art. Creature and traits
-              become chunky pixels; handheld UI stays as it is.
-            </p>
-            <p className="font-mono text-xs text-muted-foreground">
-              <Link className="underline" href="/art-pass/pixel">
-                /art-pass/pixel
-              </Link>
-            </p>
-          </CardContent>
-        </Card>
 
         <Card>
           <CardHeader>
