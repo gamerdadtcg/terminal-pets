@@ -247,7 +247,7 @@ contract IgniteModule is Ownable, ReentrancyGuard, IIgniteModule {
         unchecked {
             litCount += 1;
         }
- mar
+
         emit Ignited(tokenId, msg.sender, fee, burnCut, allotmentCut, hopperCut, ethFee);
         IMetadataNotify(address(collection)).notifyMetadataUpdate(tokenId);
     }
