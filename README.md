@@ -1,0 +1,13 @@
+# Terminal Pets
+
+Greenfield NFT collection for **Robinhood Chain** (EVM L2, chain id `4663`, native gas **ETH**).
+
+Public collection name: **Terminal Pets**. NFT symbol: **TERM**. Memecoin: **`$TERM`**.
+
+Collectors mint on OpenSea. After mint, each token is a unique handheld **pet** that starts **Sealed** (placeholder metadata, 24h reveal window) with a **TBA**. After `CollectionNFT.reveal()` it shows as **Dormant** until Ignite. Each token also gets a one-time **`$TERM` Ignite allotment** (placeholder **1,000 `$TERM`**) from token supply so the token half of the first wake does not need a live chart. **Ignite** is off until reveal. Then it is hybrid: that `$TERM` (**37.5% burn / 25% Hopper-as-ETH / 37.5% allotment escrow refill**) **plus exactly 0.002 ETH**. The ETH splits **50% buy `$TERM` and burn / 50% Hopper**. Team earns **0** from that ETH fee (not TermFund, not treasury). The 37.5% token cut returns to the per-pet allotment **pool** (that tokenId stays consumed). One-way **Dormant → Lit**. Lit stays with the NFT on transfer. **Royalties** (7.5% via **RoyaltySplitter**): **pre-reveal 100% → TermFund** (nothing to Hopper, nothing to treasury from that stream). **Post-reveal 5% Hopper / 2.5% treasury**. **Hopper** is ETH only after that: post-reveal NFT royalties, **50% of each Ignite ETH fee**, 25% of each Ignite `$TERM` fee (swapped to ETH when a router is set), plus, once the canonical TERM/ETH pool is live, a **1.5% TermMarket skim** of that pool’s volume. `$TERM` is **not** fee-on-transfer; public transfers are also **off until reveal**. **Dial**: Lit holders pick up to 3 Robinhood Chain Stock Tokens (weights = 100%). **Pulse** uses an escalating Hopper ETH **ladder** (not a fixed 0.5 ETH): bootstrap `0.1 → 1.0`, then cycle `0.5 → 1.0` forever (never back to 0.1). Snapshot Lit, read Dial. **Dialed Lit** swap their ETH share to Stock Tokens (ETH fallback if no router). **Undialed Lit** buy `$TERM` with that share and credit the TBA (or owner) — not raw ETH; claim reverts without router + `$TERM`. Hopper stays ETH. Dormant earn nothing. TermMarket ships in this repo but stays **inactive** until `TERM_POOL` and `TERM_SWAP_ROUTER` are set.
+
+This repo is a complete MVP: Foundry contracts, tests, a Robinhood Chain deploy script, and a Next.js hub + wallet dapp (wagmi / viem). The public homepage is a marketing hub. Contract addresses can stay empty until Robinhood Chain deploy.
+
+**Ready to deploy — not deployed. Do not broadcast to chain `4663` until explicitly asked.**
+
+See `src/`, `test/`, `script/`, and `web/` for the rest of the rebuildable project. Clone with `--recursive` so Foundry submodules (`lib/`) install from `.gitmodules`.
