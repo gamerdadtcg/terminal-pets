@@ -206,6 +206,8 @@ Read the comments at the top of `src/Hopper.sol`.
 
 ### Art / metadata
 
+**Main art lock:** the morning `faces3` + `traits` archive is canonical until the user explicitly changes direction. See [`docs/MAIN_ART_LOCK.md`](docs/MAIN_ART_LOCK.md) (md5s, `ACC_N=6`, do not overwrite with fill-only / Look A / pixel / approximate regen).
+
 Token art is on-chain SVG (no IPFS) — Tamagotchi-style handheld pets. Traits are derived from `keccak256(abi.encodePacked("AWAKEN_PET_V2", tokenId))` (seed unchanged). **Three visual states:**
 
 1. **Sealed / unrevealed** (mint → `reveal()`): one fixed gunmetal + gold handheld. SMIL **teaser reel** of possible lit pets (optional `?` poster as frame 0). Labeled UNREVEALED / SEALED. Does not leak this token’s shell or pet.
