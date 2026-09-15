@@ -120,8 +120,10 @@ contract TerminalRendererTest is Test {
             assertTrue(_contains(l, 'stroke="#2a2430"'), "lit edge");
             assertFalse(_contains(d, 'stroke="#16141a"'), "old dormant edge");
             assertFalse(_contains(d, 'fill="#0a0c10"'), "old dormant canvas");
-            assertTrue(_contains(d, 'fill="#141018"'), "shared canvas");
-            assertTrue(_contains(l, 'fill="#141018"'), "shared canvas");
+            assertTrue(_contains(d, 'fill="#1a1524"'), "shared canvas");
+            assertTrue(_contains(l, 'fill="#1a1524"'), "shared canvas");
+            assertTrue(_contains(d, 'data-spk="1"'), "speaker dashes");
+            assertTrue(_contains(d, 'width="10" height="3"'), "dash speakers not dots");
             assertTrue(_contains(d, 'data-egg="1"'), "mystery egg");
             assertTrue(_contains(d, "#e8e0d4"), "egg shell");
             assertFalse(_contains(l, 'data-egg="1"'), "lit is not the egg");
@@ -396,8 +398,12 @@ contract TerminalRendererTest is Test {
         string memory dino = r.svg(12, true);
         assertTrue(_contains(dino, 'cx="134"'), "dino snout");
         assertTrue(_contains(dino, 'data-tail="1"'), "dino tail");
-        assertTrue(_contains(dino, "180,126"), "dino spikes");
+        assertTrue(_contains(dino, "186,118"), "dino spikes");
+        assertTrue(_contains(dino, 'data-dino-head="1"'), "round head");
         assertFalse(_contains(dino, "292,188"), "old spear tail");
+        string memory fox = r.svg(16, true);
+        assertTrue(_contains(fox, 'data-fox="1"'), "fox pentagon");
+        assertTrue(_contains(fox, "200,124 252,158 236,216 164,216 148,158"), "outlined fox");
         string memory ghost = r.svg(7, true);
         assertTrue(_contains(ghost, 'data-ghost="1"'), "sheet ghost");
         assertTrue(_contains(ghost, "Q228 200"), "wavy hem");
@@ -539,10 +545,13 @@ contract TerminalRendererTest is Test {
             uint256 id = ids[i];
             string memory lit = r.svg(id, true);
             string memory dormant = r.svg(id, false);
-            assertTrue(_contains(lit, 'text-anchor="middle"'), "footer not centered");
+            assertTrue(_contains(lit, 'text-anchor="start"'), "PET# left");
+            assertTrue(_contains(lit, 'text-anchor="end"'), "generation right");
             assertTrue(_contains(lit, "PET#"), "missing PET#");
             assertFalse(_contains(lit, "PET //"), "old footer leaked");
-            assertTrue(_contains(lit, 'y="324"'), "footer not in safe band");
+            assertTrue(_contains(lit, 'y="328"'), "footer not in safe band");
+            assertTrue(_contains(lit, 'data-foot="1"'), "id footer tag");
+            assertTrue(_contains(lit, 'data-gen="1"'), "generation footer tag");
             assertTrue(_contains(dormant, 'y="120"'), "zzz not in screen");
             assertTrue(_contains(dormant, 'y="110"'), "zzz not in screen");
         }

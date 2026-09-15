@@ -8,6 +8,9 @@ import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
 /// @notice On-chain SVG for Terminal Pets. Seed domain `AWAKEN_PET_V2` is locked.
 /// Accessories are None, Bow, Cap, Star, Glasses, Halo (ACC_N = 6). Scarf and Pack
 /// were removed; old 8-way rolls remap via `s % 6` (Halo is index 5).
+/// Chrome matches the faces3 / sample-100 archives: fill-only shells, dark
+/// screen bezel, speaker dashes, split `PET#{id}` / generation footer. Pets keep
+/// `stroke="#2a2430"` outlines (not the fill-only hub dump).
 library TerminalRenderer {
     using Strings for uint256;
 
@@ -241,7 +244,8 @@ library TerminalRenderer {
             "<defs>",
             '<clipPath id="scr"><rect x="116" y="94" width="168" height="160" rx="12"/></clipPath>',
             "</defs>",
-            '<rect width="400" height="400" fill="#141018"/>',
+            '<rect width="400" height="400" fill="#1a1524"/>',
+            '<ellipse cx="200" cy="214" rx="140" ry="158" fill="#000" fill-opacity=".3"/>',
             chrome,
             inner,
             "</svg>"
@@ -254,7 +258,8 @@ library TerminalRenderer {
             "<defs>",
             '<clipPath id="scr"><rect x="116" y="94" width="168" height="160" rx="12"/></clipPath>',
             "</defs>",
-            '<rect width="400" height="400" fill="#141018"/>',
+            '<rect width="400" height="400" fill="#1a1524"/>',
+            '<ellipse cx="200" cy="214" rx="140" ry="158" fill="#000" fill-opacity=".3"/>',
             _chrome(tokenId, a, true),
             _teaserInner(),
             '<text x="200" y="84" text-anchor="middle" fill="#c9a227" font-size="11" font-family="monospace">TERMINAL PETS</text>',
@@ -266,34 +271,39 @@ library TerminalRenderer {
 
     function _chrome(uint256 tokenId, Roll memory a, bool mystery) private pure returns (string memory) {
         string memory fill = mystery ? "#1a2030" : _shellHex(a.shellColor);
-        string memory stroke = mystery ? "#c9a227" : "#2a2430";
         string memory btn = mystery ? "#c9a227" : _btnHex(a.button);
+        string memory ink = mystery ? "#c9a227" : "#3d3a44";
         return string.concat(
-            _shellShape(a.shell, fill, stroke),
-            _antenna(a.antenna, mystery ? "#c9a227" : fill, stroke),
-            '<rect x="116" y="94" width="168" height="160" rx="12" fill="#0c0a10" stroke="',
-            stroke,
-            '" stroke-width="3"/>',
-            '<circle cx="168" cy="272" r="9" fill="',
+            _shellShape(a.shell, fill),
+            _antenna(a.antenna, fill),
+            '<rect x="110" y="88" width="180" height="172" rx="18" fill="#1c1916" stroke="#2a2430" stroke-width="2"/>',
+            '<rect data-spk="1" x="156" y="256" width="10" height="3" rx="1" fill="#2a2430"/>',
+            '<rect data-spk="1" x="170" y="256" width="10" height="3" rx="1" fill="#2a2430"/>',
+            '<rect data-spk="1" x="184" y="256" width="10" height="3" rx="1" fill="#2a2430"/>',
+            '<circle cx="168" cy="276" r="10" fill="',
             btn,
-            '" stroke="#2a2430" stroke-width="2"/>',
-            '<circle cx="200" cy="272" r="9" fill="',
+            '"/>',
+            '<circle cx="200" cy="276" r="10" fill="',
             btn,
-            '" stroke="#2a2430" stroke-width="2"/>',
-            '<circle cx="232" cy="272" r="9" fill="',
+            '"/>',
+            '<circle cx="232" cy="276" r="10" fill="',
             btn,
-            '" stroke="#2a2430" stroke-width="2"/>',
-            '<text x="200" y="324" text-anchor="middle" fill="#e8e4f0" font-size="13" font-family="monospace">PET#',
+            '"/>',
+            '<text data-foot="1" x="132" y="328" text-anchor="start" fill="',
+            ink,
+            '" font-size="11" font-family="sans-serif">PET#',
             tokenId.toString(),
             "</text>",
-            '<text x="200" y="342" text-anchor="middle" fill="#94a3b8" font-size="10" font-family="monospace">',
+            '<text data-gen="1" x="268" y="328" text-anchor="end" fill="',
+            ink,
+            '" font-size="11" font-family="sans-serif">',
             mystery ? "SEALED" : _genName(a.generation),
             "</text>"
         );
     }
 
-    function _shellShape(uint8 shell, string memory fill, string memory stroke) private pure returns (string memory) {
-        string memory open = string.concat('<path fill="', fill, '" stroke="', stroke, '" stroke-width="5" ');
+    function _shellShape(uint8 shell, string memory fill) private pure returns (string memory) {
+        string memory open = string.concat('<path fill="', fill, '" ');
         if (shell == 0) {
             return string.concat(
                 open,
@@ -337,53 +347,41 @@ library TerminalRenderer {
         );
     }
 
-    function _antenna(uint8 kind, string memory fill, string memory stroke) private pure returns (string memory) {
+    function _antenna(uint8 kind, string memory fill) private pure returns (string memory) {
         if (kind == 0) return "";
         if (kind == 1) {
-            return string.concat(
-                '<rect x="194" y="42" width="12" height="22" rx="4" fill="',
-                fill,
-                '" stroke="',
-                stroke,
-                '" stroke-width="2"/>'
-            );
+            return string.concat('<rect x="195" y="40" width="10" height="20" rx="4" fill="', fill, '"/>');
         }
         if (kind == 2) {
             return string.concat(
-                '<line x1="200" y1="58" x2="200" y2="40" stroke="',
-                stroke,
-                '" stroke-width="3"/>',
-                '<circle cx="200" cy="32" r="8" fill="',
+                '<line x1="200" y1="56" x2="200" y2="36" stroke="',
                 fill,
-                '" stroke="',
-                stroke,
-                '" stroke-width="2"/>'
+                '" stroke-width="3"/>',
+                '<circle cx="200" cy="30" r="7" fill="',
+                fill,
+                '"/>'
             );
         }
         if (kind == 3) {
             return string.concat(
-                '<line x1="200" y1="58" x2="188" y2="28" stroke="',
-                stroke,
+                '<line x1="200" y1="56" x2="188" y2="28" stroke="',
+                fill,
                 '" stroke-width="3"/>',
-                '<line x1="200" y1="58" x2="212" y2="28" stroke="',
-                stroke,
+                '<line x1="200" y1="56" x2="212" y2="28" stroke="',
+                fill,
                 '" stroke-width="3"/>'
             );
         }
         if (kind == 4) {
-            return string.concat(
-                '<polygon points="200,24 208,58 192,58" fill="', fill, '" stroke="', stroke, '" stroke-width="2"/>'
-            );
+            return string.concat('<polygon points="200,24 208,56 192,56" fill="', fill, '"/>');
         }
         return string.concat(
-            '<line x1="200" y1="58" x2="200" y2="36" stroke="',
-            stroke,
+            '<line x1="200" y1="56" x2="200" y2="36" stroke="',
+            fill,
             '" stroke-width="3"/>',
             '<ellipse cx="200" cy="28" rx="14" ry="8" fill="',
             fill,
-            '" stroke="',
-            stroke,
-            '" stroke-width="2"/>'
+            '"/>'
         );
     }
 
@@ -614,20 +612,7 @@ library TerminalRenderer {
         if (sp == 2) return _dinoParts(body);
         if (sp == 3) {
             return string.concat(
-                "<g>",
-                '<ellipse cx="200" cy="186" rx="42" ry="38"',
-                st,
-                "/>",
-                '<polygon points="168,124 178,154 154,150"',
-                st,
-                "/>",
-                '<polygon points="232,124 246,150 222,150"',
-                st,
-                "/>",
-                '<ellipse cx="200" cy="196" rx="18" ry="12"',
-                st,
-                "/>",
-                "</g>"
+                '<g data-fox="1">', '<polygon points="200,124 252,158 236,216 164,216 148,158"', st, "/>", "</g>"
             );
         }
         if (sp == 4) {
@@ -666,6 +651,8 @@ library TerminalRenderer {
                 '<ellipse cx="176" cy="190" rx="14" ry="8"',
                 st,
                 "/>",
+                '<rect x="188" y="208" width="4" height="14" rx="1" fill="#f59e0b"/>',
+                '<rect x="208" y="208" width="4" height="14" rx="1" fill="#f59e0b"/>',
                 "</g>"
             );
         }
@@ -739,22 +726,48 @@ library TerminalRenderer {
         );
     }
 
-    /// @dev Left-facing dino: round head, snout, neck, torso, hips, planted feet, tapering tail.
-    /// Ridge sits on the spine. No belly patch.
+    /// @dev Left-facing outlined dino from the faces3 / sample-100 archive.
     function _dinoParts(string memory body) private pure returns (string memory) {
         string memory st = string.concat(' fill="', body, '" stroke="#2a2430" stroke-width="3" stroke-linejoin="round"');
         return string.concat(
             '<g data-dino="1">',
-            '<path data-dino-body="1" data-tail="1" d="M120 160 C118 150 128 144 140 148 C148 134 164 128 176 140 C186 134 198 142 196 154 C210 146 228 150 238 164 C254 162 270 174 276 190 C278 198 272 206 262 206 C250 206 242 196 234 188 C236 204 234 222 226 234 C222 240 210 242 206 234 C208 222 212 208 208 198 C198 214 188 230 176 236 C166 242 156 236 158 226 C162 214 166 204 160 194 C148 196 136 188 130 176 C122 180 116 172 120 160 Z"',
+            '<ellipse cx="176" cy="206" rx="7" ry="12"',
             st,
             "/>",
-            '<ellipse data-dino-head="1" cx="158" cy="150" rx="22" ry="20"',
+            '<ellipse cx="192" cy="210" rx="7" ry="12"',
             st,
             "/>",
-            '<ellipse cx="134" cy="158" rx="17" ry="11"',
+            '<ellipse cx="210" cy="210" rx="7" ry="12"',
             st,
             "/>",
-            '<polygon data-ridge="1" points="168,146 174,132 180,126 186,140 194,130 200,144 208,136 214,150"',
+            '<ellipse cx="226" cy="206" rx="7" ry="12"',
+            st,
+            "/>",
+            '<ellipse data-tail="1" cx="248" cy="188" rx="18" ry="12"',
+            st,
+            "/>",
+            '<ellipse cx="266" cy="192" rx="9" ry="7"',
+            st,
+            "/>",
+            '<ellipse data-dino-body="1" cx="200" cy="176" rx="44" ry="32"',
+            st,
+            "/>",
+            '<polygon data-ridge="1" points="176,156 186,118 200,154"',
+            st,
+            "/>",
+            '<polygon points="194,150 206,112 218,150"',
+            st,
+            "/>",
+            '<polygon points="212,152 224,118 234,154"',
+            st,
+            "/>",
+            '<polygon points="228,156 238,128 246,162"',
+            st,
+            "/>",
+            '<ellipse data-dino-head="1" cx="156" cy="154" rx="26" ry="24"',
+            st,
+            "/>",
+            '<ellipse data-snout="1" cx="134" cy="162" rx="12" ry="9"',
             st,
             "/>",
             "</g>"
