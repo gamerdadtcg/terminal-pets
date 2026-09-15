@@ -77,7 +77,7 @@ SHEETS: list[dict] = [
     {
         "id": "belly",
         "title": "Belly",
-        "blurb": "Belly patch on most species. Not drawn for Dino or Ghost (OpenSea value is n/a).",
+        "blurb": "Belly patch on most species. Not drawn for Dino, Ghost, or Robot (OpenSea value is n/a).",
         "prefix": "belly-",
         "cols": 4,
     },
@@ -92,7 +92,7 @@ SHEETS: list[dict] = [
     {
         "id": "eyes-dino",
         "title": "Eyes · Dino profile",
-        "blurb": "Each eye type on the left-facing Dino head.",
+        "blurb": "Each eye type on the left-facing fill-forward Dino head.",
         "prefix": "eyes-dino-",
         "cols": 3,
     },
@@ -142,7 +142,7 @@ SHEETS: list[dict] = [
     {
         "id": "mouth-dino",
         "title": "Mouth · Dino snout",
-        "blurb": "Each mouth type on the Dino profile snout.",
+        "blurb": "Each mouth type on the left-facing Dino head.",
         "prefix": "mouth-dino-",
         "cols": 3,
     },
@@ -194,7 +194,7 @@ SHEETS: list[dict] = [
     {
         "id": "accessory-dino",
         "title": "Accessories · Dino",
-        "blurb": "Hats, monocle glasses, and halo on the profile silhouette.",
+        "blurb": "Bow, cap, star, monocle, and halo on the left-facing Dino.",
         "prefix": "accessory-dino-",
         "cols": 3,
     },

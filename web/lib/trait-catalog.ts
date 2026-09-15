@@ -66,7 +66,7 @@ export const TRAIT_SHEETS: TraitSheet[] = [
   {
     id: "belly",
     title: "Belly",
-    blurb: "Belly patch on most species. Not drawn for Dino or Ghost (OpenSea value is n/a). Match uses the body color.",
+    blurb: "Belly patch on most species. Not drawn for Dino, Ghost, or Robot (OpenSea value is n/a). Match uses the body color.",
     group: "pet",
     options: 4,
   },
@@ -80,7 +80,7 @@ export const TRAIT_SHEETS: TraitSheet[] = [
   {
     id: "eyes-dino",
     title: "Eyes · Dino profile",
-    blurb: "Each eye type on the left-facing Dino head.",
+    blurb: "Each eye type on the left-facing fill-forward Dino head.",
     group: "face",
     options: 6,
   },
@@ -129,7 +129,7 @@ export const TRAIT_SHEETS: TraitSheet[] = [
   {
     id: "mouth-dino",
     title: "Mouth · Dino snout",
-    blurb: "Each mouth type on the Dino profile snout.",
+    blurb: "Each mouth type on the left-facing Dino head.",
     group: "face",
     options: 6,
   },
@@ -178,7 +178,7 @@ export const TRAIT_SHEETS: TraitSheet[] = [
   {
     id: "accessory-dino",
     title: "Accessories · Dino",
-    blurb: "Hats, monocle, and halo on the profile body.",
+    blurb: "Bow, cap, star, monocle, and halo on the left-facing Dino.",
     group: "accessory",
     options: 6,
   },
@@ -199,7 +199,7 @@ export const TRAIT_SHEETS: TraitSheet[] = [
   {
     id: "dormant",
     title: "Dormant egg",
-    blurb: "Spotted mystery egg on each shell. Species hidden until Ignite.",
+    blurb: "Spotted mystery egg on each shell. Species is hidden until Ignite.",
     group: "state",
     options: 8,
   },
