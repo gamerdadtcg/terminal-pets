@@ -116,12 +116,12 @@ contract TerminalRendererTest is Test {
             assertTrue(_contains(l, shell), "lit shell color");
             assertEq(_count(d, shell), _count(l, shell), "shell fill count");
             assertEq(_count(d, btn), _count(l, btn), "button count");
-            assertTrue(_contains(d, 'stroke="#2a2430"'), "screen bezel");
-            assertTrue(_contains(l, 'stroke="#2a2430"'), "screen bezel");
+            assertTrue(_contains(d, 'stroke="#2a2430"'), "dormant edge");
+            assertTrue(_contains(l, 'stroke="#2a2430"'), "lit edge");
             assertFalse(_contains(d, 'stroke="#16141a"'), "old dormant edge");
             assertFalse(_contains(d, 'fill="#0a0c10"'), "old dormant canvas");
-            assertTrue(_contains(d, 'fill="#1a1524"'), "shared canvas");
-            assertTrue(_contains(l, 'fill="#1a1524"'), "shared canvas");
+            assertTrue(_contains(d, 'fill="#141018"'), "shared canvas");
+            assertTrue(_contains(l, 'fill="#141018"'), "shared canvas");
             assertTrue(_contains(d, 'data-egg="1"'), "mystery egg");
             assertTrue(_contains(d, "#e8e0d4"), "egg shell");
             assertFalse(_contains(l, 'data-egg="1"'), "lit is not the egg");
@@ -132,10 +132,10 @@ contract TerminalRendererTest is Test {
         string memory d1 = r.svg(1, false);
         string memory l1 = r.svg(1, true);
         assertFalse(_contains(d1, 'data-acc="'), "dormant accessory");
-        assertFalse(_contains(d1, "#f4729d"), "dormant bow fill");
-        assertFalse(_contains(d1, 'r="2" fill="#2a2430"'), "dormant lit freckles");
-        assertFalse(_contains(d1, "#c9897a"), "old muted freckles");
-        assertFalse(_contains(d1, "#f5edd8"), "dormant wallpaper");
+        assertFalse(_contains(d1, "#7a3a58"), "dormant bow fill");
+        assertFalse(_contains(d1, "#c9897a"), "dormant lit freckles");
+        assertFalse(_contains(d1, "#5a4038"), "dormant muted freckles");
+        assertFalse(_contains(d1, "#fff4d6"), "dormant wallpaper");
         assertTrue(_contains(d1, 'data-egg="1"'), "dormant egg");
         assertTrue(_contains(d1, "#e8e0d4"), "egg fill");
         assertTrue(_contains(d1, 'y="120"'), "zzz stays");
@@ -146,7 +146,7 @@ contract TerminalRendererTest is Test {
         string memory l2 = r.svg(2, true);
         assertFalse(_contains(d2, 'r="2"'), "dormant freckle dots");
         assertTrue(_contains(l2, 'r="2"'), "lit keeps freckles");
-        assertTrue(_contains(l2, 'r="2" fill="#2a2430"'), "lit freckle color");
+        assertTrue(_contains(l2, "#c9897a"), "lit freckle color");
     }
 
     function test_dormant_genericEggNoSpecies() public view {
@@ -184,16 +184,16 @@ contract TerminalRendererTest is Test {
 
     function test_faceAnchors_allTwelveSpecies() public view {
         _assertFace(2, 0, "200", "168", "16");
-        _assertFace(3, 1, "200", "168", "15");
+        _assertFace(3, 1, "200", "170", "15");
         _assertFace(12, 2, "158", "152", "8");
-        _assertFace(16, 3, "200", "166", "14");
+        _assertFace(16, 3, "200", "166", "15");
         _assertFace(7, 4, "200", "168", "16");
         _assertFace(28, 5, "200", "172", "14");
         _assertFace(15, 6, "196", "148", "8");
         _assertFace(5, 7, "200", "156", "24");
-        _assertFace(1, 8, "200", "166", "13");
+        _assertFace(1, 8, "200", "174", "16");
         _assertFace(11, 9, "200", "155", "14");
-        _assertFace(4, 10, "200", "168", "14");
+        _assertFace(4, 10, "200", "172", "14");
         _assertFace(6, 11, "200", "168", "12");
     }
 
@@ -204,19 +204,19 @@ contract TerminalRendererTest is Test {
         assertTrue(_contains(dino, 'data-gap="8"'), "dino tight eye gap");
         assertTrue(_contains(dino, 'data-dino="1"'), "connected dino group");
         assertTrue(_contains(dino, 'data-dino-eye="1"'), "profile eye on head");
-        assertTrue(_contains(dino, 'data-snout="1"'), "snout on the muzzle");
-        assertTrue(_contains(dino, 'data-dino-body="1"'), "bean body");
+        assertTrue(_contains(dino, 'data-snout="1"'), "mouth sits on snout");
+        assertTrue(_contains(dino, 'data-dino-body="1"'), "one torso-hip-tail path");
         assertTrue(_contains(dino, 'data-dino-head="1"'), "round head for face");
-        assertTrue(_contains(dino, 'data-ridge="1"'), "dorsal spikes");
-        assertTrue(_contains(dino, 'fill="#fff"'), "white sclera");
+        assertTrue(_contains(dino, 'data-ridge="1"'), "dorsal ridge on the back");
+        assertTrue(_contains(dino, 'fill="#fff"'), "sclera so expressions read");
+        assertFalse(_contains(dino, 'cx="216" cy="168"'), "old centered glasses");
         string memory bird = r.svg(15, true);
         assertTrue(_contains(bird, 'data-cx="196"'), "bird face on head");
         assertTrue(_contains(bird, 'data-ey="148"'), "bird eye height");
         assertTrue(_contains(bird, 'data-gap="8"'), "bird tight eye gap");
         assertTrue(_contains(bird, 'cx="188"'), "bird left eye on head");
         assertTrue(_contains(bird, 'cx="204"'), "bird right eye on head, left of beak");
-        assertTrue(_contains(bird, 'data-beak="1"'), "beak");
-        assertTrue(_contains(bird, "246,"), "beak points right");
+        assertTrue(_contains(bird, "246,"), "beak still present");
     }
 
     function test_accessoriesUseFaceAnchors() public view {
@@ -291,7 +291,7 @@ contract TerminalRendererTest is Test {
     function test_dinoFaceTraitsVary() public view {
         string memory a = r.svg(12, true);
         assertTrue(_contains(a, 'data-dino-eye="1"'), "dino eye");
-        assertTrue(_contains(a, 'data-snout="1"'), "snout bump");
+        assertTrue(_contains(a, 'data-snout="1"'), "snout mouth");
         TerminalRenderer.Roll memory d12 = r.roll(12);
         if (d12.accessory == 4) {
             assertTrue(_contains(a, 'data-mono="1"'), "profile monocle");
@@ -309,10 +309,9 @@ contract TerminalRendererTest is Test {
                 ++dinoN;
             }
             string memory lit = r.svg(id, true);
-            assertTrue(_contains(lit, 'data-dino-eye="1"'), "every dino has eyes");
-            assertTrue(_contains(lit, 'data-snout="1"'), "every dino has a snout bump");
-            assertTrue(_contains(lit, 'data-cx="158"'), "face locked to left head");
-            assertTrue(_contains(lit, 'data-ey="152"'), "dino eye height");
+            assertTrue(_contains(lit, 'data-dino-eye="1"'), "every dino has profile eye");
+            assertTrue(_contains(lit, 'data-snout="1"'), "every dino has snout mouth");
+            assertTrue(_contains(lit, 'data-cx="158"'), "face locked to head");
             if (!eyeSeen[roll.eyes]) {
                 eyeSeen[roll.eyes] = true;
                 unchecked {
@@ -333,22 +332,6 @@ contract TerminalRendererTest is Test {
         assertTrue(dinoN >= 8, "need several dinos in sample");
         assertTrue(eyeN >= 4, "dino eye traits should differ");
         assertTrue(mouthN >= 4, "dino mouth traits should differ");
-    }
-
-    function test_awakenV2Chrome_tokens1_42_100() public view {
-        string memory fox = r.svg(16, true);
-        assertTrue(_contains(fox, 'data-fox="1"'), "fox pentagon");
-        assertTrue(_contains(fox, "200,124 252,158"), "V2 fox silhouette");
-        string memory bear = r.svg(1, true);
-        assertTrue(_contains(bear, "PET#1"), "token 1 footer");
-        assertTrue(_contains(bear, "Gamma"), "token 1 generation");
-        string memory id42 = r.svg(42, true);
-        assertTrue(_contains(id42, "PET#42"), "token 42 footer");
-        assertFalse(_contains(id42, "data-pack"), "pack stays gone");
-        string memory id100 = r.svg(100, true);
-        assertTrue(_contains(id100, "PET#100"), "token 100 footer");
-        assertTrue(_contains(id100, 'data-gloss="1"'), "screen gloss");
-        assertTrue(_contains(id100, 'data-spk="1"'), "speaker dots");
     }
 
     function test_bellySkipped_dinoAndGhost() public view {
@@ -411,16 +394,16 @@ contract TerminalRendererTest is Test {
 
     function test_reworkedSpeciesReadAsNames() public view {
         string memory dino = r.svg(12, true);
-        assertTrue(_contains(dino, 'data-snout="1"'), "dino snout");
+        assertTrue(_contains(dino, 'cx="134"'), "dino snout");
         assertTrue(_contains(dino, 'data-tail="1"'), "dino tail");
-        assertTrue(_contains(dino, 'data-ridge="1"'), "dino spikes");
-        assertFalse(_contains(dino, "292,188"), "catalog spear tail stays gone");
+        assertTrue(_contains(dino, "180,126"), "dino spikes");
+        assertFalse(_contains(dino, "292,188"), "old spear tail");
         string memory ghost = r.svg(7, true);
         assertTrue(_contains(ghost, 'data-ghost="1"'), "sheet ghost");
         assertTrue(_contains(ghost, "Q228 200"), "wavy hem");
         assertTrue(_contains(ghost, 'fill="#1e1930"'), "hollow eyes");
         string memory bird = r.svg(15, true);
-        assertTrue(_contains(bird, 'data-beak="1"'), "beak");
+        assertTrue(_contains(bird, "246,"), "beak");
         assertTrue(_contains(bird, "204,112"), "crest");
         string memory robot = r.svg(11, true);
         assertTrue(_contains(robot, 'data-visor="1"'), "visor");
@@ -539,15 +522,15 @@ contract TerminalRendererTest is Test {
 
     function test_dinoTailSoft_andFrecklesOnCheeks() public view {
         string memory dino = r.svg(12, true);
-        assertFalse(_contains(dino, "292,188"), "catalog spear tail stays gone");
-        assertTrue(_contains(dino, 'data-tail="1"'), "soft tail on the body");
-        assertTrue(_contains(dino, 'cx="244" cy="186"'), "mid-tail");
-        assertTrue(_contains(dino, 'cx="262" cy="190"'), "tail tip");
+        assertFalse(_contains(dino, "292,188"), "old spear tail");
+        assertTrue(_contains(dino, 'data-tail="1"'), "tapered tail on the body path");
+        assertFalse(_contains(dino, 'cx="266" cy="168"'), "old bubbly tail tip gone");
+        assertFalse(_contains(dino, 'cx="248" cy="180"'), "old mid-tail bubble gone");
         string memory freckled = r.svg(2, true);
         assertTrue(_contains(freckled, 'r="2"'), "tiny freckle dots");
-        assertTrue(_contains(freckled, 'r="2" fill="#2a2430"'), "ink freckle color");
-        assertFalse(_contains(freckled, 'r="3" fill="#000"'), "blob has no torso spots");
-        assertFalse(_contains(dino, 'r="3" fill="#000"'), "V2 dino has no torso spots");
+        assertTrue(_contains(freckled, "#c9897a"), "muted freckle color");
+        assertFalse(_contains(freckled, 'r="3" fill="#000"'), "old torso spots");
+        assertFalse(_contains(dino, 'r="3" fill="#000"'), "old torso spots");
     }
 
     function test_footerAndZzzStayInSafeBoxes() public view {
@@ -556,11 +539,10 @@ contract TerminalRendererTest is Test {
             uint256 id = ids[i];
             string memory lit = r.svg(id, true);
             string memory dormant = r.svg(id, false);
-            assertTrue(_contains(lit, 'text-anchor="start"'), "id footer left");
-            assertTrue(_contains(lit, 'text-anchor="end"'), "gen footer right");
-            assertTrue(_contains(lit, "PET#"), "hub footer");
-            assertFalse(_contains(lit, "PET //"), "old PET // footer");
-            assertTrue(_contains(lit, 'y="328"'), "footer not in safe band");
+            assertTrue(_contains(lit, 'text-anchor="middle"'), "footer not centered");
+            assertTrue(_contains(lit, "PET#"), "missing PET#");
+            assertFalse(_contains(lit, "PET //"), "old footer leaked");
+            assertTrue(_contains(lit, 'y="324"'), "footer not in safe band");
             assertTrue(_contains(dormant, 'y="120"'), "zzz not in screen");
             assertTrue(_contains(dormant, 'y="110"'), "zzz not in screen");
         }

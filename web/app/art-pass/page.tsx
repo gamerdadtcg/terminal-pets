@@ -73,7 +73,7 @@ const COMBOS = [
     id: 49,
     src: "/art-pass/DinoGrin-id49-lit.svg",
     png: "/art-pass/DinoGrin-id49-lit.png",
-    note: "Monocle on the left-facing fill-forward Dino. Round head, snout, four legs, spikes, tail.",
+    note: "Side-profile monocle on the head. Body is one left-facing silhouette: head, neck, torso, hips, legs, tail.",
   },
   {
     name: "Bird glasses",
@@ -188,10 +188,11 @@ export default function ArtPassPage() {
           <p className="text-muted-foreground">
             Eyes, mouth, brows, and blush follow trait rolls and sit on that
             species’ face — Dino profile, Bird beak, Frog bumps, Robot visor.
-            Birds wear wire rims with a short arch. Dino Lit is the left-facing
-            fill-forward cartoon from the hub trait catalog. The handheld chrome
-            does not change from Dormant (spotted egg) to Lit. OpenSea Lit
-            metadata is the hatched pet.
+            Bird glasses are thin rims on the pupils with a short arch above
+            the eyes, not a second pair of discs. Dino Lit is one left-facing
+            creature: head, neck, torso, hips, legs, and a tapering tail, with
+            the ridge sitting on the back. The handheld still does not change
+            from Dormant to Lit. OpenSea Lit metadata is the hatched pet.
           </p>
           <p className="text-muted-foreground">
             Need every option, not a random combo? The{" "}
