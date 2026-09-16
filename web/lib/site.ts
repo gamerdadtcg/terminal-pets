@@ -4,7 +4,7 @@ export const SITE = {
   petName: "Terminal Pets",
   tagline: "Handheld pets that sleep until you Ignite them.",
     description:
-    "On-chain Tamagotchi terminals on Robinhood Chain. Mint on OpenSea. Pets mint Sealed for 24 hours: placeholder metadata, Ignite off, $TERM trading off, and 7.5% secondary royalties all to TermFund. Reveal flips metadata, Ignite, trading, and royalties to 5% Hopper / 2.5% treasury. Hopper claims stay locked 7 days after reveal while ETH accrues. Each pet comes with a $TERM Ignite allotment. Ignite splits that 1,000 $TERM 37.5% burn / 25% Hopper (as ETH) / 37.5% allotment refill, plus 0.002 ETH split 50% buy-and-burn $TERM / 50% Hopper. Team earns 0 from that ETH fee. Dial up to 3 Stock Tokens. Pulse pays Dialed Lit in Stock Tokens and undialed Lit in $TERM — typically to the TBA. Hopper stays ETH.",
+    "On-chain Tamagotchi terminals on Robinhood Chain. Free mint Friday, September 18, 2026, America/Los_Angeles (PT). Mint on OpenSea. Pets mint Sealed for 24 hours: placeholder metadata, Ignite off, $TERM trading off, and 7.5% secondary royalties all to TermFund. Reveal flips metadata, Ignite, trading, and royalties to 5% Hopper / 2.5% treasury. Hopper claims stay locked 7 days after reveal while ETH accrues. Each pet comes with a $TERM Ignite allotment. Ignite splits that 1,000 $TERM 37.5% burn / 25% Hopper (as ETH) / 37.5% allotment refill, plus 0.002 ETH split 50% buy-and-burn $TERM / 50% Hopper. Team earns 0 from that ETH fee. Dial up to 3 Stock Tokens. Pulse pays Dialed Lit in Stock Tokens and undialed Lit in $TERM — typically to the TBA. Hopper stays ETH.",
   disclaimer:
     "Dial and Pulse Stock Token rewards are promotional on-chain rewards. They are not dividends, equity, shareholder rights, or ownership of any underlying company. Holding a pet or receiving Stock Tokens confers no legal interest in those companies. Not financial or investment advice.",
   chain: "Robinhood Chain",
@@ -14,7 +14,7 @@ export const SITE = {
   teamReserve: 200,
   publicSupply: 4244,
   teamReserveUse: "airdrops, burns, giveaways, and similar",
-  mintPrice: "TBD",
+  mintPrice: "Free",
   igniteFee: "1,000 $TERM + 0.002 ETH",
   igniteFeeTerm: "1,000 $TERM",
   igniteFeeEth: "0.002 ETH",
@@ -46,7 +46,40 @@ export const SITE = {
 /** Hub / app mint-split line. Matches CollectionConfig MAX_SUPPLY / TEAM_RESERVE / PUBLIC_SUPPLY. */
 export const mintAllocation = {
   sentence: `Total supply is ${SITE.supply}. ${SITE.teamReserve} are reserved for the team for ${SITE.teamReserveUse}. Public mint is the remaining ${SITE.publicSupply}.`,
-  appHint: `${SITE.publicSupply} public / ${SITE.teamReserve} team (${SITE.teamReserveUse})`,
+  appHint: `Free mint · ${SITE.publicSupply} public / ${SITE.teamReserve} team (${SITE.teamReserveUse})`,
+} as const;
+
+/** Hub mint drop schedule. Copy only — CollectionNFT has mintOpen + mintPrice (default 0), not phase contracts. */
+export const mintSchedule = {
+  date: "Friday, September 18, 2026",
+  timezoneLabel: "PT",
+  timezoneIana: "America/Los_Angeles",
+  price: "Free",
+  perPhase: 1,
+  rule:
+    "Everyone may mint 1 in every phase that gets added or opened for them (1 per phase).",
+  phases: [
+    { time: "7:00 AM PT", name: "Team" },
+    { time: "8:00 AM PT", name: "GTD", note: "guaranteed" },
+    { time: "9:00 AM PT", name: "FCFS" },
+    { time: "10:00 AM PT", name: "Public" },
+  ],
+} as const;
+
+export function mintPhaseLine(
+  phase: (typeof mintSchedule.phases)[number],
+): string {
+  return "note" in phase && phase.note
+    ? `${phase.time} — ${phase.name} (${phase.note})`
+    : `${phase.time} — ${phase.name}`;
+}
+
+export const mintScheduleCopy = {
+  headline: `Free mint · ${mintSchedule.date} · ${mintSchedule.timezoneIana} (${mintSchedule.timezoneLabel})`,
+  when: `Free mint on ${mintSchedule.date}. Times are ${mintSchedule.timezoneIana} (${mintSchedule.timezoneLabel}).`,
+  phases: mintSchedule.phases.map(mintPhaseLine).join(" · "),
+  phasesLong: mintSchedule.phases.map(mintPhaseLine).join("; "),
+  sentence: `Free mint on ${mintSchedule.date}. Times are ${mintSchedule.timezoneIana} (${mintSchedule.timezoneLabel}): ${mintSchedule.phases.map(mintPhaseLine).join("; ")}. ${mintSchedule.rule}`,
 } as const;
 
 export const PULSE_BOOTSTRAP = [
@@ -75,7 +108,11 @@ export function publicLinks() {
 export const FAQ = [
   {
     q: "When can I mint?",
-    a: `After the contracts land on Robinhood Chain and the OpenSea collection is imported. Mint price is TBD. ${mintAllocation.sentence} Each pet mints Sealed (placeholder metadata) with a TBA and a one-time $TERM Ignite allotment. Art, Ignite, and $TERM trading unlock at reveal.`,
+    a: `${mintScheduleCopy.sentence} ${mintAllocation.sentence} After contracts land on Robinhood Chain and the OpenSea collection is imported. Each pet mints Sealed (placeholder metadata) with a TBA and a one-time $TERM Ignite allotment. Art, Ignite, and $TERM trading unlock at reveal.`,
+  },
+  {
+    q: "How many can I mint?",
+    a: `${mintSchedule.rule} Same-day schedule on ${mintSchedule.date}: ${mintScheduleCopy.phasesLong}. ${mintAllocation.sentence} Free mint — no mint price.`,
   },
   {
     q: "What is $TERM?",
