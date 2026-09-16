@@ -91,4 +91,19 @@ for (const id of expected) {
   );
 }
 
-console.log("test host ok: 25 GIF89a lit + 25 GIF89a egg + JSON HTTPS .gif images");
+const hatchDir = path.join(publicDir, "art", "hatch");
+const hatchFiles = [
+  "P01_pudd_hatch.gif",
+  "P04_puppo_hatch.gif",
+  "P08_blop_hatch.gif",
+  "P12_bolt_hatch.gif",
+  "snag_hatch.gif",
+  "anim_hatch.gif",
+];
+for (const name of hatchFiles) {
+  mustGif(path.join(hatchDir, name));
+}
+
+console.log(
+  "test host ok: 25 GIF89a lit + 25 GIF89a egg + JSON HTTPS .gif images + 6 hatch GIFs",
+);
