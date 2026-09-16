@@ -68,8 +68,10 @@ library CollectionConfig {
     address internal constant SEADROP = 0x00005EA00Ac477B1030CE78506496e8C2dE24bf5;
 
     /// @notice Robinhood Chain Stock Token Dial pool (PulseDistributor allowlist).
-    /// Symbols (hub order): HOOD, AAPL, MSFT, GOOGL, AMZN, META, NVDA, TSLA.
-    /// Mainnet ERC-20s are **not** hardcoded — owner `setStockToken` when known.
+    /// Fixed 8-slot array: slot 0 is unused (no HOOD token in the official
+    /// Robinhood Chain registry). Live pool is slots 1–7: AAPL, MSFT, GOOGL,
+    /// AMZN, META, NVDA, TSLA. Owner `setStockToken` when known; leave slot 0
+    /// as `address(0)`. Do not invent a HOOD ERC-20.
     uint8 internal constant STOCK_POOL_SIZE = 8;
     uint8 internal constant MAX_DIAL_LEGS = 4;
 

@@ -192,7 +192,7 @@ Do **not** `reveal()` until after a Studio mint (or until you are done configuri
 5. Drop setup → Settings:
    - Limited edition **4444** on-chain (do not ask Studio to resize). Public SeaDrop cap is **4244**.
    - Free mint (`0`).
-   - Stages **1 per wallet** (Team / GTD / FCFS allowlists if you want them, then **Public** last). A Studio “Team” stage spends **public** supply — the 200 `teamMint` reserve is on-chain only.
+   - Stages **1 per wallet** (GTD / FCFS allowlists if you want them, then **Public** last). Do not add a Friday 7am Team stage for the 200 reserve — that is owner `teamMint` Thursday 8:00 PM PT. A Studio “Team” stage spends **public** supply.
    - Creator payout for **primary** Drop ETH → Hopper (or the address ops chooses). Fee recipient = OpenSea’s Drop fee wallet as Studio instructs.
 6. Publish / enable the Public stage.
 

@@ -1,3 +1,5 @@
+import { DIAL_COPY } from "./dial";
+
 export const SITE = {
   name: "Terminal Pets",
   symbol: "TERM",
@@ -58,9 +60,15 @@ export const mintSchedule = {
   price: "Free",
   perPhase: 1,
   rule:
-    "1 per phase window (Team / GTD / FCFS / Public). On-chain the hub calls CollectionNFT.mint / mintTo while mintOpen — there are no separate phase contracts.",
+    "1 per public phase window (GTD / FCFS / Public). On-chain the hub calls CollectionNFT.mint / mintTo while mintOpen — there are no separate phase contracts. Public mintOpen stays closed until Friday phases.",
+  teamAllocation: {
+    date: "Thursday, September 17, 2026",
+    shortDate: "Thu Sep 17",
+    time: "8:00 PM PT",
+    name: "Team allocation",
+    note: "teamMint 200 to the team wallet. Owner-only. Not a public mint.",
+  },
   phases: [
-    { time: "7:00 AM PT", name: "Team" },
     { time: "8:00 AM PT", name: "GTD", note: "guaranteed" },
     { time: "9:00 AM PT", name: "FCFS" },
     { time: "10:00 AM PT", name: "Public" },
@@ -80,7 +88,8 @@ export const mintScheduleCopy = {
   when: `Free mint on ${mintSchedule.date}. Times are ${mintSchedule.timezoneIana} (${mintSchedule.timezoneLabel}).`,
   phases: mintSchedule.phases.map(mintPhaseLine).join(" · "),
   phasesLong: mintSchedule.phases.map(mintPhaseLine).join("; "),
-  sentence: `Free mint on ${mintSchedule.date}. Times are ${mintSchedule.timezoneIana} (${mintSchedule.timezoneLabel}): ${mintSchedule.phases.map(mintPhaseLine).join("; ")}. ${mintSchedule.rule}`,
+  teamLine: `${mintSchedule.teamAllocation.date}, ${mintSchedule.teamAllocation.time} — ${mintSchedule.teamAllocation.name} only (${mintSchedule.teamAllocation.note})`,
+  sentence: `${mintSchedule.teamAllocation.date}, ${mintSchedule.teamAllocation.time} — Team allocation only (teamMint 200 to the team wallet). Not a public mint. Public mintOpen stays closed until Friday. Free mint on ${mintSchedule.date}. Times are ${mintSchedule.timezoneIana} (${mintSchedule.timezoneLabel}): ${mintSchedule.phases.map(mintPhaseLine).join("; ")}. ${mintSchedule.rule}`,
 } as const;
 
 /** Anti-snipe copy. tokenURI is one hidden.json until CollectionNFT.reveal(). */
@@ -125,7 +134,7 @@ export const FAQ = [
   },
   {
     q: "How many can I mint?",
-    a: `${mintSchedule.rule} Same-day schedule on ${mintSchedule.date}: ${mintScheduleCopy.phasesLong}. ${mintAllocation.sentence} Free mint — no mint price.`,
+    a: `${mintSchedule.rule} Public phases on ${mintSchedule.date}: ${mintScheduleCopy.phasesLong}. Thursday team allocation is owner-only teamMint, not a collector mint. ${mintAllocation.sentence} Free mint — no mint price.`,
   },
   {
     q: "What is $TERM?",
@@ -141,11 +150,11 @@ export const FAQ = [
   },
   {
     q: "What is Dial?",
-    a: "Ignite assigns 1–4 Robinhood Chain Stock Tokens from a fixed pool (HOOD, AAPL, MSFT, GOOGL, AMZN, META, NVDA, TSLA) by shell class: ALPHA Common → 1, BETA Rare → 2, DELTA Epic → 3, OMEGA Legendary → 4. Holders do not pick. Equal weights. Pulse swaps that Lit share into those tokens (to the TBA, or the owner if TBA delivery is off). If a Dial has no filled token addresses, that share buys $TERM — not ETH.",
+    a: `Ignite assigns 1–4 Robinhood Chain Stock Tokens from a fixed pool (${DIAL_COPY.poolLine}) by shell class: ALPHA Common → 1, BETA Rare → 2, DELTA Epic → 3, OMEGA Legendary → 4. Holders do not pick. Equal weights. Pulse swaps that Lit share into those tokens (to the TBA, or the owner if TBA delivery is off). If a Dial has no filled token addresses, that share buys $TERM — not ETH.`,
   },
   {
     q: "What are Stock Tokens here?",
-    a: "Robinhood Chain Stock Tokens Pulse may buy with Hopper ETH according to each Lit pet’s assigned Dial (HOOD, AAPL, MSFT, GOOGL, AMZN, META, NVDA, TSLA). They credit the pet’s TBA (or the owner wallet if TBA delivery is off). They travel with the NFT; the owner can withdraw. They are not shares of those companies.",
+    a: `Robinhood Chain Stock Tokens Pulse may buy with Hopper ETH according to each Lit pet’s assigned Dial (${DIAL_COPY.poolLine}). They credit the pet’s TBA (or the owner wallet if TBA delivery is off). They travel with the NFT; the owner can withdraw. They are not shares of those companies.`,
   },
   {
     q: "Do I own the stock company?",

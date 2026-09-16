@@ -190,8 +190,8 @@ contract Deploy is Script {
         if (p.pulseRouter != address(0)) pulse.setRouter(p.pulseRouter);
         ignite.setPulseDistributor(address(pulse));
         hopper.lockDistributor(address(pulse));
-        console.log("Dial stock pool: HOOD AAPL MSFT GOOGL AMZN META NVDA TSLA - owner setStockToken when known");
-        console.log("Mainnet stock addresses left 0; do not invent. Testnet AMZN/TSLA samples are in docs/DIAL.md");
+        console.log("Dial live pool: AAPL MSFT GOOGL AMZN META NVDA TSLA - slot 0 unused (no HOOD)");
+        console.log("Owner setStockToken slots 1-7 when known; leave slot 0 address(0). See docs/DIAL.md");
         if (p.mintOpen) nft.setMintOpen(true);
 
         console.log("Hopper", address(hopper));

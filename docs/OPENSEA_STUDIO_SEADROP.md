@@ -17,7 +17,7 @@ Studio’s wizard is for collections whose whole product is “upload metadata +
 | Royalties | ERC-2981 → RoyaltySplitter (pre-reveal TermFund / post-reveal Hopper + treasury) |
 | Metadata refresh | ERC-4906 |
 
-OpenSea’s SeaDrop 1.0 contract is allowed to call `mintSeaDrop` on **our** token. Stages (Team / GTD / FCFS / Public) live on SeaDrop and are configured in Studio. They all mint the same collection.
+OpenSea’s SeaDrop 1.0 contract is allowed to call `mintSeaDrop` on **our** token. If Studio is ever used, public stages are GTD / FCFS / Public. They all mint the same collection. **Hub mint is primary.** The 200 team reserve is owner `teamMint` on **Thursday, September 17, 2026, 8:00 PM PT** — not a Studio Team stage and not a Friday 7am public phase.
 
 ## SeaDrop 1.0 address (confirmed)
 
@@ -69,16 +69,15 @@ Inheriting `ERC721SeaDrop` would pull ERC721A, OpenZeppelin 4.x, and solc `0.8.1
 
 Configure **in Studio Drop settings**, not in Solidity:
 
-| Stage | Typical allowlist | Wallet limit |
-| --- | --- | --- |
-| Team | Merkle / allowlist | 1 |
-| GTD | Merkle / allowlist | 1 |
-| FCFS | Merkle / allowlist | 1 |
-| Public | Public drop (required last stage) | 1 |
+| Stage | Typical allowlist | Wallet limit | When (PT) |
+| --- | --- | --- | --- |
+| GTD | Merkle / allowlist | 1 | Friday Sep 18, 8:00 AM |
+| FCFS | Merkle / allowlist | 1 | Friday Sep 18, 9:00 AM |
+| Public | Public drop (required last stage) | 1 | Friday Sep 18, 10:00 AM |
 
 Price `0` for a free mint. Studio writes `PublicDrop` / allowlists onto SeaDrop by sending txs from the collection owner through our `update*` functions. OpenSea’s Drop primary fee (currently 10% on Studio drops) is SeaDrop `feeBps` + allowed fee recipient — set creator payout to **Hopper** if primary ETH should still fuel Pulse. Secondary royalties stay on the **RoyaltySplitter** (7.5% ERC-2981).
 
-The 200 `teamMint` reserve is **not** a Studio Team stage. Mint that on-chain to treasury (or a team wallet) with `teamMint`. A Studio “Team” allowlist would spend **public** 4244 supply.
+The 200 `teamMint` reserve is **not** a Studio Team stage and is **not** a Friday 7am collector phase. Mint that on-chain **Thursday Sep 17 2026, 8:00 PM PT** to the team wallet with `teamMint`. A Studio “Team” allowlist would spend **public** 4244 supply. Public `mintOpen` stays closed until Friday phases.
 
 ## Metadata — keep our URIs
 
@@ -97,11 +96,11 @@ Trailing `/` → `{id}.json`. Ignite still flips `tokenURI` Sealed → Dormant �
 ## Procedure (no wizard)
 
 1. **Deploy our stack** with Foundry (`script/Deploy.s.sol`) when the owner says go. Constructor `allowedSeaDrop` should include canonical SeaDrop (or `SEADROP_ADDRESS`). Confirm `isAllowedSeaDrop`.
-2. `teamMint(treasury, 200)` (or split across team wallets — mainnet team allocation is in [`MAINNET_PREP.md`](MAINNET_PREP.md)). Optional `setMetadataURIs`. Do **not** `reveal()` until the mint window policy says so.
+2. `teamMint(team wallet, 200)` **Thursday Sep 17 2026, 8:00 PM PT** (mainnet team allocation is in [`MAINNET_PREP.md`](MAINNET_PREP.md)). Owner-only; not a public mint. Optional `setMetadataURIs`. Do **not** `setMintOpen(true)` until Friday. Do **not** `reveal()` until the mint window policy says so.
 3. Verify CollectionNFT on the chain explorer.
 4. OpenSea Studio: **import existing contract** / add the **already-deployed** CollectionNFT address. Never “Drop a collection → deploy contract.”
 5. Collection earnings: **7.5%** to the **RoyaltySplitter**. Enable ERC-2981 if offered.
-6. Drop setup → Settings: limited edition **4444** on-chain (do not change max supply). Public mintable via SeaDrop is **4244**. Add Team / GTD / FCFS allowlists, then Public, **1 per wallet per stage**, free (`0`).
+6. Drop setup → Settings: limited edition **4444** on-chain (do not change max supply). Public mintable via SeaDrop is **4244**. If Studio is used: GTD / FCFS / Public, **1 per wallet per stage**, free (`0`). Do not add a Friday 7am Team stage for the 200 reserve.
 7. Creator payout for **primary** Drop proceeds → Hopper (or the address ops chooses). Fee recipient = OpenSea’s Drop fee wallet as Studio instructs.
 8. Test mint on Studio’s preview/test path if offered. Then `reveal()` (owner anytime, or anyone after 24h). Hopper payouts unlock **7 days after reveal**. Ignite fee stays **0.002 ETH**.
 

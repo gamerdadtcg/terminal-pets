@@ -18,6 +18,7 @@ import {
   zeroAddress,
 } from "@/lib/contracts";
 import { explorerAddress, explorerTx, formatEth } from "@/lib/format";
+import { DIAL_COPY } from "@/lib/dial";
 import { SITE, mintAllocation, mintScheduleCopy } from "@/lib/site";
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
@@ -410,9 +411,9 @@ NEXT_PUBLIC_CHAIN_ID=4663`}
             <div>
               <CardTitle>Dial</CardTitle>
               <p className="text-sm text-muted-foreground">
-                Ignite assigns 1–4 Robinhood Chain Stock Tokens (HOOD, AAPL,
-                MSFT, GOOGL, AMZN, META, NVDA, TSLA) by shell class. Holders
-                do not pick. Unfilled addresses buy $TERM.
+                Ignite assigns 1–4 Robinhood Chain Stock Tokens (
+                {DIAL_COPY.poolLine}) by shell class. Holders do not pick.
+                Unfilled addresses buy $TERM.
               </p>
             </div>
             <ComingSoon>Deploying soon</ComingSoon>
