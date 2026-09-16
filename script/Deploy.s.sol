@@ -151,7 +151,10 @@ contract Deploy is Script {
         pulse.setTbaConfig(tbaRegistry, tbaImplementation, p.tbaSalt);
         pulse.setTerm(address(term));
         if (p.pulseRouter != address(0)) pulse.setRouter(p.pulseRouter);
+        ignite.setPulseDistributor(address(pulse));
         hopper.lockDistributor(address(pulse));
+        console.log("Dial stock pool: HOOD AAPL MSFT GOOGL AMZN META NVDA TSLA - owner setStockToken when known");
+        console.log("Mainnet stock addresses left 0; do not invent. Testnet AMZN/TSLA samples are in docs/DIAL.md");
         if (p.mintOpen) nft.setMintOpen(true);
 
         console.log("Hopper", address(hopper));

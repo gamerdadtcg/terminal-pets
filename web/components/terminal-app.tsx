@@ -267,7 +267,8 @@ export function TerminalApp() {
             swap router is set), and, once the canonical pool is live, a 1.5%
             TermMarket skim.
             Pulse follows an escalating ETH ladder. Lit earn pro-rata. Dormant
-            earn nothing. Dial picker is not live here.
+            earn nothing. Dial is assigned at Ignite (1–4 stocks by shell class);
+            this screen does not let holders pick.
           </p>
         </section>
 
@@ -294,8 +295,8 @@ NEXT_PUBLIC_CHAIN_ID=4663`}
               <p>
                 The UI stays readable without a deployment: connect a wallet,
                 then Ignite (allotment $TERM + 0.002 ETH) / Pulse once
-                addresses are set. Dial is in the contracts and not wired
-                here — no fake picker against empty addresses.
+                addresses are set. Dial assigns on Ignite in the contracts —
+                this screen has no holder picker.
               </p>
             </CardContent>
           </Card>
@@ -406,9 +407,9 @@ NEXT_PUBLIC_CHAIN_ID=4663`}
             <div>
               <CardTitle>Dial</CardTitle>
               <p className="text-sm text-muted-foreground">
-                Lit holders will aim Pulse at up to 3 Robinhood Chain Stock
-                Tokens. No Dial on file buys $TERM. This picker is not live —
-                no contract address yet.
+                Ignite assigns 1–4 Robinhood Chain Stock Tokens (HOOD, AAPL,
+                MSFT, GOOGL, AMZN, META, NVDA, TSLA) by shell class. Holders
+                do not pick. Unfilled addresses buy $TERM.
               </p>
             </div>
             <ComingSoon>Deploying soon</ComingSoon>

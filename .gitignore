@@ -11,9 +11,10 @@ out/
 /broadcast/*/31337/
 /broadcast/**/dry-run/
 
-# Docs (Foundry default). Keep the live art lock checked in.
-docs/
+# Docs (Foundry default). Keep the live art lock and Dial notes checked in.
+docs/*
 !docs/MAIN_ART_LOCK.md
+!docs/DIAL.md
 
 # Dotenv file
 .env

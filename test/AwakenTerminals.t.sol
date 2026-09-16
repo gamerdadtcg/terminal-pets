@@ -85,6 +85,7 @@ contract AwakenTerminalsTest is Test {
         MockPulseRouter pulseTermRouter = new MockPulseRouter(1);
         term.mint(address(pulseTermRouter), 10_000 ether);
         pulse.setRouter(address(pulseTermRouter));
+        ignite.setPulseDistributor(address(pulse));
         hopper.lockDistributor(address(pulse));
         vm.stopPrank();
 
@@ -863,56 +864,54 @@ contract AwakenTerminalsTest is Test {
         assertEq(term.balanceOf(alice), beforeTerm + pendingTotal);
     }
 
-    function test_dial_onlyLitOwner_weights100() public {
+    function test_dial_assignsOnIgnite_noHolderPick() public {
         vm.prank(alice);
         nft.mint(1);
 
-        address[] memory tokens = new address[](1);
-        tokens[0] = address(0xBEEF);
-        uint16[] memory w = new uint16[](1);
-        w[0] = 10_000;
-
         vm.prank(alice);
         vm.expectRevert(PulseDistributor.NotLit.selector);
-        pulse.setDial(1, tokens, w);
+        pulse.assignDial(1);
 
+        PulseDistributor.Dial memory preview = pulse.previewDial(1);
         vm.prank(alice);
         ignite.ignite{value: ETH_FEE}(1);
 
-        vm.prank(bob);
-        vm.expectRevert(PulseDistributor.NotTokenOwner.selector);
-        pulse.setDial(1, tokens, w);
-
-        w[0] = 9_999;
-        vm.prank(alice);
-        vm.expectRevert(PulseDistributor.BadDial.selector);
-        pulse.setDial(1, tokens, w);
-
-        w[0] = 10_000;
-        vm.prank(alice);
-        pulse.setDial(1, tokens, w);
         PulseDistributor.Dial memory d = pulse.getDial(1);
-        assertEq(d.token0, address(0xBEEF));
-        assertEq(d.weight0, 10_000);
+        assertEq(d.nLegs, preview.nLegs);
+        assertEq(d.shellClass, preview.shellClass);
+        assertEq(d.slot0, preview.slot0);
+        // Empty allowlist: slots assigned, addresses still zero until owner fills.
+        assertEq(d.token0, address(0));
+        assertGt(d.weight0, 0);
     }
 
     function test_pulse_routerUnset_dialedPaysEth_undialedReverts() public {
         vm.prank(owner);
         pulse.setRouter(address(0));
 
+        MockStockToken stock = new MockStockToken("Stock A", "STKA");
+        address[8] memory pool;
+        pool[0] = address(stock);
+        for (uint8 i = 1; i < 8; ++i) {
+            pool[i] = address(uint160(uint256(0xBEEF00) + i));
+        }
+        vm.prank(owner);
+        pulse.setStockTokens(pool);
+
+        vm.prank(owner);
+        ignite.setPulseDistributor(address(0));
+
         vm.prank(alice);
         nft.mint(2);
         vm.prank(alice);
-        ignite.ignite{value: ETH_FEE}(1);
-        vm.prank(alice);
         ignite.ignite{value: ETH_FEE}(2);
 
-        address[] memory tokens = new address[](1);
-        tokens[0] = address(0xBEEF);
-        uint16[] memory w = new uint16[](1);
-        w[0] = 10_000;
+        vm.prank(owner);
+        ignite.setPulseDistributor(address(pulse));
+        vm.prank(owner);
+        pulse.setShellClassOverride(1, 1);
         vm.prank(alice);
-        pulse.setDial(1, tokens, w);
+        ignite.ignite{value: ETH_FEE}(1);
 
         (bool ok,) = address(hopper).call{value: THRESHOLD}("");
         assertTrue(ok);
@@ -937,19 +936,35 @@ contract AwakenTerminalsTest is Test {
         vm.prank(owner);
         pulse.setRouter(address(mockRouter));
 
+        address[8] memory pool;
+        pool[0] = address(stock);
+        vm.prank(owner);
+        pulse.setStockTokens(pool);
+
+        vm.prank(owner);
+        ignite.setPulseDistributor(address(0));
         vm.prank(alice);
         nft.mint(2);
         vm.prank(alice);
-        ignite.ignite{value: ETH_FEE}(1);
-        vm.prank(alice);
         ignite.ignite{value: ETH_FEE}(2);
 
-        address[] memory tokens = new address[](1);
-        tokens[0] = address(stock);
-        uint16[] memory w = new uint16[](1);
-        w[0] = 10_000;
+        vm.prank(owner);
+        ignite.setPulseDistributor(address(pulse));
+        vm.prank(owner);
+        pulse.setShellClassOverride(1, 1);
         vm.prank(alice);
-        pulse.setDial(1, tokens, w);
+        ignite.ignite{value: ETH_FEE}(1);
+
+        // ALPHA 1 stock — only slot 0 is guaranteed in-pool if pick lands on empty
+        // slots. Fill the whole allowlist with the same mock? duplicates revert.
+        // Re-fill remaining slots with extra mocks so any ALPHA slot resolves.
+        MockStockToken[7] memory extra;
+        vm.startPrank(owner);
+        for (uint8 i = 1; i < 8; ++i) {
+            extra[i - 1] = new MockStockToken("S", "S");
+            pulse.setStockToken(i, address(extra[i - 1]));
+        }
+        vm.stopPrank();
 
         uint256 hopperBefore = hopper.available();
         (bool ok,) = address(hopper).call{value: THRESHOLD}("");
@@ -960,16 +975,18 @@ contract AwakenTerminalsTest is Test {
         uint256 share = pulse.pending(1);
         uint256 aliceEth = alice.balance;
         uint256 aliceTerm = term.balanceOf(alice);
+        PulseDistributor.Dial memory d = pulse.getDial(1);
         vm.prank(alice);
         pulse.claim(1);
         assertEq(alice.balance, aliceEth);
-        assertEq(stock.balanceOf(alice), share * 2);
         assertEq(term.balanceOf(alice), aliceTerm);
+        address paidStock = pulse.stockPool(d.slot0);
+        assertEq(MockStockToken(paidStock).balanceOf(alice), share * 2);
 
         vm.prank(alice);
         pulse.claim(2);
         assertEq(alice.balance, aliceEth);
-        assertEq(stock.balanceOf(alice), share * 2);
+        assertEq(MockStockToken(paidStock).balanceOf(alice), share * 2);
         assertEq(term.balanceOf(alice), aliceTerm + share * 2);
     }
 }

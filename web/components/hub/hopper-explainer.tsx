@@ -80,8 +80,8 @@ export function HopperExplainer({ compact = false }: { compact?: boolean }) {
             Anyone can Pulse when{" "}
             <span className="text-foreground">available() ≥ current rung</span>
             . Permissionless. Snapshot the Lit set, read each Dial, swap that
-            share of Hopper ETH into Stock Tokens (Dial) or $TERM (no Dial).
-            The Hopper pot itself stays ETH.
+            share of Hopper ETH into assigned Stock Tokens (Dial) or $TERM
+            (unfilled Dial). The Hopper pot itself stays ETH.
           </p>
           <div className="grid gap-4 sm:grid-cols-2">
             <div>

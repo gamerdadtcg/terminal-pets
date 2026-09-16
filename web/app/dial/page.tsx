@@ -9,7 +9,7 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: `Dial · ${SITE.name}`,
   description:
-    "Lit holders Dial up to 3 Robinhood Chain Stock Tokens. Pulse converts Hopper ETH per Dial. No Dial buys $TERM.",
+    "Ignite assigns 1–4 Robinhood Chain Stock Tokens by shell class (ALPHA–OMEGA) from HOOD, AAPL, MSFT, GOOGL, AMZN, META, NVDA, TSLA. Pulse converts Hopper ETH per Dial.",
 };
 
 export default function DialPage() {
@@ -26,7 +26,8 @@ export default function DialPage() {
                 DIAL
               </p>
               <p className="mt-2 text-sm text-muted-foreground">
-                Dial is Lit-only. Awake pet GIF after Ignite.
+                Eight Stock Tokens. ALPHA 1 … OMEGA 4. Assigned at Ignite —
+                holders do not pick. Awake pet GIF after Ignite.
               </p>
             </div>
             <Button className="w-full" asChild>

@@ -5,23 +5,31 @@ import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import {IERC721} from "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import {CollectionConfig} from "./CollectionConfig.sol";
+import {DialMath} from "./DialMath.sol";
 import {IHopper} from "./interfaces/IHopper.sol";
 import {IIgniteModule} from "./interfaces/IIgniteModule.sol";
+import {IPulseDial} from "./interfaces/IPulseDial.sol";
 import {IPulseRouter} from "./interfaces/IPulseRouter.sol";
 import {IERC6551Registry} from "./interfaces/IERC6551Registry.sol";
 
 /// @title PulseDistributor
 /// @notice When the Hopper (ETH) is at or above the current ladder threshold,
-/// anyone can Pulse. Snapshots Lit membership and each Dial. Dialed Lit claims
-/// swap that share to Stock Tokens. Undialed Lit buy `$TERM` via the same
-/// router and credit the TBA (or owner). Hopper itself stays ETH. Dormant earn 0.
+/// anyone can Pulse. Snapshots Lit membership and each Dial. Dial is assigned
+/// automatically at Ignite: 1–4 Robinhood Chain Stock Tokens from an 8-token
+/// owner allowlist, by shell class (ALPHA 1 / BETA 2 / DELTA 3 / OMEGA 4).
+/// Holders do not pick. Dialed Lit claims swap that share to those stocks.
+/// Undialed Lit (no assignment, or assigned slots still address(0)) buy `$TERM`
+/// via the same router and credit the TBA (or owner). Hopper itself stays ETH.
+/// Dormant earn 0.
 ///
 /// Pulse ladder (ETH in Hopper `available()`):
 ///   Bootstrap (first time only): 0.1, 0.2, … 1.0 (step 0.1).
 ///   After a successful Pulse at 1.0 during bootstrap: 0.5, 0.6, … 1.0, then
 ///   back to 0.5 forever. Never returns to 0.1.
-contract PulseDistributor is Ownable, ReentrancyGuard {
+contract PulseDistributor is Ownable, ReentrancyGuard, IPulseDial {
     uint16 public constant DIAL_BPS = 10_000;
+    uint8 public constant STOCK_POOL_SIZE = 8;
+    uint8 public constant MAX_DIAL_LEGS = 4;
     uint8 public constant BOOTSTRAP_LAST_INDEX = 9; // 0.1 + 9*0.1 = 1.0
     uint8 public constant CYCLE_LAST_INDEX = 5; // 0.5 + 5*0.1 = 1.0
 
@@ -54,17 +62,37 @@ contract PulseDistributor is Ownable, ReentrancyGuard {
         bool routed;
     }
 
-    /// @dev Up to 3 Stock Token legs. Empty / zero weights = buy `$TERM` instead.
+    /// @dev Up to 4 Stock Token legs. Empty / zero-address legs at snapshot → `$TERM`.
     struct Dial {
         address token0;
         address token1;
         address token2;
+        address token3;
         uint16 weight0;
         uint16 weight1;
         uint16 weight2;
+        uint16 weight3;
+        uint8 slot0;
+        uint8 slot1;
+        uint8 slot2;
+        uint8 slot3;
+        uint8 nLegs;
+        uint8 shellClass;
     }
 
-    mapping(uint256 tokenId => Dial) public dials;
+    /// @notice Allowlisted Robinhood Chain Stock Tokens. Index order is hub order:
+    /// HOOD, AAPL, MSFT, GOOGL, AMZN, META, NVDA, TSLA. Owner fills real ERC-20
+    /// addresses when known. Unset slots stay `address(0)` — do not invent mainnet
+    /// addresses. Optional Robinhood Chain **testnet** samples (not defaults):
+    /// AMZN `0x5884aD2f920c162CFBbACc88C9C51AA75eC09E02`,
+    /// TSLA `0xC9f9c86933092BbbfFF3CCb4b105A4A94bf3Bd4E`
+    /// (https://docs.robinhood.com/chain/contracts/).
+    address[8] public stockPool;
+
+    /// @notice Optional per-token class (1=ALPHA … 4=OMEGA). `0` → keccak derivation.
+    mapping(uint256 tokenId => uint8) public shellClassOverride;
+
+    mapping(uint256 tokenId => Dial) internal _dials;
     mapping(uint256 epochId => EpochMeta) public epochs;
     mapping(uint256 epochId => mapping(uint256 word => uint256)) public epochBitmap;
     mapping(uint256 epochId => mapping(uint256 word => uint256)) public claimedBitmap;
@@ -76,11 +104,13 @@ contract PulseDistributor is Ownable, ReentrancyGuard {
     error DustHopper();
     error NothingToClaim();
     error TbaNotConfigured();
-    error NotTokenOwner();
     error NotLit();
     error BadDial();
     error SwapFailed();
     error TermRouterRequired();
+    error BadStockSlot();
+    error DuplicateStock();
+    error BadShellClass();
 
     event PulseThresholdUpdated(uint256 threshold);
     event LadderAdvanced(bool bootstrapComplete, uint8 ladderIndex, uint256 nextThreshold);
@@ -88,10 +118,10 @@ contract PulseDistributor is Ownable, ReentrancyGuard {
     event RouterUpdated(address indexed router);
     event TermUpdated(address indexed term);
     event TbaConfigUpdated(address registry, address implementation, bytes32 salt);
-    event DialSet(uint256 indexed tokenId, address indexed owner);
-    event DialCleared(uint256 indexed tokenId);
+    event StockTokenSet(uint8 indexed slot, address indexed token);
+    event ShellClassOverrideSet(uint256 indexed tokenId, uint8 shellClass);
+    event DialAssigned(uint256 indexed tokenId, uint8 shellClass, uint8 nLegs);
     event Pulsed(uint256 indexed epochId, uint256 amount, uint256 share, uint256 litCount, address indexed caller);
-
     event Claimed(uint256 indexed tokenId, uint256 indexed epochId, address indexed to, uint256 ethAmount);
 
     constructor(address hopper_, address collection_, address ignite_, uint256 maxSupply_, address initialOwner)
@@ -132,6 +162,51 @@ contract PulseDistributor is Ownable, ReentrancyGuard {
         emit TbaConfigUpdated(registry, implementation, salt);
     }
 
+    /// @notice Set one allowlisted Stock Token. `token` may be `address(0)` (placeholder).
+    function setStockToken(uint8 index, address token) external onlyOwner {
+        if (index >= STOCK_POOL_SIZE) revert BadStockSlot();
+        if (token != address(0)) {
+            for (uint8 i; i < STOCK_POOL_SIZE; ++i) {
+                if (i != index && stockPool[i] == token) revert DuplicateStock();
+            }
+        }
+        stockPool[index] = token;
+        emit StockTokenSet(index, token);
+    }
+
+    /// @notice Replace the full 8-token allowlist. Zero addresses are placeholders.
+    function setStockTokens(address[8] calldata tokens) external onlyOwner {
+        for (uint8 i; i < STOCK_POOL_SIZE; ++i) {
+            if (tokens[i] != address(0)) {
+                for (uint8 j; j < i; ++j) {
+                    if (tokens[j] == tokens[i]) revert DuplicateStock();
+                }
+            }
+            stockPool[i] = tokens[i];
+            emit StockTokenSet(i, tokens[i]);
+        }
+    }
+
+    /// @notice Pin generative-pack shell class so Dial count matches the PFP.
+    /// `0` clears the override (keccak derivation). Call before Ignite.
+    function setShellClassOverride(uint256 tokenId, uint8 shellClass) external onlyOwner {
+        if (shellClass > DialMath.OMEGA) revert BadShellClass();
+        collection.ownerOf(tokenId);
+        shellClassOverride[tokenId] = shellClass;
+        emit ShellClassOverrideSet(tokenId, shellClass);
+    }
+
+    function setShellClassOverrides(uint256[] calldata tokenIds, uint8[] calldata classes) external onlyOwner {
+        if (tokenIds.length != classes.length) revert BadDial();
+        for (uint256 i; i < tokenIds.length; ++i) {
+            uint8 shellClass = classes[i];
+            if (shellClass > DialMath.OMEGA) revert BadShellClass();
+            collection.ownerOf(tokenIds[i]);
+            shellClassOverride[tokenIds[i]] = shellClass;
+            emit ShellClassOverrideSet(tokenIds[i], shellClass);
+        }
+    }
+
     /// @notice Current Hopper `available()` required to Pulse.
     function pulseThreshold() public view returns (uint256) {
         if (!bootstrapComplete) {
@@ -142,45 +217,32 @@ contract PulseDistributor is Ownable, ReentrancyGuard {
         return CollectionConfig.PULSE_CYCLE_START_WEI + uint256(ladderIndex) * CollectionConfig.PULSE_LADDER_STEP_WEI;
     }
 
-    /// @notice Lit owner: up to 3 Stock Token addresses, weights in bps summing to 10_000 (100%).
-    function setDial(uint256 tokenId, address[] calldata tokens, uint16[] calldata weightsBps) external {
-        if (collection.ownerOf(tokenId) != msg.sender) revert NotTokenOwner();
-        if (!ignite.isLit(tokenId)) revert NotLit();
-        uint256 n = tokens.length;
-        if (n == 0 || n > 3 || n != weightsBps.length) revert BadDial();
-
-        uint256 sum;
-        Dial memory d;
-        for (uint256 i; i < n; ++i) {
-            if (tokens[i] == address(0) || weightsBps[i] == 0) revert BadDial();
-            for (uint256 j; j < i; ++j) {
-                if (tokens[j] == tokens[i]) revert BadDial();
-            }
-            sum += weightsBps[i];
-            if (i == 0) {
-                d.token0 = tokens[i];
-                d.weight0 = weightsBps[i];
-            } else if (i == 1) {
-                d.token1 = tokens[i];
-                d.weight1 = weightsBps[i];
-            } else {
-                d.token2 = tokens[i];
-                d.weight2 = weightsBps[i];
-            }
-        }
-        if (sum != DIAL_BPS) revert BadDial();
-        dials[tokenId] = d;
-        emit DialSet(tokenId, msg.sender);
+    /// @notice Shell class used for Dial: override if set, else keccak(tokenId + salt).
+    function shellClassOf(uint256 tokenId) public view returns (uint8) {
+        uint8 over = shellClassOverride[tokenId];
+        if (over != 0) return over;
+        return DialMath.deriveShellClass(tokenId);
     }
 
-    function clearDial(uint256 tokenId) external {
-        if (collection.ownerOf(tokenId) != msg.sender) revert NotTokenOwner();
-        delete dials[tokenId];
-        emit DialCleared(tokenId);
+    /// @notice Holder picker removed. Dial is computed from tokenId + shell class.
+    function previewDial(uint256 tokenId) public view returns (Dial memory) {
+        return _computeDial(tokenId);
     }
 
     function getDial(uint256 tokenId) external view returns (Dial memory) {
-        return dials[tokenId];
+        return _dials[tokenId];
+    }
+
+    /// @notice Assign Dial once the pet is Lit. IgniteModule calls this; anyone
+    /// may backfill a Lit token that missed the hook. Outcome is deterministic —
+    /// callers cannot choose stocks.
+    function assignDial(uint256 tokenId) public {
+        if (!ignite.isLit(tokenId)) revert NotLit();
+        if (_dials[tokenId].nLegs != 0) return;
+        collection.ownerOf(tokenId);
+        Dial memory d = _computeDial(tokenId);
+        _dials[tokenId] = d;
+        emit DialAssigned(tokenId, d.shellClass, d.nLegs);
     }
 
     function canPulse() public view returns (bool) {
@@ -228,8 +290,8 @@ contract PulseDistributor is Ownable, ReentrancyGuard {
                 if ((bits & (1 << b)) == 0) continue;
                 uint256 tokenId = (w << 8) | b;
                 if (tokenId == 0 || tokenId > maxSupply) continue;
-                Dial memory d = dials[tokenId];
-                if (d.weight0 != 0) {
+                Dial memory d = _resolvedDial(_dials[tokenId]);
+                if (_hasResolvedLeg(d)) {
                     epochDial[id][tokenId] = d;
                 }
             }
@@ -274,6 +336,42 @@ contract PulseDistributor is Ownable, ReentrancyGuard {
         return tbaRegistry.account(tbaImplementation, tbaSalt, block.chainid, address(collection), tokenId);
     }
 
+    function _computeDial(uint256 tokenId) internal view returns (Dial memory d) {
+        uint8 class_ = shellClassOf(tokenId);
+        uint8 n = DialMath.legCount(class_);
+        uint8[4] memory slots = DialMath.pickSlots(tokenId, n);
+        uint16[4] memory weights = DialMath.splitWeights(n);
+        d.nLegs = n;
+        d.shellClass = class_;
+        d.slot0 = slots[0];
+        d.slot1 = n > 1 ? slots[1] : 0;
+        d.slot2 = n > 2 ? slots[2] : 0;
+        d.slot3 = n > 3 ? slots[3] : 0;
+        d.weight0 = weights[0];
+        d.weight1 = n > 1 ? weights[1] : 0;
+        d.weight2 = n > 2 ? weights[2] : 0;
+        d.weight3 = n > 3 ? weights[3] : 0;
+        d.token0 = stockPool[slots[0]];
+        d.token1 = n > 1 ? stockPool[slots[1]] : address(0);
+        d.token2 = n > 2 ? stockPool[slots[2]] : address(0);
+        d.token3 = n > 3 ? stockPool[slots[3]] : address(0);
+    }
+
+    /// @dev Re-resolve allowlist addresses from frozen slots (owner may fill tokens after Ignite).
+    function _resolvedDial(Dial memory d) internal view returns (Dial memory) {
+        if (d.nLegs == 0) return d;
+        d.token0 = stockPool[d.slot0];
+        d.token1 = d.nLegs > 1 ? stockPool[d.slot1] : address(0);
+        d.token2 = d.nLegs > 2 ? stockPool[d.slot2] : address(0);
+        d.token3 = d.nLegs > 3 ? stockPool[d.slot3] : address(0);
+        return d;
+    }
+
+    function _hasResolvedLeg(Dial memory d) internal pure returns (bool) {
+        if (d.weight0 == 0 || d.nLegs == 0) return false;
+        return d.token0 != address(0) || d.token1 != address(0) || d.token2 != address(0) || d.token3 != address(0);
+    }
+
     function _advanceLadder() internal {
         if (!bootstrapComplete) {
             if (ladderIndex == BOOTSTRAP_LAST_INDEX) {
@@ -311,7 +409,8 @@ contract PulseDistributor is Ownable, ReentrancyGuard {
     }
 
     function _payout(uint256 epochId, uint256 tokenId, address to, uint256 ethShare) internal {
-        if (epochDial[epochId][tokenId].weight0 != 0) {
+        Dial memory d = epochDial[epochId][tokenId];
+        if (_hasResolvedLeg(d)) {
             _payoutDialed(epochId, tokenId, to, ethShare);
         } else {
             _buyTerm(to, ethShare);
@@ -324,13 +423,35 @@ contract PulseDistributor is Ownable, ReentrancyGuard {
             return;
         }
         Dial memory d = epochDial[epochId][tokenId];
+        uint256 lastIdx = type(uint256).max;
+        for (uint256 i; i < MAX_DIAL_LEGS; ++i) {
+            if (_tokenAt(d, i) != address(0) && _weightAt(d, i) != 0) lastIdx = i;
+        }
+        if (lastIdx == type(uint256).max) {
+            _buyTerm(to, ethShare);
+            return;
+        }
         uint256 remain = ethShare;
-        remain -= _swapLeg(d.token0, d.weight0, ethShare, remain, to, d.weight1 == 0 && d.weight2 == 0);
-        remain -= _swapLeg(d.token1, d.weight1, ethShare, remain, to, d.weight2 == 0);
-        remain -= _swapLeg(d.token2, d.weight2, ethShare, remain, to, true);
+        for (uint256 i; i <= lastIdx; ++i) {
+            remain -= _swapLeg(_tokenAt(d, i), _weightAt(d, i), ethShare, remain, to, i == lastIdx);
+        }
         if (remain > 0) {
             hopper.release(to, remain);
         }
+    }
+
+    function _tokenAt(Dial memory d, uint256 i) internal pure returns (address) {
+        if (i == 0) return d.token0;
+        if (i == 1) return d.token1;
+        if (i == 2) return d.token2;
+        return d.token3;
+    }
+
+    function _weightAt(Dial memory d, uint256 i) internal pure returns (uint16) {
+        if (i == 0) return d.weight0;
+        if (i == 1) return d.weight1;
+        if (i == 2) return d.weight2;
+        return d.weight3;
     }
 
     function _buyTerm(address to, uint256 ethShare) internal {

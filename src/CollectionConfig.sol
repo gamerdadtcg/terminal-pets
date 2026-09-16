@@ -61,6 +61,18 @@ library CollectionConfig {
 
     uint256 internal constant CHAIN_ID = 4663;
 
+    /// @notice Robinhood Chain Stock Token Dial pool (PulseDistributor allowlist).
+    /// Symbols (hub order): HOOD, AAPL, MSFT, GOOGL, AMZN, META, NVDA, TSLA.
+    /// Mainnet ERC-20s are **not** hardcoded — owner `setStockToken` when known.
+    uint8 internal constant STOCK_POOL_SIZE = 8;
+    uint8 internal constant MAX_DIAL_LEGS = 4;
+
+    /// @dev Shell class rarity weights — same as `art/schema/traits.json` `shell_class`.
+    uint8 internal constant SHELL_ALPHA_WEIGHT = 60;
+    uint8 internal constant SHELL_BETA_WEIGHT = 25;
+    uint8 internal constant SHELL_DELTA_WEIGHT = 10;
+    uint8 internal constant SHELL_OMEGA_WEIGHT = 5;
+
     /// @notice Mint → reveal delay. Owner may reveal early; anyone may reveal after this elapses.
     uint256 internal constant REVEAL_DELAY = 24 hours;
 
