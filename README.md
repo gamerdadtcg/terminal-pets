@@ -8,7 +8,7 @@ Collectors mint on OpenSea. After mint, each token is a unique handheld **pet** 
 
 This repo is a complete MVP: Foundry contracts, tests, a Robinhood Chain deploy script, a Next.js hub + wallet dapp (wagmi / viem), and the Pocket Critter generative PFP art system under `art/`. The public homepage is a marketing hub. Contract addresses can stay empty until Robinhood Chain deploy.
 
-**Ready to deploy — not deployed. Do not broadcast to chain `4663` until explicitly asked.** Robinhood testnet (`46630`) deploy prep: [`docs/TESTNET_DEPLOY.md`](docs/TESTNET_DEPLOY.md).
+**Ready to deploy — not deployed. Do not broadcast to chain `4663` until explicitly asked.** Robinhood testnet (`46630`) deploy prep: [`docs/TESTNET_DEPLOY.md`](docs/TESTNET_DEPLOY.md). OpenSea Studio Drop dry-run (Base Sepolia / Sepolia, production economics): [`docs/STUDIO_DROP_DRYRUN.md`](docs/STUDIO_DROP_DRYRUN.md). Mainnet prep checklist (no `4663` broadcast): [`docs/MAINNET_PREP.md`](docs/MAINNET_PREP.md).
 
 ## Configure name, symbol, max supply
 
@@ -108,7 +108,7 @@ Always point OpenSea creator earnings at the **RoyaltySplitter**. The splitter h
 Do **not** broadcast to chain `4663` until explicitly asked.
 
 1. Deploy contracts. Confirm `revealed = false`, `igniteEnabled = false`, `tradingEnabled = false`, splitter `live = false`.
-2. `teamMint` the 200 reserve. OpenSea **import existing** CollectionNFT (never Studio deploy-wizard). Point **7.5%** earnings at the RoyaltySplitter. Authorize SeaDrop. Configure Studio Drop stages (see [`docs/OPENSEA_STUDIO_SEADROP.md`](docs/OPENSEA_STUDIO_SEADROP.md)). Leave `mintOpen` false unless the hub should mint too.
+2. `teamMint` the 200 reserve to the mainnet team wallet (see [`docs/MAINNET_PREP.md`](docs/MAINNET_PREP.md)). OpenSea **import existing** CollectionNFT (never Studio deploy-wizard). Point **7.5%** earnings at the RoyaltySplitter. Authorize SeaDrop. Configure Studio Drop stages (see [`docs/OPENSEA_STUDIO_SEADROP.md`](docs/OPENSEA_STUDIO_SEADROP.md)). Leave `mintOpen` false unless the hub should mint too. Rehearse this on Base Sepolia first: [`docs/STUDIO_DROP_DRYRUN.md`](docs/STUDIO_DROP_DRYRUN.md).
 3. Mint window (up to 24h): secondary royalties fund TermFund. Hopper is untouched by that stream.
 4. `CollectionNFT.reveal()` — owner anytime, or anyone after 24h. Art + Ignite + `$TERM` trading + 5/2.5 royalties in one tx. Hopper payouts then lock 7 days from that timestamp.
 5. Later, when a DEX adapter exists: `TermFund.setRouter` + `seedLiquidity`. Set `TERM_SWAP_ROUTER` so Ignite can buy-and-burn the ETH half (and convert the `$TERM` Hopper cut). Optional `TERM_POOL` for TermMarket.
@@ -180,7 +180,7 @@ Until a real DEX exists, tests use `MockTermPool` + `MockTermSwapRouter`. **Do n
 | Faucet | — | `https://faucet.testnet.chain.robinhood.com` |
 | Foundry `--rpc-url` | `robinhood` | `testnet` / `robinhood_testnet` |
 
-Add the network to any EVM wallet with those values. **Do not broadcast to `4663` until explicitly asked.** Testnet mechanics smoke (not Studio Drop): [`docs/TESTNET_DEPLOY.md`](docs/TESTNET_DEPLOY.md).
+Add the network to any EVM wallet with those values. **Do not broadcast to `4663` until explicitly asked.** Testnet mechanics smoke (not Studio Drop): [`docs/TESTNET_DEPLOY.md`](docs/TESTNET_DEPLOY.md). Studio Drop dry-run uses Foundry aliases `base_sepolia` / `sepolia` ([`docs/STUDIO_DROP_DRYRUN.md`](docs/STUDIO_DROP_DRYRUN.md)) — never `robinhood` until the owner says go ([`docs/MAINNET_PREP.md`](docs/MAINNET_PREP.md)).
 
 ## Contracts
 
@@ -362,7 +362,7 @@ npx vercel --prod --yes
 
 ## Ready to deploy — not deployed
 
-**Do not broadcast until the user says go.** Contracts and tests are green. No live addresses. This repo must not send transactions to Robinhood Chain `4663` until explicitly asked. Robinhood testnet (`46630`) checklist: [`docs/TESTNET_DEPLOY.md`](docs/TESTNET_DEPLOY.md) (do not use that plan to hit `4663`; Studio Drop is separate).
+**Do not broadcast until the user says go.** Contracts and tests are green. No live addresses. This repo must not send transactions to Robinhood Chain `4663` until explicitly asked. Robinhood testnet (`46630`) checklist: [`docs/TESTNET_DEPLOY.md`](docs/TESTNET_DEPLOY.md) (do not use that plan to hit `4663`). Studio Drop dry-run: [`docs/STUDIO_DROP_DRYRUN.md`](docs/STUDIO_DROP_DRYRUN.md). Mainnet prep (still no broadcast): [`docs/MAINNET_PREP.md`](docs/MAINNET_PREP.md).
 
 Placeholders still open:
 
@@ -432,7 +432,7 @@ forge test -vv
 src/           CollectionNFT, Ignite, TermFund, TermMarket, Hopper, RoyaltySplitter, Pulse, TBA, SeaDrop interfaces
 script/        Deploy.s.sol, testnet smoke `cast` cheatsheet
 test/          Foundry tests (including MockSeaDrop / MockTermPool / MockTermSwapRouter)
-docs/          Dial, art lock, OpenSea Studio SeaDrop, Robinhood testnet deploy
+docs/          Dial, art lock, OpenSea Studio SeaDrop, Studio dry-run, mainnet prep, Robinhood testnet deploy
 web/           Next.js hub (`/`), Hopper, Dial, Terminal (`/app`)
 ```
 
