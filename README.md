@@ -38,7 +38,7 @@ Other defaults in the same library: mint price `0`, **24h reveal delay**, Ignite
 
 ## Pulse ladder
 
-`PulseDistributor.pulseThreshold()` is derived from phase + index. It advances **after** each successful `pulse()`. There is no owner `setPulseThreshold`.
+`PulseDistributor.pulseThreshold()` is derived from phase + index using immutable `bootstrapStart` / `cycleStart` / `ladderStep`. Constructor `0` (and unset deploy env) uses `CollectionConfig` defaults **0.1 / 0.5 / 0.1 ETH**. It advances **after** each successful `pulse()`. There is no owner `setPulseThreshold`.
 
 ### Bootstrap (first time only)
 
@@ -389,7 +389,7 @@ Later, when someone says go (commands only — do not run them now):
 ```bash
 cp .env.example .env
 # set PRIVATE_KEY and TREASURY_ADDRESS
-# optional: IGNITE_FEE_TERM, IGNITE_FEE_ETH, TERM_INITIAL_SUPPLY, TERM_TOKEN, TERM_LP_ROUTER, TERM_POOL, TERM_SWAP_ROUTER, PULSE_ROUTER, TBA_*
+# optional: IGNITE_FEE_TERM, IGNITE_FEE_ETH, TERM_INITIAL_SUPPLY, TERM_TOKEN, TERM_LP_ROUTER, TERM_POOL, TERM_SWAP_ROUTER, PULSE_ROUTER, HOPPER_LOCK_SECONDS, PULSE_BOOTSTRAP_START_WEI, PULSE_CYCLE_START_WEI, PULSE_LADDER_STEP_WEI, TBA_*
 
 # Local Anvil only (safe):
 # anvil

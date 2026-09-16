@@ -55,7 +55,7 @@ contract PulseLadderTest is Test {
         nft.reveal();
         term.mint(address(ignite), SUPPLY * FEE);
         nft.setMintOpen(true);
-        pulse = new PulseDistributor(address(hopper), address(nft), address(ignite), SUPPLY, owner);
+        pulse = new PulseDistributor(address(hopper), address(nft), address(ignite), SUPPLY, owner, 0, 0, 0);
         pulse.setTerm(address(term));
         MockPulseRouter pulseTermRouter = new MockPulseRouter(1);
         term.mint(address(pulseTermRouter), 40 ether);
@@ -132,6 +132,109 @@ contract PulseLadderTest is Test {
         assertFalse(pulse.canPulse());
         vm.expectRevert(PulseDistributor.HopperNotFull.selector);
         pulse.pulse();
+    }
+
+    function test_zeroLadderArgsUseCollectionConfigDefaults() public {
+        PulseDistributor p =
+            new PulseDistributor(address(hopper), address(nft), address(ignite), SUPPLY, owner, 0, 0, 0);
+        assertEq(p.bootstrapStart(), CollectionConfig.PULSE_BOOTSTRAP_START_WEI);
+        assertEq(p.cycleStart(), CollectionConfig.PULSE_CYCLE_START_WEI);
+        assertEq(p.ladderStep(), CollectionConfig.PULSE_LADDER_STEP_WEI);
+        assertEq(p.pulseThreshold(), 0.1 ether);
+        assertEq(CollectionConfig.PULSE_BOOTSTRAP_START_WEI, 0.1 ether);
+        assertEq(CollectionConfig.PULSE_CYCLE_START_WEI, 0.5 ether);
+        assertEq(CollectionConfig.PULSE_LADDER_STEP_WEI, 0.1 ether);
+    }
+
+    function test_customLadder_pulseThresholdUsesConstructorValues() public {
+        uint256 bootstrap = 0.0001 ether;
+        uint256 cycle = 0.0001 ether;
+        uint256 step = 0.00001 ether;
+        PulseDistributor p =
+            new PulseDistributor(address(hopper), address(nft), address(ignite), SUPPLY, owner, bootstrap, cycle, step);
+        assertEq(p.bootstrapStart(), bootstrap);
+        assertEq(p.cycleStart(), cycle);
+        assertEq(p.ladderStep(), step);
+        assertEq(p.pulseThreshold(), bootstrap);
+    }
+
+    function test_customLadder_zeroCycleAndStepFallBackIndependently() public {
+        uint256 bootstrap = 0.0001 ether;
+        PulseDistributor p =
+            new PulseDistributor(address(hopper), address(nft), address(ignite), SUPPLY, owner, bootstrap, 0, 0);
+        assertEq(p.bootstrapStart(), bootstrap);
+        assertEq(p.cycleStart(), CollectionConfig.PULSE_CYCLE_START_WEI);
+        assertEq(p.ladderStep(), CollectionConfig.PULSE_LADDER_STEP_WEI);
+        assertEq(p.pulseThreshold(), bootstrap);
+    }
+
+    function test_customLadder_canPulseAtMicroBootstrapStart() public {
+        uint256 bootstrap = 0.0001 ether;
+        uint256 cycle = 0.0001 ether;
+        uint256 step = 0.00001 ether;
+        uint256 microEthFee = 0.00005 ether;
+
+        vm.startPrank(owner);
+        Hopper h = new Hopper(owner, 0);
+        RoyaltySplitter splitter = new RoyaltySplitter(address(h), treasury, owner);
+        CollectionNFT n = new CollectionNFT(
+            CollectionConfig.NAME,
+            CollectionConfig.SYMBOL,
+            SUPPLY,
+            TEAM,
+            address(h),
+            address(splitter),
+            owner,
+            CollectionConfig.ROYALTY_BPS,
+            new address[](0)
+        );
+        TermToken t = new TermToken(owner);
+        TermFund fund = new TermFund(owner, address(t), treasury);
+        IgniteModule ig = new IgniteModule(address(n), address(t), address(h), owner, FEE, address(fund), microEthFee);
+        fund.lockIgnite(address(ig));
+        n.setIgniteModule(address(ig));
+        splitter.arm(address(fund), address(n));
+        t.setLauncher(address(n));
+        n.setTermToken(address(t));
+        n.reveal();
+        t.mint(address(ig), SUPPLY * FEE);
+        n.setMintOpen(true);
+        PulseDistributor p =
+            new PulseDistributor(address(h), address(n), address(ig), SUPPLY, owner, bootstrap, cycle, step);
+        p.setTerm(address(t));
+        MockPulseRouter r = new MockPulseRouter(1);
+        t.mint(address(r), 40 ether);
+        p.setRouter(address(r));
+        h.lockDistributor(address(p));
+        vm.stopPrank();
+
+        vm.warp(h.hopperUnlockTime());
+
+        address smoker = makeAddr("smoker");
+        vm.deal(smoker, 1 ether);
+        vm.prank(smoker);
+        n.mint(1);
+        vm.prank(smoker);
+        ig.ignite{value: microEthFee}(1);
+
+        assertEq(p.pulseThreshold(), bootstrap);
+        assertLt(h.available(), bootstrap);
+        assertFalse(p.canPulse());
+        vm.expectRevert(PulseDistributor.HopperNotFull.selector);
+        p.pulse();
+
+        uint256 avail = h.available();
+        (bool ok,) = address(h).call{value: bootstrap - avail}("");
+        assertTrue(ok);
+        assertTrue(p.canPulse());
+        p.pulse();
+        assertEq(p.ladderIndex(), 1);
+        assertFalse(p.bootstrapComplete());
+        assertEq(p.pulseThreshold(), bootstrap + step);
+
+        vm.prank(smoker);
+        p.claim(1);
+        assertEq(h.available(), 0);
     }
 
     function _runBootstrap() internal {

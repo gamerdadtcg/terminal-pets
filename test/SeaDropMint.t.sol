@@ -81,7 +81,7 @@ contract SeaDropMintTest is Test {
         term.mint(address(ignite), SUPPLY * FEE);
         term.mint(alice, 1_000 ether);
 
-        pulse = new PulseDistributor(address(hopper), address(nft), address(ignite), SUPPLY, owner);
+        pulse = new PulseDistributor(address(hopper), address(nft), address(ignite), SUPPLY, owner, 0, 0, 0);
         pulse.setTerm(address(term));
         MockPulseRouter router = new MockPulseRouter(2);
         pulse.setRouter(address(router));

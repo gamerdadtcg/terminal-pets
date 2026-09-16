@@ -46,12 +46,16 @@ Recommended:
 | `MINT_OPEN=false` | Keep dapp mint closed; smoke uses `teamMint`. |
 | `OWNER` | Defaults to the deployer. Leave blank unless a different owner EOA should own the stack. |
 | `HOPPER_LOCK_SECONDS` | Optional. Unset or `0` → production default `CollectionConfig.HOPPER_LOCK` (7 days). For a **new** Pulse+claim smoke stack only, set `900` (15 minutes). Do **not** change or retarget the existing 7-day testnet deploy. |
+| `IGNITE_FEE_ETH` | Optional. Unset → production `0.002` ETH. Micro-balance smoke: `50000000000000` (0.00005 ETH). |
+| `PULSE_BOOTSTRAP_START_WEI` | Optional. Unset or `0` → `CollectionConfig.PULSE_BOOTSTRAP_START_WEI` (0.1 ETH). Micro-balance smoke: `100000000000000` (0.0001 ETH). |
+| `PULSE_CYCLE_START_WEI` | Optional. Unset or `0` → `CollectionConfig.PULSE_CYCLE_START_WEI` (0.5 ETH). Micro-balance smoke: `100000000000000`. |
+| `PULSE_LADDER_STEP_WEI` | Optional. Unset or `0` → `CollectionConfig.PULSE_LADDER_STEP_WEI` (0.1 ETH). Micro-balance smoke: `10000000000000` (0.00001 ETH). |
 
 Leave DEX adapters blank (`TERM_LP_ROUTER`, `TERM_POOL`, `TERM_SWAP_ROUTER`, `PULSE_ROUTER`). Testnet smoke does not need a live pool. Ignite will park the `$TERM` Hopper cut and the ETH burn-half until a router exists — that is expected.
 
 Leave stock tokens unset at deploy. Owner `setStockToken` after, using only the [documented AMZN + TSLA samples](DIAL.md). **Do not invent** HOOD / AAPL / MSFT / GOOGL / META / NVDA addresses.
 
-`CollectionConfig` defaults still apply: free mint **4444** total, **200** team reserve / **4244** public, Ignite **0.002 ETH** + **1,000 `$TERM`**, Hopper lock **7 days after `reveal()`** unless `HOPPER_LOCK_SECONDS` is set on a new deploy.
+`CollectionConfig` defaults still apply when the env vars above are unset: free mint **4444** total, **200** team reserve / **4244** public, Ignite **0.002 ETH** + **1,000 `$TERM`**, Hopper lock **7 days after `reveal()`**, Pulse ladder **0.1 → 1.0** then **0.5 → 1.0**. Set `HOPPER_LOCK_SECONDS` / `IGNITE_FEE_ETH` / `PULSE_*_WEI` only on a **new** smoke deploy.
 
 ## 3. Dry-run (no `--broadcast`)
 
@@ -68,7 +72,7 @@ Equivalent alias:
 forge script script/Deploy.s.sol:Deploy --rpc-url robinhood_testnet
 ```
 
-Confirm the simulated chain id is **46630**, `TREASURY_ADDRESS` is yours, `SeaDrop` logs as `0x0000…0000` if you zeroed it, and the console prints Hopper / CollectionNFT / Ignite / Pulse addresses. **Stop here until you intend to deploy to testnet.**
+Confirm the simulated chain id is **46630**, `TREASURY_ADDRESS` is yours, `SeaDrop` logs as `0x0000…0000` if you zeroed it, and the console prints Hopper / CollectionNFT / Ignite / Pulse addresses. With Pulse env unset, `PulseBootstrapStart` / `PulseCycleStart` / `PulseLadderStep` should be production wei (`1e17` / `5e17` / `1e17`). **Stop here until you intend to deploy to testnet.**
 
 Wrong RPC (`robinhood` / mainnet URL) would simulate **4663**. Abort if `cast chain-id --rpc-url testnet` is not `46630`:
 
@@ -114,6 +118,32 @@ forge script script/Deploy.s.sol:Deploy --rpc-url testnet --broadcast
 ```
 
 Confirm console `HopperPayoutLock` is `900`. Record those new addresses separately; do not overwrite the 7-day `deployments/robinhood-testnet.json` unless you intend to. Unset `HOPPER_LOCK_SECONDS` (or set `0`) for any production-shaped deploy — that uses `CollectionConfig.HOPPER_LOCK` (7 days). **Do not broadcast to mainnet.**
+
+### 4.2 Micro-balance Pulse smoke (tiny Hopper ETH)
+
+A short lock is not enough if the deployer only has ~0.001–0.002 test ETH. Production Pulse still wants **0.1 ETH** in the Hopper for the first rung, and production Ignite still costs **0.002 ETH**. For a **new** stack that can Pulse with ~0.0001 Hopper ETH:
+
+```bash
+source .env
+export HOPPER_LOCK_SECONDS=900
+export IGNITE_FEE_ETH=50000000000000  # 0.00005 ETH
+export PULSE_BOOTSTRAP_START_WEI=100000000000000  # 0.0001 ETH
+export PULSE_CYCLE_START_WEI=100000000000000
+export PULSE_LADDER_STEP_WEI=10000000000000  # 0.00001
+forge script script/Deploy.s.sol:Deploy --rpc-url testnet --broadcast
+```
+
+Confirm console:
+
+- `HopperPayoutLock` = `900`
+- `IgniteFeeETH` = `50000000000000`
+- `PulseBootstrapStart` = `100000000000000`
+- `PulseCycleStart` = `100000000000000`
+- `PulseLadderStep` = `10000000000000`
+
+Leave these unset (or `0` for lock / Pulse rungs) for production-shaped deploys. Do **not** retarget the existing 7-day / 0.1 ETH testnet stack.
+
+**Note:** full stack deploy still needs enough gas (**~0.002+ ETH historically**); if under that, wait for faucet for the broadcast itself. Tiny Ignite / Pulse env only shrinks *post-deploy* smoke costs, not constructor gas.
 
 ## 5. Post-deploy smoke (owner txs)
 
@@ -172,12 +202,20 @@ This enables Ignite, `$TERM` transfers, dormant-egg metadata, and the 5/2.5 roya
 
 ### 5.5 Ignite one token
 
-Exact **0.002 ETH**. First wake spends the `$TERM` allotment on IgniteModule (no DEX required). Without `TERM_SWAP_ROUTER`, 25% `$TERM` parks as `pendingHopperTerm` and 50% of the ETH parks as `pendingIgniteEthBurn`. Hopper still receives **50% of the 0.002 ETH**.
+Exact **Ignite ETH fee** (`CollectionConfig.IGNITE_FEE_ETH` = **0.002 ETH**, or the `IGNITE_FEE_ETH` you deployed with). First wake spends the `$TERM` allotment on IgniteModule (no DEX required). Without `TERM_SWAP_ROUTER`, 25% `$TERM` parks as `pendingHopperTerm` and 50% of the ETH parks as `pendingIgniteEthBurn`. Hopper still receives **50% of the Ignite ETH fee**.
 
 Minted token must be owned by the sender (`$TREASURY` if you team-minted there).
 
+Production-fee stack:
+
 ```bash
 cast send "$IGNITE" "ignite(uint256)" 1 --value 0.002ether --rpc-url testnet
+```
+
+Micro-balance stack (`IGNITE_FEE_ETH=50000000000000`):
+
+```bash
+cast send "$IGNITE" "ignite(uint256)" 1 --value 50000000000000 --rpc-url testnet
 ```
 
 ### 5.6 Verify `tokenURI` + Dial
@@ -200,6 +238,8 @@ cast call "$HOPPER" "hopperUnlocked()(bool)" --rpc-url testnet
 `hopperUnlocked()` is **false** until `revealedAt + payoutLock`. On the existing 7-day testnet stack that is `revealedAt + 604800`. Pulse / `reserve` / `release` stay locked. Ignite deposits during the lock still accrue.
 
 **Short-lock Pulse + claim smoke** needs a **new** deploy. Do not change the existing 7-day Hopper. Set `HOPPER_LOCK_SECONDS=900` (15 minutes) in `.env` and broadcast `Deploy.s.sol` again to testnet. Console logs `HopperPayoutLock` as `900`. After `reveal()`, wait 15 minutes (or `cast call` until `hopperUnlocked()` is true), then Pulse / claim. Leave `HOPPER_LOCK_SECONDS` unset (or `0`) for production-shaped 7-day deploys.
+
+If Hopper ETH is far below 0.1, also set the [micro-balance Pulse env](#42-micro-balance-pulse-smoke-tiny-hopper-eth) on that new deploy (`PULSE_BOOTSTRAP_START_WEI=100000000000000`, matching `IGNITE_FEE_ETH`). Confirm `pulseThreshold()` matches the console `PulseBootstrapStart` before pulsing. One Ignite at 0.00005 ETH only deposits **0.000025** into the Hopper — fund the rest (or Ignite more tokens) to reach 0.0001, then `pulse()` / `claim()`.
 
 ## 6. Verify on Blockscout (46630)
 
@@ -276,7 +316,7 @@ Do not invent a `deployments/robinhood-mainnet.json` from this plan.
 
 ## References
 
-- `script/Deploy.s.sol` — deploy script (`PRIVATE_KEY`, `TREASURY_ADDRESS`, optional `SEADROP_ADDRESS`, optional `HOPPER_LOCK_SECONDS`)
+- `script/Deploy.s.sol` — deploy script (`PRIVATE_KEY`, `TREASURY_ADDRESS`, optional `SEADROP_ADDRESS`, optional `HOPPER_LOCK_SECONDS`, optional `IGNITE_FEE_ETH`, optional `PULSE_BOOTSTRAP_START_WEI` / `PULSE_CYCLE_START_WEI` / `PULSE_LADDER_STEP_WEI`)
 - `script/smoke-testnet.md` — read-only `cast call` cheatsheet
 - `docs/DIAL.md` — Dial slots and testnet AMZN/TSLA
 - `docs/OPENSEA_STUDIO_SEADROP.md` — Studio Drop (not this network)
