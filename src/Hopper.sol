@@ -11,9 +11,9 @@ import {IHopper} from "./interfaces/IHopper.sol";
 /// converted to ETH and deposited once a swap router is set.
 ///
 /// After CollectionNFT.reveal(), outbound Hopper actions stay locked for
-/// `CollectionConfig.HOPPER_LOCK` (7 days) from the reveal timestamp. Ignite
-/// during that week still deposits ETH here; Pulse / claim cannot spend it
-/// until `hopperUnlocked()`.
+/// `payoutLock` from the reveal timestamp. Constructor `payoutLock_ == 0`
+/// uses `CollectionConfig.HOPPER_LOCK` (7 days). Ignite during the lock
+/// still deposits ETH here; Pulse / claim cannot spend it until `hopperUnlocked()`.
 ///
 /// Trust model
 /// -----------
@@ -44,6 +44,8 @@ contract Hopper is Ownable, IHopper {
     address public collection;
     /// @notice Reveal timestamp. 0 until `CollectionNFT.reveal()`.
     uint64 public revealedAt;
+    /// @notice Payout lock duration after reveal. Immutable. 0 constructor arg → `CollectionConfig.HOPPER_LOCK`.
+    uint256 public immutable payoutLock;
 
     error ZeroAddress();
     error AlreadyLocked();
@@ -62,7 +64,9 @@ contract Hopper is Ownable, IHopper {
     event Reserved(uint256 amount, uint256 reservedTotal);
     event Released(address indexed to, uint256 amount);
 
-    constructor(address initialOwner) Ownable(initialOwner) {}
+    constructor(address initialOwner, uint256 payoutLock_) Ownable(initialOwner) {
+        payoutLock = payoutLock_ == 0 ? CollectionConfig.HOPPER_LOCK : payoutLock_;
+    }
 
     /// @notice CollectionNFT constructor binds itself. First caller wins.
     function bindCollection() external {
@@ -72,7 +76,7 @@ contract Hopper is Ownable, IHopper {
         emit CollectionBound(msg.sender);
     }
 
-    /// @notice Starts the 7-day payout lock. Only the bound collection, once.
+    /// @notice Starts the payout lock. Only the bound collection, once.
     function notifyReveal() external {
         if (msg.sender != collection) revert NotCollection();
         if (revealedAt != 0) revert AlreadyRevealed();
@@ -80,13 +84,13 @@ contract Hopper is Ownable, IHopper {
         emit RevealClockStarted(revealedAt, hopperUnlockTime());
     }
 
-    /// @notice 0 before reveal. After reveal: `revealedAt + 7 days`.
+    /// @notice 0 before reveal. After reveal: `revealedAt + payoutLock`.
     function hopperUnlockTime() public view returns (uint256) {
         if (revealedAt == 0) return 0;
-        return uint256(revealedAt) + CollectionConfig.HOPPER_LOCK;
+        return uint256(revealedAt) + payoutLock;
     }
 
-    /// @notice False until reveal and the 7-day lock have both elapsed.
+    /// @notice False until reveal and the payout lock have both elapsed.
     function hopperUnlocked() public view returns (bool) {
         uint256 unlock = hopperUnlockTime();
         return unlock != 0 && block.timestamp >= unlock;

@@ -31,7 +31,7 @@ contract PulseLadderTest is Test {
 
     function setUp() public {
         vm.startPrank(owner);
-        hopper = new Hopper(owner);
+        hopper = new Hopper(owner, 0);
         RoyaltySplitter splitter = new RoyaltySplitter(address(hopper), treasury, owner);
         nft = new CollectionNFT(
             CollectionConfig.NAME,

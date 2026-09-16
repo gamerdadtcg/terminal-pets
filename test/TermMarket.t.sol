@@ -28,7 +28,7 @@ contract TermMarketTest is Test {
 
     function setUp() public {
         vm.startPrank(owner);
-        hopper = new Hopper(owner);
+        hopper = new Hopper(owner, 0);
         term = new TermToken(owner);
         market = new TermMarket(owner, address(term), address(hopper), treasury);
         router = new MockTermSwapRouter();
