@@ -485,9 +485,9 @@ export function HubLanding() {
 
       <section
         id="art"
-        className="relative border-y border-border/60 bg-card/25"
+        className="relative scroll-mt-28 border-y border-border/60 bg-card/25"
       >
-        <div className="mx-auto max-w-6xl scroll-mt-28 px-4 py-16 sm:px-6">
+        <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
           <div className="mb-8 max-w-2xl space-y-3">
             <p className="font-mono text-[11px] tracking-[0.28em] text-primary">
               ART
