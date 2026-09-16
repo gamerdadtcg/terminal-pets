@@ -11,11 +11,12 @@ out/
 /broadcast/*/31337/
 /broadcast/**/dry-run/
 
-# Docs (Foundry default). Keep the live art lock, Dial notes, and SeaDrop Studio guide checked in.
+# Docs (Foundry default). Keep the live art lock, Dial notes, SeaDrop Studio guide, and testnet deploy plan checked in.
 docs/*
 !docs/MAIN_ART_LOCK.md
 !docs/DIAL.md
 !docs/OPENSEA_STUDIO_SEADROP.md
+!docs/TESTNET_DEPLOY.md
 
 # Dotenv file
 .env

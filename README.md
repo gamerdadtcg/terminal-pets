@@ -8,7 +8,7 @@ Collectors mint on OpenSea. After mint, each token is a unique handheld **pet** 
 
 This repo is a complete MVP: Foundry contracts, tests, a Robinhood Chain deploy script, a Next.js hub + wallet dapp (wagmi / viem), and the Pocket Critter generative PFP art system under `art/`. The public homepage is a marketing hub. Contract addresses can stay empty until Robinhood Chain deploy.
 
-**Ready to deploy — not deployed. Do not broadcast to chain `4663` until explicitly asked.**
+**Ready to deploy — not deployed. Do not broadcast to chain `4663` until explicitly asked.** Robinhood testnet (`46630`) deploy prep: [`docs/TESTNET_DEPLOY.md`](docs/TESTNET_DEPLOY.md).
 
 ## Configure name, symbol, max supply
 
@@ -170,15 +170,17 @@ Until a real DEX exists, tests use `MockTermPool` + `MockTermSwapRouter`. **Do n
 
 ## Network
 
-| | |
-| --- | --- |
-| Name | Robinhood Chain |
-| Chain ID | `4663` |
-| Gas token | ETH |
-| RPC | `https://rpc.mainnet.chain.robinhood.com` |
-| Explorer | `https://robinhoodchain.blockscout.com` |
+| | Mainnet | Testnet |
+| --- | --- | --- |
+| Name | Robinhood Chain | Robinhood Chain testnet |
+| Chain ID | `4663` | `46630` |
+| Gas token | ETH | ETH |
+| RPC | `https://rpc.mainnet.chain.robinhood.com` | `https://rpc.testnet.chain.robinhood.com` |
+| Explorer | `https://robinhoodchain.blockscout.com` | `https://explorer.testnet.chain.robinhood.com` |
+| Faucet | — | `https://faucet.testnet.chain.robinhood.com` |
+| Foundry `--rpc-url` | `robinhood` | `testnet` / `robinhood_testnet` |
 
-Add the network to any EVM wallet with those values.
+Add the network to any EVM wallet with those values. **Do not broadcast to `4663` until explicitly asked.** Testnet mechanics smoke (not Studio Drop): [`docs/TESTNET_DEPLOY.md`](docs/TESTNET_DEPLOY.md).
 
 ## Contracts
 
@@ -360,7 +362,7 @@ npx vercel --prod --yes
 
 ## Ready to deploy — not deployed
 
-**Do not broadcast until the user says go.** Contracts and tests are green. No live addresses. This repo must not send transactions to Robinhood Chain `4663` until explicitly asked.
+**Do not broadcast until the user says go.** Contracts and tests are green. No live addresses. This repo must not send transactions to Robinhood Chain `4663` until explicitly asked. Robinhood testnet (`46630`) checklist: [`docs/TESTNET_DEPLOY.md`](docs/TESTNET_DEPLOY.md) (do not use that plan to hit `4663`; Studio Drop is separate).
 
 Placeholders still open:
 
@@ -428,9 +430,9 @@ forge test -vv
 
 ```
 src/           CollectionNFT, Ignite, TermFund, TermMarket, Hopper, RoyaltySplitter, Pulse, TBA, SeaDrop interfaces
-script/        Deploy.s.sol
+script/        Deploy.s.sol, testnet smoke `cast` cheatsheet
 test/          Foundry tests (including MockSeaDrop / MockTermPool / MockTermSwapRouter)
-docs/          Dial, art lock, OpenSea Studio SeaDrop
+docs/          Dial, art lock, OpenSea Studio SeaDrop, Robinhood testnet deploy
 web/           Next.js hub (`/`), Hopper, Dial, Terminal (`/app`)
 ```
 

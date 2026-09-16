@@ -108,6 +108,8 @@ Trailing `/` → `{id}.json`. Ignite still flips `tokenURI` Sealed → Dormant �
 1. **Testnet first** on a chain where Studio Drop + SeaDrop 1.0 already exist (OpenSea’s documented list: e.g. Sepolia / Base Sepolia — pick whatever Studio currently offers). Deploy **this** CollectionNFT, authorize SeaDrop, import the address, configure stages, mint 1, `reveal()`, Ignite, confirm Dial / `tokenURI`.
 2. **Robinhood mainnet (`4663`) only after** SeaDrop is confirmed on that chain and the owner asks to broadcast. Same bytecode, same authorize + Studio import flow. Never use the Studio deploy wizard on mainnet either.
 
+Robinhood **testnet** (`46630`) is mechanics smoke only (SeaDrop may be absent) — use [`TESTNET_DEPLOY.md`](TESTNET_DEPLOY.md), not this Studio Drop path.
+
 This PR does **not** deploy anywhere.
 
 ## Dapp mint
