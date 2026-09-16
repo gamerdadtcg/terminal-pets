@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { configuredChainId } from "@/lib/chain";
+import { activeChain, configuredChainId } from "@/lib/chain";
 import { shortAddress } from "@/lib/format";
 import { useAccount, useConnect, useDisconnect, useSwitchChain } from "wagmi";
 import { injected } from "wagmi/connectors";
@@ -12,6 +12,7 @@ export function ConnectButton() {
   const { disconnect } = useDisconnect();
   const { switchChain, isPending: switching } = useSwitchChain();
   const target = configuredChainId();
+  const chain = activeChain();
 
   if (!isConnected) {
     return (
@@ -32,7 +33,7 @@ export function ConnectButton() {
           onClick={() => switchChain({ chainId: target })}
           disabled={switching}
         >
-          {switching ? "Switching…" : "Switch network"}
+          {switching ? "Switching…" : `Switch to ${chain.name}`}
         </Button>
         <Button variant="ghost" onClick={() => disconnect()}>
           Disconnect

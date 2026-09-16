@@ -18,8 +18,9 @@ import {
   zeroAddress,
 } from "@/lib/contracts";
 import { explorerAddress, explorerTx, formatEth } from "@/lib/format";
-import { SITE, mintAllocation } from "@/lib/site";
+import { SITE, mintAllocation, mintScheduleCopy } from "@/lib/site";
 import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 import {
   useAccount,
   useReadContract,
@@ -268,7 +269,8 @@ export function TerminalApp() {
             TermMarket skim.
             Pulse follows an escalating ETH ladder. Lit earn pro-rata. Dormant
             earn nothing. Dial is assigned at Ignite (1–4 stocks by shell class);
-            this screen does not let holders pick.
+            this screen does not let holders pick. Mint on this hub when{" "}
+            <span className="font-mono">mintOpen</span> is true.
           </p>
         </section>
 
@@ -282,7 +284,8 @@ export function TerminalApp() {
                 Deploy with Foundry, then set these in <code>web/.env.local</code>:
               </p>
               <pre className="overflow-x-auto rounded-md bg-background/60 p-3 font-mono text-xs text-foreground">
-{`NEXT_PUBLIC_COLLECTION_ADDRESS=
+{`NEXT_PUBLIC_COLLECTION_NFT=
+NEXT_PUBLIC_COLLECTION_ADDRESS=
 NEXT_PUBLIC_IGNITE_ADDRESS=
 NEXT_PUBLIC_HOPPER_ADDRESS=
 NEXT_PUBLIC_PULSE_ADDRESS=
@@ -428,6 +431,9 @@ NEXT_PUBLIC_CHAIN_ID=4663`}
               </p>
             </div>
             <div className="flex flex-wrap gap-2">
+              <Button variant="outline" asChild>
+                <Link href="/mint">Open mint page</Link>
+              </Button>
               {configured && mintOpen && isConnected && onTarget && (
                 <Button
                   variant="outline"
@@ -449,6 +455,13 @@ NEXT_PUBLIC_CHAIN_ID=4663`}
               )}
             </div>
           </div>
+
+          {configured && mintOpen === false && (
+            <Empty
+              title="Mint is closed"
+              body={`${mintScheduleCopy.when} CollectionNFT.mintOpen is false, so mint/mintTo revert. Use the mint page when the owner opens the hub path. Do not mint through OpenSea Studio’s deploy wizard.`}
+            />
+          )}
 
           {!isConnected && (
             <Empty
@@ -478,7 +491,7 @@ NEXT_PUBLIC_CHAIN_ID=4663`}
           {isConnected && onTarget && configured && !tokensQuery.isLoading && tokenIds.length === 0 && (
             <Empty
               title="No terminals in this wallet"
-              body="Mint via OpenSea (or the mint button if the collection is open), then Ignite from here."
+              body="Mint on this hub (/mint) when mintOpen is true, then Ignite from here."
             />
           )}
 
@@ -567,10 +580,11 @@ NEXT_PUBLIC_CHAIN_ID=4663`}
           <div>
             <p className="mb-2 font-medium text-foreground">OpenSea</p>
             <p>
-              Import the verified CollectionNFT and set creator earnings to 7.5%
+              Collection import is separate from mint. Hub mint is the primary
+              path. If a collection page exists, point creator earnings to 7.5%
               at the RoyaltySplitter. Pre-reveal that stream is 100% TermFund.
               After reveal it pays 5% of sale to the Hopper and 2.5% to
-              treasury. ERC-2981 already returns the splitter.
+              treasury. Do not use Studio’s deploy-Drop wizard.
             </p>
           </div>
           <div>
