@@ -83,7 +83,7 @@ CollectionNFT.setMetadataURIs(
 )
 ```
 
-Hub sample stubs (3 tokens): `web/public/metadata/{hidden.json,dormant/,lit/}` pointing at `web/public/art/`.
+Hub test host (tokens 1–25, GIF only): `web/public/metadata/{hidden.json,dormant/,lit/}` with absolute `https://terminal-pets.vercel.app/art/test{,-egg}/{id}.gif` image URLs. Featured stills also live under `web/public/art/{awake,dormant}/`.
 
 ## CLI flags
 

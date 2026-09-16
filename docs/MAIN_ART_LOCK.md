@@ -48,7 +48,37 @@ Until bases are set, `tokenURI` falls back to `TerminalRenderer` data-URI JSON (
 
 Host on IPFS or HTTP. After pinning GIF folders, prefix `image` fields with `--art-image-base` / `--egg-image-base` or `art/generator/rewrite_image_uris.py`. Stub sample: `art/export/sealed/hidden.json` and `art/export/gif-test/`.
 
-Hub demo (3 tokens): `web/public/metadata/` + `web/public/art/`.
+Hub demo: featured samples plus a **25-token HTTPS GIF test host** under `web/public/`.
+
+## Test hosting
+
+Tokens **1–25** (seed 42) are committed as **GIF89a only** (do not convert to PNG):
+
+| Path | What |
+| --- | --- |
+| `web/public/art/test/{id}.gif` | Awake / lit pet GIF |
+| `web/public/art/test-egg/{id}.gif` | Dormant egg-rock GIF |
+| `web/public/metadata/lit/{id}.json` | Lit JSON (`image` → absolute `.gif` URL) |
+| `web/public/metadata/dormant/{id}.json` | Dormant JSON (`image` → absolute `.gif` URL) |
+| `web/public/metadata/hidden.json` | Sealed stub (`image` → egg GIF) |
+
+After the hub deploys to Vercel, owner-set:
+
+```text
+CollectionNFT.setMetadataURIs(
+  hiddenURI,       // https://terminal-pets.vercel.app/metadata/hidden.json
+  dormantBaseURI,  // https://terminal-pets.vercel.app/metadata/dormant/
+  litBaseURI       // https://terminal-pets.vercel.app/metadata/lit/
+)
+```
+
+| Arg | Value |
+| --- | --- |
+| `hiddenURI` | `https://terminal-pets.vercel.app/metadata/hidden.json` |
+| `dormantBaseURI` | `https://terminal-pets.vercel.app/metadata/dormant/` |
+| `litBaseURI` | `https://terminal-pets.vercel.app/metadata/lit/` |
+
+Trailing `/` on the bases appends `{tokenId}.json`. This is a test path for ids 1–25, not the full 4444 mint export. No chain deploy from this hosting change.
 
 ## Regenerate collection GIFs
 

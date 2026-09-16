@@ -165,7 +165,7 @@ export const FAQ = [
   },
   {
     q: "Where is the pet art?",
-    a: "Generative Pocket Critter PFPs — off-chain composed PNG/GIF, not on-chain SVG. Tokens mint Sealed (hidden metadata), reveal as a dormant egg rock GIF, then swap to the matching awake pet GIF on Ignite. Sample previews are on this hub. The old Track A TerminalRenderer SVG pets are not product art.",
+    a: "Generative Pocket Critter PFPs — off-chain composed PNG/GIF, not on-chain SVG. Tokens mint Sealed (hidden metadata), reveal as a dormant egg rock GIF, then swap to the matching awake pet GIF on Ignite. This hub hosts a 25-token animated GIF test path (HTTPS JSON under /metadata) so setMetadataURIs can point at real .gif image URLs. The old Track A TerminalRenderer SVG pets are not product art.",
   },
   {
     q: "Where do royalties go?",

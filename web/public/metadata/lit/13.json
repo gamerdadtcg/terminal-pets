@@ -1,0 +1,120 @@
+{
+  "name": "Terminal Pet #13",
+  "description": "A Terminal Pet generative PFP \u2014 awake critter on a handheld device with animated screen FX. Egg trait records the matching hatch egg for this pet species.",
+  "image": "https://terminal-pets.vercel.app/art/test/13.gif",
+  "pet_id": "13",
+  "egg_id": "13",
+  "dna": "pet:P04|egg:E04|pet_color:cocoa|eyes:happy|mouth:open_smile|accessory:none|background:BG08|handheld:H02|shell_color:light_blue|shell_class:DELTA|buttons:white|antenna:star|screen:S05|fx:scanlines",
+  "animation": {
+    "type": "fx",
+    "frames": 10,
+    "duration_ms": 120,
+    "size": 512
+  },
+  "attributes": [
+    {
+      "trait_type": "Pet",
+      "value": "PUPPO"
+    },
+    {
+      "trait_type": "Pet ID",
+      "value": "P04"
+    },
+    {
+      "trait_type": "Pet Rarity",
+      "value": "Common"
+    },
+    {
+      "trait_type": "Egg",
+      "value": "PUPPO Tan"
+    },
+    {
+      "trait_type": "Egg ID",
+      "value": "E04"
+    },
+    {
+      "trait_type": "Egg Rarity",
+      "value": "Common"
+    },
+    {
+      "trait_type": "Pet Color",
+      "value": "cocoa"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "happy"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "open_smile"
+    },
+    {
+      "trait_type": "Accessory",
+      "value": "none"
+    },
+    {
+      "trait_type": "Background",
+      "value": "Soft Vignette Core"
+    },
+    {
+      "trait_type": "Handheld",
+      "value": "Rounded Square"
+    },
+    {
+      "trait_type": "Shell Color",
+      "value": "light_blue"
+    },
+    {
+      "trait_type": "Shell Class",
+      "value": "DELTA"
+    },
+    {
+      "trait_type": "Buttons",
+      "value": "white"
+    },
+    {
+      "trait_type": "Antenna",
+      "value": "star"
+    },
+    {
+      "trait_type": "Screen",
+      "value": "Dark Well LEDs"
+    },
+    {
+      "trait_type": "FX",
+      "value": "scanlines"
+    }
+  ],
+  "rarity": {
+    "pet": "common",
+    "egg": "common",
+    "pet_color": "common",
+    "eyes": "common",
+    "mouth": "common",
+    "accessory": "common",
+    "background": "common",
+    "handheld": "common",
+    "shell_color": "common",
+    "shell_class": "epic",
+    "buttons": "common",
+    "antenna": "common",
+    "screen": "common",
+    "fx": "common"
+  },
+  "traits": {
+    "pet": "P04",
+    "egg": "E04",
+    "pet_color": "cocoa",
+    "eyes": "happy",
+    "mouth": "open_smile",
+    "accessory": "none",
+    "background": "BG08",
+    "handheld": "H02",
+    "shell_color": "light_blue",
+    "shell_class": "DELTA",
+    "buttons": "white",
+    "antenna": "star",
+    "screen": "S05",
+    "fx": "scanlines"
+  }
+}

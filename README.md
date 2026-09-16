@@ -218,6 +218,16 @@ Live product art is the **generative Pocket Critter** package vendored at [`art/
 
 Owner sets bases with `setMetadataURIs`. Trailing `/` appends `{tokenId}.json`. ERC-4906 `MetadataUpdate` still fires on Ignite. Until URIs are set, a **fallback** on-chain data-URI stub (rectangle + `PET#` + state + `OFF-CHAIN ART`) keeps mint/reveal/Ignite tests working — it is not product art.
 
+**Test hosting (tokens 1–25, GIF only)** is already on the hub. After Vercel deploy, the owner can point:
+
+| Arg | Value |
+| --- | --- |
+| `hiddenURI` | `https://terminal-pets.vercel.app/metadata/hidden.json` |
+| `dormantBaseURI` | `https://terminal-pets.vercel.app/metadata/dormant/` |
+| `litBaseURI` | `https://terminal-pets.vercel.app/metadata/lit/` |
+
+Art files: `web/public/art/test/{id}.gif` (lit) and `web/public/art/test-egg/{id}.gif` (dormant). Do not convert those to PNG. This is not a chain deploy and is not the full 4444 export.
+
 `tokenTraits()` still returns the historical `AWAKEN_PET_V2` table for tests. Product traits are `art/schema/traits.json`. The old `ACC_N = 6` accessory list is obsolete for product art.
 
 Metadata `name` is `Terminal Pet #{id}` (egg JSON uses `Terminal Pet Egg #{id}`). Collection `contractURI` name is `Terminal Pets`.

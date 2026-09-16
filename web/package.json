@@ -6,7 +6,8 @@
     "dev": "next dev --port 43147 --hostname 127.0.0.1",
     "build": "next build",
     "start": "next start --port 43147 --hostname 127.0.0.1",
-    "lint": "eslint"
+    "lint": "eslint",
+    "verify:test-host": "node scripts/verify-test-host.js"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.102.8",

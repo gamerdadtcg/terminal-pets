@@ -1,0 +1,120 @@
+{
+  "name": "Terminal Pet #10",
+  "description": "A Terminal Pet generative PFP \u2014 awake critter on a handheld device with animated screen FX. Egg trait records the matching hatch egg for this pet species.",
+  "image": "https://terminal-pets.vercel.app/art/test/10.gif",
+  "pet_id": "10",
+  "egg_id": "10",
+  "dna": "pet:P08|egg:E08|pet_color:blue_frog|eyes:happy|mouth:tongue|accessory:bandana|background:BG10|handheld:H05|shell_color:white|shell_class:ALPHA|buttons:white|antenna:mushroom|screen:S08|fx:fire",
+  "animation": {
+    "type": "fx",
+    "frames": 10,
+    "duration_ms": 120,
+    "size": 512
+  },
+  "attributes": [
+    {
+      "trait_type": "Pet",
+      "value": "BLOP"
+    },
+    {
+      "trait_type": "Pet ID",
+      "value": "P08"
+    },
+    {
+      "trait_type": "Pet Rarity",
+      "value": "Common"
+    },
+    {
+      "trait_type": "Egg",
+      "value": "BLOP Magenta"
+    },
+    {
+      "trait_type": "Egg ID",
+      "value": "E08"
+    },
+    {
+      "trait_type": "Egg Rarity",
+      "value": "Common"
+    },
+    {
+      "trait_type": "Pet Color",
+      "value": "blue_frog"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "happy"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "tongue"
+    },
+    {
+      "trait_type": "Accessory",
+      "value": "bandana"
+    },
+    {
+      "trait_type": "Background",
+      "value": "Chevrons"
+    },
+    {
+      "trait_type": "Handheld",
+      "value": "Egg-shaped"
+    },
+    {
+      "trait_type": "Shell Color",
+      "value": "white"
+    },
+    {
+      "trait_type": "Shell Class",
+      "value": "ALPHA"
+    },
+    {
+      "trait_type": "Buttons",
+      "value": "white"
+    },
+    {
+      "trait_type": "Antenna",
+      "value": "mushroom"
+    },
+    {
+      "trait_type": "Screen",
+      "value": "Minimal Ice Blue"
+    },
+    {
+      "trait_type": "FX",
+      "value": "fire"
+    }
+  ],
+  "rarity": {
+    "pet": "common",
+    "egg": "common",
+    "pet_color": "rare",
+    "eyes": "common",
+    "mouth": "rare",
+    "accessory": "common",
+    "background": "rare",
+    "handheld": "common",
+    "shell_color": "common",
+    "shell_class": "common",
+    "buttons": "common",
+    "antenna": "rare",
+    "screen": "common",
+    "fx": "rare"
+  },
+  "traits": {
+    "pet": "P08",
+    "egg": "E08",
+    "pet_color": "blue_frog",
+    "eyes": "happy",
+    "mouth": "tongue",
+    "accessory": "bandana",
+    "background": "BG10",
+    "handheld": "H05",
+    "shell_color": "white",
+    "shell_class": "ALPHA",
+    "buttons": "white",
+    "antenna": "mushroom",
+    "screen": "S08",
+    "fx": "fire"
+  }
+}

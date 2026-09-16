@@ -1,0 +1,125 @@
+{
+  "name": "Terminal Pet Egg #25",
+  "description": "A dormant Terminal Pet egg on a matching handheld device, gently rocking. Same token id as the awakened pet NFT.",
+  "image": "https://terminal-pets.vercel.app/art/test-egg/25.gif",
+  "egg_id": "25",
+  "pet_id": "25",
+  "linked_pet_id": "25",
+  "dna": "pet:P02|egg:E02|pet_color:green|eyes:wink|mouth:sad|accessory:bow|background:BG08|handheld:H02|shell_color:light_blue|shell_class:DELTA|buttons:orange|antenna:double|screen:S08|fx:static",
+  "animation": {
+    "type": "egg_rock",
+    "frames": 8,
+    "duration_ms": 150,
+    "size": 512
+  },
+  "attributes": [
+    {
+      "trait_type": "Pet",
+      "value": "SNAG"
+    },
+    {
+      "trait_type": "Pet ID",
+      "value": "P02"
+    },
+    {
+      "trait_type": "Pet Rarity",
+      "value": "Common"
+    },
+    {
+      "trait_type": "Egg",
+      "value": "SNAG Green"
+    },
+    {
+      "trait_type": "Egg ID",
+      "value": "E02"
+    },
+    {
+      "trait_type": "Egg Rarity",
+      "value": "Common"
+    },
+    {
+      "trait_type": "Pet Color",
+      "value": "green"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "wink"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "sad"
+    },
+    {
+      "trait_type": "Accessory",
+      "value": "bow"
+    },
+    {
+      "trait_type": "Background",
+      "value": "Soft Vignette Core"
+    },
+    {
+      "trait_type": "Handheld",
+      "value": "Rounded Square"
+    },
+    {
+      "trait_type": "Shell Color",
+      "value": "light_blue"
+    },
+    {
+      "trait_type": "Shell Class",
+      "value": "DELTA"
+    },
+    {
+      "trait_type": "Buttons",
+      "value": "orange"
+    },
+    {
+      "trait_type": "Antenna",
+      "value": "double"
+    },
+    {
+      "trait_type": "Screen",
+      "value": "Minimal Ice Blue"
+    },
+    {
+      "trait_type": "FX",
+      "value": "static"
+    },
+    {
+      "trait_type": "State",
+      "value": "Dormant"
+    }
+  ],
+  "rarity": {
+    "pet": "common",
+    "egg": "common",
+    "pet_color": "common",
+    "eyes": "common",
+    "mouth": "common",
+    "accessory": "common",
+    "background": "common",
+    "handheld": "common",
+    "shell_color": "common",
+    "shell_class": "epic",
+    "buttons": "epic",
+    "antenna": "common",
+    "screen": "common",
+    "fx": "common"
+  },
+  "traits": {
+    "pet": "P02",
+    "egg": "E02",
+    "pet_color": "green",
+    "eyes": "wink",
+    "mouth": "sad",
+    "accessory": "bow",
+    "background": "BG08",
+    "handheld": "H02",
+    "shell_color": "light_blue",
+    "shell_class": "DELTA",
+    "buttons": "orange",
+    "antenna": "double",
+    "screen": "S08",
+    "fx": "static"
+  }
+}

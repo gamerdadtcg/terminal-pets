@@ -1,0 +1,125 @@
+{
+  "name": "Terminal Pet Egg #24",
+  "description": "A dormant Terminal Pet egg on a matching handheld device, gently rocking. Same token id as the awakened pet NFT.",
+  "image": "https://terminal-pets.vercel.app/art/test-egg/24.gif",
+  "egg_id": "24",
+  "pet_id": "24",
+  "linked_pet_id": "24",
+  "dna": "pet:P10|egg:E10|pet_color:purple|eyes:angry|mouth:laugh|accessory:bandana|background:BG02|handheld:H01|shell_color:dark_gray|shell_class:DELTA|buttons:blue|antenna:double|screen:S08|fx:scanlines",
+  "animation": {
+    "type": "egg_rock",
+    "frames": 8,
+    "duration_ms": 150,
+    "size": 512
+  },
+  "attributes": [
+    {
+      "trait_type": "Pet",
+      "value": "PIP"
+    },
+    {
+      "trait_type": "Pet ID",
+      "value": "P10"
+    },
+    {
+      "trait_type": "Pet Rarity",
+      "value": "Rare"
+    },
+    {
+      "trait_type": "Egg",
+      "value": "PIP Yellow"
+    },
+    {
+      "trait_type": "Egg ID",
+      "value": "E10"
+    },
+    {
+      "trait_type": "Egg Rarity",
+      "value": "Rare"
+    },
+    {
+      "trait_type": "Pet Color",
+      "value": "purple"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "angry"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "laugh"
+    },
+    {
+      "trait_type": "Accessory",
+      "value": "bandana"
+    },
+    {
+      "trait_type": "Background",
+      "value": "Robinhood Green"
+    },
+    {
+      "trait_type": "Handheld",
+      "value": "Classic"
+    },
+    {
+      "trait_type": "Shell Color",
+      "value": "dark_gray"
+    },
+    {
+      "trait_type": "Shell Class",
+      "value": "DELTA"
+    },
+    {
+      "trait_type": "Buttons",
+      "value": "blue"
+    },
+    {
+      "trait_type": "Antenna",
+      "value": "double"
+    },
+    {
+      "trait_type": "Screen",
+      "value": "Minimal Ice Blue"
+    },
+    {
+      "trait_type": "FX",
+      "value": "scanlines"
+    },
+    {
+      "trait_type": "State",
+      "value": "Dormant"
+    }
+  ],
+  "rarity": {
+    "pet": "rare",
+    "egg": "rare",
+    "pet_color": "epic",
+    "eyes": "common",
+    "mouth": "rare",
+    "accessory": "common",
+    "background": "common",
+    "handheld": "common",
+    "shell_color": "common",
+    "shell_class": "epic",
+    "buttons": "common",
+    "antenna": "common",
+    "screen": "common",
+    "fx": "common"
+  },
+  "traits": {
+    "pet": "P10",
+    "egg": "E10",
+    "pet_color": "purple",
+    "eyes": "angry",
+    "mouth": "laugh",
+    "accessory": "bandana",
+    "background": "BG02",
+    "handheld": "H01",
+    "shell_color": "dark_gray",
+    "shell_class": "DELTA",
+    "buttons": "blue",
+    "antenna": "double",
+    "screen": "S08",
+    "fx": "scanlines"
+  }
+}

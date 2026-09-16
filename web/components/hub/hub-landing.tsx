@@ -104,9 +104,14 @@ const ROADMAP = [
     body: "Pocket Critter off-chain GIFs. tokenURI: sealed JSON → dormant egg → awake pet on Ignite. ERC-4906 MetadataUpdate stays. Old on-chain SVG pets are not product art.",
   },
   {
+    state: "done" as const,
+    title: "25-token GIF test host",
+    body: "Hub hosts tokens 1–25 as animated GIFs + JSON at /art/test, /art/test-egg, and /metadata/{hidden,dormant,lit}. After Vercel deploy, setMetadataURIs can use the terminal-pets.vercel.app HTTPS bases. Not a chain deploy.",
+  },
+  {
     state: "next" as const,
     title: "Pin collection GIFs",
-    body: "Generate the 4444 awake + egg GIFs, pin JSON to IPFS/HTTP, then CollectionNFT.setMetadataURIs. A 3-token sample is already in the repo.",
+    body: "Generate the remaining 4444 awake + egg GIFs, pin JSON to IPFS/HTTP, then CollectionNFT.setMetadataURIs. A 25-token HTTPS GIF test path is already on this hub.",
   },
   {
     state: "done" as const,
@@ -116,7 +121,7 @@ const ROADMAP = [
   {
     state: "now" as const,
     title: "Public hub",
-    body: "This site. Ignite / Pulse / Hopper / Dial hub pages. Terminal route is ready. Generative sample GIFs on the hub.",
+    body: "This site. Ignite / Pulse / Hopper / Dial hub pages. Terminal route is ready. 25-token GIF test host + sample previews on the hub.",
   },
   {
     state: "next" as const,
@@ -258,7 +263,7 @@ export function HubLanding() {
               <div className="mt-4 grid grid-cols-2 gap-2">
                 <figure className="overflow-hidden rounded-xl border border-border/70 bg-black/40">
                   <img
-                    src="/art/dormant/2.gif"
+                    src="/art/test-egg/2.gif"
                     alt="Sample dormant Terminal Pet egg GIF"
                     className="aspect-square w-full object-cover"
                     width={512}
@@ -270,7 +275,7 @@ export function HubLanding() {
                 </figure>
                 <figure className="overflow-hidden rounded-xl border border-border/70 bg-black/40">
                   <img
-                    src="/art/awake/2.gif"
+                    src="/art/test/2.gif"
                     alt="Sample awakened Terminal Pet GIF"
                     className="aspect-square w-full object-cover"
                     width={512}
@@ -477,7 +482,8 @@ export function HubLanding() {
               {SITE.artSystem} system: modular layers, 12 pets, matching eggs,
               Robinhood-green backgrounds ({SITE.artCompose}). Reveal serves the
               dormant egg GIF. Ignite swaps tokenURI to the awake pet GIF
-              (ERC-4906). Old on-chain SVG Track A pets and art-pass trait
+              (ERC-4906). This hub hosts tokens 1–25 as animated GIFs for
+              setMetadataURIs. Old on-chain SVG Track A pets and art-pass trait
               catalogs are not product art.
             </p>
           </div>
