@@ -45,7 +45,7 @@ const STEPS = [
   {
     n: "05",
     title: "Dial",
-    body: "Lit holders pick up to 3 Robinhood Chain Stock Tokens. Weights sum to 100%. Changeable until the next Pulse snapshot.",
+    body: "Ignite assigns 1–4 Robinhood Chain Stock Tokens by shell class (ALPHA 1 … OMEGA 4) from HOOD, AAPL, MSFT, GOOGL, AMZN, META, NVDA, TSLA. Holders do not pick.",
   },
   {
     n: "06",
@@ -60,7 +60,7 @@ const STEPS = [
   {
     n: "08",
     title: "TBA / rewards",
-    body: "Credit the pet’s TBA (or the owner wallet if TBA delivery is off). Dialed pets get Stock Tokens. Undialed Lit get $TERM. Dormant earn nothing.",
+    body: "Credit the pet’s TBA (or the owner wallet if TBA delivery is off). Dialed pets get their assigned Stock Tokens. Lit with no filled Dial addresses get $TERM. Dormant earn nothing.",
   },
 ] as const;
 
@@ -182,8 +182,8 @@ export function HubLanding() {
               That 1,000 $TERM splits {SITE.igniteBurn} burn /{" "}
               {SITE.igniteHopper} Hopper (as ETH) / {SITE.igniteAllotmentRefill}{" "}
               allotment refill, plus {SITE.igniteFeeEth} split{" "}
-              {SITE.igniteEthSplit}. Team earns 0 from that ETH. Dial aims a
-              Lit Pulse at Stock Tokens — or leave it and earn $TERM.
+              {SITE.igniteEthSplit}. Team earns 0 from that ETH. Dial assigns
+              1–4 Stock Tokens by shell class at Ignite.
             </p>
             <div className="flex flex-wrap gap-2">
               {links.opensea ? (
@@ -405,12 +405,13 @@ export function HubLanding() {
             DIAL
           </p>
           <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-            Up to 3 Stock Tokens. Weights to 100%. No Dial earns $TERM.
+            Shell class assigns 1–4 stocks. No holder picker.
           </h2>
           <p className="text-muted-foreground">
-            Lit only. Change Dial until the next Pulse snapshot. No Dial on
-            file → that pet’s share buys $TERM. Pulse credits the TBA; tokens
-            travel with the NFT.
+            Lit only. ALPHA 1 / BETA 2 / DELTA 3 / OMEGA 4 from HOOD, AAPL,
+            MSFT, GOOGL, AMZN, META, NVDA, TSLA. Equal weights. Unfilled Dial
+            addresses → that pet’s share buys $TERM. Pulse credits the TBA;
+            tokens travel with the NFT.
           </p>
           <Button variant="outline" asChild>
             <Link href="/dial">Open the Dial page</Link>
@@ -637,8 +638,9 @@ export function HubLanding() {
             </CardHeader>
             <CardContent className="space-y-3 text-sm text-muted-foreground">
               <p>
-                Wallet tools: Ignite, Hopper fill, Pulse, claim, TBA. Dial is
-                listed as deploying soon — no live picker yet.
+                Wallet tools: Ignite, Hopper fill, Pulse, claim, TBA. Dial
+                assigns on Ignite in the contracts; the app does not offer a
+                picker.
               </p>
               <Button size="sm" asChild>
                 <Link href="/app">Open the app</Link>
@@ -675,7 +677,10 @@ export function HubLanding() {
               <CardTitle className="text-base">Dial</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3 text-sm text-muted-foreground">
-              <p>Up to 3 Stock Tokens, weights, no Dial → $TERM, TBA delivery.</p>
+              <p>
+                8 Stock Tokens, ALPHA–OMEGA 1–4 legs, assigned at Ignite, TBA
+                delivery.
+              </p>
               <Button size="sm" variant="outline" asChild>
                 <Link href="/dial">Read Dial</Link>
               </Button>

@@ -10,6 +10,7 @@ import {CollectionConfig} from "./CollectionConfig.sol";
 import {IERC20Burnable} from "./interfaces/IERC20Burnable.sol";
 import {IHopper} from "./interfaces/IHopper.sol";
 import {IIgniteModule} from "./interfaces/IIgniteModule.sol";
+import {IPulseDial} from "./interfaces/IPulseDial.sol";
 import {ITermFund} from "./interfaces/ITermFund.sol";
 import {ITermSwapRouter} from "./interfaces/ITermSwapRouter.sol";
 
@@ -54,6 +55,7 @@ contract IgniteModule is Ownable, ReentrancyGuard, IIgniteModule {
     uint256 public pendingIgniteEthBurn;
 
     ITermSwapRouter public swapRouter;
+    IPulseDial public pulseDistributor;
     bool public igniteEnabled;
 
     mapping(uint256 tokenId => bool) private _ignited;
@@ -78,6 +80,7 @@ contract IgniteModule is Ownable, ReentrancyGuard, IIgniteModule {
     event IgniteFeeEthUpdated(uint256 fee);
     event FeeBpsUpdated(uint16 hopperBps, uint16 burnBps, uint16 allotmentBps);
     event SwapRouterUpdated(address indexed router);
+    event PulseDistributorUpdated(address indexed pulse);
     event IgniteEnabled(uint256 timestamp);
     event IgniteAllotmentClaimed(uint256 indexed tokenId, address indexed owner, uint256 amount);
     event HopperTermFlushed(uint256 termIn, uint256 ethOut);
@@ -138,6 +141,12 @@ contract IgniteModule is Ownable, ReentrancyGuard, IIgniteModule {
     function setSwapRouter(address router_) external onlyOwner {
         swapRouter = ITermSwapRouter(router_);
         emit SwapRouterUpdated(router_);
+    }
+
+    /// @notice Wire Pulse Dial assignment. Called after both contracts exist.
+    function setPulseDistributor(address pulse_) external onlyOwner {
+        pulseDistributor = IPulseDial(pulse_);
+        emit PulseDistributorUpdated(pulse_);
     }
 
     /// @notice Owner or CollectionNFT.reveal(). Starts false (pre-reveal).
@@ -250,6 +259,9 @@ contract IgniteModule is Ownable, ReentrancyGuard, IIgniteModule {
 
         emit Ignited(tokenId, msg.sender, fee, burnCut, allotmentCut, hopperCut, ethFee);
         IMetadataNotify(address(collection)).notifyMetadataUpdate(tokenId);
+        if (address(pulseDistributor) != address(0)) {
+            pulseDistributor.assignDial(tokenId);
+        }
     }
 
     function isLit(uint256 tokenId) public view returns (bool) {

@@ -1,18 +1,20 @@
 import { ComingSoon } from "@/components/coming-soon";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { DIAL_COPY, SHELL_DIAL, STOCK_POOL } from "@/lib/dial";
+import { SITE } from "@/lib/site";
 
 const RULES = [
   {
-    title: "Lit only",
-    body: "Dormant pets cannot Dial and earn nothing. Ignite first. No Dial means that Lit share buys $TERM — not raw ETH.",
+    title: "Assigned at Ignite",
+    body: "When a pet becomes Lit, the contract assigns Dial automatically. Holders do not pick tickers or weights.",
   },
   {
-    title: "Up to 3 tickers",
-    body: "Pick Robinhood Chain Stock Tokens. Weights must sum to 100%. Change them any time before the next Pulse snapshot.",
+    title: "Shell class sets the count",
+    body: `${DIAL_COPY.classLine}. Class follows generative-art rarity (ALPHA Common … OMEGA Legendary).`,
   },
   {
-    title: "Default is $TERM",
-    body: "No Dial on file at snapshot means that Lit pet’s Pulse share buys $TERM (credited to the TBA when delivery is on). Skipping Dial is valid.",
+    title: "Equal weights",
+    body: "Assigned stocks split the Pulse share equally (bps sum to 100%). Remainder lands on the last leg.",
   },
   {
     title: "TBA delivery",
@@ -29,13 +31,65 @@ export function DialExplainer() {
           Dial aims a Lit Pulse at Stock Tokens.
         </h2>
         <p className="text-muted-foreground">
-          After you Ignite (allotment $TERM + 0.002 ETH), a Lit holder can Dial
-          up to three Robinhood Chain Stock Tokens. When someone Pulses, the
-          snapshot reads each Dial. If a DEX router is set, Hopper ETH swaps
-          into those tokens; if not, Pulse still spends Hopper ETH. No Dial
-          means that share buys $TERM for the TBA.
+          After Ignite (allotment $TERM + 0.002 ETH), Dial is assigned
+          automatically: {DIAL_COPY.classLine}, drawn from the eight Robinhood
+          Chain Stock Tokens below. Picks are random without replacement,
+          deterministic from token id. When someone Pulses, Hopper ETH swaps
+          into those tokens (or $TERM if a Dial has no filled addresses).
+          Dormant earn nothing.
         </p>
       </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base">Possible stocks</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          <p className="text-sm text-muted-foreground">
+            Eight Robinhood Chain Stock Tokens. Owner fills ERC-20 addresses
+            when they are known. Not a holder menu.
+          </p>
+          <ul className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+            {STOCK_POOL.map((stock) => (
+              <li
+                key={stock.symbol}
+                className="rounded-xl border border-border/70 bg-background/50 px-3 py-3"
+              >
+                <p className="font-mono text-sm font-semibold tracking-wide">
+                  {stock.symbol}
+                </p>
+                <p className="text-xs text-muted-foreground">{stock.name}</p>
+              </li>
+            ))}
+          </ul>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base">Shell class → Dial count</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <table className="w-full text-left text-sm">
+            <thead className="text-muted-foreground">
+              <tr>
+                <th className="pb-2 font-medium">Class</th>
+                <th className="pb-2 font-medium">Art rarity</th>
+                <th className="pb-2 font-medium">Stocks</th>
+              </tr>
+            </thead>
+            <tbody>
+              {SHELL_DIAL.map((row) => (
+                <tr key={row.className} className="border-t border-border/60">
+                  <td className="py-2 font-mono">{row.className}</td>
+                  <td className="py-2 text-muted-foreground">{row.rarity}</td>
+                  <td className="py-2">{row.stocks}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </CardContent>
+      </Card>
 
       <div className="grid gap-4 sm:grid-cols-2">
         {RULES.map((rule) => (
@@ -56,18 +110,21 @@ export function DialExplainer() {
         </CardHeader>
         <CardContent className="space-y-2 text-sm text-muted-foreground">
           <p>
-          Hopper still holds ETH until Pulse. At the current ladder rung,
-          anyone can Pulse. The call snapshots the Lit set, reads each Dial, converts that
-            pet’s share of Hopper ETH into the demanded Stock Tokens on
-            Robinhood Chain, and credits the TBA — or the owner wallet if TBA
-            delivery is off.
+            Hopper still holds ETH until Pulse. At the current ladder rung,
+            anyone can Pulse. The call snapshots the Lit set, reads each Dial,
+            converts that pet’s share of Hopper ETH into the assigned Stock
+            Tokens on Robinhood Chain, and credits the TBA — or the owner
+            wallet if TBA delivery is off.
           </p>
           <p>
-            Undialed Lit get $TERM. Dormant earn nothing. Tokens that land
-            in the TBA move with the NFT on sale.
+            If a Lit Dial has no filled token addresses, that share buys $TERM.
+            Dormant earn nothing. Tokens that land in the TBA move with the NFT
+            on sale.
           </p>
         </CardContent>
       </Card>
+
+      <p className="max-w-2xl text-xs text-muted-foreground">{SITE.disclaimer}</p>
     </div>
   );
 }

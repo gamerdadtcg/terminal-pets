@@ -4,7 +4,7 @@ Greenfield NFT collection for **Robinhood Chain** (EVM L2, chain id `4663`, nati
 
 Public collection name: **Terminal Pets**. NFT symbol: **TERM**. Memecoin: **`$TERM`**.
 
-Collectors mint on OpenSea. After mint, each token is a unique handheld **pet** that starts **Sealed** (placeholder metadata, 24h reveal window) with a **TBA**. After `CollectionNFT.reveal()` it shows as **Dormant** until Ignite. Each token also gets a one-time **`$TERM` Ignite allotment** (placeholder **1,000 `$TERM`**) from token supply so the token half of the first wake does not need a live chart. **Ignite** is off until reveal. Then it is hybrid: that `$TERM` (**37.5% burn / 25% Hopper-as-ETH / 37.5% allotment escrow refill**) **plus exactly 0.002 ETH**. The ETH splits **50% buy `$TERM` and burn / 50% Hopper**. Team earns **0** from that ETH fee (not TermFund, not treasury). The 37.5% token cut returns to the per-pet allotment **pool** (that tokenId stays consumed). One-way **Dormant → Lit**. Lit stays with the NFT on transfer. **Royalties** (7.5% via **RoyaltySplitter**): **pre-reveal 100% → TermFund** (nothing to Hopper, nothing to treasury from that stream). **Post-reveal 5% Hopper / 2.5% treasury**. **Hopper** is ETH only after that: post-reveal NFT royalties, **50% of each Ignite ETH fee**, 25% of each Ignite `$TERM` fee (swapped to ETH when a router is set), plus, once the canonical TERM/ETH pool is live, a **1.5% TermMarket skim** of that pool’s volume. `$TERM` is **not** fee-on-transfer; public transfers are also **off until reveal**. **Dial**: Lit holders pick up to 3 Robinhood Chain Stock Tokens (weights = 100%). **Pulse** uses an escalating Hopper ETH **ladder** (not a fixed 0.5 ETH): bootstrap `0.1 → 1.0`, then cycle `0.5 → 1.0` forever (never back to 0.1). Snapshot Lit, read Dial. **Dialed Lit** swap their ETH share to Stock Tokens (ETH fallback if no router). **Undialed Lit** buy `$TERM` with that share and credit the TBA (or owner) — not raw ETH; claim reverts without router + `$TERM`. Hopper stays ETH. Dormant earn nothing. TermMarket ships in this repo but stays **inactive** until `TERM_POOL` and `TERM_SWAP_ROUTER` are set.
+Collectors mint on OpenSea. After mint, each token is a unique handheld **pet** that starts **Sealed** (placeholder metadata, 24h reveal window) with a **TBA**. After `CollectionNFT.reveal()` it shows as **Dormant** until Ignite. Each token also gets a one-time **`$TERM` Ignite allotment** (placeholder **1,000 `$TERM`**) from token supply so the token half of the first wake does not need a live chart. **Ignite** is off until reveal. Then it is hybrid: that `$TERM` (**37.5% burn / 25% Hopper-as-ETH / 37.5% allotment escrow refill**) **plus exactly 0.002 ETH**. The ETH splits **50% buy `$TERM` and burn / 50% Hopper**. Team earns **0** from that ETH fee (not TermFund, not treasury). The 37.5% token cut returns to the per-pet allotment **pool** (that tokenId stays consumed). One-way **Dormant → Lit**. Lit stays with the NFT on transfer. **Royalties** (7.5% via **RoyaltySplitter**): **pre-reveal 100% → TermFund** (nothing to Hopper, nothing to treasury from that stream). **Post-reveal 5% Hopper / 2.5% treasury**. **Hopper** is ETH only after that: post-reveal NFT royalties, **50% of each Ignite ETH fee**, 25% of each Ignite `$TERM` fee (swapped to ETH when a router is set), plus, once the canonical TERM/ETH pool is live, a **1.5% TermMarket skim** of that pool’s volume. `$TERM` is **not** fee-on-transfer; public transfers are also **off until reveal**. **Dial**: Ignite assigns **1–4** Robinhood Chain Stock Tokens from a fixed 8-token pool (**HOOD, AAPL, MSFT, GOOGL, AMZN, META, NVDA, TSLA**) by shell class (**ALPHA 1 / BETA 2 / DELTA 3 / OMEGA 4**). Holders do not pick. Equal weights (bps = 10_000). See [`docs/DIAL.md`](docs/DIAL.md). **Pulse** uses an escalating Hopper ETH **ladder** (not a fixed 0.5 ETH): bootstrap `0.1 → 1.0`, then cycle `0.5 → 1.0` forever (never back to 0.1). Snapshot Lit, read Dial. **Dialed Lit** swap their ETH share to those Stock Tokens (ETH fallback if no router). **Undialed Lit** (no assignment, or slots still `address(0)`) buy `$TERM` with that share and credit the TBA (or owner) — not raw ETH; claim reverts without router + `$TERM`. Hopper stays ETH. Dormant earn nothing. TermMarket ships in this repo but stays **inactive** until `TERM_POOL` and `TERM_SWAP_ROUTER` are set.
 
 This repo is a complete MVP: Foundry contracts, tests, a Robinhood Chain deploy script, a Next.js hub + wallet dapp (wagmi / viem), and the Pocket Critter generative PFP art system under `art/`. The public homepage is a marketing hub. Contract addresses can stay empty until Robinhood Chain deploy.
 
@@ -191,7 +191,7 @@ Add the network to any EVM wallet with those values.
 | `IgniteModule` | Payable `ignite(tokenId)` — Dormant → Lit. **Off until reveal.** `$TERM` allotment or `transferFrom` (**25% Hopper / 37.5% burn / 37.5% allotment refill**) **plus exact 0.002 ETH (50% Hopper / 50% buy `$TERM` and burn)**. |
 | `Hopper` | ETH only. **Post-reveal** royalty slice + optional paid mint + **50% of Ignite ETH** + Ignite `$TERM` hopper cut (as ETH) + TermMarket skim when live. **No pre-reveal royalties. No admin withdraw.** Distributor locked once. |
 | `RoyaltySplitter` | ERC-2981 / OpenSea receiver. Pre-reveal: 100% → TermFund. Post-reveal (`setLive` in `reveal()`): 2/3 Hopper, 1/3 treasury. |
-| `PulseDistributor` | Dial (up to 3 Stock Tokens, weights in bps = 10_000). Ladder `pulse()`. Dialed `claim` → Stock Tokens via `PULSE_ROUTER`. Undialed Lit → buy `$TERM` to TBA/owner (reverts without router+term). Hopper stays ETH. Optional TBA delivery. |
+| `PulseDistributor` | Dial auto-assigned at Ignite: 1–4 of 8 allowlisted Stock Tokens by shell class (ALPHA–OMEGA), equal bps = 10_000. No holder `setDial`. Ladder `pulse()`. Dialed `claim` → Stock Tokens via `PULSE_ROUTER`. Unfilled Dial → buy `$TERM` to TBA/owner (reverts without router+term). Hopper stays ETH. Optional TBA delivery. |
 | `ERC6551Registry` + `ReceivableAccount` | Configurable TBA registry. Tests also ship `MockERC6551Registry`. |
 
 ### Hopper trust model
@@ -294,8 +294,8 @@ Public marketing site and wallet tools share one Next.js app.
 | --- | --- |
 | `/` | Hub: hero, how it works, Hopper, economics, generative art preview, status, FAQ, links |
 | `/hopper` | Dedicated Hopper + Pulse ladder explainer |
-| `/dial` | Dial explainer |
-| `/app` | Ignite / allotment / Hopper / Pulse / TBA wallet tools (Dial picker not live) |
+| `/dial` | Dial explainer: 8-stock pool + ALPHA–OMEGA assignment table |
+| `/app` | Ignite / allotment / Hopper / Pulse / TBA wallet tools (no Dial picker) |
 
 ```bash
 cd web
@@ -364,6 +364,7 @@ Placeholders still open:
 | Reveal delay | `24 hours` — owner may reveal early | `CollectionConfig.REVEAL_DELAY` |
 | Royalty mode | Pre-reveal 100% TermFund; post-reveal 5/2.5 | `RoyaltySplitter.live` flipped in `reveal()` |
 | Canonical swap fee | 3% = 1.5% Hopper / 1% burn / 0.5% treasury | `TRADE_*_BPS` in `CollectionConfig` |
+| Pulse stock allowlist | 8 slots HOOD…TSLA, addresses `0` until owner fills | `PulseDistributor.setStockToken` — see [`docs/DIAL.md`](docs/DIAL.md) |
 | Pulse DEX router | required for undialed `$TERM` and Dialed stocks | `PULSE_ROUTER` / `setRouter` + `setTerm` |
 | Chain contract addresses | empty | `web/.env.local` |
 | Mint price | `0` / TBD | `MINT_PRICE_WEI` |
@@ -396,6 +397,8 @@ After a future broadcast, copy TermToken, TermFund, TermMarket, Hopper, RoyaltyS
 ## Tests
 
 `test/LaunchReveal.t.sol` covers the 24h window: sealed metadata, Ignite off, `$TERM` trading off, **pre-reveal royalties 100% TermFund** (Hopper and treasury unchanged, including when Hopper already holds ETH), owner may reveal early, anyone after 24h, and after reveal: revealed metadata + Ignite + trading + **5% Hopper / 2.5% treasury**.
+
+`test/DialAssign.t.sol` covers shell-class assignment counts (ALPHA 1 … OMEGA 4), equal weights + remainder, no holder pick, allowlist, multi-leg Pulse claim, and `$TERM` fallback when slots are unfilled.
 
 `test/AwakenTerminals.t.sol` covers mint, **post-reveal** royalties (5/2.5), hybrid Ignite (0 ETH reverts; with mock router 25% Hopper ETH / 37.5% burn / 37.5% allotment refill + **0.002 ETH 50% Hopper / 50% buy-and-burn `$TERM`**; escrow refill; flushHopperTerm; flushIgniteEthBurn; claim-then-wallet `$TERM`), TermFund `seedLiquidity` does not spend allotment, no TermFund owner withdraw, Dial, Pulse ladder first rung, pro-rata Lit, **Dialed → stocks / undialed → `$TERM`**, TBA `$TERM` (not ETH), undialed revert without router, double-claim.
 

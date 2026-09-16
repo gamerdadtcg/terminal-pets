@@ -4,7 +4,7 @@ export const SITE = {
   petName: "Terminal Pets",
   tagline: "Handheld pets that sleep until you Ignite them.",
     description:
-    "Generative Pocket Critter PFPs on Robinhood Chain. Free mint Friday, September 18, 2026, America/Los_Angeles (PT). Mint on OpenSea. Pets mint Sealed for 24 hours: hidden metadata, Ignite off, $TERM trading off, and 7.5% secondary royalties all to TermFund. Reveal shows a dormant egg GIF, turns on Ignite and trading, and switches royalties to 5% Hopper / 2.5% treasury. Hopper claims stay locked 7 days after reveal while ETH accrues. Each pet comes with a $TERM Ignite allotment. Ignite splits that 1,000 $TERM 37.5% burn / 25% Hopper (as ETH) / 37.5% allotment refill, plus 0.002 ETH split 50% buy-and-burn $TERM / 50% Hopper. Team earns 0 from that ETH fee. Dial up to 3 Stock Tokens. Pulse pays Dialed Lit in Stock Tokens and undialed Lit in $TERM — typically to the TBA. Hopper stays ETH.",
+    "Generative Pocket Critter PFPs on Robinhood Chain. Free mint Friday, September 18, 2026, America/Los_Angeles (PT). Mint on OpenSea. Pets mint Sealed for 24 hours: hidden metadata, Ignite off, $TERM trading off, and 7.5% secondary royalties all to TermFund. Reveal shows a dormant egg GIF, turns on Ignite and trading, and switches royalties to 5% Hopper / 2.5% treasury. Hopper claims stay locked 7 days after reveal while ETH accrues. Each pet comes with a $TERM Ignite allotment. Ignite splits that 1,000 $TERM 37.5% burn / 25% Hopper (as ETH) / 37.5% allotment refill, plus 0.002 ETH split 50% buy-and-burn $TERM / 50% Hopper. Team earns 0 from that ETH fee. Dial assigns 1–4 Stock Tokens by shell class at Ignite. Pulse pays Dialed Lit in Stock Tokens and undialed Lit in $TERM — typically to the TBA. Hopper stays ETH.",
   disclaimer:
     "Dial and Pulse Stock Token rewards are promotional on-chain rewards. They are not dividends, equity, shareholder rights, or ownership of any underlying company. Holding a pet or receiving Stock Tokens confers no legal interest in those companies. Not financial or investment advice.",
   chain: "Robinhood Chain",
@@ -129,19 +129,19 @@ export const FAQ = [
   },
   {
     q: "What is Dial?",
-    a: "Lit holders pick up to 3 Robinhood Chain Stock Tokens and set weights that sum to 100%. You can change Dial until the next Pulse snapshot. No Dial means that Lit pet’s Pulse share buys $TERM (to the TBA, or the owner if TBA delivery is off) — not ETH.",
+    a: "Ignite assigns 1–4 Robinhood Chain Stock Tokens from a fixed pool (HOOD, AAPL, MSFT, GOOGL, AMZN, META, NVDA, TSLA) by shell class: ALPHA Common → 1, BETA Rare → 2, DELTA Epic → 3, OMEGA Legendary → 4. Holders do not pick. Equal weights. Pulse swaps that Lit share into those tokens (to the TBA, or the owner if TBA delivery is off). If a Dial has no filled token addresses, that share buys $TERM — not ETH.",
   },
   {
     q: "What are Stock Tokens here?",
-    a: "Robinhood Chain tokens Pulse may buy with Hopper ETH according to each Lit pet’s Dial. They credit the pet’s TBA (or the owner wallet if TBA delivery is off). They travel with the NFT; the owner can withdraw.",
+    a: "Robinhood Chain Stock Tokens Pulse may buy with Hopper ETH according to each Lit pet’s assigned Dial (HOOD, AAPL, MSFT, GOOGL, AMZN, META, NVDA, TSLA). They credit the pet’s TBA (or the owner wallet if TBA delivery is off). They travel with the NFT; the owner can withdraw. They are not shares of those companies.",
   },
   {
     q: "Do I own the stock company?",
     a: "No. Dial and Pulse Stock Token rewards are promotional on-chain rewards. They are not dividends, equity, shareholder rights, or ownership of any underlying company. Holding a pet or receiving Stock Tokens confers no legal interest in those companies. Not financial or investment advice.",
   },
   {
-    q: "What if I don’t Dial?",
-    a: "That Lit pet’s Pulse share buys $TERM via the market router and credits the TBA (or the owner wallet if TBA delivery is off). Not ETH. Dormant pets cannot Dial and earn nothing on Pulse.",
+    q: "What if a pet has no Dial?",
+    a: "Every Lit pet is assigned Dial at Ignite. If those stock addresses are still unset, or assignment was skipped, that Lit pet’s Pulse share buys $TERM via the market router and credits the TBA (or the owner wallet if TBA delivery is off). Not ETH. Dormant pets are not assigned Dial and earn nothing on Pulse.",
   },
   {
     q: "What is the Hopper?",
@@ -157,7 +157,7 @@ export const FAQ = [
   },
   {
     q: "Who earns from Pulse?",
-    a: "Lit terminals only, pro-rata at the snapshot. Pulse reads each Dial, swaps Hopper ETH into the demanded Stock Tokens, and credits TBAs (or owner wallets). Undialed Lit get $TERM the same way. Dormant earn nothing. The Hopper pot itself stays ETH.",
+    a: "Lit terminals only, pro-rata at the snapshot. Pulse reads each Dial, swaps Hopper ETH into the assigned Stock Tokens, and credits TBAs (or owner wallets). Lit pets with no filled Dial addresses get $TERM the same way. Dormant earn nothing. The Hopper pot itself stays ETH.",
   },
   {
     q: "What is a TBA?",
