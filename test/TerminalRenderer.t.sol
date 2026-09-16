@@ -128,7 +128,7 @@ contract TerminalRendererTest is Test {
         }
     }
 
-    function test_fingerprintUnique_first500() public {
+    function test_fingerprintUnique_first500() public view {
         bytes32[501] memory seen;
         for (uint256 id = 1; id <= 500; ++id) {
             bytes32 fp = r.fingerprint(id);
