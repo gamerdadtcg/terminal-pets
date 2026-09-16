@@ -40,8 +40,11 @@ import {ReceivableAccount} from "../src/tba/ReceivableAccount.sol";
 ///   SEADROP_ADDRESS        default canonical SeaDrop 1.0; `address(0)` = none (update later)
 ///   HOPPER_LOCK_SECONDS    optional payout lock after reveal (0 / unset → CollectionConfig.HOPPER_LOCK = 7 days)
 ///                          Testnet Pulse smoke: 900 (15m) on a NEW deploy. Do not retarget an existing 7d Hopper.
+///   PULSE_BOOTSTRAP_START_WEI  optional first bootstrap rung (0 / unset → CollectionConfig.PULSE_BOOTSTRAP_START_WEI)
+///   PULSE_CYCLE_START_WEI      optional first cycle rung (0 / unset → CollectionConfig.PULSE_CYCLE_START_WEI)
+///   PULSE_LADDER_STEP_WEI      optional ladder step (0 / unset → CollectionConfig.PULSE_LADDER_STEP_WEI)
+///                          Micro-balance smoke: 0.0001 / 0.0001 / 0.00001 on a NEW deploy. Production: leave unset.
 ///
-/// Pulse thresholds are a ladder in PulseDistributor (not a deploy env).
 /// Ignite allotment: MAX_SUPPLY × IGNITE_FEE_TERM minted to IgniteModule.
 contract Deploy is Script {
     struct Params {
@@ -67,6 +70,9 @@ contract Deploy is Script {
         bytes32 tbaSalt;
         address seaDrop;
         uint256 hopperLock;
+        uint256 pulseBootstrapStart;
+        uint256 pulseCycleStart;
+        uint256 pulseLadderStep;
     }
 
     function run() external {
@@ -101,6 +107,9 @@ contract Deploy is Script {
         p.tbaSalt = vm.envOr("TBA_SALT", bytes32(0));
         p.seaDrop = vm.envOr("SEADROP_ADDRESS", CollectionConfig.SEADROP);
         p.hopperLock = vm.envOr("HOPPER_LOCK_SECONDS", uint256(0));
+        p.pulseBootstrapStart = vm.envOr("PULSE_BOOTSTRAP_START_WEI", uint256(0));
+        p.pulseCycleStart = vm.envOr("PULSE_CYCLE_START_WEI", uint256(0));
+        p.pulseLadderStep = vm.envOr("PULSE_LADDER_STEP_WEI", uint256(0));
     }
 
     function _deploy(Params memory p) internal {
@@ -166,8 +175,16 @@ contract Deploy is Script {
         if (tbaRegistry == address(0)) tbaRegistry = address(new ERC6551Registry());
         if (tbaImplementation == address(0)) tbaImplementation = address(new ReceivableAccount());
 
-        PulseDistributor pulse =
-            new PulseDistributor(address(hopper), address(nft), address(ignite), p.maxSupply, p.owner);
+        PulseDistributor pulse = new PulseDistributor(
+            address(hopper),
+            address(nft),
+            address(ignite),
+            p.maxSupply,
+            p.owner,
+            p.pulseBootstrapStart,
+            p.pulseCycleStart,
+            p.pulseLadderStep
+        );
         pulse.setTbaConfig(tbaRegistry, tbaImplementation, p.tbaSalt);
         pulse.setTerm(address(term));
         if (p.pulseRouter != address(0)) pulse.setRouter(p.pulseRouter);
@@ -191,6 +208,9 @@ contract Deploy is Script {
         console.log("IgniteModule", address(ignite));
         console.log("IgniteAllotmentTERM", allotment);
         console.log("PulseDistributor", address(pulse));
+        console.log("PulseBootstrapStart", pulse.bootstrapStart());
+        console.log("PulseCycleStart", pulse.cycleStart());
+        console.log("PulseLadderStep", pulse.ladderStep());
         console.log("PulseRouter", p.pulseRouter);
         console.log("TbaRegistry", tbaRegistry);
         console.log("TbaImplementation", tbaImplementation);

@@ -80,7 +80,7 @@ contract AwakenTerminalsTest is Test {
         registry = new ERC6551Registry();
         tbaImpl = new ReceivableAccount();
 
-        pulse = new PulseDistributor(address(hopper), address(nft), address(ignite), SUPPLY, owner);
+        pulse = new PulseDistributor(address(hopper), address(nft), address(ignite), SUPPLY, owner, 0, 0, 0);
         pulse.setTbaConfig(address(registry), address(tbaImpl), bytes32(0));
         pulse.setTerm(address(term));
         MockPulseRouter pulseTermRouter = new MockPulseRouter(1);
@@ -625,6 +625,9 @@ contract AwakenTerminalsTest is Test {
         assertEq(pulse.pulseThreshold(), 0.1 ether);
         assertFalse(pulse.bootstrapComplete());
         assertEq(pulse.ladderIndex(), 0);
+        assertEq(pulse.bootstrapStart(), CollectionConfig.PULSE_BOOTSTRAP_START_WEI);
+        assertEq(pulse.cycleStart(), CollectionConfig.PULSE_CYCLE_START_WEI);
+        assertEq(pulse.ladderStep(), CollectionConfig.PULSE_LADDER_STEP_WEI);
     }
 
     function test_hopper_noAdminWithdraw() public {

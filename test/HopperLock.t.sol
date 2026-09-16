@@ -53,7 +53,7 @@ contract HopperLockTest is Test {
         nft.setTermToken(address(term));
         term.mint(address(ignite), SUPPLY * FEE);
         nft.setMintOpen(true);
-        pulse = new PulseDistributor(address(hopper), address(nft), address(ignite), SUPPLY, owner);
+        pulse = new PulseDistributor(address(hopper), address(nft), address(ignite), SUPPLY, owner, 0, 0, 0);
         pulse.setTerm(address(term));
         MockPulseRouter router = new MockPulseRouter(1);
         term.mint(address(router), 10_000 ether);

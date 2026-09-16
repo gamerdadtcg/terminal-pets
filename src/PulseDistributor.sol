@@ -22,10 +22,11 @@ import {IERC6551Registry} from "./interfaces/IERC6551Registry.sol";
 /// via the same router and credit the TBA (or owner). Hopper itself stays ETH.
 /// Dormant earn 0.
 ///
-/// Pulse ladder (ETH in Hopper `available()`):
-///   Bootstrap (first time only): 0.1, 0.2, … 1.0 (step 0.1).
-///   After a successful Pulse at 1.0 during bootstrap: 0.5, 0.6, … 1.0, then
-///   back to 0.5 forever. Never returns to 0.1.
+/// Pulse ladder (ETH in Hopper `available()`), from constructor immutables
+/// (`0` → CollectionConfig defaults 0.1 / 0.5 / 0.1):
+///   Bootstrap (first time only): start, start+step, … start+9*step.
+///   After the last bootstrap Pulse: cycle, cycle+step, … cycle+5*step, then
+///   back to cycle forever. Never returns to the bootstrap start.
 contract PulseDistributor is Ownable, ReentrancyGuard, IPulseDial {
     uint16 public constant DIAL_BPS = 10_000;
     uint8 public constant STOCK_POOL_SIZE = 8;
@@ -37,8 +38,14 @@ contract PulseDistributor is Ownable, ReentrancyGuard, IPulseDial {
     IERC721 public immutable collection;
     IIgniteModule public immutable ignite;
     uint256 public immutable maxSupply;
+    /// @notice Bootstrap first rung. Immutable. 0 constructor arg → `CollectionConfig.PULSE_BOOTSTRAP_START_WEI`.
+    uint256 public immutable bootstrapStart;
+    /// @notice Cycle first rung after bootstrap completes. Immutable. 0 → `CollectionConfig.PULSE_CYCLE_START_WEI`.
+    uint256 public immutable cycleStart;
+    /// @notice Ladder step. Immutable. 0 constructor arg → `CollectionConfig.PULSE_LADDER_STEP_WEI`.
+    uint256 public immutable ladderStep;
 
-    /// @notice False until the bootstrap Pulse at 1.0 ETH succeeds.
+    /// @notice False until the last bootstrap Pulse succeeds.
     bool public bootstrapComplete;
     /// @notice Index within the current phase (bootstrap 0–9, cycle 0–5).
     uint8 public ladderIndex;
@@ -124,9 +131,16 @@ contract PulseDistributor is Ownable, ReentrancyGuard, IPulseDial {
     event Pulsed(uint256 indexed epochId, uint256 amount, uint256 share, uint256 litCount, address indexed caller);
     event Claimed(uint256 indexed tokenId, uint256 indexed epochId, address indexed to, uint256 ethAmount);
 
-    constructor(address hopper_, address collection_, address ignite_, uint256 maxSupply_, address initialOwner)
-        Ownable(initialOwner)
-    {
+    constructor(
+        address hopper_,
+        address collection_,
+        address ignite_,
+        uint256 maxSupply_,
+        address initialOwner,
+        uint256 bootstrapStart_,
+        uint256 cycleStart_,
+        uint256 ladderStep_
+    ) Ownable(initialOwner) {
         if (hopper_ == address(0) || collection_ == address(0) || ignite_ == address(0)) {
             revert ZeroAddress();
         }
@@ -134,6 +148,9 @@ contract PulseDistributor is Ownable, ReentrancyGuard, IPulseDial {
         collection = IERC721(collection_);
         ignite = IIgniteModule(ignite_);
         maxSupply = maxSupply_;
+        bootstrapStart = bootstrapStart_ == 0 ? CollectionConfig.PULSE_BOOTSTRAP_START_WEI : bootstrapStart_;
+        cycleStart = cycleStart_ == 0 ? CollectionConfig.PULSE_CYCLE_START_WEI : cycleStart_;
+        ladderStep = ladderStep_ == 0 ? CollectionConfig.PULSE_LADDER_STEP_WEI : ladderStep_;
     }
 
     receive() external payable {}
@@ -210,11 +227,9 @@ contract PulseDistributor is Ownable, ReentrancyGuard, IPulseDial {
     /// @notice Current Hopper `available()` required to Pulse.
     function pulseThreshold() public view returns (uint256) {
         if (!bootstrapComplete) {
-            return
-                CollectionConfig.PULSE_BOOTSTRAP_START_WEI + uint256(ladderIndex)
-                    * CollectionConfig.PULSE_LADDER_STEP_WEI;
+            return bootstrapStart + uint256(ladderIndex) * ladderStep;
         }
-        return CollectionConfig.PULSE_CYCLE_START_WEI + uint256(ladderIndex) * CollectionConfig.PULSE_LADDER_STEP_WEI;
+        return cycleStart + uint256(ladderIndex) * ladderStep;
     }
 
     /// @notice Shell class used for Dial: override if set, else keccak(tokenId + salt).
