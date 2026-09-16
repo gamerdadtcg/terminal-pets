@@ -35,13 +35,17 @@ interface IHopperClock {
 
 /// @title CollectionNFT
 /// @notice Terminal Pets — ERC-721Enumerable + ERC-2981 + SeaDrop 1.0 token interface.
-/// OpenSea Studio Drop mints through canonical SeaDrop into **this** contract
-/// (`mintSeaDrop`). Same tokenId then reveal / Ignite / Hopper / Pulse / Dial.
+/// Hub `/mint` (`mint` / `mintTo` while `mintOpen`) is the primary public path.
+/// OpenSea Studio Drop may mint through canonical SeaDrop into **this** contract
+/// (`mintSeaDrop`) if Studio can import it — do not use Studio’s deploy-wizard.
+/// Same tokenId then reveal / Ignite / Hopper / Pulse / Dial.
 /// Royalties go to the RoyaltySplitter. Pre-reveal: 7.5% → TermFund. Post-reveal:
 /// 5% Hopper / 2.5% treasury. Tokens mint **Sealed**; `reveal()` flips metadata, enables
 /// `$TERM` trading and Ignite (owner anytime, or anyone after 24h).
-/// Public allocation is `maxSupply - teamReserve` (4244). SeaDrop and dapp `mint` /
-/// `mintTo` share that cap. Team reserve is owner-only via `teamMint` / `ownerMint`
+/// Public allocation is `maxSupply - teamReserve` (4244). Hub `mint` /
+/// `mintTo` (while `mintOpen`) is the primary public path. SeaDrop
+/// `mintSeaDrop` shares that cap if Studio can import this contract.
+/// Team reserve is owner-only via `teamMint` / `ownerMint`
 /// (not SeaDrop). Ignite spends `$TERM` (37.5% burn / 25% Hopper-as-ETH / 37.5%
 /// allotment refill) plus 0.002 ETH (50% Hopper / 50% buy `$TERM` and burn).
 /// Hopper payouts stay locked 7 days after `reveal()`.
@@ -71,7 +75,7 @@ contract CollectionNFT is ERC721Enumerable, ERC2981, Ownable, ReentrancyGuard {
     TerminalRenderer public immutable renderer;
     string private _contractURIOverride;
     /// @notice Pre-reveal metadata. No trailing slash → same URI for every token
-    /// (typical `hidden.json`). Trailing slash → `{base}{id}.json`.
+    /// (typical `hidden.json`). Collectors cannot see traits until `reveal()`.
     string public hiddenURI;
     /// @notice Revealed + Dormant (egg rock GIF). Trailing slash → `{id}.json`.
     string public dormantBaseURI;

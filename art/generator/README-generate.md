@@ -83,7 +83,7 @@ CollectionNFT.setMetadataURIs(
 )
 ```
 
-Hub test host (tokens 1–25, GIF only): `web/public/metadata/{hidden.json,dormant/,lit/}` with absolute `https://terminal-pets.vercel.app/art/test{,-egg}/{id}.gif` image URLs. Featured stills also live under `web/public/art/{awake,dormant}/`.
+Hub examples (~25 GIFs, **not mint supply**): `web/public/art/examples/{awake,egg}/`. Public collection metadata on the hub is **only** `web/public/metadata/hidden.json` until after reveal. Do not commit 4444 JSON to `web/public/metadata/{lit,dormant}/`. Featured stills also live under `web/public/art/{awake,dormant}/`.
 
 ## CLI flags
 

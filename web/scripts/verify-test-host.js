@@ -27,67 +27,67 @@ function listNumeric(dir, ext) {
     .sort((a, b) => a - b);
 }
 
-const artTest = path.join(publicDir, "art", "test");
-const artEgg = path.join(publicDir, "art", "test-egg");
-const litDir = path.join(publicDir, "metadata", "lit");
-const dormantDir = path.join(publicDir, "metadata", "dormant");
+const examplesAwake = path.join(publicDir, "art", "examples", "awake");
+const examplesEgg = path.join(publicDir, "art", "examples", "egg");
+const metadataDir = path.join(publicDir, "metadata");
+const litDir = path.join(metadataDir, "lit");
+const dormantDir = path.join(metadataDir, "dormant");
 
-const artIds = listNumeric(artTest, ".gif");
-const eggIds = listNumeric(artEgg, ".gif");
-const litIds = listNumeric(litDir, ".json");
-const dormantIds = listNumeric(dormantDir, ".json");
+if (fs.existsSync(litDir)) {
+  throw new Error(
+    "anti-snipe: do not host collection lit JSON at web/public/metadata/lit",
+  );
+}
+if (fs.existsSync(dormantDir)) {
+  throw new Error(
+    "anti-snipe: do not host collection dormant JSON at web/public/metadata/dormant",
+  );
+}
+
+const awakeIds = listNumeric(examplesAwake, ".gif");
+const eggIds = listNumeric(examplesEgg, ".gif");
 const expected = Array.from({ length: 25 }, (_, i) => i + 1);
 
 function assertIds(label, ids) {
   if (ids.join(",") !== expected.join(",")) {
-    throw new Error(`${label} expected 1..25, got ${ids.join(",")}`);
+    throw new Error(`${label} expected demo 1..25, got ${ids.join(",")}`);
   }
 }
 
-assertIds("art/test", artIds);
-assertIds("art/test-egg", eggIds);
-assertIds("metadata/lit", litIds);
-assertIds("metadata/dormant", dormantIds);
+assertIds("art/examples/awake", awakeIds);
+assertIds("art/examples/egg", eggIds);
 
 for (const id of expected) {
-  mustGif(path.join(artTest, `${id}.gif`));
-  mustGif(path.join(artEgg, `${id}.gif`));
+  mustGif(path.join(examplesAwake, `${id}.gif`));
+  mustGif(path.join(examplesEgg, `${id}.gif`));
 }
 
-for (const dir of [artTest, artEgg]) {
+for (const dir of [examplesAwake, examplesEgg]) {
   for (const name of fs.readdirSync(dir)) {
     if (name.toLowerCase().endsWith(".png")) {
-      throw new Error(`PNG not allowed in test host: ${path.join(dir, name)}`);
+      throw new Error(`PNG not allowed in examples: ${path.join(dir, name)}`);
     }
   }
 }
 
-function checkJson(filePath, expectedImage) {
-  const data = JSON.parse(fs.readFileSync(filePath, "utf8"));
-  if (typeof data.image !== "string" || !data.image.endsWith(".gif")) {
-    throw new Error(`${filePath} image must be a .gif URL`);
-  }
-  if (data.image.toLowerCase().includes(".png")) {
-    throw new Error(`${filePath} image must not reference PNG`);
-  }
-  if (data.image !== expectedImage) {
-    throw new Error(`${filePath} image expected ${expectedImage}, got ${data.image}`);
-  }
+const hiddenPath = path.join(metadataDir, "hidden.json");
+const hidden = JSON.parse(fs.readFileSync(hiddenPath, "utf8"));
+if (hidden.image !== `${ORIGIN}/art/sealed.png`) {
+  throw new Error(
+    `${hiddenPath} image expected ${ORIGIN}/art/sealed.png, got ${hidden.image}`,
+  );
+}
+if (hidden.attributes?.some((a) => a.trait_type !== "State")) {
+  throw new Error(`${hiddenPath} must only expose State=Sealed (no traits)`);
+}
+if (!String(hidden.description || "").toLowerCase().includes("cannot see traits")) {
+  throw new Error(`${hiddenPath} description must say collectors cannot see traits`);
 }
 
-checkJson(
-  path.join(publicDir, "metadata", "hidden.json"),
-  `${ORIGIN}/art/test-egg/1.gif`,
-);
-
-for (const id of expected) {
-  checkJson(
-    path.join(litDir, `${id}.json`),
-    `${ORIGIN}/art/test/${id}.gif`,
-  );
-  checkJson(
-    path.join(dormantDir, `${id}.json`),
-    `${ORIGIN}/art/test-egg/${id}.gif`,
+const metadataNames = fs.readdirSync(metadataDir);
+if (metadataNames.some((name) => name !== "hidden.json")) {
+  throw new Error(
+    `anti-snipe: web/public/metadata must only contain hidden.json, got ${metadataNames.join(",")}`,
   );
 }
 
@@ -105,5 +105,5 @@ for (const name of hatchFiles) {
 }
 
 console.log(
-  "test host ok: 25 GIF89a lit + 25 GIF89a egg + JSON HTTPS .gif images + 6 hatch GIFs",
+  "examples ok: 25 demo GIFs (not mint supply) + sealed hidden.json only + 6 hatch GIFs",
 );

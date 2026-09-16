@@ -4,7 +4,7 @@ Greenfield NFT collection for **Robinhood Chain** (EVM L2, chain id `4663`, nati
 
 Public collection name: **Terminal Pets**. NFT symbol: **TERM**. Memecoin: **`$TERM`**.
 
-Collectors mint on OpenSea. After mint, each token is a unique handheld **pet** that starts **Sealed** (placeholder metadata, 24h reveal window) with a **TBA**. After `CollectionNFT.reveal()` it shows as **Dormant** until Ignite. Each token also gets a one-time **`$TERM` Ignite allotment** (placeholder **1,000 `$TERM`**) from token supply so the token half of the first wake does not need a live chart. **Ignite** is off until reveal. Then it is hybrid: that `$TERM` (**37.5% burn / 25% Hopper-as-ETH / 37.5% allotment escrow refill**) **plus exactly 0.002 ETH**. The ETH splits **50% buy `$TERM` and burn / 50% Hopper**. Team earns **0** from that ETH fee (not TermFund, not treasury). The 37.5% token cut returns to the per-pet allotment **pool** (that tokenId stays consumed). One-way **Dormant → Lit**. Lit stays with the NFT on transfer. **Royalties** (7.5% via **RoyaltySplitter**): **pre-reveal 100% → TermFund** (nothing to Hopper, nothing to treasury from that stream). **Post-reveal 5% Hopper / 2.5% treasury**. **Hopper** is ETH only after that: post-reveal NFT royalties, **50% of each Ignite ETH fee**, 25% of each Ignite `$TERM` fee (swapped to ETH when a router is set), plus, once the canonical TERM/ETH pool is live, a **1.5% TermMarket skim** of that pool’s volume. `$TERM` is **not** fee-on-transfer; public transfers are also **off until reveal**. **Dial**: Ignite assigns **1–4** Robinhood Chain Stock Tokens from a fixed 8-token pool (**HOOD, AAPL, MSFT, GOOGL, AMZN, META, NVDA, TSLA**) by shell class (**ALPHA 1 / BETA 2 / DELTA 3 / OMEGA 4**). Holders do not pick. Equal weights (bps = 10_000). See [`docs/DIAL.md`](docs/DIAL.md). **Pulse** uses an escalating Hopper ETH **ladder** (not a fixed 0.5 ETH): bootstrap `0.1 → 1.0`, then cycle `0.5 → 1.0` forever (never back to 0.1). Snapshot Lit, read Dial. **Dialed Lit** swap their ETH share to those Stock Tokens (ETH fallback if no router). **Undialed Lit** (no assignment, or slots still `address(0)`) buy `$TERM` with that share and credit the TBA (or owner) — not raw ETH; claim reverts without router + `$TERM`. Hopper stays ETH. Dormant earn nothing. TermMarket ships in this repo but stays **inactive** until `TERM_POOL` and `TERM_SWAP_ROUTER` are set.
+Collectors mint on **this hub** (`/mint` → `CollectionNFT.mint` / `mintTo` while `mintOpen`). OpenSea Studio BYO import is currently blocked — do **not** send collectors to the Studio deploy-wizard. After mint, each token is a unique handheld **pet** that starts **Sealed**: every `tokenURI` is the same `hidden.json` until `CollectionNFT.reveal()`, so collectors **cannot see traits**. Hub carousel GIFs are **examples / not mint supply**. After `CollectionNFT.reveal()` it shows as **Dormant** until Ignite. Each token also gets a one-time **`$TERM` Ignite allotment** (placeholder **1,000 `$TERM`**) from token supply so the token half of the first wake does not need a live chart. **Ignite** is off until reveal. Then it is hybrid: that `$TERM` (**37.5% burn / 25% Hopper-as-ETH / 37.5% allotment escrow refill**) **plus exactly 0.002 ETH**. The ETH splits **50% buy `$TERM` and burn / 50% Hopper**. Team earns **0** from that ETH fee (not TermFund, not treasury). The 37.5% token cut returns to the per-pet allotment **pool** (that tokenId stays consumed). One-way **Dormant → Lit**. Lit stays with the NFT on transfer. **Royalties** (7.5% via **RoyaltySplitter**): **pre-reveal 100% → TermFund** (nothing to Hopper, nothing to treasury from that stream). **Post-reveal 5% Hopper / 2.5% treasury**. **Hopper** is ETH only after that: post-reveal NFT royalties, **50% of each Ignite ETH fee**, 25% of each Ignite `$TERM` fee (swapped to ETH when a router is set), plus, once the canonical TERM/ETH pool is live, a **1.5% TermMarket skim** of that pool’s volume. `$TERM` is **not** fee-on-transfer; public transfers are also **off until reveal**. **Dial**: Ignite assigns **1–4** Robinhood Chain Stock Tokens from a fixed 8-token pool (**HOOD, AAPL, MSFT, GOOGL, AMZN, META, NVDA, TSLA**) by shell class (**ALPHA 1 / BETA 2 / DELTA 3 / OMEGA 4**). Holders do not pick. Equal weights (bps = 10_000). See [`docs/DIAL.md`](docs/DIAL.md). **Pulse** uses an escalating Hopper ETH **ladder** (not a fixed 0.5 ETH): bootstrap `0.1 → 1.0`, then cycle `0.5 → 1.0` forever (never back to 0.1). Snapshot Lit, read Dial. **Dialed Lit** swap their ETH share to those Stock Tokens (ETH fallback if no router). **Undialed Lit** (no assignment, or slots still `address(0)`) buy `$TERM` with that share and credit the TBA (or owner) — not raw ETH; claim reverts without router + `$TERM`. Hopper stays ETH. Dormant earn nothing. TermMarket ships in this repo but stays **inactive** until `TERM_POOL` and `TERM_SWAP_ROUTER` are set.
 
 This repo is a complete MVP: Foundry contracts, tests, a Robinhood Chain deploy script, a Next.js hub + wallet dapp (wagmi / viem), and the Pocket Critter generative PFP art system under `art/`. The public homepage is a marketing hub. Contract addresses can stay empty until Robinhood Chain deploy.
 
@@ -107,10 +107,10 @@ Always point OpenSea creator earnings at the **RoyaltySplitter**. The splitter h
 
 Do **not** broadcast to chain `4663` until explicitly asked.
 
-1. Deploy contracts. Confirm `revealed = false`, `igniteEnabled = false`, `tradingEnabled = false`, splitter `live = false`.
-2. `teamMint` the 200 reserve to the mainnet team wallet (see [`docs/MAINNET_PREP.md`](docs/MAINNET_PREP.md)). OpenSea **import existing** CollectionNFT (never Studio deploy-wizard). Point **7.5%** earnings at the RoyaltySplitter. Authorize SeaDrop. Configure Studio Drop stages (see [`docs/OPENSEA_STUDIO_SEADROP.md`](docs/OPENSEA_STUDIO_SEADROP.md)). Leave `mintOpen` false unless the hub should mint too. Rehearse this on Base Sepolia first: [`docs/STUDIO_DROP_DRYRUN.md`](docs/STUDIO_DROP_DRYRUN.md).
-3. Mint window (up to 24h): secondary royalties fund TermFund. Hopper is untouched by that stream.
-4. `CollectionNFT.reveal()` — owner anytime, or anyone after 24h. Art + Ignite + `$TERM` trading + 5/2.5 royalties in one tx. Hopper payouts then lock 7 days from that timestamp.
+1. Deploy contracts. Confirm `revealed = false`, `igniteEnabled = false`, `tradingEnabled = false`, splitter `live = false`. Set `hiddenURI` only (`https://terminal-pets.vercel.app/metadata/hidden.json`). Do **not** publish 4444 lit/dormant JSON to `web/public/metadata/{lit,dormant}` or git.
+2. `teamMint` the 200 reserve to the mainnet team wallet (see [`docs/MAINNET_PREP.md`](docs/MAINNET_PREP.md)). **Hub mint is primary** (`setMintOpen(true)` for Friday). OpenSea Studio currently has **no BYO import** and **no Base Sepolia** in Drop create — do not send collectors to the wizard. Point **7.5%** earnings at the RoyaltySplitter if a collection page exists. Rehearse on Base Sepolia first: [`docs/STUDIO_DROP_DRYRUN.md`](docs/STUDIO_DROP_DRYRUN.md).
+3. Mint window (up to 24h): every `tokenURI` is the same sealed `hidden.json` (collectors cannot see traits). Secondary royalties fund TermFund. Hopper is untouched by that stream. Friday copy: Team 7am / GTD 8am / FCFS 9am / Public 10am PT Sep 18 2026, 1 per phase, 4444 / 200 team.
+4. `CollectionNFT.reveal()` — owner anytime, or anyone after 24h. Then (and only then) point `dormantBaseURI` / `litBaseURI` at the **private 4444 pin**. Art + Ignite + `$TERM` trading + 5/2.5 royalties in one tx. Hopper payouts then lock 7 days from that timestamp.
 5. Later, when a DEX adapter exists: `TermFund.setRouter` + `seedLiquidity`. Set `TERM_SWAP_ROUTER` so Ignite can buy-and-burn the ETH half (and convert the `$TERM` Hopper cut). Optional `TERM_POOL` for TermMarket.
 
 ## Hybrid Ignite + TermFund
@@ -214,25 +214,27 @@ Live product art is the **generative Pocket Critter** package vendored at [`art/
 
 | State | URI |
 | --- | --- |
-| Sealed | `hiddenURI` (typical single `hidden.json`) |
+| Sealed (pre-`reveal()`) | **single** `hiddenURI` (no trailing slash → same `hidden.json` for every token) |
 | Revealed Dormant | `{dormantBaseURI}{id}.json` → egg rock GIF |
 | Lit (Ignite) | `{litBaseURI}{id}.json` → awake pet GIF |
 
+Until `reveal()`, collectors **cannot see traits**. Hub carousel GIFs (~25) at `web/public/art/examples/` are **examples / not mint supply** — they are not live collection tokenIds and must not be the 4444 mint files.
+
 Owner sets bases with `setMetadataURIs`. Trailing `/` appends `{tokenId}.json`. ERC-4906 `MetadataUpdate` still fires on Ignite. Until URIs are set, CollectionNFT calls a separately deployed **fallback** renderer (`TerminalRenderer` contract, constructed by `CollectionNFT`) for a data-URI stub (rectangle + `PET#` + state + `OFF-CHAIN ART`) — it is not product art.
 
-**Test hosting (tokens 1–25, GIF only)** is already on the hub. After Vercel deploy, the owner can point:
+**Anti-snipe hosting (Friday mint):**
 
-| Arg | Value |
+| Public on this hub | Role |
 | --- | --- |
-| `hiddenURI` | `https://terminal-pets.vercel.app/metadata/hidden.json` |
-| `dormantBaseURI` | `https://terminal-pets.vercel.app/metadata/dormant/` |
-| `litBaseURI` | `https://terminal-pets.vercel.app/metadata/lit/` |
+| `https://terminal-pets.vercel.app/metadata/hidden.json` | **Only** collection metadata until after reveal |
+| `web/public/art/examples/{awake,egg}/` | Demo GIFs, labeled examples / not mint supply |
+| `web/public/metadata/{lit,dormant}/` | **Do not commit or deploy** until after reveal policy |
 
-Art files: `web/public/art/test/{id}.gif` (lit) and `web/public/art/test-egg/{id}.gif` (dormant). Do not convert those to PNG. This is not a chain deploy and is not the full 4444 export.
+Do **not** `setMetadataURIs` dormant/lit bases at the old hub `/metadata/dormant/` or `/metadata/lit/` trees — those paths are gone so snipers cannot enumerate tokenId JSON. Pin the 4444 set privately; publish those bases at `reveal()`.
 
 `tokenTraits()` still returns the historical `AWAKEN_PET_V2` table for tests. Product traits are `art/schema/traits.json`. The old `ACC_N = 6` accessory list is obsolete for product art.
 
-Metadata `name` is `Terminal Pet #{id}` (egg JSON uses `Terminal Pet Egg #{id}`). Collection `contractURI` name is `Terminal Pets`.
+Metadata `name` after reveal is `Terminal Pet #{id}` (egg JSON uses `Terminal Pet Egg #{id}`). Collection `contractURI` name is `Terminal Pets`. Sealed name is `Terminal Pet (Sealed)`.
 
 Regenerate sample GIFs (Python 3.10+ / Pillow):
 
@@ -253,8 +255,8 @@ Full 4444 export is optional and gitignored (`art/export/gif-full/`). After pinn
 
 | Path | Supply | Who |
 | --- | --- | --- |
-| Public / OpenSea Studio Drop (`mintSeaDrop`) | **4244** | SeaDrop stages (Team / GTD / FCFS / Public) |
-| Dapp (`mint`, `mintTo`) | **4244** (same cap) | Anyone while `mintOpen` |
+| Dapp (`mint`, `mintTo`) — **primary** | **4244** | Anyone while `mintOpen` |
+| Public / OpenSea Studio Drop (`mintSeaDrop`) | **4244** (same cap) | SeaDrop if Studio BYO exists; currently blocked |
 | Team (`teamMint` / `ownerMint`) | **200** | Owner only, to treasury or any team wallet |
 | Total | **4444** | Team + public cannot exceed this |
 
@@ -268,7 +270,7 @@ Public mint cannot consume the team reserve, even if the team has not minted yet
 - `mint(uint256 quantity)` — dapp mint to the caller (public cap)
 - `teamMint` / `ownerMint` — owner-only reserve (team cap)
 
-Mint starts **closed** for the dapp path. After deploy, mint the reserve with `teamMint(TREASURY_ADDRESS, 200)` (or a dedicated team wallet). Authorize SeaDrop in the constructor (`CollectionConfig.SEADROP` = `0x00005EA00Ac477B1030CE78506496e8C2dE24bf5`) or `updateAllowedSeaDrop`. Configure the Drop in Studio against **this** address — see [`docs/OPENSEA_STUDIO_SEADROP.md`](docs/OPENSEA_STUDIO_SEADROP.md). Paid dapp mint ETH is forwarded to the Hopper; SeaDrop primary proceeds go to the Studio creator-payout address (set to Hopper if that ETH should fuel Pulse).
+Mint starts **closed** for the dapp path. After deploy, mint the reserve with `teamMint(TREASURY_ADDRESS, 200)` (or a dedicated team wallet). **Hub mint is primary for Friday:** owner `setMintOpen(true)` so `/mint` can call `mint` / `mintTo`. Studio Drop create currently has **no BYO import** and **no Base Sepolia** — do not send collectors to the wizard. Authorize SeaDrop only if Studio can import this CollectionNFT later. Paid dapp mint ETH is forwarded to the Hopper; SeaDrop primary proceeds (if ever used) go to the Studio creator-payout address.
 
 ## OpenSea: point royalties at the RoyaltySplitter
 
@@ -280,7 +282,7 @@ ERC-2981 is wired to the **RoyaltySplitter** at `750` bps (7.5% of sale). **Pre-
 4. Set creator earnings to **7.5% (750 bps)** and the recipient to the **RoyaltySplitter** address (not Hopper, not a personal wallet, not treasury).
 5. If OpenSea offers “honor on-chain royalties” / ERC-2981, enable it. `royaltyInfo` already returns the splitter and 750 bps.
 6. Confirm the collection page shows the splitter as the fee recipient. Secondary sales that honor ERC-2981 then follow the live mode: TermFund until reveal, Hopper/treasury after.
-7. Primary mint: configure an OpenSea **Studio Drop against this CollectionNFT** (SeaDrop). Details: [`docs/OPENSEA_STUDIO_SEADROP.md`](docs/OPENSEA_STUDIO_SEADROP.md). After mint, OpenSea will show **Sealed** metadata until `reveal()`, then Dormant; Ignite updates `tokenURI` to Lit.
+7. Primary mint is **this hub** (`/mint` while `mintOpen`). Do not use Studio “deploy Drop contract.” If Studio later supports import-existing on the launch chain, that path is optional and shares the 4244 cap. After mint, OpenSea will show **Sealed** metadata (`hidden.json`) until `reveal()`, then Dormant; Ignite updates `tokenURI` to Lit.
 
 Do not route creator earnings to an EOA or directly to Hopper. The splitter is what keeps the pre-reveal TermFund path and the post-reveal 5% / 2.5% split.
 
@@ -306,7 +308,8 @@ Public marketing site and wallet tools share one Next.js app.
 
 | Route | What |
 | --- | --- |
-| `/` | Hub: hero, how it works, Hopper, economics, generative art preview, status, FAQ, links |
+| `/` | Hub: hero, Friday schedule, how it works, Hopper, economics, **example** art (not mint supply), status, FAQ, links |
+| `/mint` | Primary mint: wallet connect, chain switch, `CollectionNFT.mint` / `mintTo` while `mintOpen`; sealed-state copy |
 | `/hopper` | Dedicated Hopper + Pulse ladder explainer |
 | `/dial` | Dial explainer: 8-stock pool + ALPHA–OMEGA assignment table |
 | `/app` | Ignite / allotment / Hopper / Pulse / TBA wallet tools (no Dial picker) |
@@ -324,9 +327,11 @@ Without contract addresses the hub shows **Deploying soon**. The Terminal route 
 Environment (`web/.env.local` or Vercel project env):
 
 ```
+# Robinhood mainnet (fill after 4663 deploy — no broadcast from this PR)
 NEXT_PUBLIC_CHAIN_ID=4663
 NEXT_PUBLIC_RPC_URL=https://rpc.mainnet.chain.robinhood.com
 NEXT_PUBLIC_EXPLORER_URL=https://robinhoodchain.blockscout.com
+NEXT_PUBLIC_COLLECTION_NFT=
 NEXT_PUBLIC_COLLECTION_ADDRESS=
 NEXT_PUBLIC_IGNITE_ADDRESS=
 NEXT_PUBLIC_HOPPER_ADDRESS=
@@ -337,6 +342,14 @@ NEXT_PUBLIC_TERM_FUND_ADDRESS=
 NEXT_PUBLIC_TERM_MARKET_ADDRESS=
 NEXT_PUBLIC_OPENSEA_URL=
 NEXT_PUBLIC_X_URL=
+
+# Base Sepolia dry-run (testing). Hub falls back to CollectionNFT
+# 0xe1cC988CeC1C29764ba18523635De82d0C9B518F when CHAIN_ID=84532 and
+# collection env is blank. Studio Drop create has no BYO import / no Base Sepolia.
+# NEXT_PUBLIC_CHAIN_ID=84532
+# NEXT_PUBLIC_RPC_URL=https://sepolia.base.org
+# NEXT_PUBLIC_EXPLORER_URL=https://sepolia.basescan.org
+# NEXT_PUBLIC_COLLECTION_NFT=0xe1cC988CeC1C29764ba18523635De82d0C9B518F
 ```
 
 ### Deploy the hub to Vercel (Hobby / free)

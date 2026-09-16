@@ -13,8 +13,9 @@ export function SiteFooter() {
           </p>
           <p className="text-sm font-medium">{SITE.name}</p>
           <p className="max-w-sm text-sm text-muted-foreground">
-            Collection on {SITE.chain}. Metadata names each token Terminal Pet
-            #id. Generative PFPs: dormant egg, awake on Ignite.
+            Collection on {SITE.chain}. Mint on this hub. Until reveal, every
+            tokenURI is sealed hidden.json — collectors cannot see traits.
+            Hub GIFs are examples / not mint supply.
           </p>
           <p className="max-w-lg text-xs leading-relaxed text-muted-foreground/80">
             {SITE.disclaimer}
@@ -33,6 +34,9 @@ export function SiteFooter() {
           <Link className="hover:text-foreground" href="/dial">
             Dial
           </Link>
+          <Link className="hover:text-foreground" href="/mint">
+            Mint
+          </Link>
           <Link className="hover:text-foreground" href="/app">
             Terminal
           </Link>
@@ -41,7 +45,7 @@ export function SiteFooter() {
               OpenSea
             </a>
           ) : (
-            <span>OpenSea · soon</span>
+            <span>OpenSea · collection later</span>
           )}
           {links.x ? (
             <a className="hover:text-foreground" href={links.x}>

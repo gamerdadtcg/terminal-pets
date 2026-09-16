@@ -34,6 +34,9 @@ export default function HopperPage() {
               </p>
             </div>
             <Button className="w-full" asChild>
+              <Link href="/mint">Mint on this hub</Link>
+            </Button>
+            <Button className="w-full" variant="outline" asChild>
               <Link href="/dial">How Dial aims Pulse</Link>
             </Button>
             <Button className="w-full" variant="outline" asChild>

@@ -1,6 +1,7 @@
 import { ComingSoon } from "@/components/coming-soon";
 import { ArtGallery } from "@/components/hub/art-gallery";
 import { HopperExplainer } from "@/components/hub/hopper-explainer";
+import { MintScheduleCard } from "@/components/hub/mint-schedule";
 import {
   Accordion,
   AccordionContent,
@@ -10,7 +11,8 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { contractsConfigured } from "@/lib/contracts";
+import { collectionConfigured } from "@/lib/contracts";
+import { configuredChainId } from "@/lib/chain";
 import {
   FAQ,
   SITE,
@@ -18,6 +20,7 @@ import {
   mintSchedule,
   mintScheduleCopy,
   publicLinks,
+  sealedCopy,
 } from "@/lib/site";
 import Link from "next/link";
 
@@ -25,12 +28,12 @@ const STEPS = [
   {
     n: "01",
     title: "Free mint",
-    body: `${mintScheduleCopy.sentence} ${mintAllocation.sentence} Mint on OpenSea. Each token mints Sealed — hidden metadata, TBA, and a $TERM allotment. Name is Terminal Pet #{id}. Ignite and $TERM trading stay off.`,
+    body: `${mintScheduleCopy.sentence} ${mintAllocation.sentence} Mint on this hub when mintOpen is true. Each token mints Sealed — every tokenURI is the same hidden.json, so collectors cannot see traits. TBA and a $TERM allotment still attach. Name is Terminal Pet #{id}. Ignite and $TERM trading stay off.`,
   },
   {
     n: "02",
     title: "24h reveal",
-    body: `Sealed for ${SITE.revealWindow}. Owner may call CollectionNFT.reveal() early; anyone can after that. One tx: dormant egg metadata live, $TERM trading on, Ignite on, royalties switch from 7.5% TermFund to ${SITE.royaltyHopper} Hopper / ${SITE.royaltyTreasury} treasury.`,
+    body: `Sealed for ${SITE.revealWindow}. Every tokenURI stays the same hidden.json until CollectionNFT.reveal() — collectors cannot see traits. Owner may reveal early; anyone can after the window. One tx: dormant egg metadata live, $TERM trading on, Ignite on, royalties switch from 7.5% TermFund to ${SITE.royaltyHopper} Hopper / ${SITE.royaltyTreasury} treasury.`,
   },
   {
     n: "03",
@@ -101,27 +104,27 @@ const ROADMAP = [
   {
     state: "done" as const,
     title: "Generative PFP metadata",
-    body: "Pocket Critter off-chain GIFs. tokenURI: sealed JSON → dormant egg → awake pet on Ignite. ERC-4906 MetadataUpdate stays. Old on-chain SVG pets are not product art.",
+    body: "Pocket Critter off-chain GIFs. Until reveal every tokenURI is one sealed hidden.json (collectors cannot see traits). After reveal: dormant egg → awake pet on Ignite. ERC-4906 MetadataUpdate stays. Old on-chain SVG pets are not product art.",
   },
   {
     state: "done" as const,
-    title: "25-token GIF test host",
-    body: "Hub hosts tokens 1–25 as animated GIFs + JSON at /art/test, /art/test-egg, and /metadata/{hidden,dormant,lit}. After Vercel deploy, setMetadataURIs can use the terminal-pets.vercel.app HTTPS bases. Not a chain deploy.",
+    title: "Anti-snipe demo split",
+    body: "Hub carousel GIFs (~25) live at /art/examples and are labeled examples / not mint supply. Public /metadata is only hidden.json until after reveal. Do not host 4444 lit/dormant JSON on this hub or in git before reveal policy.",
   },
   {
     state: "next" as const,
-    title: "Pin collection GIFs",
-    body: "Generate the remaining 4444 awake + egg GIFs, pin JSON to IPFS/HTTP, then CollectionNFT.setMetadataURIs. A 25-token HTTPS GIF test path is already on this hub.",
+    title: "Pin collection GIFs (after reveal policy)",
+    body: "Generate the 4444 awake + egg GIFs off-git (art/export/gif-full/ is gitignored). Pin privately. Set hiddenURI now; set dormant/lit bases at reveal — do not publish tokenId JSON on this hub before CollectionNFT.reveal().",
   },
   {
     state: "done" as const,
     title: "24h reveal gates",
-    body: "Mint → sealed metadata, Ignite off, $TERM trading off, 7.5% royalties → TermFund. CollectionNFT.reveal() flips metadata, Ignite, trading, and 5/2.5 royalties in one tx. Owner early; anyone after 24h.",
+    body: "Mint → every tokenURI is hidden.json (no traits), Ignite off, $TERM trading off, 7.5% royalties → TermFund. CollectionNFT.reveal() flips metadata, Ignite, trading, and 5/2.5 royalties in one tx. Owner early; anyone after 24h.",
   },
   {
     state: "now" as const,
-    title: "Public hub",
-    body: "This site. Ignite / Pulse / Hopper / Dial hub pages. Terminal route is ready. 25-token GIF test host + sample previews on the hub.",
+    title: "Public hub mint",
+    body: "This site. /mint calls CollectionNFT.mint / mintTo while mintOpen. Sealed-state copy until reveal. Ignite / Pulse / Hopper / Dial pages. Carousel is examples / not mint supply.",
   },
   {
     state: "next" as const,
@@ -135,14 +138,15 @@ const ROADMAP = [
   },
   {
     state: "next" as const,
-    title: "OpenSea import",
-    body: `Point the collection at the splitter. Honor ERC-2981. Open the ${SITE.publicSupply} public mint on ${mintSchedule.date} (${mintSchedule.timezoneLabel}). ${SITE.teamReserve} stay reserved for the team for ${SITE.teamReserveUse}. Hub phase times are copy only until allowlists exist on-chain. Pre-reveal earnings still hit the splitter — they just route 100% to TermFund until reveal.`,
+    title: "OpenSea Studio (not the mint path)",
+    body: `Studio Drop create currently has no BYO import and no Base Sepolia. Hub mint is primary. Do not use Studio’s deploy-Drop wizard. OpenSea can still show the collection after import. ${SITE.publicSupply} public / ${SITE.teamReserve} team. Phase times are hub copy until on-chain mintOpen.`,
   },
 ] as const;
 
 export function HubLanding() {
   const links = publicLinks();
-  const live = contractsConfigured();
+  const live = collectionConfigured();
+  const chainId = configuredChainId();
 
   return (
     <div className="relative">
@@ -154,13 +158,16 @@ export function HubLanding() {
           <div className="space-y-6">
             <div className="flex flex-wrap items-center gap-2">
               <Badge variant="outline" className="font-mono">
-                {SITE.chain} · {SITE.chainId}
+                {SITE.chain} · {chainId}
               </Badge>
               <Badge variant="outline" className="font-mono">
                 Free mint · {mintSchedule.date} · {mintSchedule.timezoneLabel}
               </Badge>
+              <Badge variant="outline" className="font-mono">
+                {sealedCopy.badge}
+              </Badge>
               {live ? (
-                <ComingSoon>Contracts live</ComingSoon>
+                <ComingSoon>Hub mint</ComingSoon>
               ) : (
                 <ComingSoon />
               )}
@@ -175,10 +182,11 @@ export function HubLanding() {
             </p>
             <p className="max-w-xl text-sm text-muted-foreground">
               {mintScheduleCopy.sentence} {mintAllocation.sentence} Mint on
-              OpenSea. Pets mint Sealed for {SITE.revealWindow}: hidden
-              metadata, Ignite off, $TERM transfers off. Reveal shows a
-              dormant egg GIF; Ignite swaps metadata to the matching awake
-              pet. Secondary royalties (
+              this hub. Pets mint Sealed for {SITE.revealWindow}: every
+              tokenURI is the same hidden.json — collectors cannot see traits.
+              Ignite and $TERM transfers stay off. {sealedCopy.carousel} Reveal
+              shows a dormant egg GIF; Ignite swaps metadata to the matching
+              awake pet. Secondary royalties (
               {SITE.royalty}) go 100% to TermFund — nothing to Hopper, nothing
               to treasury from that stream. Reveal flips metadata live, turns
               on Ignite and $TERM trading, and switches royalties to{" "}
@@ -191,114 +199,85 @@ export function HubLanding() {
               1–4 Stock Tokens by shell class at Ignite.
             </p>
             <div className="flex flex-wrap gap-2">
-              {links.opensea ? (
-                <Button asChild>
-                  <a href={links.opensea} rel="noreferrer" target="_blank">
-                    Mint on OpenSea
-                  </a>
-                </Button>
-              ) : (
-                <Button disabled>Mint on OpenSea · soon</Button>
-              )}
+              <Button asChild>
+                <Link href="/mint">Mint</Link>
+              </Button>
               <Button variant="outline" asChild>
                 <Link href="/app">Ignite / Pulse app</Link>
               </Button>
               <Button variant="ghost" asChild>
                 <Link href="/hopper">Hopper lock</Link>
               </Button>
+              {links.opensea ? (
+                <Button variant="ghost" asChild>
+                  <a href={links.opensea} rel="noreferrer" target="_blank">
+                    View on OpenSea
+                  </a>
+                </Button>
+              ) : null}
             </div>
             <p className="font-mono text-[11px] text-muted-foreground">
               {SITE.supply} total · {SITE.publicSupply} public /{" "}
               {SITE.teamReserve} team · Free mint · {mintSchedule.date} ·{" "}
               {mintScheduleCopy.phases} · 1 / phase · Sealed{" "}
-              {SITE.revealWindow} · Ignite {SITE.igniteFee} · Royalty{" "}
-              {SITE.royalty}
+              {SITE.revealWindow} · {sealedCopy.label} · Ignite {SITE.igniteFee}{" "}
+              · Royalty {SITE.royalty}
             </p>
           </div>
 
           <div className="grid gap-3">
-            <div className="rounded-[1.6rem] border border-primary/25 bg-card/70 p-5 shadow-[0_0_80px_rgba(240,180,41,0.08)]">
-              <p className="font-mono text-[11px] tracking-[0.28em] text-primary">
-                FREE MINT
-              </p>
-              <p className="mt-3 text-lg font-medium">{mintSchedule.date}</p>
-              <p className="mt-1 text-sm text-muted-foreground">
-                {mintSchedule.timezoneIana} ({mintSchedule.timezoneLabel})
-              </p>
-              <ol className="mt-4 grid gap-2 sm:grid-cols-2">
-                {mintSchedule.phases.map((phase) => (
-                  <li
-                    key={phase.name}
-                    className="rounded-xl border border-border/70 bg-background/50 px-3 py-2"
-                  >
-                    <p className="font-mono text-[11px] text-primary">
-                      {phase.time}
-                    </p>
-                    <p className="text-sm font-medium">
-                      {phase.name}
-                      {"note" in phase && phase.note ? (
-                        <span className="ml-1 font-normal text-muted-foreground">
-                          ({phase.note})
-                        </span>
-                      ) : null}
-                    </p>
-                  </li>
-                ))}
-              </ol>
-              <p className="mt-4 text-sm text-muted-foreground">
-                {mintSchedule.rule} {mintAllocation.sentence}
-              </p>
-            </div>
+            <MintScheduleCard />
             <div className="rounded-[1.6rem] border border-border/70 bg-card/70 p-5">
               <p className="font-mono text-[11px] tracking-[0.28em] text-primary">
-                GENERATIVE PFP
+                EXAMPLES / NOT MINT SUPPLY
               </p>
               <p className="mt-3 text-lg font-medium">
                 Dormant egg. Ignite cracks it open.
               </p>
               <p className="mt-2 text-sm text-muted-foreground">
-                Modular Pocket Critter GIFs (2048 compose, 512 export). Off-chain
-                JSON tokenURI — not the old on-chain SVG pets. Ignite is the
-                hatch: crack, split, flash, awake pet.
+                Demo GIFs only — not live tokenIds. Modular Pocket Critter
+                (2048 compose, 512 export). Until reveal, minted tokenURI is
+                one sealed hidden.json. Ignite is the hatch: crack, split,
+                flash, awake pet.
               </p>
               <div className="mt-4 grid grid-cols-2 gap-2">
                 <figure className="overflow-hidden rounded-xl border border-border/70 bg-black/40">
                   <img
-                    src="/art/test-egg/2.gif"
-                    alt="Sample dormant Terminal Pet egg GIF"
+                    src="/art/examples/egg/2.gif"
+                    alt="Example dormant Terminal Pet egg GIF (not mint supply)"
                     className="aspect-square w-full object-cover"
                     width={512}
                     height={512}
                   />
                   <figcaption className="px-2 py-1.5 font-mono text-[10px] text-muted-foreground">
-                    Dormant · SNAG egg
+                    Example · SNAG egg · {sealedCopy.label}
                   </figcaption>
                 </figure>
                 <figure className="overflow-hidden rounded-xl border border-border/70 bg-black/40">
                   <img
-                    src="/art/test/2.gif"
-                    alt="Sample awakened Terminal Pet GIF"
+                    src="/art/examples/awake/2.gif"
+                    alt="Example awakened Terminal Pet GIF (not mint supply)"
                     className="aspect-square w-full object-cover"
                     width={512}
                     height={512}
                   />
                   <figcaption className="px-2 py-1.5 font-mono text-[10px] text-muted-foreground">
-                    Lit · SNAG awake
+                    Example · SNAG awake · {sealedCopy.label}
                   </figcaption>
                 </figure>
               </div>
               <figure className="mt-2 overflow-hidden rounded-xl border border-primary/25 bg-black/40">
                 <img
                   src="/art/hatch/snag_hatch.gif"
-                  alt="SNAG Ignite hatch GIF: egg cracks, splits, flashes, and the pet wakes"
+                  alt="Example SNAG Ignite hatch GIF (not mint supply): egg cracks, splits, flashes, and the pet wakes"
                   className="aspect-square w-full object-cover"
                   width={512}
                   height={512}
                 />
                 <figcaption className="px-2 py-1.5 font-mono text-[10px] text-muted-foreground">
-                  Hatch · Ignite cracks the egg. Pet wakes.{" "}
+                  Example hatch · {sealedCopy.label}.{" "}
                   <Link href="/#art" className="text-primary underline-offset-2 hover:underline">
-                    More hatches
+                    More examples
                   </Link>
                 </figcaption>
               </figure>
@@ -307,7 +286,7 @@ export function HubLanding() {
               <div className="rounded-2xl border border-border/70 bg-card/60 p-3">
                 <p className="font-mono text-[10px] text-primary">SEALED</p>
                 <p className="mt-1 text-xs text-muted-foreground">
-                  Hidden / generic metadata until reveal.
+                  One hidden.json for every token. No traits until reveal.
                 </p>
               </div>
               <div className="rounded-2xl border border-border/70 bg-card/60 p-3">
@@ -340,9 +319,10 @@ export function HubLanding() {
           </h2>
           <p className="text-muted-foreground">
             {mintScheduleCopy.sentence} {mintAllocation.sentence} Pets mint
-            Sealed. After {SITE.revealWindow} (or sooner if the owner
-            activates), reveal flips metadata, enables Ignite and $TERM
-            trading, and routes royalties to Hopper/treasury. Until then the
+            Sealed — {sealedCopy.tokenUri} After {SITE.revealWindow} (or
+            sooner if the owner activates), reveal flips metadata, enables
+            Ignite and $TERM trading, and routes royalties to
+            Hopper/treasury. Until then the
             full {SITE.royalty} creator royalty seeds TermFund. Ignite is
             hybrid: {SITE.igniteFeeTerm} splits {SITE.igniteBurn} burn /{" "}
             {SITE.igniteHopper} Hopper / {SITE.igniteAllotmentRefill} allotment
@@ -462,8 +442,9 @@ export function HubLanding() {
             {SITE.igniteFeeEth} ({SITE.igniteEthSplit}). Team earns 0 from the
             ETH fee. The {SITE.igniteAllotmentRefill} $TERM cut refills
             allotment escrow, not treasury. Live $TERM trades on the canonical
-            pool skim {SITE.tradeFee} once TERM_POOL is set. No live addresses.
-            Do not point OpenSea earnings at a wallet — use the splitter.
+            pool skim {SITE.tradeFee} once TERM_POOL is set. Hub mint is the
+            primary path. Do not point OpenSea earnings at a wallet — use the
+            splitter.
           </p>
         </div>
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
@@ -497,12 +478,11 @@ export function HubLanding() {
             </h2>
             <p className="text-muted-foreground">
               {SITE.artSystem} system: modular layers, 12 pets, matching eggs,
-              Robinhood-green backgrounds ({SITE.artCompose}). Reveal serves the
-              dormant egg GIF. Ignite is the hatch — crack, split, flash — then
-              tokenURI swaps to the awake pet GIF (ERC-4906). Composed hatch
-              GIFs are below; frame PNGs stay in the art package. This hub hosts
-              tokens 1–25 as animated GIFs for setMetadataURIs. Old on-chain SVG
-              Track A pets and art-pass trait catalogs are not product art.
+              Robinhood-green backgrounds ({SITE.artCompose}). {sealedCopy.sentence}{" "}
+              After reveal, dormant egg GIFs go live. Ignite is the hatch —
+              crack, split, flash — then tokenURI swaps to the awake pet GIF
+              (ERC-4906). The carousel below is {sealedCopy.label}. Old
+              on-chain SVG Track A pets are not product art.
             </p>
           </div>
           <ArtGallery />
@@ -518,16 +498,19 @@ export function HubLanding() {
             STATUS
           </p>
           <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-            Contracts ready. Not deployed.
+            Hub mint is the public path.
           </h2>
           <p className="text-muted-foreground">
-            Ready to deploy — not broadcast. {mintScheduleCopy.sentence}{" "}
-            {mintAllocation.sentence} Phase times are hub copy: CollectionNFT
-            still only has mintOpen and mintPrice (default 0 / free) — no Team /
-            GTD / FCFS / Public phase contracts yet. Deploy stays sealed
-            (hidden metadata, Ignite off, $TERM trading off, royalties to
-            TermFund) until CollectionNFT.reveal(). Addresses stay empty until
-            Robinhood Chain deploy and the OpenSea import.
+            {mintScheduleCopy.sentence} {mintAllocation.sentence} CollectionNFT
+            has mintOpen + mintPrice (default 0 / free) — Team / GTD / FCFS /
+            Public times are hub copy, not phase contracts. Mint on{" "}
+            <Link href="/mint" className="text-primary underline-offset-2 hover:underline">
+              /mint
+            </Link>{" "}
+            when mintOpen is true; the hub shows mint closed otherwise.{" "}
+            {sealedCopy.sentence} Robinhood mainnet (4663) addresses are
+            env-driven. Base Sepolia dry-run is for testing. Do not use OpenSea
+            Studio’s deploy-Drop wizard.
           </p>
         </div>
         <ol className="space-y-3">
@@ -597,20 +580,35 @@ export function HubLanding() {
             LINKS
           </p>
           <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-            Places that will exist.
+            Mint, app, Hopper, Dial.
           </h2>
         </div>
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base">Mint</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3 text-sm text-muted-foreground">
+              <p>
+                Primary path: this hub. Connect a wallet, switch to the
+                configured chain, mint 1 via CollectionNFT.mint when mintOpen
+                is true. {mintScheduleCopy.sentence}
+              </p>
+              <Button size="sm" asChild>
+                <Link href="/mint">Open mint</Link>
+              </Button>
+            </CardContent>
+          </Card>
           <Card>
             <CardHeader>
               <CardTitle className="text-base">OpenSea</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3 text-sm text-muted-foreground">
               <p>
-                Public mint after import: {SITE.publicSupply} of {SITE.supply}.{" "}
-                {SITE.teamReserve} reserved for the team for{" "}
-                {SITE.teamReserveUse}. {mintScheduleCopy.sentence} Collection
-                name {SITE.name}.
+                Collection page after import — not the mint wizard. Studio Drop
+                create currently has no BYO import / no Base Sepolia.{" "}
+                {SITE.publicSupply} public of {SITE.supply}. Collection name{" "}
+                {SITE.name}.
               </p>
               {links.opensea ? (
                 <Button size="sm" asChild>
@@ -676,8 +674,9 @@ export function HubLanding() {
             </CardHeader>
             <CardContent className="space-y-3 text-sm text-muted-foreground">
               <p>
-                Contracts ready, not deployed. Generative PFP samples on the
-                hub. Full collection GIFs pin before mint.
+                Contracts ready, not broadcast to 4663. Hub mint is primary.
+                Carousel GIFs are examples / not mint supply. Sealed until
+                reveal — collectors cannot see traits.
               </p>
               <Button size="sm" variant="outline" asChild>
                 <Link href="/#status">See status</Link>

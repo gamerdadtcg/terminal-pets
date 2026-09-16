@@ -1,6 +1,6 @@
 {
-  "name": "Terminal Pet",
-  "description": "A sealed Terminal Pet. Unique Pocket Critter traits reveal after the 24h window as a dormant egg GIF, then awaken to the matching pet GIF on Ignite.",
+  "name": "Terminal Pet (Sealed)",
+  "description": "Sealed Terminal Pet. Until CollectionNFT.reveal(), every tokenURI is this single hidden.json. Collectors cannot see traits, species, rarity, or token-specific art.",
   "image": "sealed.png",
   "attributes": [
     {

@@ -1,14 +1,17 @@
 "use client";
 
 import { ComingSoon } from "@/components/coming-soon";
+import { ConnectButton } from "@/components/connect-button";
 import { Button } from "@/components/ui/button";
-import { contractsConfigured } from "@/lib/contracts";
+import { configuredChainId } from "@/lib/chain";
+import { collectionConfigured } from "@/lib/contracts";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
 
 const NAV = [
+  { href: "/mint", label: "Mint" },
   { href: "/#how", label: "How" },
   { href: "/#art", label: "Art" },
   { href: "/hopper", label: "Hopper" },
@@ -20,7 +23,8 @@ const NAV = [
 
 export function SiteHeader({ trailing }: { trailing?: ReactNode }) {
   const pathname = usePathname();
-  const live = contractsConfigured();
+  const live = collectionConfigured();
+  const chainId = configuredChainId();
 
   return (
     <header className="sticky top-0 z-30 border-b border-border/70 bg-background/80 backdrop-blur-md">
@@ -28,7 +32,7 @@ export function SiteHeader({ trailing }: { trailing?: ReactNode }) {
         <div className="flex items-center justify-between gap-3">
           <Link href="/" className="min-w-0 shrink-0">
             <p className="font-mono text-[11px] tracking-[0.28em] text-primary">
-              TERM // 4663
+              TERM // {chainId}
             </p>
             <p className="truncate text-lg font-semibold tracking-tight">
               Terminal Pets
@@ -36,16 +40,17 @@ export function SiteHeader({ trailing }: { trailing?: ReactNode }) {
           </Link>
           <div className="flex items-center gap-2">
             {live ? (
-              <ComingSoon className="hidden sm:inline-flex">
-                Contracts live
-              </ComingSoon>
+              <ComingSoon className="hidden sm:inline-flex">Hub mint</ComingSoon>
             ) : (
               <ComingSoon className="hidden sm:inline-flex" />
             )}
             <Button size="sm" asChild>
+              <Link href="/mint">Mint</Link>
+            </Button>
+            <Button size="sm" variant="outline" asChild>
               <Link href="/app">Terminal</Link>
             </Button>
-            {trailing}
+            {trailing ?? <ConnectButton />}
           </div>
         </div>
         <nav
