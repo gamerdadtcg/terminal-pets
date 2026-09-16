@@ -18,7 +18,7 @@ import {
   zeroAddress,
 } from "@/lib/contracts";
 import { explorerAddress, explorerTx, formatEth } from "@/lib/format";
-import { SITE } from "@/lib/site";
+import { SITE, mintAllocation } from "@/lib/site";
 import { useEffect, useMemo, useState } from "react";
 import {
   useAccount,
@@ -331,8 +331,8 @@ NEXT_PUBLIC_CHAIN_ID=4663`}
             }
             hint={
               symbol
-                ? `${name ?? "Terminal Pets"} (${symbol}) · 4244 public / 200 team`
-                : "Terminal Pets (TERM) · 4244 public / 200 team"
+                ? `${name ?? "Terminal Pets"} (${symbol}) · ${mintAllocation.appHint}`
+                : `Terminal Pets (TERM) · ${mintAllocation.appHint}`
             }
           />
           <Stat
