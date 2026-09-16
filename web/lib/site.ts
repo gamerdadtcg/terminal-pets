@@ -4,7 +4,7 @@ export const SITE = {
   petName: "Terminal Pets",
   tagline: "Handheld pets that sleep until you Ignite them.",
     description:
-    "Generative Pocket Critter PFPs on Robinhood Chain. Free mint Friday, September 18, 2026, America/Los_Angeles (PT). Mint on OpenSea. Pets mint Sealed for 24 hours: hidden metadata, Ignite off, $TERM trading off, and 7.5% secondary royalties all to TermFund. Reveal shows a dormant egg GIF, turns on Ignite and trading, and switches royalties to 5% Hopper / 2.5% treasury. Hopper claims stay locked 7 days after reveal while ETH accrues. Each pet comes with a $TERM Ignite allotment. Ignite splits that 1,000 $TERM 37.5% burn / 25% Hopper (as ETH) / 37.5% allotment refill, plus 0.002 ETH split 50% buy-and-burn $TERM / 50% Hopper. Team earns 0 from that ETH fee. Dial assigns 1–4 Stock Tokens by shell class at Ignite. Pulse pays Dialed Lit in Stock Tokens and undialed Lit in $TERM — typically to the TBA. Hopper stays ETH.",
+    "Generative Pocket Critter PFPs on Robinhood Chain. Free mint Friday, September 18, 2026, America/Los_Angeles (PT). Mint on this hub (CollectionNFT.mint / mintTo while mintOpen). Pets mint Sealed for 24 hours: hidden metadata, Ignite off, $TERM trading off, and 7.5% secondary royalties all to TermFund. Reveal shows a dormant egg GIF, turns on Ignite and trading, and switches royalties to 5% Hopper / 2.5% treasury. Hopper claims stay locked 7 days after reveal while ETH accrues. Each pet comes with a $TERM Ignite allotment. Ignite splits that 1,000 $TERM 37.5% burn / 25% Hopper (as ETH) / 37.5% allotment refill, plus 0.002 ETH split 50% buy-and-burn $TERM / 50% Hopper. Team earns 0 from that ETH fee. Dial assigns 1–4 Stock Tokens by shell class at Ignite. Pulse pays Dialed Lit in Stock Tokens and undialed Lit in $TERM — typically to the TBA. Hopper stays ETH.",
   disclaimer:
     "Dial and Pulse Stock Token rewards are promotional on-chain rewards. They are not dividends, equity, shareholder rights, or ownership of any underlying company. Holding a pet or receiving Stock Tokens confers no legal interest in those companies. Not financial or investment advice.",
   chain: "Robinhood Chain",
@@ -58,7 +58,7 @@ export const mintSchedule = {
   price: "Free",
   perPhase: 1,
   rule:
-    "Everyone may mint 1 in every phase that gets added or opened for them (1 per phase).",
+    "1 per phase window (Team / GTD / FCFS / Public). On-chain the hub calls CollectionNFT.mint / mintTo while mintOpen — there are no separate phase contracts.",
   phases: [
     { time: "7:00 AM PT", name: "Team" },
     { time: "8:00 AM PT", name: "GTD", note: "guaranteed" },
@@ -109,7 +109,7 @@ export function publicLinks() {
 export const FAQ = [
   {
     q: "When can I mint?",
-    a: `${mintScheduleCopy.sentence} ${mintAllocation.sentence} After contracts land on Robinhood Chain and the OpenSea collection is imported. Each pet mints Sealed (hidden metadata) with a TBA and a one-time $TERM Ignite allotment. Dormant egg art, Ignite, and $TERM trading unlock at reveal.`,
+    a: `${mintScheduleCopy.sentence} ${mintAllocation.sentence} Mint on this hub at /mint. The button calls CollectionNFT.mint (or mintTo) when on-chain mintOpen is true; if mintOpen is false the hub shows mint closed. Do not mint through OpenSea Studio’s deploy-Drop wizard — Studio currently has no BYO import and no Base Sepolia in Drop create. Each pet mints Sealed (hidden metadata) with a TBA and a one-time $TERM Ignite allotment. Dormant egg art, Ignite, and $TERM trading unlock at reveal.`,
   },
   {
     q: "How many can I mint?",
@@ -173,7 +173,7 @@ export const FAQ = [
   },
   {
     q: "Are contract addresses live?",
-    a: "Contracts are ready to deploy and not broadcast. No live addresses yet. Hybrid Ignite, TermFund, TermMarket skim (off until TERM_POOL + router), 24h sealed reveal, Dial, Pulse ladder are in the repo. Robinhood Chain deploy waits until someone says go.",
+    a: "Robinhood mainnet (4663) is not broadcast. Hub addresses are env-driven (NEXT_PUBLIC_CHAIN_ID, NEXT_PUBLIC_COLLECTION_NFT, …). Base Sepolia dry-run CollectionNFT 0xe1cC988CeC1C29764ba18523635De82d0C9B518F is the testing stack. Hybrid Ignite 0.002 ETH, Hopper 7 days, Dial 1–4 by shell class are product defaults.",
   },
   {
     q: "How does the 24h reveal work?",

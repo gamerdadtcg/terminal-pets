@@ -1,6 +1,7 @@
 import { ComingSoon } from "@/components/coming-soon";
 import { ArtGallery } from "@/components/hub/art-gallery";
 import { HopperExplainer } from "@/components/hub/hopper-explainer";
+import { MintScheduleCard } from "@/components/hub/mint-schedule";
 import {
   Accordion,
   AccordionContent,
@@ -10,7 +11,8 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { contractsConfigured } from "@/lib/contracts";
+import { collectionConfigured } from "@/lib/contracts";
+import { configuredChainId } from "@/lib/chain";
 import {
   FAQ,
   SITE,
@@ -25,7 +27,7 @@ const STEPS = [
   {
     n: "01",
     title: "Free mint",
-    body: `${mintScheduleCopy.sentence} ${mintAllocation.sentence} Mint on OpenSea. Each token mints Sealed — hidden metadata, TBA, and a $TERM allotment. Name is Terminal Pet #{id}. Ignite and $TERM trading stay off.`,
+    body: `${mintScheduleCopy.sentence} ${mintAllocation.sentence} Mint on this hub when mintOpen is true. Each token mints Sealed — hidden metadata, TBA, and a $TERM allotment. Name is Terminal Pet #{id}. Ignite and $TERM trading stay off.`,
   },
   {
     n: "02",
@@ -120,8 +122,8 @@ const ROADMAP = [
   },
   {
     state: "now" as const,
-    title: "Public hub",
-    body: "This site. Ignite / Pulse / Hopper / Dial hub pages. Terminal route is ready. 25-token GIF test host + sample previews on the hub.",
+    title: "Public hub mint",
+    body: "This site. /mint calls CollectionNFT.mint / mintTo while mintOpen. Ignite / Pulse / Hopper / Dial pages. Terminal route is ready. 25-token GIF test host + sample previews on the hub.",
   },
   {
     state: "next" as const,
@@ -135,14 +137,15 @@ const ROADMAP = [
   },
   {
     state: "next" as const,
-    title: "OpenSea import",
-    body: `Point the collection at the splitter. Honor ERC-2981. Open the ${SITE.publicSupply} public mint on ${mintSchedule.date} (${mintSchedule.timezoneLabel}). ${SITE.teamReserve} stay reserved for the team for ${SITE.teamReserveUse}. Hub phase times are copy only until allowlists exist on-chain. Pre-reveal earnings still hit the splitter — they just route 100% to TermFund until reveal.`,
+    title: "OpenSea Studio (not the mint path)",
+    body: `Studio Drop create currently has no BYO import and no Base Sepolia. Hub mint is primary. Do not use Studio’s deploy-Drop wizard. OpenSea can still show the collection after import. ${SITE.publicSupply} public / ${SITE.teamReserve} team. Phase times are hub copy until on-chain mintOpen.`,
   },
 ] as const;
 
 export function HubLanding() {
   const links = publicLinks();
-  const live = contractsConfigured();
+  const live = collectionConfigured();
+  const chainId = configuredChainId();
 
   return (
     <div className="relative">
@@ -154,13 +157,13 @@ export function HubLanding() {
           <div className="space-y-6">
             <div className="flex flex-wrap items-center gap-2">
               <Badge variant="outline" className="font-mono">
-                {SITE.chain} · {SITE.chainId}
+                {SITE.chain} · {chainId}
               </Badge>
               <Badge variant="outline" className="font-mono">
                 Free mint · {mintSchedule.date} · {mintSchedule.timezoneLabel}
               </Badge>
               {live ? (
-                <ComingSoon>Contracts live</ComingSoon>
+                <ComingSoon>Hub mint</ComingSoon>
               ) : (
                 <ComingSoon />
               )}
@@ -175,7 +178,7 @@ export function HubLanding() {
             </p>
             <p className="max-w-xl text-sm text-muted-foreground">
               {mintScheduleCopy.sentence} {mintAllocation.sentence} Mint on
-              OpenSea. Pets mint Sealed for {SITE.revealWindow}: hidden
+              this hub. Pets mint Sealed for {SITE.revealWindow}: hidden
               metadata, Ignite off, $TERM transfers off. Reveal shows a
               dormant egg GIF; Ignite swaps metadata to the matching awake
               pet. Secondary royalties (
@@ -191,21 +194,22 @@ export function HubLanding() {
               1–4 Stock Tokens by shell class at Ignite.
             </p>
             <div className="flex flex-wrap gap-2">
-              {links.opensea ? (
-                <Button asChild>
-                  <a href={links.opensea} rel="noreferrer" target="_blank">
-                    Mint on OpenSea
-                  </a>
-                </Button>
-              ) : (
-                <Button disabled>Mint on OpenSea · soon</Button>
-              )}
+              <Button asChild>
+                <Link href="/mint">Mint</Link>
+              </Button>
               <Button variant="outline" asChild>
                 <Link href="/app">Ignite / Pulse app</Link>
               </Button>
               <Button variant="ghost" asChild>
                 <Link href="/hopper">Hopper lock</Link>
               </Button>
+              {links.opensea ? (
+                <Button variant="ghost" asChild>
+                  <a href={links.opensea} rel="noreferrer" target="_blank">
+                    View on OpenSea
+                  </a>
+                </Button>
+              ) : null}
             </div>
             <p className="font-mono text-[11px] text-muted-foreground">
               {SITE.supply} total · {SITE.publicSupply} public /{" "}
@@ -217,38 +221,7 @@ export function HubLanding() {
           </div>
 
           <div className="grid gap-3">
-            <div className="rounded-[1.6rem] border border-primary/25 bg-card/70 p-5 shadow-[0_0_80px_rgba(240,180,41,0.08)]">
-              <p className="font-mono text-[11px] tracking-[0.28em] text-primary">
-                FREE MINT
-              </p>
-              <p className="mt-3 text-lg font-medium">{mintSchedule.date}</p>
-              <p className="mt-1 text-sm text-muted-foreground">
-                {mintSchedule.timezoneIana} ({mintSchedule.timezoneLabel})
-              </p>
-              <ol className="mt-4 grid gap-2 sm:grid-cols-2">
-                {mintSchedule.phases.map((phase) => (
-                  <li
-                    key={phase.name}
-                    className="rounded-xl border border-border/70 bg-background/50 px-3 py-2"
-                  >
-                    <p className="font-mono text-[11px] text-primary">
-                      {phase.time}
-                    </p>
-                    <p className="text-sm font-medium">
-                      {phase.name}
-                      {"note" in phase && phase.note ? (
-                        <span className="ml-1 font-normal text-muted-foreground">
-                          ({phase.note})
-                        </span>
-                      ) : null}
-                    </p>
-                  </li>
-                ))}
-              </ol>
-              <p className="mt-4 text-sm text-muted-foreground">
-                {mintSchedule.rule} {mintAllocation.sentence}
-              </p>
-            </div>
+            <MintScheduleCard />
             <div className="rounded-[1.6rem] border border-border/70 bg-card/70 p-5">
               <p className="font-mono text-[11px] tracking-[0.28em] text-primary">
                 GENERATIVE PFP
@@ -462,8 +435,9 @@ export function HubLanding() {
             {SITE.igniteFeeEth} ({SITE.igniteEthSplit}). Team earns 0 from the
             ETH fee. The {SITE.igniteAllotmentRefill} $TERM cut refills
             allotment escrow, not treasury. Live $TERM trades on the canonical
-            pool skim {SITE.tradeFee} once TERM_POOL is set. No live addresses.
-            Do not point OpenSea earnings at a wallet — use the splitter.
+            pool skim {SITE.tradeFee} once TERM_POOL is set. Hub mint is the
+            primary path. Do not point OpenSea earnings at a wallet — use the
+            splitter.
           </p>
         </div>
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
@@ -518,16 +492,18 @@ export function HubLanding() {
             STATUS
           </p>
           <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-            Contracts ready. Not deployed.
+            Hub mint is the public path.
           </h2>
           <p className="text-muted-foreground">
-            Ready to deploy — not broadcast. {mintScheduleCopy.sentence}{" "}
-            {mintAllocation.sentence} Phase times are hub copy: CollectionNFT
-            still only has mintOpen and mintPrice (default 0 / free) — no Team /
-            GTD / FCFS / Public phase contracts yet. Deploy stays sealed
-            (hidden metadata, Ignite off, $TERM trading off, royalties to
-            TermFund) until CollectionNFT.reveal(). Addresses stay empty until
-            Robinhood Chain deploy and the OpenSea import.
+            {mintScheduleCopy.sentence} {mintAllocation.sentence} CollectionNFT
+            has mintOpen + mintPrice (default 0 / free) — Team / GTD / FCFS /
+            Public times are hub copy, not phase contracts. Mint on{" "}
+            <Link href="/mint" className="text-primary underline-offset-2 hover:underline">
+              /mint
+            </Link>{" "}
+            when mintOpen is true; the hub shows mint closed otherwise. Robinhood
+            mainnet (4663) addresses are env-driven. Base Sepolia dry-run is for
+            testing. Do not use OpenSea Studio’s deploy-Drop wizard.
           </p>
         </div>
         <ol className="space-y-3">
@@ -597,20 +573,35 @@ export function HubLanding() {
             LINKS
           </p>
           <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-            Places that will exist.
+            Mint, app, Hopper, Dial.
           </h2>
         </div>
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base">Mint</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3 text-sm text-muted-foreground">
+              <p>
+                Primary path: this hub. Connect a wallet, switch to the
+                configured chain, mint 1 via CollectionNFT.mint when mintOpen
+                is true. {mintScheduleCopy.sentence}
+              </p>
+              <Button size="sm" asChild>
+                <Link href="/mint">Open mint</Link>
+              </Button>
+            </CardContent>
+          </Card>
           <Card>
             <CardHeader>
               <CardTitle className="text-base">OpenSea</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3 text-sm text-muted-foreground">
               <p>
-                Public mint after import: {SITE.publicSupply} of {SITE.supply}.{" "}
-                {SITE.teamReserve} reserved for the team for{" "}
-                {SITE.teamReserveUse}. {mintScheduleCopy.sentence} Collection
-                name {SITE.name}.
+                Collection page after import — not the mint wizard. Studio Drop
+                create currently has no BYO import / no Base Sepolia.{" "}
+                {SITE.publicSupply} public of {SITE.supply}. Collection name{" "}
+                {SITE.name}.
               </p>
               {links.opensea ? (
                 <Button size="sm" asChild>

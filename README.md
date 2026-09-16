@@ -4,7 +4,7 @@ Greenfield NFT collection for **Robinhood Chain** (EVM L2, chain id `4663`, nati
 
 Public collection name: **Terminal Pets**. NFT symbol: **TERM**. Memecoin: **`$TERM`**.
 
-Collectors mint on OpenSea. After mint, each token is a unique handheld **pet** that starts **Sealed** (placeholder metadata, 24h reveal window) with a **TBA**. After `CollectionNFT.reveal()` it shows as **Dormant** until Ignite. Each token also gets a one-time **`$TERM` Ignite allotment** (placeholder **1,000 `$TERM`**) from token supply so the token half of the first wake does not need a live chart. **Ignite** is off until reveal. Then it is hybrid: that `$TERM` (**37.5% burn / 25% Hopper-as-ETH / 37.5% allotment escrow refill**) **plus exactly 0.002 ETH**. The ETH splits **50% buy `$TERM` and burn / 50% Hopper**. Team earns **0** from that ETH fee (not TermFund, not treasury). The 37.5% token cut returns to the per-pet allotment **pool** (that tokenId stays consumed). One-way **Dormant → Lit**. Lit stays with the NFT on transfer. **Royalties** (7.5% via **RoyaltySplitter**): **pre-reveal 100% → TermFund** (nothing to Hopper, nothing to treasury from that stream). **Post-reveal 5% Hopper / 2.5% treasury**. **Hopper** is ETH only after that: post-reveal NFT royalties, **50% of each Ignite ETH fee**, 25% of each Ignite `$TERM` fee (swapped to ETH when a router is set), plus, once the canonical TERM/ETH pool is live, a **1.5% TermMarket skim** of that pool’s volume. `$TERM` is **not** fee-on-transfer; public transfers are also **off until reveal**. **Dial**: Ignite assigns **1–4** Robinhood Chain Stock Tokens from a fixed 8-token pool (**HOOD, AAPL, MSFT, GOOGL, AMZN, META, NVDA, TSLA**) by shell class (**ALPHA 1 / BETA 2 / DELTA 3 / OMEGA 4**). Holders do not pick. Equal weights (bps = 10_000). See [`docs/DIAL.md`](docs/DIAL.md). **Pulse** uses an escalating Hopper ETH **ladder** (not a fixed 0.5 ETH): bootstrap `0.1 → 1.0`, then cycle `0.5 → 1.0` forever (never back to 0.1). Snapshot Lit, read Dial. **Dialed Lit** swap their ETH share to those Stock Tokens (ETH fallback if no router). **Undialed Lit** (no assignment, or slots still `address(0)`) buy `$TERM` with that share and credit the TBA (or owner) — not raw ETH; claim reverts without router + `$TERM`. Hopper stays ETH. Dormant earn nothing. TermMarket ships in this repo but stays **inactive** until `TERM_POOL` and `TERM_SWAP_ROUTER` are set.
+Collectors mint on **this hub** (`/mint` → `CollectionNFT.mint` / `mintTo` while `mintOpen`). After mint, each token is a unique handheld **pet** that starts **Sealed** (placeholder metadata, 24h reveal window) with a **TBA**. After `CollectionNFT.reveal()` it shows as **Dormant** until Ignite. Each token also gets a one-time **`$TERM` Ignite allotment** (placeholder **1,000 `$TERM`**) from token supply so the token half of the first wake does not need a live chart. **Ignite** is off until reveal. Then it is hybrid: that `$TERM` (**37.5% burn / 25% Hopper-as-ETH / 37.5% allotment escrow refill**) **plus exactly 0.002 ETH**. The ETH splits **50% buy `$TERM` and burn / 50% Hopper**. Team earns **0** from that ETH fee (not TermFund, not treasury). The 37.5% token cut returns to the per-pet allotment **pool** (that tokenId stays consumed). One-way **Dormant → Lit**. Lit stays with the NFT on transfer. **Royalties** (7.5% via **RoyaltySplitter**): **pre-reveal 100% → TermFund** (nothing to Hopper, nothing to treasury from that stream). **Post-reveal 5% Hopper / 2.5% treasury**. **Hopper** is ETH only after that: post-reveal NFT royalties, **50% of each Ignite ETH fee**, 25% of each Ignite `$TERM` fee (swapped to ETH when a router is set), plus, once the canonical TERM/ETH pool is live, a **1.5% TermMarket skim** of that pool’s volume. `$TERM` is **not** fee-on-transfer; public transfers are also **off until reveal**. **Dial**: Ignite assigns **1–4** Robinhood Chain Stock Tokens from a fixed 8-token pool (**HOOD, AAPL, MSFT, GOOGL, AMZN, META, NVDA, TSLA**) by shell class (**ALPHA 1 / BETA 2 / DELTA 3 / OMEGA 4**). Holders do not pick. Equal weights (bps = 10_000). See [`docs/DIAL.md`](docs/DIAL.md). **Pulse** uses an escalating Hopper ETH **ladder** (not a fixed 0.5 ETH): bootstrap `0.1 → 1.0`, then cycle `0.5 → 1.0` forever (never back to 0.1). Snapshot Lit, read Dial. **Dialed Lit** swap their ETH share to those Stock Tokens (ETH fallback if no router). **Undialed Lit** (no assignment, or slots still `address(0)`) buy `$TERM` with that share and credit the TBA (or owner) — not raw ETH; claim reverts without router + `$TERM`. Hopper stays ETH. Dormant earn nothing. TermMarket ships in this repo but stays **inactive** until `TERM_POOL` and `TERM_SWAP_ROUTER` are set.
 
 This repo is a complete MVP: Foundry contracts, tests, a Robinhood Chain deploy script, a Next.js hub + wallet dapp (wagmi / viem), and the Pocket Critter generative PFP art system under `art/`. The public homepage is a marketing hub. Contract addresses can stay empty until Robinhood Chain deploy.
 
@@ -307,6 +307,7 @@ Public marketing site and wallet tools share one Next.js app.
 | Route | What |
 | --- | --- |
 | `/` | Hub: hero, how it works, Hopper, economics, generative art preview, status, FAQ, links |
+| `/mint` | Primary mint: wallet connect, chain switch, `CollectionNFT.mint` / `mintTo` while `mintOpen` |
 | `/hopper` | Dedicated Hopper + Pulse ladder explainer |
 | `/dial` | Dial explainer: 8-stock pool + ALPHA–OMEGA assignment table |
 | `/app` | Ignite / allotment / Hopper / Pulse / TBA wallet tools (no Dial picker) |
@@ -324,9 +325,11 @@ Without contract addresses the hub shows **Deploying soon**. The Terminal route 
 Environment (`web/.env.local` or Vercel project env):
 
 ```
+# Robinhood mainnet (fill after 4663 deploy — no broadcast from this PR)
 NEXT_PUBLIC_CHAIN_ID=4663
 NEXT_PUBLIC_RPC_URL=https://rpc.mainnet.chain.robinhood.com
 NEXT_PUBLIC_EXPLORER_URL=https://robinhoodchain.blockscout.com
+NEXT_PUBLIC_COLLECTION_NFT=
 NEXT_PUBLIC_COLLECTION_ADDRESS=
 NEXT_PUBLIC_IGNITE_ADDRESS=
 NEXT_PUBLIC_HOPPER_ADDRESS=
@@ -337,6 +340,14 @@ NEXT_PUBLIC_TERM_FUND_ADDRESS=
 NEXT_PUBLIC_TERM_MARKET_ADDRESS=
 NEXT_PUBLIC_OPENSEA_URL=
 NEXT_PUBLIC_X_URL=
+
+# Base Sepolia dry-run (testing). Hub falls back to CollectionNFT
+# 0xe1cC988CeC1C29764ba18523635De82d0C9B518F when CHAIN_ID=84532 and
+# collection env is blank. Studio Drop create has no BYO import / no Base Sepolia.
+# NEXT_PUBLIC_CHAIN_ID=84532
+# NEXT_PUBLIC_RPC_URL=https://sepolia.base.org
+# NEXT_PUBLIC_EXPLORER_URL=https://sepolia.basescan.org
+# NEXT_PUBLIC_COLLECTION_NFT=0xe1cC988CeC1C29764ba18523635De82d0C9B518F
 ```
 
 ### Deploy the hub to Vercel (Hobby / free)

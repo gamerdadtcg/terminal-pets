@@ -2,6 +2,10 @@
 
 Ordered rehearsal of **import-existing CollectionNFT + Studio Drop** on a chain where OpenSea has actually deployed SeaDrop 1.0. Prefer **Base Sepolia**. Fallback **Sepolia**. This is not a Robinhood launch.
 
+**Hub mint is the primary public path.** OpenSea Studio’s current Drop-create UI has **no bring-your-own / import-existing CollectionNFT** and **no Base Sepolia** in the chain picker. Do **not** tell users to mint via the Studio deploy-wizard (that would be a different ERC721SeaDrop). Collectors mint on the hub (`/mint`) with `CollectionNFT.mint` / `mintTo` while on-chain `mintOpen` is true. The hub shows a closed state when `mintOpen` is false.
+
+Current Base Sepolia dry-run CollectionNFT: `0xe1cC988CeC1C29764ba18523635De82d0C9B518F` (chain `84532`). Hub env: `NEXT_PUBLIC_CHAIN_ID=84532` and `NEXT_PUBLIC_COLLECTION_NFT` (or the built-in 84532 fallback). Robinhood mainnet `4663` stays env-driven and is **not** broadcast from this document.
+
 **Do not broadcast to Robinhood mainnet `4663` from this document.** `script/Deploy.s.sol` does not check chain id; the RPC you pass is the network you hit. Use `--rpc-url base_sepolia` (or `sepolia`). Never `--rpc-url robinhood`.
 
 Robinhood testnet (`46630`) is mechanics-only. Canonical SeaDrop 1.0 is **not** listed there. Those stacks stay where they are:
@@ -171,7 +175,7 @@ cast call "$COLLECTION" "mintOpen()(bool)" --rpc-url base_sepolia
 # expect false
 ```
 
-Optional: `teamMint` **one** token to the dry-run wallet for a non-Studio backup path. Do **not** `teamMint(200)` here. Leave `mintOpen` false so the public path is Studio-only.
+Optional: `teamMint` **one** token to the dry-run wallet for a non-Studio backup path. Do **not** `teamMint(200)` here. Hub mint is primary: owner may `setMintOpen(true)` so `/mint` can call `mint` / `mintTo`. Studio Drop is blocked in the current UI (no BYO import / no Base Sepolia in Drop create) — do not send collectors to the wizard.
 
 Do **not** `reveal()` until after a Studio mint (or until you are done configuring stages). Owner may reveal early; anyone may after 24h.
 
@@ -188,7 +192,7 @@ Do **not** `reveal()` until after a Studio mint (or until you are done configuri
    - Creator payout for **primary** Drop ETH → Hopper (or the address ops chooses). Fee recipient = OpenSea’s Drop fee wallet as Studio instructs.
 6. Publish / enable the Public stage.
 
-If Studio cannot find the contract, cannot select the chain, or tries to deploy a new one: **stop** (§8).
+If Studio cannot find the contract, cannot select the chain, or tries to deploy a new one: **stop** (§8). Public mint continues on the **hub** (`mintOpen`), not the wizard.
 
 ## 7. Mint 1, then reveal / Ignite notes
 
@@ -230,9 +234,9 @@ Treat these as hard stops. Do not work around them with the wizard, a homemade S
 
 | Blocker | What to do |
 | --- | --- |
-| Studio chain picker has **no Base Sepolia** | Try **Sepolia** (`11155111`) with the same production env and `--rpc-url sepolia`. |
-| Studio has **neither** Base Sepolia nor Sepolia (no SeaDrop test chain you can import onto) | **Stop.** Do not deploy. Do not use RH testnet (`46630`) as a Studio substitute. Revisit when OpenSea lists a SeaDrop chain. |
-| Studio only offers **“deploy Drop contract”** / generic ERC721SeaDrop | **Stop.** Our token is `CollectionNFT`. Wizard = different collection. |
+| Studio chain picker has **no Base Sepolia** | Try **Sepolia** (`11155111`) with the same production env and `--rpc-url sepolia`. Public mint still goes through the **hub**. |
+| Studio has **neither** Base Sepolia nor Sepolia (no SeaDrop test chain you can import onto) | **Stop the Studio path.** Do not use the deploy wizard. Do not use RH testnet (`46630`) as a Studio substitute. Collectors mint on the hub (`CollectionNFT.mint` while `mintOpen`). |
+| Studio only offers **“deploy Drop contract”** / generic ERC721SeaDrop / **no BYO import** | **Stop.** Our token is `CollectionNFT`. Wizard = different collection. Hub mint is primary. |
 | `isAllowedSeaDrop(canonical)` is `false` after deploy | **Stop** importing. Fix allowlist (`SEADROP_ADDRESS` / `updateAllowedSeaDrop`) first. |
 | Studio’s SeaDrop address **differs** from canonical | Owner `updateAllowedSeaDrop([studioAddress])`. Do not guess. Do not deploy SeaDrop ourselves. |
 | Import UI missing or contract not detected after verify | Verify CollectionNFT on the explorer, wait for indexers, retry import. Still no wizard. |
@@ -244,7 +248,7 @@ This document does **not** broadcast to `4663`. No `--rpc-url robinhood`. No mai
 
 - **Do not broadcast to `4663`.** No mainnet RPC, no `--chain 4663`.
 - **Do not** set `HOPPER_LOCK_SECONDS`, tiny `IGNITE_FEE_ETH`, or `PULSE_*_WEI` micro overrides.
-- **Do not** use Studio’s deploy wizard.
+- **Do not** use Studio’s deploy wizard. Studio UI currently has no BYO import and no Base Sepolia in Drop create — hub mint is primary.
 - **Do not** treat RH testnet / MICRO stacks as Studio Drop evidence.
 - **Do not** invent Dial stock-token addresses.
 - **Do not** `reveal()` before you have finished stage config unless you accept Ignite/`$TERM` trading turning on.
