@@ -88,17 +88,16 @@ Then owner-set `CollectionNFT.setMetadataURIs(hiddenURI, dormantBaseURI, litBase
 - `dormantBaseURI` — trailing slash, e.g. `ipfs://…/egg-metadata/` → `{id}.json`
 - `litBaseURI` — trailing slash, e.g. `ipfs://…/metadata/` → `{id}.json`
 
-### Test hosting
+### Demo hosting (not mint supply)
 
-The Vercel hub already hosts tokens **1–25** as animated GIFs (not PNG). After deploy:
+The Vercel hub hosts ~25 **example** GIFs at `/art/examples/` (labeled examples / not mint supply). Public collection metadata is **only** sealed `hidden.json` until after `reveal()`:
 
-| Arg | HTTPS base |
+| Arg | HTTPS |
 | --- | --- |
 | `hiddenURI` | `https://terminal-pets.vercel.app/metadata/hidden.json` |
-| `dormantBaseURI` | `https://terminal-pets.vercel.app/metadata/dormant/` |
-| `litBaseURI` | `https://terminal-pets.vercel.app/metadata/lit/` |
+| `dormantBaseURI` / `litBaseURI` | **Do not** point at this hub before reveal |
 
-Files: `web/public/art/test/{id}.gif` (awake), `web/public/art/test-egg/{id}.gif` (dormant egg), matching JSON under `web/public/metadata/{lit,dormant}/`. See `docs/MAIN_ART_LOCK.md`.
+Files: `web/public/art/examples/awake/{n}.gif`, `web/public/art/examples/egg/{n}.gif`. See `docs/MAIN_ART_LOCK.md`. Do not commit 4444 JSON to `web/public/metadata/{lit,dormant}`.
 
 Ignite already emits ERC-4906 `MetadataUpdate`. Reveal emits `BatchMetadataUpdate`.
 

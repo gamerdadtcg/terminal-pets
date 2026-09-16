@@ -4,7 +4,7 @@ export const SITE = {
   petName: "Terminal Pets",
   tagline: "Handheld pets that sleep until you Ignite them.",
     description:
-    "Generative Pocket Critter PFPs on Robinhood Chain. Free mint Friday, September 18, 2026, America/Los_Angeles (PT). Mint on this hub (CollectionNFT.mint / mintTo while mintOpen). Pets mint Sealed for 24 hours: hidden metadata, Ignite off, $TERM trading off, and 7.5% secondary royalties all to TermFund. Reveal shows a dormant egg GIF, turns on Ignite and trading, and switches royalties to 5% Hopper / 2.5% treasury. Hopper claims stay locked 7 days after reveal while ETH accrues. Each pet comes with a $TERM Ignite allotment. Ignite splits that 1,000 $TERM 37.5% burn / 25% Hopper (as ETH) / 37.5% allotment refill, plus 0.002 ETH split 50% buy-and-burn $TERM / 50% Hopper. Team earns 0 from that ETH fee. Dial assigns 1–4 Stock Tokens by shell class at Ignite. Pulse pays Dialed Lit in Stock Tokens and undialed Lit in $TERM — typically to the TBA. Hopper stays ETH.",
+    "Generative Pocket Critter PFPs on Robinhood Chain. Free mint Friday, September 18, 2026, America/Los_Angeles (PT). Mint on this hub (CollectionNFT.mint / mintTo while mintOpen). Pets mint Sealed for 24 hours: every tokenURI is the same hidden.json — collectors cannot see traits until CollectionNFT.reveal(). Hub carousel GIFs are examples / not mint supply. Ignite off, $TERM trading off, and 7.5% secondary royalties all to TermFund until reveal. Reveal shows a dormant egg GIF, turns on Ignite and trading, and switches royalties to 5% Hopper / 2.5% treasury. Hopper claims stay locked 7 days after reveal while ETH accrues. Each pet comes with a $TERM Ignite allotment. Ignite splits that 1,000 $TERM 37.5% burn / 25% Hopper (as ETH) / 37.5% allotment refill, plus 0.002 ETH split 50% buy-and-burn $TERM / 50% Hopper. Team earns 0 from that ETH fee. Dial assigns 1–4 Stock Tokens by shell class at Ignite. Pulse pays Dialed Lit in Stock Tokens and undialed Lit in $TERM — typically to the TBA. Hopper stays ETH.",
   disclaimer:
     "Dial and Pulse Stock Token rewards are promotional on-chain rewards. They are not dividends, equity, shareholder rights, or ownership of any underlying company. Holding a pet or receiving Stock Tokens confers no legal interest in those companies. Not financial or investment advice.",
   chain: "Robinhood Chain",
@@ -83,6 +83,18 @@ export const mintScheduleCopy = {
   sentence: `Free mint on ${mintSchedule.date}. Times are ${mintSchedule.timezoneIana} (${mintSchedule.timezoneLabel}): ${mintSchedule.phases.map(mintPhaseLine).join("; ")}. ${mintSchedule.rule}`,
 } as const;
 
+/** Anti-snipe copy. tokenURI is one hidden.json until CollectionNFT.reveal(). */
+export const sealedCopy = {
+  badge: "Sealed until reveal",
+  label: "examples / not mint supply",
+  tokenUri:
+    "Until CollectionNFT.reveal(), every tokenURI is the same sealed hidden.json. Collectors cannot see traits.",
+  carousel:
+    "Hub GIFs are examples / not mint supply. They are not live collection tokenIds.",
+  sentence:
+    "Until CollectionNFT.reveal(), every tokenURI is the same sealed hidden.json. Collectors cannot see traits, species, or rarity. Hub carousel GIFs are examples / not mint supply — not the 4444 mint files.",
+} as const;
+
 export const PULSE_BOOTSTRAP = [
   "0.1",
   "0.2",
@@ -109,7 +121,7 @@ export function publicLinks() {
 export const FAQ = [
   {
     q: "When can I mint?",
-    a: `${mintScheduleCopy.sentence} ${mintAllocation.sentence} Mint on this hub at /mint. The button calls CollectionNFT.mint (or mintTo) when on-chain mintOpen is true; if mintOpen is false the hub shows mint closed. Do not mint through OpenSea Studio’s deploy-Drop wizard — Studio currently has no BYO import and no Base Sepolia in Drop create. Each pet mints Sealed (hidden metadata) with a TBA and a one-time $TERM Ignite allotment. Dormant egg art, Ignite, and $TERM trading unlock at reveal.`,
+    a: `${mintScheduleCopy.sentence} ${mintAllocation.sentence} Mint on this hub at /mint. The button calls CollectionNFT.mint (or mintTo) when on-chain mintOpen is true; if mintOpen is false the hub shows mint closed. Do not mint through OpenSea Studio’s deploy-Drop wizard — Studio currently has no BYO import and no Base Sepolia in Drop create. Each pet mints Sealed: every tokenURI is the same hidden.json until CollectionNFT.reveal(), so collectors cannot see traits. Dormant egg art, Ignite, and $TERM trading unlock at reveal.`,
   },
   {
     q: "How many can I mint?",
@@ -164,8 +176,12 @@ export const FAQ = [
     a: "A token-bound account (ERC-6551) attached at mint. Pulse typically delivers Stock Tokens or $TERM there. Those assets travel with the NFT. The owner can withdraw. Delivery to the owner wallet is used if TBA delivery is off.",
   },
   {
+    q: "Can I see traits at mint?",
+    a: "No. Until CollectionNFT.reveal(), every tokenURI is the same sealed hidden.json. Collectors cannot see traits, species, or rarity. Hub carousel GIFs are examples / not mint supply and are not the live 4444 files.",
+  },
+  {
     q: "Where is the pet art?",
-    a: "Generative Pocket Critter PFPs — off-chain composed PNG/GIF, not on-chain SVG. Tokens mint Sealed (hidden metadata), reveal as a dormant egg rock GIF, then swap to the matching awake pet GIF on Ignite. This hub hosts a 25-token animated GIF test path (HTTPS JSON under /metadata) so setMetadataURIs can point at real .gif image URLs. The old Track A TerminalRenderer SVG pets are not product art.",
+    a: "Generative Pocket Critter PFPs — off-chain composed PNG/GIF, not on-chain SVG. Tokens mint Sealed: every tokenURI is the same hidden.json until CollectionNFT.reveal(), so collectors cannot see traits. After reveal, dormant egg GIFs go live; Ignite swaps to the matching awake pet GIF. Hub carousel GIFs (~25) are examples / not mint supply — not live collection tokenIds, and not hosted as /metadata/{lit,dormant}/{id}.json. The 4444 pin stays private until after reveal. The old Track A TerminalRenderer SVG pets are not product art.",
   },
   {
     q: "Where do royalties go?",
@@ -177,7 +193,7 @@ export const FAQ = [
   },
   {
     q: "How does the 24h reveal work?",
-    a: "Tokens mint Sealed — hidden metadata, Ignite off, $TERM public transfers off. Secondary royalties (7.5%) go entirely to TermFund. After 24 hours anyone can call reveal(); the owner can call it earlier. Reveal serves dormant egg metadata, turns on Ignite and $TERM trading, and switches royalties to 5% Hopper / 2.5% treasury. Hopper payouts then stay locked 7 days from that reveal timestamp so people can Ignite before claims open. ETH from Ignite and post-reveal royalties still accrues in the pot. LP is seeded later from TermFund (pre-reveal royalties + optional treasury $TERM), not by draining the Hopper or taking Ignite ETH.",
+    a: "Tokens mint Sealed — every tokenURI is the same hidden.json, so collectors cannot see traits. Ignite is off and $TERM public transfers are off. Secondary royalties (7.5%) go entirely to TermFund. After 24 hours anyone can call reveal(); the owner can call it earlier. Reveal serves dormant egg metadata, turns on Ignite and $TERM trading, and switches royalties to 5% Hopper / 2.5% treasury. Hopper payouts then stay locked 7 days from that reveal timestamp so people can Ignite before claims open. ETH from Ignite and post-reveal royalties still accrues in the pot. LP is seeded later from TermFund (pre-reveal royalties + optional treasury $TERM), not by draining the Hopper or taking Ignite ETH.",
   },
   {
     q: "How do $TERM trading fees work?",

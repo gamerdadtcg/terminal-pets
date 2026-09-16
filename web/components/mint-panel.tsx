@@ -13,7 +13,7 @@ import {
   zeroAddress,
 } from "@/lib/contracts";
 import { explorerAddress, explorerTx, formatEth, shortAddress } from "@/lib/format";
-import { SITE, mintAllocation, mintScheduleCopy } from "@/lib/site";
+import { SITE, mintAllocation, mintScheduleCopy, sealedCopy } from "@/lib/site";
 import { useEffect, useMemo, useState } from "react";
 import { isAddress, type Address } from "viem";
 import {
@@ -77,6 +77,11 @@ export function MintPanel() {
             functionName: "numberMinted" as const,
             args: [address ?? zeroAddress],
           },
+          {
+            address: addresses.collection,
+            abi: collectionAbi,
+            functionName: "revealed" as const,
+          },
         ]
       : [],
     query: { enabled: configured, refetchInterval: 12_000 },
@@ -96,6 +101,7 @@ export function MintPanel() {
   const totalSupply = reads.data?.[4]?.result as bigint | undefined;
   const maxSupply = reads.data?.[5]?.result as bigint | undefined;
   const numberMinted = reads.data?.[6]?.result as bigint | undefined;
+  const revealed = reads.data?.[7]?.result as boolean | undefined;
 
   const remaining =
     publicMinted !== undefined && publicSupply !== undefined
@@ -159,6 +165,9 @@ export function MintPanel() {
               {mintScheduleCopy.headline}
             </Badge>
             <MintStatusBadge status={status} />
+            <Badge variant="outline" className="font-mono">
+              {revealed ? "Revealed" : sealedCopy.badge}
+            </Badge>
           </div>
           <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">
             Mint on this hub
@@ -172,9 +181,10 @@ export function MintPanel() {
           </p>
           <p className="max-w-xl text-sm text-muted-foreground">
             {mintScheduleCopy.sentence} {mintAllocation.sentence} After mint
-            the pet is Sealed. Ignite is {SITE.igniteFeeEth} (plus the $TERM
-            allotment) after reveal. Hopper claims lock {SITE.hopperLock}. Dial
-            assigns 1–4 Stock Tokens by shell class at Ignite.
+            the pet is Sealed: {sealedCopy.tokenUri} {sealedCopy.carousel}{" "}
+            Ignite is {SITE.igniteFeeEth} (plus the $TERM allotment) after
+            reveal. Hopper claims lock {SITE.hopperLock}. Dial assigns 1–4
+            Stock Tokens by shell class at Ignite.
           </p>
 
           <Card
@@ -372,6 +382,30 @@ export function MintPanel() {
           <MintScheduleCard />
           <Card>
             <CardHeader>
+              <p className="font-mono text-[11px] text-primary">SEALED STATE</p>
+              <CardTitle className="text-base">
+                {revealed ? "Metadata is live" : "Collectors cannot see traits"}
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-2 text-sm text-muted-foreground">
+              {revealed ? (
+                <p>
+                  CollectionNFT.reveal() has run. tokenURI now serves dormant
+                  egg JSON (or lit after Ignite).
+                </p>
+              ) : (
+                <>
+                  <p>{sealedCopy.sentence}</p>
+                  <p>
+                    Hub GIFs at /art/examples are {sealedCopy.label}. They are
+                    not the 4444 mint files and are not tokenIds.
+                  </p>
+                </>
+              )}
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
               <p className="font-mono text-[11px] text-primary">AFTER MINT</p>
               <CardTitle className="text-base">
                 Production economics
@@ -382,8 +416,9 @@ export function MintPanel() {
               <p>Hopper payouts lock {SITE.hopperLock} after reveal.</p>
               <p>Dial assigns 1–4 Stock Tokens by shell class at Ignite.</p>
               <p>
-                Pets mint Sealed for {SITE.revealWindow}. Do not use Studio’s
-                deploy-Drop wizard.
+                Pets mint Sealed for {SITE.revealWindow}. Every tokenURI is
+                hidden.json until reveal. Do not use Studio’s deploy-Drop
+                wizard.
               </p>
             </CardContent>
           </Card>

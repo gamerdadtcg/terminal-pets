@@ -1,4 +1,4 @@
-import { mintSchedule, mintScheduleCopy } from "@/lib/site";
+import { mintAllocation, mintSchedule, mintScheduleCopy, sealedCopy } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
 export function MintScheduleCard({
@@ -16,11 +16,11 @@ export function MintScheduleCard({
       )}
     >
       <p className="font-mono text-[11px] tracking-[0.28em] text-primary">
-        FREE MINT
+        FREE MINT · FRI SEP 18 2026
       </p>
       <p className="mt-3 text-lg font-medium">{mintSchedule.date}</p>
       <p className="mt-1 text-sm text-muted-foreground">
-        {mintSchedule.timezoneIana} ({mintSchedule.timezoneLabel})
+        {mintSchedule.timezoneIana} ({mintSchedule.timezoneLabel}) · 1 per phase
       </p>
       <ol className="mt-4 grid gap-2 sm:grid-cols-2">
         {mintSchedule.phases.map((phase) => (
@@ -41,8 +41,9 @@ export function MintScheduleCard({
         ))}
       </ol>
       <p className="mt-4 text-sm text-muted-foreground">
-        {compact ? mintSchedule.rule : mintScheduleCopy.sentence} Mint 1 on this
-        hub when on-chain <span className="font-mono">mintOpen</span> is true.
+        {compact ? mintSchedule.rule : mintScheduleCopy.sentence}{" "}
+        {mintAllocation.sentence} Mint 1 on this hub when on-chain{" "}
+        <span className="font-mono">mintOpen</span> is true. {sealedCopy.tokenUri}
       </p>
     </div>
   );

@@ -4,6 +4,8 @@ Ordered rehearsal of **import-existing CollectionNFT + Studio Drop** on a chain 
 
 **Hub mint is the primary public path.** OpenSea Studio’s current Drop-create UI has **no bring-your-own / import-existing CollectionNFT** and **no Base Sepolia** in the chain picker. Do **not** tell users to mint via the Studio deploy-wizard (that would be a different ERC721SeaDrop). Collectors mint on the hub (`/mint`) with `CollectionNFT.mint` / `mintTo` while on-chain `mintOpen` is true. The hub shows a closed state when `mintOpen` is false.
 
+**Anti-snipe:** until `CollectionNFT.reveal()`, every `tokenURI` is the same sealed `hidden.json`. Collectors cannot see traits. Hub carousel GIFs are **examples / not mint supply**. Do **not** host 4444 (or tokenId) lit/dormant JSON at `web/public/metadata/{lit,dormant}` or point `setMetadataURIs` dormant/lit bases at this hub before reveal.
+
 Current Base Sepolia dry-run CollectionNFT: `0xe1cC988CeC1C29764ba18523635De82d0C9B518F` (chain `84532`). Hub env: `NEXT_PUBLIC_CHAIN_ID=84532` and `NEXT_PUBLIC_COLLECTION_NFT` (or the built-in 84532 fallback). Robinhood mainnet `4663` stays env-driven and is **not** broadcast from this document.
 
 **Do not broadcast to Robinhood mainnet `4663` from this document.** `script/Deploy.s.sol` does not check chain id; the RPC you pass is the network you hit. Use `--rpc-url base_sepolia` (or `sepolia`). Never `--rpc-url robinhood`.
@@ -139,18 +141,20 @@ Copy CollectionNFT, Hopper, RoyaltySplitter, IgniteModule, PulseDistributor, Ter
 
 Replace `$COLLECTION` / `$HOPPER` / `$IGNITE` / `$PULSE` from the logs. RPC alias matches the chain you broadcast to.
 
-### 5.1 Hub test metadata (tokens 1–25 only)
+### 5.1 Sealed metadata only (anti-snipe)
 
-Smoke only. Not a full 4444 pin. Trailing `/` on the bases appends `{tokenId}.json`.
+Set **hiddenURI only** for the mint window. Every `tokenURI` is this JSON until `reveal()`. Do **not** publish per-token dormant/lit JSON on the hub (`/metadata/{lit,dormant}/{id}.json` is removed). Hub GIFs at `/art/examples/` are **examples / not mint supply**.
 
 ```bash
 cast send "$COLLECTION" \
   "setMetadataURIs(string,string,string)" \
   "https://terminal-pets.vercel.app/metadata/hidden.json" \
-  "https://terminal-pets.vercel.app/metadata/dormant/" \
-  "https://terminal-pets.vercel.app/metadata/lit/" \
+  "" \
+  "" \
   --rpc-url base_sepolia
 ```
+
+Leave dormant/lit bases empty (or a private pin) until after `reveal()`. Trailing `/` on those bases would append `{tokenId}.json` and leak traits if the files are public.
 
 ### 5.2 Confirm canonical SeaDrop is allowed
 
@@ -196,7 +200,7 @@ If Studio cannot find the contract, cannot select the chain, or tries to deploy 
 
 ## 7. Mint 1, then reveal / Ignite notes
 
-1. From a **different** wallet than a 1/wallet allowlist already filled (or the public stage), mint **exactly 1** through Studio. Confirm the NFT appears on the OpenSea testnet item page as **Sealed** (`hidden.json` / stub until URIs + reveal).
+1. From a **different** wallet than a 1/wallet allowlist already filled (or the public stage), mint **exactly 1** through the **hub** (`/mint` while `mintOpen`). Confirm the NFT appears as **Sealed** (`hidden.json` — no traits). Studio mint is blocked in the current UI.
 2. On-chain:
 
 ```bash
@@ -212,7 +216,7 @@ cast call "$COLLECTION" "getMintStats(address)(uint256,uint256,uint256)" "$MINTE
 cast send "$COLLECTION" "reveal()" --rpc-url base_sepolia
 ```
 
-Expect dormant `tokenURI` → `https://terminal-pets.vercel.app/metadata/dormant/{id}.json` for ids 1–25. Ignite and `$TERM` transfers turn on. RoyaltySplitter `live` → 5% Hopper / 2.5% treasury.
+Expect `tokenURI` still `https://terminal-pets.vercel.app/metadata/hidden.json` until reveal (same URI for every token). After reveal, point dormant/lit bases at a **private pin**, not this hub’s old `/metadata/dormant/` tree. Ignite and `$TERM` transfers turn on. RoyaltySplitter `live` → 5% Hopper / 2.5% treasury.
 
 4. **Ignite** the minted token from its owner. Exact **0.002 ETH** (production). Without `TERM_SWAP_ROUTER`, 25% `$TERM` parks as `pendingHopperTerm` and 50% of the ETH parks as `pendingIgniteEthBurn`. Hopper still receives 50% of the 0.002 ETH.
 
@@ -220,7 +224,8 @@ Expect dormant `tokenURI` → `https://terminal-pets.vercel.app/metadata/dormant
 cast send "$IGNITE" "ignite(uint256)" 1 --value 0.002ether --rpc-url base_sepolia
 cast call "$COLLECTION" "isLit(uint256)(bool)" 1 --rpc-url base_sepolia
 cast call "$COLLECTION" "tokenURI(uint256)(string)" 1 --rpc-url base_sepolia
-# expect …/metadata/lit/1.json
+cast call "$COLLECTION" "tokenURI(uint256)(string)" 1 --rpc-url base_sepolia
+# expect the private dormant/lit pin you set at reveal — not hub /metadata/lit/1.json
 cast call "$PULSE" "getDial(uint256)" 1 --rpc-url base_sepolia
 ```
 
@@ -252,6 +257,7 @@ This document does **not** broadcast to `4663`. No `--rpc-url robinhood`. No mai
 - **Do not** treat RH testnet / MICRO stacks as Studio Drop evidence.
 - **Do not** invent Dial stock-token addresses.
 - **Do not** `reveal()` before you have finished stage config unless you accept Ignite/`$TERM` trading turning on.
+- **Do not** publish 4444 (or tokenId) lit/dormant JSON to `web/public/metadata/{lit,dormant}` or git until after reveal. Hub carousel is examples / not mint supply.
 - **Do not** put private keys in git or this markdown.
 
 ## References
@@ -261,5 +267,5 @@ This document does **not** broadcast to `4663`. No `--rpc-url robinhood`. No mai
 - [`OPENSEA_STUDIO_SEADROP.md`](OPENSEA_STUDIO_SEADROP.md) — interface, stages, royalties
 - [`MAINNET_PREP.md`](MAINNET_PREP.md) — checklist before any Robinhood `4663` broadcast
 - [`TESTNET_DEPLOY.md`](TESTNET_DEPLOY.md) — RH `46630` mechanics (not Studio)
-- [`MAIN_ART_LOCK.md`](MAIN_ART_LOCK.md) — hub test host vs full 4444 pin
+- [`MAIN_ART_LOCK.md`](MAIN_ART_LOCK.md) — examples vs sealed hidden.json vs 4444 pin
 - `foundry.toml` — `base_sepolia` / `sepolia` RPC aliases

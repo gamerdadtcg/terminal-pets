@@ -149,22 +149,24 @@ Recorded SHORT-LOCK 900s MICRO stack (not 7-day CollectionNFT `0xe1cC988…`): [
 
 ## 5. Post-deploy smoke (owner txs)
 
-Replace `$COLLECTION`, `$PULSE`, `$IGNITE`, `$HOPPER`, `$TREASURY` from the deploy logs. Hub test metadata covers tokens **1–25** only.
+Replace `$COLLECTION`, `$PULSE`, `$IGNITE`, `$HOPPER`, `$TREASURY` from the deploy logs.
+
+**Historical 46630 smoke** used hub `/metadata/{dormant,lit}/{id}.json`. Those JSON trees are **removed** (anti-snipe for Friday mint). GIF files moved to `/art/examples/` with redirects from `/art/test/`. New deploys should set **hiddenURI only** until reveal; do not republish tokenId JSON on this hub.
 
 Read-only `cast call` examples (no keys): [`script/smoke-testnet.md`](../script/smoke-testnet.md).
 
-### 5.1 `setMetadataURIs` (hub HTTPS)
+### 5.1 `setMetadataURIs` (sealed hidden.json only)
 
 ```bash
 cast send "$COLLECTION" \
   "setMetadataURIs(string,string,string)" \
   "https://terminal-pets.vercel.app/metadata/hidden.json" \
-  "https://terminal-pets.vercel.app/metadata/dormant/" \
-  "https://terminal-pets.vercel.app/metadata/lit/" \
+  "" \
+  "" \
   --rpc-url testnet
 ```
 
-Trailing `/` on the bases appends `{tokenId}.json`.
+Do **not** point dormant/lit at hub `/metadata/dormant/` or `/metadata/lit/` — those paths no longer exist. Pin privately after reveal. The recorded 7-day 46630 stack already revealed against the old URLs (see [`RH_TESTNET_DEPLOY_ADDRESSES.md`](RH_TESTNET_DEPLOY_ADDRESSES.md)).
 
 ### 5.2 `setStockToken` — AMZN + TSLA only
 
@@ -228,7 +230,7 @@ cast call "$COLLECTION" "isLit(uint256)(bool)" 1 --rpc-url testnet
 cast call "$PULSE" "getDial(uint256)" 1 --rpc-url testnet
 ```
 
-Expect Lit `tokenURI` → `https://terminal-pets.vercel.app/metadata/lit/1.json`. Dial `nLegs` is 1–4 by shell class. Assigned slots may still be `address(0)` if the keccak draw hit an unset pool index — that is correct; only AMZN/TSLA are wired. `previewDial` matches `getDial` (holders cannot pick).
+Expect Lit `tokenURI` to follow the **private pin** you set at reveal (not hub `/metadata/lit/1.json` — that path is gone). The recorded 46630 7-day stack still lists the old URL in [`RH_TESTNET_DEPLOY_ADDRESSES.md`](RH_TESTNET_DEPLOY_ADDRESSES.md). Dial `nLegs` is 1–4 by shell class. Assigned slots may still be `address(0)` if the keccak draw hit an unset pool index — that is correct; only AMZN/TSLA are wired. `previewDial` matches `getDial` (holders cannot pick).
 
 ### 5.7 Hopper lock
 
@@ -300,8 +302,8 @@ Recorded 46630 addresses (7-day stack): [`RH_TESTNET_DEPLOY_ADDRESSES.md`](RH_TE
   },
   "metadata": {
     "hiddenURI": "https://terminal-pets.vercel.app/metadata/hidden.json",
-    "dormantBaseURI": "https://terminal-pets.vercel.app/metadata/dormant/",
-    "litBaseURI": "https://terminal-pets.vercel.app/metadata/lit/"
+    "dormantBaseURI": "(private pin after reveal — do not use hub /metadata/dormant/)",
+    "litBaseURI": "(private pin after reveal — do not use hub /metadata/lit/)"
   }
 }
 ```

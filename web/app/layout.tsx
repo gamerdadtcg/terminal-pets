@@ -19,11 +19,11 @@ export const metadata: Metadata = {
     template: "%s · Terminal Pets",
   },
   description:
-    "Handheld pets that sleep until you Ignite them. Generative Pocket Critter PFPs. Free mint Friday, September 18, 2026 PT on this hub. 1,000 $TERM + 0.002 ETH. Hopper lock 7 days. Dial 1–4 by shell class. Mint. Ignite. Dormant→Lit. Hopper. Pulse. TBA. Robinhood Chain.",
+    "Handheld pets that sleep until you Ignite them. Generative Pocket Critter PFPs. Free mint Friday, September 18, 2026 PT on this hub. Sealed until reveal — collectors cannot see traits. Hub GIFs are examples / not mint supply. 1,000 $TERM + 0.002 ETH. Hopper lock 7 days. Dial 1–4 by shell class.",
   openGraph: {
     title: "Terminal Pets",
     description:
-      "Free mint Friday, September 18, 2026 PT. Mint on this hub. Ignite 0.002 ETH. Hopper 7 days. Dial 1–4.",
+      "Free mint Friday, September 18, 2026 PT. Mint on this hub. Sealed until reveal. Ignite 0.002 ETH. Hopper 7 days. Dial 1–4.",
     type: "website",
   },
 };

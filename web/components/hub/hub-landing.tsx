@@ -20,6 +20,7 @@ import {
   mintSchedule,
   mintScheduleCopy,
   publicLinks,
+  sealedCopy,
 } from "@/lib/site";
 import Link from "next/link";
 
@@ -27,12 +28,12 @@ const STEPS = [
   {
     n: "01",
     title: "Free mint",
-    body: `${mintScheduleCopy.sentence} ${mintAllocation.sentence} Mint on this hub when mintOpen is true. Each token mints Sealed — hidden metadata, TBA, and a $TERM allotment. Name is Terminal Pet #{id}. Ignite and $TERM trading stay off.`,
+    body: `${mintScheduleCopy.sentence} ${mintAllocation.sentence} Mint on this hub when mintOpen is true. Each token mints Sealed — every tokenURI is the same hidden.json, so collectors cannot see traits. TBA and a $TERM allotment still attach. Name is Terminal Pet #{id}. Ignite and $TERM trading stay off.`,
   },
   {
     n: "02",
     title: "24h reveal",
-    body: `Sealed for ${SITE.revealWindow}. Owner may call CollectionNFT.reveal() early; anyone can after that. One tx: dormant egg metadata live, $TERM trading on, Ignite on, royalties switch from 7.5% TermFund to ${SITE.royaltyHopper} Hopper / ${SITE.royaltyTreasury} treasury.`,
+    body: `Sealed for ${SITE.revealWindow}. Every tokenURI stays the same hidden.json until CollectionNFT.reveal() — collectors cannot see traits. Owner may reveal early; anyone can after the window. One tx: dormant egg metadata live, $TERM trading on, Ignite on, royalties switch from 7.5% TermFund to ${SITE.royaltyHopper} Hopper / ${SITE.royaltyTreasury} treasury.`,
   },
   {
     n: "03",
@@ -103,27 +104,27 @@ const ROADMAP = [
   {
     state: "done" as const,
     title: "Generative PFP metadata",
-    body: "Pocket Critter off-chain GIFs. tokenURI: sealed JSON → dormant egg → awake pet on Ignite. ERC-4906 MetadataUpdate stays. Old on-chain SVG pets are not product art.",
+    body: "Pocket Critter off-chain GIFs. Until reveal every tokenURI is one sealed hidden.json (collectors cannot see traits). After reveal: dormant egg → awake pet on Ignite. ERC-4906 MetadataUpdate stays. Old on-chain SVG pets are not product art.",
   },
   {
     state: "done" as const,
-    title: "25-token GIF test host",
-    body: "Hub hosts tokens 1–25 as animated GIFs + JSON at /art/test, /art/test-egg, and /metadata/{hidden,dormant,lit}. After Vercel deploy, setMetadataURIs can use the terminal-pets.vercel.app HTTPS bases. Not a chain deploy.",
+    title: "Anti-snipe demo split",
+    body: "Hub carousel GIFs (~25) live at /art/examples and are labeled examples / not mint supply. Public /metadata is only hidden.json until after reveal. Do not host 4444 lit/dormant JSON on this hub or in git before reveal policy.",
   },
   {
     state: "next" as const,
-    title: "Pin collection GIFs",
-    body: "Generate the remaining 4444 awake + egg GIFs, pin JSON to IPFS/HTTP, then CollectionNFT.setMetadataURIs. A 25-token HTTPS GIF test path is already on this hub.",
+    title: "Pin collection GIFs (after reveal policy)",
+    body: "Generate the 4444 awake + egg GIFs off-git (art/export/gif-full/ is gitignored). Pin privately. Set hiddenURI now; set dormant/lit bases at reveal — do not publish tokenId JSON on this hub before CollectionNFT.reveal().",
   },
   {
     state: "done" as const,
     title: "24h reveal gates",
-    body: "Mint → sealed metadata, Ignite off, $TERM trading off, 7.5% royalties → TermFund. CollectionNFT.reveal() flips metadata, Ignite, trading, and 5/2.5 royalties in one tx. Owner early; anyone after 24h.",
+    body: "Mint → every tokenURI is hidden.json (no traits), Ignite off, $TERM trading off, 7.5% royalties → TermFund. CollectionNFT.reveal() flips metadata, Ignite, trading, and 5/2.5 royalties in one tx. Owner early; anyone after 24h.",
   },
   {
     state: "now" as const,
     title: "Public hub mint",
-    body: "This site. /mint calls CollectionNFT.mint / mintTo while mintOpen. Ignite / Pulse / Hopper / Dial pages. Terminal route is ready. 25-token GIF test host + sample previews on the hub.",
+    body: "This site. /mint calls CollectionNFT.mint / mintTo while mintOpen. Sealed-state copy until reveal. Ignite / Pulse / Hopper / Dial pages. Carousel is examples / not mint supply.",
   },
   {
     state: "next" as const,
@@ -162,6 +163,9 @@ export function HubLanding() {
               <Badge variant="outline" className="font-mono">
                 Free mint · {mintSchedule.date} · {mintSchedule.timezoneLabel}
               </Badge>
+              <Badge variant="outline" className="font-mono">
+                {sealedCopy.badge}
+              </Badge>
               {live ? (
                 <ComingSoon>Hub mint</ComingSoon>
               ) : (
@@ -178,10 +182,11 @@ export function HubLanding() {
             </p>
             <p className="max-w-xl text-sm text-muted-foreground">
               {mintScheduleCopy.sentence} {mintAllocation.sentence} Mint on
-              this hub. Pets mint Sealed for {SITE.revealWindow}: hidden
-              metadata, Ignite off, $TERM transfers off. Reveal shows a
-              dormant egg GIF; Ignite swaps metadata to the matching awake
-              pet. Secondary royalties (
+              this hub. Pets mint Sealed for {SITE.revealWindow}: every
+              tokenURI is the same hidden.json — collectors cannot see traits.
+              Ignite and $TERM transfers stay off. {sealedCopy.carousel} Reveal
+              shows a dormant egg GIF; Ignite swaps metadata to the matching
+              awake pet. Secondary royalties (
               {SITE.royalty}) go 100% to TermFund — nothing to Hopper, nothing
               to treasury from that stream. Reveal flips metadata live, turns
               on Ignite and $TERM trading, and switches royalties to{" "}
@@ -215,8 +220,8 @@ export function HubLanding() {
               {SITE.supply} total · {SITE.publicSupply} public /{" "}
               {SITE.teamReserve} team · Free mint · {mintSchedule.date} ·{" "}
               {mintScheduleCopy.phases} · 1 / phase · Sealed{" "}
-              {SITE.revealWindow} · Ignite {SITE.igniteFee} · Royalty{" "}
-              {SITE.royalty}
+              {SITE.revealWindow} · {sealedCopy.label} · Ignite {SITE.igniteFee}{" "}
+              · Royalty {SITE.royalty}
             </p>
           </div>
 
@@ -224,54 +229,55 @@ export function HubLanding() {
             <MintScheduleCard />
             <div className="rounded-[1.6rem] border border-border/70 bg-card/70 p-5">
               <p className="font-mono text-[11px] tracking-[0.28em] text-primary">
-                GENERATIVE PFP
+                EXAMPLES / NOT MINT SUPPLY
               </p>
               <p className="mt-3 text-lg font-medium">
                 Dormant egg. Ignite cracks it open.
               </p>
               <p className="mt-2 text-sm text-muted-foreground">
-                Modular Pocket Critter GIFs (2048 compose, 512 export). Off-chain
-                JSON tokenURI — not the old on-chain SVG pets. Ignite is the
-                hatch: crack, split, flash, awake pet.
+                Demo GIFs only — not live tokenIds. Modular Pocket Critter
+                (2048 compose, 512 export). Until reveal, minted tokenURI is
+                one sealed hidden.json. Ignite is the hatch: crack, split,
+                flash, awake pet.
               </p>
               <div className="mt-4 grid grid-cols-2 gap-2">
                 <figure className="overflow-hidden rounded-xl border border-border/70 bg-black/40">
                   <img
-                    src="/art/test-egg/2.gif"
-                    alt="Sample dormant Terminal Pet egg GIF"
+                    src="/art/examples/egg/2.gif"
+                    alt="Example dormant Terminal Pet egg GIF (not mint supply)"
                     className="aspect-square w-full object-cover"
                     width={512}
                     height={512}
                   />
                   <figcaption className="px-2 py-1.5 font-mono text-[10px] text-muted-foreground">
-                    Dormant · SNAG egg
+                    Example · SNAG egg · {sealedCopy.label}
                   </figcaption>
                 </figure>
                 <figure className="overflow-hidden rounded-xl border border-border/70 bg-black/40">
                   <img
-                    src="/art/test/2.gif"
-                    alt="Sample awakened Terminal Pet GIF"
+                    src="/art/examples/awake/2.gif"
+                    alt="Example awakened Terminal Pet GIF (not mint supply)"
                     className="aspect-square w-full object-cover"
                     width={512}
                     height={512}
                   />
                   <figcaption className="px-2 py-1.5 font-mono text-[10px] text-muted-foreground">
-                    Lit · SNAG awake
+                    Example · SNAG awake · {sealedCopy.label}
                   </figcaption>
                 </figure>
               </div>
               <figure className="mt-2 overflow-hidden rounded-xl border border-primary/25 bg-black/40">
                 <img
                   src="/art/hatch/snag_hatch.gif"
-                  alt="SNAG Ignite hatch GIF: egg cracks, splits, flashes, and the pet wakes"
+                  alt="Example SNAG Ignite hatch GIF (not mint supply): egg cracks, splits, flashes, and the pet wakes"
                   className="aspect-square w-full object-cover"
                   width={512}
                   height={512}
                 />
                 <figcaption className="px-2 py-1.5 font-mono text-[10px] text-muted-foreground">
-                  Hatch · Ignite cracks the egg. Pet wakes.{" "}
+                  Example hatch · {sealedCopy.label}.{" "}
                   <Link href="/#art" className="text-primary underline-offset-2 hover:underline">
-                    More hatches
+                    More examples
                   </Link>
                 </figcaption>
               </figure>
@@ -280,7 +286,7 @@ export function HubLanding() {
               <div className="rounded-2xl border border-border/70 bg-card/60 p-3">
                 <p className="font-mono text-[10px] text-primary">SEALED</p>
                 <p className="mt-1 text-xs text-muted-foreground">
-                  Hidden / generic metadata until reveal.
+                  One hidden.json for every token. No traits until reveal.
                 </p>
               </div>
               <div className="rounded-2xl border border-border/70 bg-card/60 p-3">
@@ -313,9 +319,10 @@ export function HubLanding() {
           </h2>
           <p className="text-muted-foreground">
             {mintScheduleCopy.sentence} {mintAllocation.sentence} Pets mint
-            Sealed. After {SITE.revealWindow} (or sooner if the owner
-            activates), reveal flips metadata, enables Ignite and $TERM
-            trading, and routes royalties to Hopper/treasury. Until then the
+            Sealed — {sealedCopy.tokenUri} After {SITE.revealWindow} (or
+            sooner if the owner activates), reveal flips metadata, enables
+            Ignite and $TERM trading, and routes royalties to
+            Hopper/treasury. Until then the
             full {SITE.royalty} creator royalty seeds TermFund. Ignite is
             hybrid: {SITE.igniteFeeTerm} splits {SITE.igniteBurn} burn /{" "}
             {SITE.igniteHopper} Hopper / {SITE.igniteAllotmentRefill} allotment
@@ -471,12 +478,11 @@ export function HubLanding() {
             </h2>
             <p className="text-muted-foreground">
               {SITE.artSystem} system: modular layers, 12 pets, matching eggs,
-              Robinhood-green backgrounds ({SITE.artCompose}). Reveal serves the
-              dormant egg GIF. Ignite is the hatch — crack, split, flash — then
-              tokenURI swaps to the awake pet GIF (ERC-4906). Composed hatch
-              GIFs are below; frame PNGs stay in the art package. This hub hosts
-              tokens 1–25 as animated GIFs for setMetadataURIs. Old on-chain SVG
-              Track A pets and art-pass trait catalogs are not product art.
+              Robinhood-green backgrounds ({SITE.artCompose}). {sealedCopy.sentence}{" "}
+              After reveal, dormant egg GIFs go live. Ignite is the hatch —
+              crack, split, flash — then tokenURI swaps to the awake pet GIF
+              (ERC-4906). The carousel below is {sealedCopy.label}. Old
+              on-chain SVG Track A pets are not product art.
             </p>
           </div>
           <ArtGallery />
@@ -501,9 +507,10 @@ export function HubLanding() {
             <Link href="/mint" className="text-primary underline-offset-2 hover:underline">
               /mint
             </Link>{" "}
-            when mintOpen is true; the hub shows mint closed otherwise. Robinhood
-            mainnet (4663) addresses are env-driven. Base Sepolia dry-run is for
-            testing. Do not use OpenSea Studio’s deploy-Drop wizard.
+            when mintOpen is true; the hub shows mint closed otherwise.{" "}
+            {sealedCopy.sentence} Robinhood mainnet (4663) addresses are
+            env-driven. Base Sepolia dry-run is for testing. Do not use OpenSea
+            Studio’s deploy-Drop wizard.
           </p>
         </div>
         <ol className="space-y-3">
@@ -667,8 +674,9 @@ export function HubLanding() {
             </CardHeader>
             <CardContent className="space-y-3 text-sm text-muted-foreground">
               <p>
-                Contracts ready, not deployed. Generative PFP samples on the
-                hub. Full collection GIFs pin before mint.
+                Contracts ready, not broadcast to 4663. Hub mint is primary.
+                Carousel GIFs are examples / not mint supply. Sealed until
+                reveal — collectors cannot see traits.
               </p>
               <Button size="sm" variant="outline" asChild>
                 <Link href="/#status">See status</Link>

@@ -82,13 +82,13 @@ The 200 `teamMint` reserve is **not** a Studio Team stage. Mint that on-chain to
 
 ## Metadata — keep our URIs
 
-Do **not** use Studio’s metadata-upload / reveal wizard as the source of truth. Product art is off-chain Pocket Critter GIFs. After pinning (or using the hub test host):
+Do **not** use Studio’s metadata-upload / reveal wizard as the source of truth. Product art is off-chain Pocket Critter GIFs. **Anti-snipe:** until `reveal()`, every `tokenURI` is one `hidden.json`. Hub carousel GIFs are examples / not mint supply. Do not publish tokenId lit/dormant JSON on the hub before reveal.
 
 ```text
 CollectionNFT.setMetadataURIs(
-  hiddenURI,        // e.g. https://terminal-pets.vercel.app/metadata/hidden.json
-  dormantBaseURI,   // e.g. https://terminal-pets.vercel.app/metadata/dormant/
-  litBaseURI        // e.g. https://terminal-pets.vercel.app/metadata/lit/
+  hiddenURI,        // https://terminal-pets.vercel.app/metadata/hidden.json
+  dormantBaseURI,   // private 4444 pin AFTER reveal (trailing / → {id}.json)
+  litBaseURI        // private 4444 pin AFTER reveal
 )
 ```
 
@@ -116,7 +116,7 @@ This document does **not** deploy anywhere.
 
 ## Dapp mint
 
-`mint` / `mintTo` remain for the hub, gated by `mintOpen`, and share the 4244 public cap with SeaDrop. Leave `mintOpen` false if OpenSea is the only public path.
+`mint` / `mintTo` on the hub are the **primary** public path, gated by `mintOpen`, and share the 4244 public cap with SeaDrop. Studio Drop create currently has no BYO import — hub mint is the Friday path.
 
 ## References
 

@@ -50,3 +50,7 @@ art/**/__pycache__/
 art/**/*.pyc
 art/.venv/
 art/export/gif-full/
+
+# Anti-snipe: never commit live collection metadata trees until after reveal
+web/public/metadata/lit/
+web/public/metadata/dormant/
