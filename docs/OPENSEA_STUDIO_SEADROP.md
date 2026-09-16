@@ -82,13 +82,13 @@ The 200 `teamMint` reserve is **not** a Studio Team stage. Mint that on-chain to
 
 ## Metadata — keep our URIs
 
-Do **not** use Studio’s metadata-upload / reveal wizard as the source of truth. Product art is off-chain Pocket Critter GIFs. After pinning (or using the hub test host):
+Do **not** use Studio’s metadata-upload / reveal wizard as the source of truth. Product art is off-chain Pocket Critter GIFs. Pin **off-hub** (IPFS or a private bucket). Hub `/art/examples` GIFs are **Examples — not the mint supply** and must never be `tokenURI`. Do **not** publish real 4444 lit/dormant JSON to public `web/` until **after reveal**.
 
 ```text
 CollectionNFT.setMetadataURIs(
-  hiddenURI,        // e.g. https://terminal-pets.vercel.app/metadata/hidden.json
-  dormantBaseURI,   // e.g. https://terminal-pets.vercel.app/metadata/dormant/
-  litBaseURI        // e.g. https://terminal-pets.vercel.app/metadata/lit/
+  hiddenURI,        // ipfs://…/hidden.json  (sealed stub, no traits, until reveal)
+  dormantBaseURI,   // ipfs://…/egg-metadata/  (after reveal)
+  litBaseURI        // ipfs://…/metadata/      (after reveal)
 )
 ```
 

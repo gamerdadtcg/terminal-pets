@@ -6,7 +6,6 @@ const path = require("path");
 
 const publicDir = path.join(__dirname, "..", "public");
 const GIF89A = Buffer.from("GIF89a");
-const ORIGIN = "https://terminal-pets.vercel.app";
 
 function mustGif(filePath) {
   const fd = fs.openSync(filePath, "r");
@@ -27,15 +26,21 @@ function listNumeric(dir, ext) {
     .sort((a, b) => a - b);
 }
 
-const artTest = path.join(publicDir, "art", "test");
-const artEgg = path.join(publicDir, "art", "test-egg");
-const litDir = path.join(publicDir, "metadata", "lit");
-const dormantDir = path.join(publicDir, "metadata", "dormant");
+function assertGone(rel) {
+  const full = path.join(publicDir, rel);
+  if (fs.existsSync(full)) {
+    throw new Error(`anti-snipe: ${rel} must not be published on the hub`);
+  }
+}
 
-const artIds = listNumeric(artTest, ".gif");
-const eggIds = listNumeric(artEgg, ".gif");
-const litIds = listNumeric(litDir, ".json");
-const dormantIds = listNumeric(dormantDir, ".json");
+assertGone("metadata");
+assertGone("art/test");
+assertGone("art/test-egg");
+assertGone("art/awake");
+assertGone("art/dormant");
+
+const artAwake = path.join(publicDir, "art", "examples", "awake");
+const artEggs = path.join(publicDir, "art", "examples", "eggs");
 const expected = Array.from({ length: 25 }, (_, i) => i + 1);
 
 function assertIds(label, ids) {
@@ -44,54 +49,23 @@ function assertIds(label, ids) {
   }
 }
 
-assertIds("art/test", artIds);
-assertIds("art/test-egg", eggIds);
-assertIds("metadata/lit", litIds);
-assertIds("metadata/dormant", dormantIds);
+assertIds("art/examples/awake", listNumeric(artAwake, ".gif"));
+assertIds("art/examples/eggs", listNumeric(artEggs, ".gif"));
 
 for (const id of expected) {
-  mustGif(path.join(artTest, `${id}.gif`));
-  mustGif(path.join(artEgg, `${id}.gif`));
+  mustGif(path.join(artAwake, `${id}.gif`));
+  mustGif(path.join(artEggs, `${id}.gif`));
 }
 
-for (const dir of [artTest, artEgg]) {
+for (const dir of [artAwake, artEggs]) {
   for (const name of fs.readdirSync(dir)) {
     if (name.toLowerCase().endsWith(".png")) {
-      throw new Error(`PNG not allowed in test host: ${path.join(dir, name)}`);
+      throw new Error(`PNG not allowed in example GIFs: ${path.join(dir, name)}`);
     }
   }
 }
 
-function checkJson(filePath, expectedImage) {
-  const data = JSON.parse(fs.readFileSync(filePath, "utf8"));
-  if (typeof data.image !== "string" || !data.image.endsWith(".gif")) {
-    throw new Error(`${filePath} image must be a .gif URL`);
-  }
-  if (data.image.toLowerCase().includes(".png")) {
-    throw new Error(`${filePath} image must not reference PNG`);
-  }
-  if (data.image !== expectedImage) {
-    throw new Error(`${filePath} image expected ${expectedImage}, got ${data.image}`);
-  }
-}
-
-checkJson(
-  path.join(publicDir, "metadata", "hidden.json"),
-  `${ORIGIN}/art/test-egg/1.gif`,
-);
-
-for (const id of expected) {
-  checkJson(
-    path.join(litDir, `${id}.json`),
-    `${ORIGIN}/art/test/${id}.gif`,
-  );
-  checkJson(
-    path.join(dormantDir, `${id}.json`),
-    `${ORIGIN}/art/test-egg/${id}.gif`,
-  );
-}
-
-const hatchDir = path.join(publicDir, "art", "hatch");
+const hatchDir = path.join(publicDir, "art", "examples", "hatch");
 const hatchFiles = [
   "P01_pudd_hatch.gif",
   "P04_puppo_hatch.gif",
@@ -104,6 +78,11 @@ for (const name of hatchFiles) {
   mustGif(path.join(hatchDir, name));
 }
 
+const sealed = path.join(publicDir, "art", "examples", "sealed.png");
+if (!fs.existsSync(sealed)) {
+  throw new Error("missing art/examples/sealed.png");
+}
+
 console.log(
-  "test host ok: 25 GIF89a lit + 25 GIF89a egg + JSON HTTPS .gif images + 6 hatch GIFs",
+  "examples ok: 25 GIF89a awake + 25 GIF89a eggs under /art/examples; no public /metadata token JSON",
 );

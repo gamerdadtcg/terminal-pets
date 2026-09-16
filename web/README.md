@@ -12,4 +12,6 @@ npm run dev    # http://127.0.0.1:43147
 
 `NEXT_PUBLIC_COLLECTION_NFT` aliases `NEXT_PUBLIC_COLLECTION_ADDRESS`. Robinhood mainnet is chain `4663` (addresses empty until deploy). Base Sepolia `84532` falls back to dry-run CollectionNFT `0xe1cC988CeC1C29764ba18523635De82d0C9B518F` when collection env is blank.
 
-See the repository root README for deploy, 24h sealed reveal, generative Pocket Critter metadata (sealed → egg → awake), OpenSea royalty → RoyaltySplitter (pre-reveal 100% TermFund; post-reveal 5/2.5), Pulse ladder, `$TERM` allotment, and contract addresses.
+See the repository root README for deploy, 24h sealed reveal (mystery until reveal; traits unknown), generative Pocket Critter metadata (sealed → egg → awake), OpenSea royalty → RoyaltySplitter (pre-reveal 100% TermFund; post-reveal 5/2.5), Pulse ladder, `$TERM` allotment, and contract addresses.
+
+Hub GIFs under `public/art/examples/` are **Examples — not the mint supply.** They are never CollectionNFT `tokenURI`. `npm run verify:test-host` asserts those demos exist and that public `/metadata` token JSON is absent.

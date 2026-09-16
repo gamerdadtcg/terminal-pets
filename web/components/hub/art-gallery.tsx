@@ -1,13 +1,21 @@
 import {
   ART_SAMPLES,
   ART_SHEETS,
+  EXAMPLE_TOKENS,
+  EXAMPLES_LABEL,
   HATCH_OTHERS,
   HATCH_PRIMARY,
-  TEST_HOST_TOKENS,
-  TEST_METADATA_URIS,
-  TEST_TOKEN_COUNT,
 } from "@/lib/art-samples";
+import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
+function ExamplesBadge() {
+  return (
+    <Badge variant="outline" className="font-mono">
+      {EXAMPLES_LABEL}
+    </Badge>
+  );
+}
 
 function PetFrame({
   src,
@@ -40,15 +48,17 @@ function HatchReveal() {
   return (
     <Card className="overflow-hidden border-primary/25">
       <CardHeader className="gap-2">
-        <p className="font-mono text-[11px] text-primary">HATCH / IGNITE REVEAL</p>
+        <div className="flex flex-wrap items-center gap-2">
+          <p className="font-mono text-[11px] text-primary">HATCH / IGNITE REVEAL</p>
+          <ExamplesBadge />
+        </div>
         <CardTitle className="text-xl sm:text-2xl">
           Crack. Split. Flash. Awake.
         </CardTitle>
         <p className="text-sm text-muted-foreground">
-          Ignite breaks the dormant egg open. The shell cracks, splits, flashes,
-          and the matching pet wakes on the handheld. These are composed hatch
-          GIFs (native loops) — not the frame PNGs in{" "}
-          <code className="font-mono text-xs">art/anim/hatch/</code>.
+          {EXAMPLES_LABEL} Ignite breaks the dormant egg open. Minted tokens
+          stay sealed — traits unknown — until reveal. These hatch GIFs are
+          demos, not collection IDs.
         </p>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -99,9 +109,12 @@ export function ArtGallery() {
         {ART_SAMPLES.map((sample) => (
           <Card key={sample.id} className="overflow-hidden">
             <CardHeader className="pb-3">
-              <p className="font-mono text-[11px] text-primary">
-                SAMPLE #{sample.id}
-              </p>
+              <div className="flex flex-wrap items-center gap-2">
+                <p className="font-mono text-[11px] text-primary">
+                  EXAMPLE {sample.id}
+                </p>
+                <ExamplesBadge />
+              </div>
               <CardTitle className="text-base">
                 {sample.pet}{" "}
                 <span className="font-mono text-xs text-muted-foreground">
@@ -113,12 +126,12 @@ export function ArtGallery() {
             <CardContent className="grid grid-cols-2 gap-2">
               <PetFrame
                 src={sample.dormantSrc}
-                alt={`${sample.pet} dormant egg GIF`}
+                alt={`Example ${sample.pet} dormant egg GIF`}
                 caption="Dormant · egg rock"
               />
               <PetFrame
                 src={sample.awakeSrc}
-                alt={`${sample.pet} awake pet GIF`}
+                alt={`Example ${sample.pet} awake pet GIF`}
                 caption="Lit · awake FX"
               />
             </CardContent>
@@ -127,39 +140,23 @@ export function ArtGallery() {
       </div>
       <Card>
         <CardHeader className="gap-2">
-          <p className="font-mono text-[11px] text-primary">TEST HOST</p>
+          <div className="flex flex-wrap items-center gap-2">
+            <p className="font-mono text-[11px] text-primary">EXAMPLES</p>
+            <ExamplesBadge />
+          </div>
           <CardTitle className="text-base">
-            Tokens 1–{TEST_TOKEN_COUNT} · animated GIF (not PNG)
+            Demo GIFs. Not the 4444 mint supply.
           </CardTitle>
           <p className="text-sm text-muted-foreground">
-            After this hub deploys, CollectionNFT.setMetadataURIs can point at
-            these HTTPS JSON bases. Image fields already use absolute{" "}
-            <code className="font-mono text-xs">.gif</code> URLs.
+            {EXAMPLES_LABEL} Pets mint sealed; traits unknown until reveal.
+            Do not point CollectionNFT.setMetadataURIs at these files. Real
+            collection lit/dormant JSON is not published on this hub until
+            after reveal.
           </p>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <dl className="grid gap-2 font-mono text-[11px] sm:grid-cols-1">
-            <div className="rounded-xl border border-border/70 bg-background/40 px-3 py-2">
-              <dt className="text-muted-foreground">hiddenURI</dt>
-              <dd className="break-all text-foreground">
-                {TEST_METADATA_URIS.hiddenURI}
-              </dd>
-            </div>
-            <div className="rounded-xl border border-border/70 bg-background/40 px-3 py-2">
-              <dt className="text-muted-foreground">dormantBaseURI</dt>
-              <dd className="break-all text-foreground">
-                {TEST_METADATA_URIS.dormantBaseURI}
-              </dd>
-            </div>
-            <div className="rounded-xl border border-border/70 bg-background/40 px-3 py-2">
-              <dt className="text-muted-foreground">litBaseURI</dt>
-              <dd className="break-all text-foreground">
-                {TEST_METADATA_URIS.litBaseURI}
-              </dd>
-            </div>
-          </dl>
+        <CardContent>
           <div className="-mx-1 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2 [scrollbar-width:thin]">
-            {TEST_HOST_TOKENS.map((token) => (
+            {EXAMPLE_TOKENS.map((token) => (
               <figure
                 key={token.id}
                 className="w-[17rem] shrink-0 snap-start overflow-hidden rounded-2xl border border-border/70 bg-black/40"
@@ -167,7 +164,7 @@ export function ArtGallery() {
                 <div className="grid grid-cols-2">
                   <img
                     src={token.dormantSrc}
-                    alt={`Token ${token.id} dormant egg GIF`}
+                    alt={`Example ${token.id} dormant egg GIF`}
                     className="aspect-square w-full object-cover"
                     width={256}
                     height={256}
@@ -176,7 +173,7 @@ export function ArtGallery() {
                   />
                   <img
                     src={token.awakeSrc}
-                    alt={`Token ${token.id} awake pet GIF`}
+                    alt={`Example ${token.id} awake pet GIF`}
                     className="aspect-square w-full object-cover"
                     width={256}
                     height={256}
@@ -185,7 +182,7 @@ export function ArtGallery() {
                   />
                 </div>
                 <figcaption className="px-3 py-2 font-mono text-xs tracking-wide text-muted-foreground">
-                  #{token.id} egg · lit
+                  Example {token.id} · egg / awake
                 </figcaption>
               </figure>
             ))}

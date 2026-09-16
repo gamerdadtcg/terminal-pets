@@ -71,19 +71,22 @@ RH **testnet** AMZN / TSLA samples in [`DIAL.md`](DIAL.md) are **46630-only**. D
 
 `PULSE_ROUTER` (and `TERM_SWAP_ROUTER` / `TERM_POOL`) stay blank until real DEX adapters exist. Undialed Pulse **reverts** without router + `$TERM`; Dialed claims fall back to ETH. Production should set routers before collectors rely on Pulse / Ignite buy-and-burn.
 
-## 4. Full metadata pin (not the 25-token hub test)
+## 4. Full metadata pin (off-hub; not public web/ until after reveal)
 
-Hub HTTPS is a **smoke host for tokens 1–25**:
+**Anti-snipe.** Do **not** publish real 4444 lit/dormant JSON under `web/public/` until **after reveal**. Hub GIFs at `/art/examples` are **Examples — not the mint supply.** Never `setMetadataURIs` to:
 
 ```text
 https://terminal-pets.vercel.app/metadata/hidden.json
 https://terminal-pets.vercel.app/metadata/dormant/{id}.json
 https://terminal-pets.vercel.app/metadata/lit/{id}.json
+https://terminal-pets.vercel.app/art/examples/…
 ```
 
-That is **not** the 4444 collection. Mainnet `tokenURI` for ids 26–4444 would 404 if you pointed production at the hub test tree. Plan:
+Those hub metadata paths are gone (404 is correct). `/art/examples` is demo art only.
 
-1. Export the full set (gitignored `art/export/gif-full/`; hours; seed locked when ops chooses):
+Plan:
+
+1. Export the full set privately (gitignored `art/export/gif-full/`; hours; seed locked when ops chooses):
 
 ```bash
 python art/generator/generate_collection.py \
@@ -96,27 +99,27 @@ python art/generator/generate_collection.py \
   --progress-every 25
 ```
 
-2. Pin **four** trees (or equivalent HTTP buckets), not only JSON:
+2. Pin **four** trees **off-hub** (IPFS or a private bucket — not `web/public/`):
    - Awake GIFs (`art/`)
    - Dormant egg GIFs (`egg/`)
    - Lit JSON (`metadata/`)
    - Dormant JSON (`egg-metadata/`)
    - Plus sealed `hidden.json` (see `art/export/sealed/hidden.json`)
 3. Rewrite `image` fields to the pinned GIF bases (`--art-image-base` / `--egg-image-base` or `art/generator/rewrite_image_uris.py`).
-4. After CollectionNFT is live (and **after** owner says go), owner:
+4. After CollectionNFT is live (and **after** owner says go), owner may set a **sealed** `hiddenURI` (no traits) before mint. Set dormant/lit bases only when you are ready to reveal — and **do not** copy those JSON trees onto public `web/` until after reveal:
 
 ```text
 CollectionNFT.setMetadataURIs(
-  hiddenURI,        // ipfs://…/hidden.json   (no trailing slash)
-  dormantBaseURI,   // ipfs://…/egg-metadata/ (trailing slash → {id}.json)
-  litBaseURI        // ipfs://…/metadata/     (trailing slash → {id}.json)
+  hiddenURI,        // ipfs://…/hidden.json   (no trailing slash; sealed stub, no traits)
+  dormantBaseURI,   // ipfs://…/egg-metadata/ (trailing slash → {id}.json) — after reveal
+  litBaseURI        // ipfs://…/metadata/     (trailing slash → {id}.json) — after reveal
 )
 ```
 
 5. Optional: `setShellClassOverride` from generative `Shell Class` **before Ignite** so Dial counts match PFPs ([`DIAL.md`](DIAL.md)).
 6. Do **not** use Studio’s metadata-upload / reveal wizard as source of truth ([`MAIN_ART_LOCK.md`](MAIN_ART_LOCK.md), [`OPENSEA_STUDIO_SEADROP.md`](OPENSEA_STUDIO_SEADROP.md)).
 
-Sealed stub until pin is acceptable only as a conscious delay — not as the launch art plan.
+Sealed stub until pin is the pre-reveal plan. Do not leak 4444 traits on the public hub.
 
 ## 5. Wallets (mainnet ≠ testnet deployer)
 
@@ -174,7 +177,7 @@ Do **not** `reveal()` until mint-window policy says so.
 3. Creator earnings **7.5% (750 bps)** → **RoyaltySplitter**. Enable ERC-2981 if offered.
 4. Drop stages: free, **1 per wallet** per stage, Public last. Limited edition 4444 on-chain; SeaDrop public 4244. Creator payout for primary ETH → Hopper if that fuel should Pulse.
 5. Confirm `isAllowedSeaDrop` for the Studio SeaDrop address.
-6. `setMetadataURIs` to the **pinned** 4444 bases (§4), not only the hub test host.
+6. `setMetadataURIs` to the **pinned off-hub** 4444 bases (§4). Never the hub `/art/examples` tree or public `web/public/metadata`.
 7. Wire Dial only with the eight **real** `4663` stock addresses (§3).
 8. Copy addresses into hub `NEXT_PUBLIC_*`. Leave `mintOpen` false unless the hub should also mint (shares the 4244 cap with SeaDrop).
 
@@ -195,7 +198,8 @@ When the owner says go, re-read §0–§7 on that day (SeaDrop address, stock to
 - **Do not** reuse RH testnet MICRO economics (`HOPPER_LOCK_SECONDS=900`, tiny Ignite / Pulse).
 - **Do not** invent Dial mainnet stock addresses or a Robinhood SeaDrop address.
 - **Do not** `teamMint` the 200 reserve to `0xA71c…` (testnet deployer).
-- **Do not** point production metadata at the 25-token hub test tree as the full collection.
+- **Do not** publish 4444 lit/dormant metadata to public `web/` until after reveal.
+- **Do not** point production metadata at hub `/art/examples` or the deleted `/metadata` tree.
 - **Do not** use Studio’s deploy wizard on mainnet.
 
 ## References

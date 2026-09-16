@@ -46,39 +46,26 @@ ERC-4906: `reveal()` emits `BatchMetadataUpdate`; Ignite already calls `notifyMe
 
 Until bases are set, `tokenURI` falls back to `TerminalRenderer` data-URI JSON (plain rectangle stub labeled `OFF-CHAIN ART`). That stub is **not** product art.
 
-Host on IPFS or HTTP. After pinning GIF folders, prefix `image` fields with `--art-image-base` / `--egg-image-base` or `art/generator/rewrite_image_uris.py`. Stub sample: `art/export/sealed/hidden.json` and `art/export/gif-test/`.
+Host **off-hub** (IPFS or a private bucket). Do **not** copy 4444 lit/dormant JSON into public `web/` until after reveal. After pinning GIF folders, prefix `image` fields with `--art-image-base` / `--egg-image-base` or `art/generator/rewrite_image_uris.py`. Stub sample: `art/export/sealed/hidden.json` and `art/export/gif-test/` (generator smoke only — not a public tokenURI host).
 
-Hub demo: featured samples plus a **25-token HTTPS GIF test host** under `web/public/`.
+Hub demo GIFs under `web/public/art/examples/` are **examples only — not the mint supply**. Do not use them as CollectionNFT `tokenURI`. Real 4444 lit/dormant JSON must **not** be published on public `web/` until **after reveal**.
 
-## Test hosting
+## Hub examples (not tokenURI)
 
-Tokens **1–25** (seed 42) are committed as **GIF89a only** (do not convert to PNG):
+Demo GIFs (~25) are committed as **GIF89a only** (do not convert to PNG). Label in UI: **Examples — not the mint supply.**
 
 | Path | What |
 | --- | --- |
-| `web/public/art/test/{id}.gif` | Awake / lit pet GIF |
-| `web/public/art/test-egg/{id}.gif` | Dormant egg-rock GIF |
-| `web/public/metadata/lit/{id}.json` | Lit JSON (`image` → absolute `.gif` URL) |
-| `web/public/metadata/dormant/{id}.json` | Dormant JSON (`image` → absolute `.gif` URL) |
-| `web/public/metadata/hidden.json` | Sealed stub (`image` → egg GIF) |
+| `web/public/art/examples/awake/{id}.gif` | Demo awake pet GIF |
+| `web/public/art/examples/eggs/{id}.gif` | Demo dormant egg-rock GIF |
+| `web/public/art/examples/hatch/*.gif` | Demo Ignite hatch GIFs |
+| `web/public/art/examples/sealed.png` | Sealed-mystery still |
 
-After the hub deploys to Vercel, owner-set:
+**Anti-snipe:** `web/public/metadata/` is gone. Do **not** restore `/metadata/{hidden,dormant,lit}` on the public hub. Do **not** point `setMetadataURIs` at `https://terminal-pets.vercel.app/metadata/…` or at `/art/examples`. Collectors must not be able to fetch collection-id trait JSON from this site before reveal.
 
-```text
-CollectionNFT.setMetadataURIs(
-  hiddenURI,       // https://terminal-pets.vercel.app/metadata/hidden.json
-  dormantBaseURI,  // https://terminal-pets.vercel.app/metadata/dormant/
-  litBaseURI       // https://terminal-pets.vercel.app/metadata/lit/
-)
-```
+Pin 4444 metadata **off-hub** (IPFS or a private bucket). Pre-reveal, `hiddenURI` may be a sealed stub with **no traits**. Publish real lit/dormant JSON to public `web/` only **after reveal**. Studio dry-run and mainnet both follow this rule — [`MAINNET_PREP.md`](MAINNET_PREP.md) §4.
 
-| Arg | Value |
-| --- | --- |
-| `hiddenURI` | `https://terminal-pets.vercel.app/metadata/hidden.json` |
-| `dormantBaseURI` | `https://terminal-pets.vercel.app/metadata/dormant/` |
-| `litBaseURI` | `https://terminal-pets.vercel.app/metadata/lit/` |
-
-Trailing `/` on the bases appends `{tokenId}.json`. This is a test path for ids 1–25, not the full 4444 mint export. No chain deploy from this hosting change. Studio dry-run may point at this hub host; mainnet must pin the full 4444 set — [`MAINNET_PREP.md`](MAINNET_PREP.md) §4.
+Old paths (`web/public/art/test`, `art/test-egg`, `art/awake`, `art/dormant`) must stay unpublished. `npm run verify:test-host` asserts examples exist and public metadata JSON is absent.
 
 ## Regenerate collection GIFs
 

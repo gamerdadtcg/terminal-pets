@@ -1,10 +1,13 @@
+/** Hub gallery badge. Demo GIFs only — never CollectionNFT tokenURI. */
+export const EXAMPLES_LABEL = "Examples — not the mint supply.";
+
 export const SITE = {
   name: "Terminal Pets",
   symbol: "TERM",
   petName: "Terminal Pets",
   tagline: "Handheld pets that sleep until you Ignite them.",
-    description:
-    "Generative Pocket Critter PFPs on Robinhood Chain. Free mint Friday, September 18, 2026, America/Los_Angeles (PT). Mint on this hub (CollectionNFT.mint / mintTo while mintOpen). Pets mint Sealed for 24 hours: hidden metadata, Ignite off, $TERM trading off, and 7.5% secondary royalties all to TermFund. Reveal shows a dormant egg GIF, turns on Ignite and trading, and switches royalties to 5% Hopper / 2.5% treasury. Hopper claims stay locked 7 days after reveal while ETH accrues. Each pet comes with a $TERM Ignite allotment. Ignite splits that 1,000 $TERM 37.5% burn / 25% Hopper (as ETH) / 37.5% allotment refill, plus 0.002 ETH split 50% buy-and-burn $TERM / 50% Hopper. Team earns 0 from that ETH fee. Dial assigns 1–4 Stock Tokens by shell class at Ignite. Pulse pays Dialed Lit in Stock Tokens and undialed Lit in $TERM — typically to the TBA. Hopper stays ETH.",
+  description:
+    "Generative Pocket Critter PFPs on Robinhood Chain. Free mint Friday, September 18, 2026, America/Los_Angeles (PT). Mint on this hub (CollectionNFT.mint / mintTo while mintOpen). Pets mint as a sealed mystery until reveal — traits unknown. Ignite off, $TERM trading off, and 7.5% secondary royalties all to TermFund during the 24h sealed window. Reveal turns on Ignite and trading and switches royalties to 5% Hopper / 2.5% treasury. Hopper claims stay locked 7 days after reveal while ETH accrues. Hub GIFs are examples only, not the 4444 mint supply. Each pet comes with a $TERM Ignite allotment. Ignite splits that 1,000 $TERM 37.5% burn / 25% Hopper (as ETH) / 37.5% allotment refill, plus 0.002 ETH split 50% buy-and-burn $TERM / 50% Hopper. Team earns 0 from that ETH fee. Dial assigns 1–4 Stock Tokens by shell class at Ignite. Pulse pays Dialed Lit in Stock Tokens and undialed Lit in $TERM — typically to the TBA. Hopper stays ETH.",
   disclaimer:
     "Dial and Pulse Stock Token rewards are promotional on-chain rewards. They are not dividends, equity, shareholder rights, or ownership of any underlying company. Holding a pet or receiving Stock Tokens confers no legal interest in those companies. Not financial or investment advice.",
   chain: "Robinhood Chain",
@@ -109,7 +112,7 @@ export function publicLinks() {
 export const FAQ = [
   {
     q: "When can I mint?",
-    a: `${mintScheduleCopy.sentence} ${mintAllocation.sentence} Mint on this hub at /mint. The button calls CollectionNFT.mint (or mintTo) when on-chain mintOpen is true; if mintOpen is false the hub shows mint closed. Do not mint through OpenSea Studio’s deploy-Drop wizard — Studio currently has no BYO import and no Base Sepolia in Drop create. Each pet mints Sealed (hidden metadata) with a TBA and a one-time $TERM Ignite allotment. Dormant egg art, Ignite, and $TERM trading unlock at reveal.`,
+    a: `${mintScheduleCopy.sentence} ${mintAllocation.sentence} Mint on this hub at /mint. The button calls CollectionNFT.mint (or mintTo) when on-chain mintOpen is true; if mintOpen is false the hub shows mint closed. Do not mint through OpenSea Studio’s deploy-Drop wizard — Studio currently has no BYO import and no Base Sepolia in Drop create. Each pet mints as a sealed mystery until reveal — traits unknown — with a TBA and a one-time $TERM Ignite allotment. Dormant egg art, Ignite, and $TERM trading unlock at reveal.`,
   },
   {
     q: "How many can I mint?",
@@ -165,7 +168,7 @@ export const FAQ = [
   },
   {
     q: "Where is the pet art?",
-    a: "Generative Pocket Critter PFPs — off-chain composed PNG/GIF, not on-chain SVG. Tokens mint Sealed (hidden metadata), reveal as a dormant egg rock GIF, then swap to the matching awake pet GIF on Ignite. This hub hosts a 25-token animated GIF test path (HTTPS JSON under /metadata) so setMetadataURIs can point at real .gif image URLs. The old Track A TerminalRenderer SVG pets are not product art.",
+    a: `Generative Pocket Critter PFPs — off-chain composed PNG/GIF, not on-chain SVG. Tokens mint as a sealed mystery until reveal; traits unknown. After reveal, metadata becomes a dormant egg rock GIF, then the matching awake pet GIF on Ignite. Hub GIFs under /art/examples: ${EXAMPLES_LABEL} They are demos, not collection IDs, and must never be CollectionNFT tokenURI. Real 4444 lit/dormant JSON is not published on this hub until after reveal. The old Track A TerminalRenderer SVG pets are not product art.`,
   },
   {
     q: "Where do royalties go?",
@@ -177,7 +180,7 @@ export const FAQ = [
   },
   {
     q: "How does the 24h reveal work?",
-    a: "Tokens mint Sealed — hidden metadata, Ignite off, $TERM public transfers off. Secondary royalties (7.5%) go entirely to TermFund. After 24 hours anyone can call reveal(); the owner can call it earlier. Reveal serves dormant egg metadata, turns on Ignite and $TERM trading, and switches royalties to 5% Hopper / 2.5% treasury. Hopper payouts then stay locked 7 days from that reveal timestamp so people can Ignite before claims open. ETH from Ignite and post-reveal royalties still accrues in the pot. LP is seeded later from TermFund (pre-reveal royalties + optional treasury $TERM), not by draining the Hopper or taking Ignite ETH.",
+    a: "Tokens mint as a sealed mystery until reveal — traits unknown, Ignite off, $TERM public transfers off. Secondary royalties (7.5%) go entirely to TermFund. After 24 hours anyone can call reveal(); the owner can call it earlier. Reveal serves dormant egg metadata, turns on Ignite and $TERM trading, and switches royalties to 5% Hopper / 2.5% treasury. Hopper payouts then stay locked 7 days from that reveal timestamp so people can Ignite before claims open. ETH from Ignite and post-reveal royalties still accrues in the pot. LP is seeded later from TermFund (pre-reveal royalties + optional treasury $TERM), not by draining the Hopper or taking Ignite ETH.",
   },
   {
     q: "How do $TERM trading fees work?",

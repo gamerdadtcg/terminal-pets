@@ -149,22 +149,13 @@ Recorded SHORT-LOCK 900s MICRO stack (not 7-day CollectionNFT `0xe1cC988…`): [
 
 ## 5. Post-deploy smoke (owner txs)
 
-Replace `$COLLECTION`, `$PULSE`, `$IGNITE`, `$HOPPER`, `$TREASURY` from the deploy logs. Hub test metadata covers tokens **1–25** only.
+Replace `$COLLECTION`, `$PULSE`, `$IGNITE`, `$HOPPER`, `$TREASURY` from the deploy logs.
 
 Read-only `cast call` examples (no keys): [`script/smoke-testnet.md`](../script/smoke-testnet.md).
 
-### 5.1 `setMetadataURIs` (hub HTTPS)
+### 5.1 `setMetadataURIs` — not hub HTTPS
 
-```bash
-cast send "$COLLECTION" \
-  "setMetadataURIs(string,string,string)" \
-  "https://terminal-pets.vercel.app/metadata/hidden.json" \
-  "https://terminal-pets.vercel.app/metadata/dormant/" \
-  "https://terminal-pets.vercel.app/metadata/lit/" \
-  --rpc-url testnet
-```
-
-Trailing `/` on the bases appends `{tokenId}.json`.
+**Anti-snipe.** Do **not** point RH testnet CollectionNFT at `https://terminal-pets.vercel.app/metadata/…` or `/art/examples`. Hub GIFs are **Examples — not the mint supply.** Public `/metadata` JSON is unpublished. Leave the fallback stub, or pin a private/IPFS sealed `hidden.json` with no traits. Do not publish 4444 lit/dormant JSON to public `web/` until after reveal. Historical RH testnet URIs that already pointed at the hub will 404 — intended.
 
 ### 5.2 `setStockToken` — AMZN + TSLA only
 
@@ -228,7 +219,7 @@ cast call "$COLLECTION" "isLit(uint256)(bool)" 1 --rpc-url testnet
 cast call "$PULSE" "getDial(uint256)" 1 --rpc-url testnet
 ```
 
-Expect Lit `tokenURI` → `https://terminal-pets.vercel.app/metadata/lit/1.json`. Dial `nLegs` is 1–4 by shell class. Assigned slots may still be `address(0)` if the keccak draw hit an unset pool index — that is correct; only AMZN/TSLA are wired. `previewDial` matches `getDial` (holders cannot pick).
+Expect sealed/fallback `tokenURI` (or an off-hub pin) — **not** hub `/metadata/lit/1.json`. Dial `nLegs` is 1–4 by shell class. Assigned slots may still be `address(0)` if the keccak draw hit an unset pool index — that is correct; only AMZN/TSLA are wired. `previewDial` matches `getDial` (holders cannot pick).
 
 ### 5.7 Hopper lock
 
@@ -299,9 +290,9 @@ Recorded 46630 addresses (7-day stack): [`RH_TESTNET_DEPLOY_ADDRESSES.md`](RH_TE
     "7_TSLA": "0xC9f9c86933092BbbfFF3CCb4b105A4A94bf3Bd4E"
   },
   "metadata": {
-    "hiddenURI": "https://terminal-pets.vercel.app/metadata/hidden.json",
-    "dormantBaseURI": "https://terminal-pets.vercel.app/metadata/dormant/",
-    "litBaseURI": "https://terminal-pets.vercel.app/metadata/lit/"
+    "hiddenURI": "off-hub sealed stub (no traits) — do not use terminal-pets.vercel.app/metadata",
+    "dormantBaseURI": "unpublished on public web/ until after reveal",
+    "litBaseURI": "unpublished on public web/ until after reveal"
   }
 }
 ```
@@ -315,6 +306,7 @@ Do not invent a `deployments/robinhood-mainnet.json` from this plan.
 - **Do not invent stock-token or SeaDrop addresses.** AMZN/TSLA samples above are the only testnet Dial fills in this repo.
 - **Do not `teamMint(200)`** just to smoke; **do not** open public mint unless you mean to.
 - **Do not** put private keys in git, PR comments, or this markdown.
+- **Do not** point `setMetadataURIs` at hub `/metadata` or `/art/examples`. Do not publish 4444 lit/dormant JSON to public `web/` until after reveal.
 
 ## References
 

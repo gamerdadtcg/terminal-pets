@@ -139,18 +139,19 @@ Copy CollectionNFT, Hopper, RoyaltySplitter, IgniteModule, PulseDistributor, Ter
 
 Replace `$COLLECTION` / `$HOPPER` / `$IGNITE` / `$PULSE` from the logs. RPC alias matches the chain you broadcast to.
 
-### 5.1 Hub test metadata (tokens 1–25 only)
+### 5.1 Metadata — do not use the hub as tokenURI
 
-Smoke only. Not a full 4444 pin. Trailing `/` on the bases appends `{tokenId}.json`.
+**Anti-snipe.** Do **not** point CollectionNFT at hub HTTPS:
 
-```bash
-cast send "$COLLECTION" \
-  "setMetadataURIs(string,string,string)" \
-  "https://terminal-pets.vercel.app/metadata/hidden.json" \
-  "https://terminal-pets.vercel.app/metadata/dormant/" \
-  "https://terminal-pets.vercel.app/metadata/lit/" \
-  --rpc-url base_sepolia
+```text
+# DO NOT RUN — these paths are unpublished on purpose
+# https://terminal-pets.vercel.app/metadata/hidden.json
+# https://terminal-pets.vercel.app/metadata/dormant/
+# https://terminal-pets.vercel.app/metadata/lit/
+# https://terminal-pets.vercel.app/art/examples/…
 ```
+
+Hub GIFs under `/art/examples` are **Examples — not the mint supply.** They are never collection `tokenURI`. Public `/metadata/{lit,dormant}` JSON is gone so traits cannot be sniped. Leave the fallback renderer stub, or pin a **private/IPFS sealed** `hidden.json` with **no traits**. Do not publish real collection lit/dormant JSON to public `web/` until **after reveal**. Existing dry-run `setMetadataURIs` to the old hub URLs will 404 after this deploy — that is intended.
 
 ### 5.2 Confirm canonical SeaDrop is allowed
 
@@ -196,7 +197,7 @@ If Studio cannot find the contract, cannot select the chain, or tries to deploy 
 
 ## 7. Mint 1, then reveal / Ignite notes
 
-1. From a **different** wallet than a 1/wallet allowlist already filled (or the public stage), mint **exactly 1** through Studio. Confirm the NFT appears on the OpenSea testnet item page as **Sealed** (`hidden.json` / stub until URIs + reveal).
+1. From a **different** wallet than a 1/wallet allowlist already filled (or the public stage), mint **exactly 1** through Studio. Confirm the NFT appears on the OpenSea testnet item page as **Sealed** (mystery / stub until a private `hiddenURI` + reveal). Traits unknown.
 2. On-chain:
 
 ```bash
@@ -212,7 +213,7 @@ cast call "$COLLECTION" "getMintStats(address)(uint256,uint256,uint256)" "$MINTE
 cast send "$COLLECTION" "reveal()" --rpc-url base_sepolia
 ```
 
-Expect dormant `tokenURI` → `https://terminal-pets.vercel.app/metadata/dormant/{id}.json` for ids 1–25. Ignite and `$TERM` transfers turn on. RoyaltySplitter `live` → 5% Hopper / 2.5% treasury.
+Expect sealed/fallback `tokenURI` (not hub `/metadata/dormant/{id}.json` — those files are unpublished). Ignite and `$TERM` transfers turn on. RoyaltySplitter `live` → 5% Hopper / 2.5% treasury.
 
 4. **Ignite** the minted token from its owner. Exact **0.002 ETH** (production). Without `TERM_SWAP_ROUTER`, 25% `$TERM` parks as `pendingHopperTerm` and 50% of the ETH parks as `pendingIgniteEthBurn`. Hopper still receives 50% of the 0.002 ETH.
 
@@ -220,7 +221,7 @@ Expect dormant `tokenURI` → `https://terminal-pets.vercel.app/metadata/dormant
 cast send "$IGNITE" "ignite(uint256)" 1 --value 0.002ether --rpc-url base_sepolia
 cast call "$COLLECTION" "isLit(uint256)(bool)" 1 --rpc-url base_sepolia
 cast call "$COLLECTION" "tokenURI(uint256)(string)" 1 --rpc-url base_sepolia
-# expect …/metadata/lit/1.json
+# expect sealed/fallback or an off-hub pin — not …/metadata/lit/1.json on the hub
 cast call "$PULSE" "getDial(uint256)" 1 --rpc-url base_sepolia
 ```
 
@@ -253,6 +254,7 @@ This document does **not** broadcast to `4663`. No `--rpc-url robinhood`. No mai
 - **Do not** invent Dial stock-token addresses.
 - **Do not** `reveal()` before you have finished stage config unless you accept Ignite/`$TERM` trading turning on.
 - **Do not** put private keys in git or this markdown.
+- **Do not** point `setMetadataURIs` at hub `/metadata` or `/art/examples`. Do not publish 4444 lit/dormant JSON to public `web/` until after reveal.
 
 ## References
 
@@ -261,5 +263,5 @@ This document does **not** broadcast to `4663`. No `--rpc-url robinhood`. No mai
 - [`OPENSEA_STUDIO_SEADROP.md`](OPENSEA_STUDIO_SEADROP.md) — interface, stages, royalties
 - [`MAINNET_PREP.md`](MAINNET_PREP.md) — checklist before any Robinhood `4663` broadcast
 - [`TESTNET_DEPLOY.md`](TESTNET_DEPLOY.md) — RH `46630` mechanics (not Studio)
-- [`MAIN_ART_LOCK.md`](MAIN_ART_LOCK.md) — hub test host vs full 4444 pin
+- [`MAIN_ART_LOCK.md`](MAIN_ART_LOCK.md) — hub `/art/examples` demos vs off-hub 4444 pin (no public metadata until after reveal)
 - `foundry.toml` — `base_sepolia` / `sepolia` RPC aliases

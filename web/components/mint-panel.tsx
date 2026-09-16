@@ -12,6 +12,7 @@ import {
   collectionConfigured,
   zeroAddress,
 } from "@/lib/contracts";
+import { EXAMPLE_ART, EXAMPLES_LABEL } from "@/lib/art-samples";
 import { explorerAddress, explorerTx, formatEth, shortAddress } from "@/lib/format";
 import { SITE, mintAllocation, mintScheduleCopy } from "@/lib/site";
 import { useEffect, useMemo, useState } from "react";
@@ -181,10 +182,11 @@ export function MintPanel() {
             Studio wizard.
           </p>
           <p className="max-w-xl text-sm text-muted-foreground">
-            {mintScheduleCopy.sentence} {mintAllocation.sentence} After mint
-            the pet is Sealed. Ignite is {SITE.igniteFeeEth} (plus the $TERM
-            allotment) after reveal. Hopper claims lock {SITE.hopperLock}. Dial
-            assigns 1–4 Stock Tokens by shell class at Ignite.
+            {mintScheduleCopy.sentence} {mintAllocation.sentence} Pets mint
+            as a sealed mystery until reveal — traits unknown. Ignite is{" "}
+            {SITE.igniteFeeEth} (plus the $TERM allotment) after reveal. Hopper
+            claims lock {SITE.hopperLock}. Dial assigns 1–4 Stock Tokens by
+            shell class at Ignite. Hub GIFs: {EXAMPLES_LABEL}
           </p>
 
           <Card
@@ -381,20 +383,38 @@ export function MintPanel() {
         <div className="grid gap-3">
           <MintScheduleCard />
           <Card>
-            <CardHeader>
-              <p className="font-mono text-[11px] text-primary">AFTER MINT</p>
+            <CardHeader className="gap-2">
+              <div className="flex flex-wrap items-center gap-2">
+                <p className="font-mono text-[11px] text-primary">AFTER MINT</p>
+                <Badge variant="outline" className="font-mono">
+                  {EXAMPLES_LABEL}
+                </Badge>
+              </div>
               <CardTitle className="text-base">
-                Production economics
+                Sealed mystery until reveal
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-2 text-sm text-muted-foreground">
+            <CardContent className="space-y-3 text-sm text-muted-foreground">
+              <figure className="overflow-hidden rounded-xl border border-border/70 bg-black/40">
+                <img
+                  src={EXAMPLE_ART.sealed}
+                  alt="Sealed Terminal Pet — mystery until reveal"
+                  className="aspect-square w-full max-h-56 object-cover"
+                  width={512}
+                  height={512}
+                />
+                <figcaption className="px-3 py-2 font-mono text-[10px] tracking-wide">
+                  Sealed mystery. Traits unknown until reveal.
+                </figcaption>
+              </figure>
+              <p>
+                Pets mint sealed for {SITE.revealWindow}. Traits stay unknown.
+                Do not treat hub GIFs as the 4444 collection.
+              </p>
               <p>Ignite {SITE.igniteFeeEth} · {SITE.igniteEthSplit}.</p>
               <p>Hopper payouts lock {SITE.hopperLock} after reveal.</p>
               <p>Dial assigns 1–4 Stock Tokens by shell class at Ignite.</p>
-              <p>
-                Pets mint Sealed for {SITE.revealWindow}. Do not use Studio’s
-                deploy-Drop wizard.
-              </p>
+              <p>Do not use Studio’s deploy-Drop wizard.</p>
             </CardContent>
           </Card>
         </div>

@@ -220,15 +220,9 @@ Live product art is the **generative Pocket Critter** package vendored at [`art/
 
 Owner sets bases with `setMetadataURIs`. Trailing `/` appends `{tokenId}.json`. ERC-4906 `MetadataUpdate` still fires on Ignite. Until URIs are set, CollectionNFT calls a separately deployed **fallback** renderer (`TerminalRenderer` contract, constructed by `CollectionNFT`) for a data-URI stub (rectangle + `PET#` + state + `OFF-CHAIN ART`) — it is not product art.
 
-**Test hosting (tokens 1–25, GIF only)** is already on the hub. After Vercel deploy, the owner can point:
+**Hub examples (not the mint supply).** Demo GIFs live under `web/public/art/examples/`. UI label: **Examples — not the mint supply.** They must never be CollectionNFT `tokenURI`. Public `/metadata/{hidden,dormant,lit}` JSON is unpublished so traits cannot be sniped. Pin 4444 metadata off-hub (IPFS or a private bucket). Do not copy real lit/dormant JSON onto public `web/` until **after reveal**.
 
-| Arg | Value |
-| --- | --- |
-| `hiddenURI` | `https://terminal-pets.vercel.app/metadata/hidden.json` |
-| `dormantBaseURI` | `https://terminal-pets.vercel.app/metadata/dormant/` |
-| `litBaseURI` | `https://terminal-pets.vercel.app/metadata/lit/` |
-
-Art files: `web/public/art/test/{id}.gif` (lit) and `web/public/art/test-egg/{id}.gif` (dormant). Do not convert those to PNG. This is not a chain deploy and is not the full 4444 export.
+Art files: `web/public/art/examples/awake/{id}.gif` and `web/public/art/examples/eggs/{id}.gif`. Do not convert those to PNG. `npm run verify:test-host` asserts examples exist and `/metadata` is gone.
 
 `tokenTraits()` still returns the historical `AWAKEN_PET_V2` table for tests. Product traits are `art/schema/traits.json`. The old `ACC_N = 6` accessory list is obsolete for product art.
 
@@ -393,7 +387,7 @@ Placeholders still open:
 | Pulse DEX router | required for undialed `$TERM` and Dialed stocks | `PULSE_ROUTER` / `setRouter` + `setTerm` |
 | Chain contract addresses | empty | `web/.env.local` |
 | Mint price | `0` / TBD | `MINT_PRICE_WEI` |
-| Metadata URIs | unset → fallback stub | `CollectionNFT.setMetadataURIs` after pinning `art/` GIFs |
+| Metadata URIs | unset → fallback stub; pin **off-hub**; never hub `/art/examples` or public `web/metadata` until after reveal | `CollectionNFT.setMetadataURIs` |
 
 Later, when someone says go (commands only — do not run them now):
 

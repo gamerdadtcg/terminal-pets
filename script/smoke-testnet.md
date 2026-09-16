@@ -40,7 +40,7 @@ cast call "$COLLECTION" "isAllowedSeaDrop(address)(bool)" \
   0x00005EA00Ac477B1030CE78506496e8C2dE24bf5 --rpc-url "$RPC"
 ```
 
-Expect `maxSupply = 4444`, `teamReserve = 200`. Canonical SeaDrop should be **false** if you deployed with `SEADROP_ADDRESS=0x0`. After `setMetadataURIs` + `reveal` + Ignite of token 1, `tokenURI(1)` should be `https://terminal-pets.vercel.app/metadata/lit/1.json`.
+Expect `maxSupply = 4444`, `teamReserve = 200`. Canonical SeaDrop should be **false** if you deployed with `SEADROP_ADDRESS=0x0`. Do **not** expect `tokenURI(1)` to be hub `/metadata/lit/1.json` — those files are unpublished (anti-snipe). After reveal + Ignite, `tokenURI` should be an off-hub pin or the fallback stub. Hub `/art/examples` GIFs are examples only, never collection `tokenURI`.
 
 ## Ignite
 

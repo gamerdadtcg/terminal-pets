@@ -82,23 +82,15 @@ python art/generator/rewrite_image_uris.py \
   --dir art/export/gif-full/egg-metadata --base ipfs://bafyEggCid/
 ```
 
-Then owner-set `CollectionNFT.setMetadataURIs(hiddenURI, dormantBaseURI, litBaseURI)`:
+Then owner-set `CollectionNFT.setMetadataURIs(hiddenURI, dormantBaseURI, litBaseURI)` **off-hub** (IPFS / private bucket):
 
-- `hiddenURI` — single sealed JSON (no trailing slash), e.g. `ipfs://…/hidden.json`
-- `dormantBaseURI` — trailing slash, e.g. `ipfs://…/egg-metadata/` → `{id}.json`
-- `litBaseURI` — trailing slash, e.g. `ipfs://…/metadata/` → `{id}.json`
+- `hiddenURI` — single sealed JSON (no trailing slash), e.g. `ipfs://…/hidden.json` — no traits until reveal
+- `dormantBaseURI` — trailing slash, e.g. `ipfs://…/egg-metadata/` → `{id}.json` — not on public `web/` until after reveal
+- `litBaseURI` — trailing slash, e.g. `ipfs://…/metadata/` → `{id}.json` — not on public `web/` until after reveal
 
-### Test hosting
+### Hub examples (not tokenURI)
 
-The Vercel hub already hosts tokens **1–25** as animated GIFs (not PNG). After deploy:
-
-| Arg | HTTPS base |
-| --- | --- |
-| `hiddenURI` | `https://terminal-pets.vercel.app/metadata/hidden.json` |
-| `dormantBaseURI` | `https://terminal-pets.vercel.app/metadata/dormant/` |
-| `litBaseURI` | `https://terminal-pets.vercel.app/metadata/lit/` |
-
-Files: `web/public/art/test/{id}.gif` (awake), `web/public/art/test-egg/{id}.gif` (dormant egg), matching JSON under `web/public/metadata/{lit,dormant}/`. See `docs/MAIN_ART_LOCK.md`.
+The Vercel hub shows demo GIFs under `web/public/art/examples/`. UI label: **Examples — not the mint supply.** Do **not** `setMetadataURIs` to `https://terminal-pets.vercel.app/metadata/…` or `/art/examples`. Public `/metadata/{lit,dormant}` is unpublished so collectors cannot snipe traits. See `docs/MAIN_ART_LOCK.md`.
 
 Ignite already emits ERC-4906 `MetadataUpdate`. Reveal emits `BatchMetadataUpdate`.
 

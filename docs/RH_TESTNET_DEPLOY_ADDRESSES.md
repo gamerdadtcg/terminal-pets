@@ -62,6 +62,8 @@ This file is the **7-day** Hopper-lock stack (CollectionNFT `0xe1cC988CeC1C29764
 - previewDial(1): `(0x0000000000000000000000000000000000000000, 0xC9f9c86933092BbbfFF3CCb4b105A4A94bf3Bd4E, 0x0000000000000000000000000000000000000000, 0x0000000000000000000000000000000000000000, 5000, 5000, 0, 0, 0, 7, 0, 0, 2, 2)`
 - stockTokens: slot4 AMZN `0x5884aD2f920c162CFBbACc88C9C51AA75eC09E02`, slot7 TSLA `0xC9f9c86933092BbbfFF3CCb4b105A4A94bf3Bd4E` (confirmed via setStockToken event logs; Dial preview shows TSLA on token 1)
 
+Those hub `/metadata/…` URLs were recorded at deploy time. They are **unpublished** on the current hub (404 is anti-snipe). Do not restore public lit/dormant JSON. Hub `/art/examples` GIFs are **Examples — not the mint supply** and are not collection `tokenURI`.
+
 ## Blockers / notes
 
 - Severe RPC 429 rate limits; deploy used forge `--resume` + manual cast for final wiring (setTerm / setPulseDistributor / lockDistributor).

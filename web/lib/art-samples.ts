@@ -1,67 +1,68 @@
-/** HTTPS bases for CollectionNFT.setMetadataURIs after the hub deploys. */
-export const TEST_METADATA_URIS = {
-  hiddenURI: "https://terminal-pets.vercel.app/metadata/hidden.json",
-  dormantBaseURI: "https://terminal-pets.vercel.app/metadata/dormant/",
-  litBaseURI: "https://terminal-pets.vercel.app/metadata/lit/",
+/** Demo GIFs on the hub. Not the mint supply. Do not use as CollectionNFT tokenURI. */
+export { EXAMPLES_LABEL } from "@/lib/site";
+
+export const EXAMPLE_ART = {
+  awake: (id: number) => `/art/examples/awake/${id}.gif`,
+  egg: (id: number) => `/art/examples/eggs/${id}.gif`,
+  hatch: (file: string) => `/art/examples/hatch/${file}`,
+  sheet: (file: string) => `/art/examples/sheets/${file}`,
+  sealed: "/art/examples/sealed.png",
 } as const;
 
-export const TEST_TOKEN_COUNT = 25;
+export const EXAMPLE_COUNT = 25;
 
-export const TEST_HOST_TOKENS = Array.from(
-  { length: TEST_TOKEN_COUNT },
-  (_, i) => {
-    const id = i + 1;
-    return {
-      id,
-      dormantSrc: `/art/test-egg/${id}.gif`,
-      awakeSrc: `/art/test/${id}.gif`,
-    };
-  },
-);
+export const EXAMPLE_TOKENS = Array.from({ length: EXAMPLE_COUNT }, (_, i) => {
+  const id = i + 1;
+  return {
+    id,
+    dormantSrc: EXAMPLE_ART.egg(id),
+    awakeSrc: EXAMPLE_ART.awake(id),
+  };
+});
 
 /** Composed Ignite hatch GIFs (crack → split → flash → awake). Native <img> only. */
 export const HATCH_PRIMARY = {
-  src: "/art/hatch/snag_hatch.gif",
+  src: EXAMPLE_ART.hatch("snag_hatch.gif"),
   pet: "SNAG",
   petId: "P02",
-  alt: "SNAG Ignite hatch GIF: egg cracks, splits, flashes, and the pet wakes",
+  alt: "Example SNAG Ignite hatch GIF: egg cracks, splits, flashes, and the pet wakes",
   caption: "SNAG · Ignite hatch · crack → split → flash → awake",
 } as const;
 
 export const HATCH_OTHERS = [
   {
-    src: "/art/hatch/P01_pudd_hatch.gif",
+    src: EXAMPLE_ART.hatch("P01_pudd_hatch.gif"),
     pet: "PUDD",
     petId: "P01",
-    alt: "PUDD Ignite hatch GIF: egg cracks open and the pet wakes",
+    alt: "Example PUDD Ignite hatch GIF",
     caption: "PUDD · P01",
   },
   {
-    src: "/art/hatch/P04_puppo_hatch.gif",
+    src: EXAMPLE_ART.hatch("P04_puppo_hatch.gif"),
     pet: "PUPPO",
     petId: "P04",
-    alt: "PUPPO Ignite hatch GIF: egg cracks open and the pet wakes",
+    alt: "Example PUPPO Ignite hatch GIF",
     caption: "PUPPO · P04",
   },
   {
-    src: "/art/hatch/P08_blop_hatch.gif",
+    src: EXAMPLE_ART.hatch("P08_blop_hatch.gif"),
     pet: "BLOP",
     petId: "P08",
-    alt: "BLOP Ignite hatch GIF: egg cracks open and the pet wakes",
+    alt: "Example BLOP Ignite hatch GIF",
     caption: "BLOP · P08",
   },
   {
-    src: "/art/hatch/P12_bolt_hatch.gif",
+    src: EXAMPLE_ART.hatch("P12_bolt_hatch.gif"),
     pet: "BOLT",
     petId: "P12",
-    alt: "BOLT Ignite hatch GIF: egg cracks open and the pet wakes",
+    alt: "Example BOLT Ignite hatch GIF",
     caption: "BOLT · P12",
   },
   {
-    src: "/art/hatch/anim_hatch.gif",
+    src: EXAMPLE_ART.hatch("anim_hatch.gif"),
     pet: "Full device",
     petId: "anim",
-    alt: "Full-device Ignite hatch GIF: egg cracks, splits, flashes, pet wakes",
+    alt: "Example full-device Ignite hatch GIF",
     caption: "Full device · anim_hatch",
   },
 ] as const;
@@ -73,8 +74,8 @@ export const ART_SAMPLES = [
     petId: "P08",
     egg: "E08",
     handheld: "H08 Large Rounded",
-    dormantSrc: "/art/test-egg/1.gif",
-    awakeSrc: "/art/test/1.gif",
+    dormantSrc: EXAMPLE_ART.egg(1),
+    awakeSrc: EXAMPLE_ART.awake(1),
   },
   {
     id: 2,
@@ -82,8 +83,8 @@ export const ART_SAMPLES = [
     petId: "P02",
     egg: "E02",
     handheld: "H01 Classic",
-    dormantSrc: "/art/test-egg/2.gif",
-    awakeSrc: "/art/test/2.gif",
+    dormantSrc: EXAMPLE_ART.egg(2),
+    awakeSrc: EXAMPLE_ART.awake(2),
   },
   {
     id: 3,
@@ -91,30 +92,30 @@ export const ART_SAMPLES = [
     petId: "P01",
     egg: "E01",
     handheld: "H05 Egg-shaped",
-    dormantSrc: "/art/test-egg/3.gif",
-    awakeSrc: "/art/test/3.gif",
+    dormantSrc: EXAMPLE_ART.egg(3),
+    awakeSrc: EXAMPLE_ART.awake(3),
   },
 ] as const;
 
 export const ART_SHEETS = [
   {
-    src: "/art/sheets/15-sample-pfps.png",
-    alt: "Sample awakened Pocket Critter PFPs",
+    src: EXAMPLE_ART.sheet("15-sample-pfps.png"),
+    alt: "Example awakened Pocket Critter PFPs",
     label: "Awake sheet",
   },
   {
-    src: "/art/sheets/sample-dormant-01.png",
-    alt: "Dormant egg on a handheld",
+    src: EXAMPLE_ART.sheet("sample-dormant-01.png"),
+    alt: "Example dormant egg on a handheld",
     label: "Dormant egg",
   },
   {
-    src: "/art/sheets/traits-eggs.png",
-    alt: "Egg trait sheet E01–E12",
+    src: EXAMPLE_ART.sheet("traits-eggs.png"),
+    alt: "Example egg trait sheet",
     label: "Eggs",
   },
   {
-    src: "/art/sheets/handheld-family.png",
-    alt: "Handheld device family H01–H10",
+    src: EXAMPLE_ART.sheet("handheld-family.png"),
+    alt: "Example handheld device family",
     label: "Handhelds",
   },
 ] as const;
