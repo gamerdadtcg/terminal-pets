@@ -1,5 +1,7 @@
 # Terminal Pets — Robinhood Chain TESTNET Deploy
 
+This file is the **7-day** Hopper-lock stack (CollectionNFT `0xe1cC988CeC1C29764ba18523635De82d0C9B518F`). SHORT-LOCK 900s MICRO pulse/claim smoke: [`RH_TESTNET_MICRO_SMOKE.md`](RH_TESTNET_MICRO_SMOKE.md) / [`deployments/robinhood-testnet-micro.json`](../deployments/robinhood-testnet-micro.json).
+
 - **chainId:** `46630` (testnet only; never mainnet `4663`)
 - **RPC:** `https://rpc.testnet.chain.robinhood.com`
 - **Explorer:** https://explorer.testnet.chain.robinhood.com
