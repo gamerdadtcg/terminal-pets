@@ -78,7 +78,7 @@ CollectionNFT.setMetadataURIs(
 | `dormantBaseURI` | `https://terminal-pets.vercel.app/metadata/dormant/` |
 | `litBaseURI` | `https://terminal-pets.vercel.app/metadata/lit/` |
 
-Trailing `/` on the bases appends `{tokenId}.json`. This is a test path for ids 1–25, not the full 4444 mint export. No chain deploy from this hosting change.
+Trailing `/` on the bases appends `{tokenId}.json`. This is a test path for ids 1–25, not the full 4444 mint export. No chain deploy from this hosting change. Studio dry-run may point at this hub host; mainnet must pin the full 4444 set — [`MAINNET_PREP.md`](MAINNET_PREP.md) §4.
 
 ## Regenerate collection GIFs
 

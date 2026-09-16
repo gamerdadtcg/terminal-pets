@@ -4,7 +4,7 @@ Prep and mechanics smoke on **Robinhood Chain testnet**. This is not a live coll
 
 **Do not broadcast to mainnet `4663` from this document.** `script/Deploy.s.sol` does not check chain id; the RPC you pass is the network you hit. Use `--rpc-url testnet` / `--rpc-url robinhood_testnet` only.
 
-**Studio Drop is separate.** Canonical SeaDrop 1.0 (`0x00005EA00Ac477B1030CE78506496e8C2dE24bf5`) is **not** listed on Robinhood testnet. RH testnet is for Ignite / Dial / `tokenURI` / Hopper-lock smoke, not an OpenSea Studio Drop. See [`OPENSEA_STUDIO_SEADROP.md`](OPENSEA_STUDIO_SEADROP.md).
+**Studio Drop is separate.** Canonical SeaDrop 1.0 (`0x00005EA00Ac477B1030CE78506496e8C2dE24bf5`) is **not** listed on Robinhood testnet. RH testnet is for Ignite / Dial / `tokenURI` / Hopper-lock smoke, not an OpenSea Studio Drop. Studio Drop QA: [`STUDIO_DROP_DRYRUN.md`](STUDIO_DROP_DRYRUN.md) (Base Sepolia / Sepolia, production economics). Interface notes: [`OPENSEA_STUDIO_SEADROP.md`](OPENSEA_STUDIO_SEADROP.md). Mainnet prep (no `4663` broadcast): [`MAINNET_PREP.md`](MAINNET_PREP.md).
 
 This file is a checklist. **This repo does not broadcast from CI or from this plan.**
 
@@ -311,7 +311,7 @@ Do not invent a `deployments/robinhood-mainnet.json` from this plan.
 ## Explicit do-nots
 
 - **Do not broadcast to `4663`.** No `--rpc-url robinhood`, no mainnet RPC, no `--chain 4663` on these commands.
-- **Do not treat this as Studio Drop.** SeaDrop may be absent on RH testnet. Canonical `0x00005EA00Ac477B1030CE78506496e8C2dE24bf5` is the OpenSea CREATE2 address on listed chains, not a RH-testnet fact. Studio Drop QA belongs on a chain Studio actually supports ([`OPENSEA_STUDIO_SEADROP.md`](OPENSEA_STUDIO_SEADROP.md) § Testnet).
+- **Do not treat this as Studio Drop.** SeaDrop may be absent on RH testnet. Canonical `0x00005EA00Ac477B1030CE78506496e8C2dE24bf5` is the OpenSea CREATE2 address on listed chains, not a RH-testnet fact. Studio Drop QA belongs on a chain Studio actually supports ([`STUDIO_DROP_DRYRUN.md`](STUDIO_DROP_DRYRUN.md); [`OPENSEA_STUDIO_SEADROP.md`](OPENSEA_STUDIO_SEADROP.md) § Testnet). MICRO overrides from this plan must **never** be used on that dry-run or on `4663`.
 - **Do not invent stock-token or SeaDrop addresses.** AMZN/TSLA samples above are the only testnet Dial fills in this repo.
 - **Do not `teamMint(200)`** just to smoke; **do not** open public mint unless you mean to.
 - **Do not** put private keys in git, PR comments, or this markdown.
@@ -322,4 +322,6 @@ Do not invent a `deployments/robinhood-mainnet.json` from this plan.
 - `script/smoke-testnet.md` — read-only `cast call` cheatsheet
 - `docs/DIAL.md` — Dial slots and testnet AMZN/TSLA
 - `docs/OPENSEA_STUDIO_SEADROP.md` — Studio Drop (not this network)
+- `docs/STUDIO_DROP_DRYRUN.md` — Base Sepolia / Sepolia Studio dry-run (production economics)
+- `docs/MAINNET_PREP.md` — checklist before any `4663` broadcast (do not run from here)
 - `docs/MAIN_ART_LOCK.md` — metadata URI rules

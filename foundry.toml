@@ -17,6 +17,10 @@ robinhood = "${ROBINHOOD_RPC_URL}"
 robinhood_testnet = "${ROBINHOOD_TESTNET_RPC_URL}"
 # Alias so `forge script … --rpc-url testnet` resolves to Robinhood testnet (46630).
 testnet = "${ROBINHOOD_TESTNET_RPC_URL}"
+# OpenSea Studio Drop dry-run (SeaDrop 1.0). Prefer Base Sepolia; Sepolia is fallback.
+# Do not use these aliases for Robinhood 4663. See docs/STUDIO_DROP_DRYRUN.md.
+base_sepolia = "${BASE_SEPOLIA_RPC_URL}"
+sepolia = "${SEPOLIA_RPC_URL}"
 anvil = "http://127.0.0.1:8545"
 
 [etherscan]

@@ -2,7 +2,7 @@
 
 Terminal Pets mints on OpenSea **into this repo’s `CollectionNFT`**. Do **not** use OpenSea Studio’s **“deploy Drop contract”** wizard. That path deploys OpenSea’s generic `ERC721SeaDrop` (ERC721A) and would be a **different token** — no Ignite, Hopper, Pulse, Dial, or our `tokenURI` lifecycle.
 
-This document is configuration-only. **Do not broadcast** to Robinhood Chain (`4663`) or any live network from this repo until the owner explicitly asks.
+This document is configuration-only. **Do not broadcast** to Robinhood Chain (`4663`) or any live network from this repo until the owner explicitly asks. Ordered Studio dry-run (Base Sepolia / Sepolia): [`STUDIO_DROP_DRYRUN.md`](STUDIO_DROP_DRYRUN.md). Mainnet prep (still no `4663` broadcast): [`MAINNET_PREP.md`](MAINNET_PREP.md).
 
 ## Why a custom token (not the wizard)
 
@@ -35,6 +35,8 @@ Robinhood Chain (`4663`) is **not** in that public deployment table. Before a li
 1. Confirm Studio lists the chain and that SeaDrop is at this address (or note the address Studio uses).
 2. If it differs, owner calls `CollectionNFT.updateAllowedSeaDrop([thatAddress])`.
 3. Deploy script default is `CollectionConfig.SEADROP` / env `SEADROP_ADDRESS`.
+
+Checklist (SeaDrop on `4663`, wallets, pin plan): [`MAINNET_PREP.md`](MAINNET_PREP.md). Do not invent a Robinhood SeaDrop address.
 
 Do **not** deploy SeaDrop ourselves as part of this work.
 
@@ -95,7 +97,7 @@ Trailing `/` → `{id}.json`. Ignite still flips `tokenURI` Sealed → Dormant �
 ## Procedure (no wizard)
 
 1. **Deploy our stack** with Foundry (`script/Deploy.s.sol`) when the owner says go. Constructor `allowedSeaDrop` should include canonical SeaDrop (or `SEADROP_ADDRESS`). Confirm `isAllowedSeaDrop`.
-2. `teamMint(treasury, 200)` (or split across team wallets). Optional `setMetadataURIs`. Do **not** `reveal()` until the mint window policy says so.
+2. `teamMint(treasury, 200)` (or split across team wallets — mainnet team allocation is in [`MAINNET_PREP.md`](MAINNET_PREP.md)). Optional `setMetadataURIs`. Do **not** `reveal()` until the mint window policy says so.
 3. Verify CollectionNFT on the chain explorer.
 4. OpenSea Studio: **import existing contract** / add the **already-deployed** CollectionNFT address. Never “Drop a collection → deploy contract.”
 5. Collection earnings: **7.5%** to the **RoyaltySplitter**. Enable ERC-2981 if offered.
@@ -105,12 +107,12 @@ Trailing `/` → `{id}.json`. Ignite still flips `tokenURI` Sealed → Dormant �
 
 ## Testnet then mainnet
 
-1. **Testnet first** on a chain where Studio Drop + SeaDrop 1.0 already exist (OpenSea’s documented list: e.g. Sepolia / Base Sepolia — pick whatever Studio currently offers). Deploy **this** CollectionNFT, authorize SeaDrop, import the address, configure stages, mint 1, `reveal()`, Ignite, confirm Dial / `tokenURI`.
-2. **Robinhood mainnet (`4663`) only after** SeaDrop is confirmed on that chain and the owner asks to broadcast. Same bytecode, same authorize + Studio import flow. Never use the Studio deploy wizard on mainnet either.
+1. **Studio dry-run first** on a chain where Studio Drop + SeaDrop 1.0 already exist. Prefer **Base Sepolia**; fallback **Sepolia**. Ordered commands, production economics (no MICRO Hopper/Pulse/Ignite overrides), import-existing only, mint 1: [`STUDIO_DROP_DRYRUN.md`](STUDIO_DROP_DRYRUN.md). If Studio’s UI has no such chain, **stop** — do not use the deploy wizard and do not substitute Robinhood testnet.
+2. **Robinhood mainnet (`4663`) only after** SeaDrop is confirmed on that chain **and** the owner asks to broadcast. Same bytecode, same authorize + Studio import flow. Production price lock, wallets, Dial (unset until known), full 4444 metadata pin: [`MAINNET_PREP.md`](MAINNET_PREP.md). Never use the Studio deploy wizard on mainnet either. Never broadcast from the prep doc.
 
-Robinhood **testnet** (`46630`) is mechanics smoke only (SeaDrop may be absent) — use [`TESTNET_DEPLOY.md`](TESTNET_DEPLOY.md), not this Studio Drop path.
+Robinhood **testnet** (`46630`) is mechanics smoke only (SeaDrop may be absent) — use [`TESTNET_DEPLOY.md`](TESTNET_DEPLOY.md), not this Studio Drop path. Existing stacks: [`deployments/robinhood-testnet.json`](../deployments/robinhood-testnet.json) (7-day) and [`deployments/robinhood-testnet-micro.json`](../deployments/robinhood-testnet-micro.json) (SHORT-LOCK MICRO). MICRO env must **never** be reused on Studio dry-run or mainnet.
 
-This PR does **not** deploy anywhere.
+This document does **not** deploy anywhere.
 
 ## Dapp mint
 
@@ -122,3 +124,5 @@ This PR does **not** deploy anywhere.
 - `src/CollectionConfig.sol` — `SEADROP`, `MAX_SUPPLY`, `TEAM_RESERVE`, `PUBLIC_SUPPLY`
 - `src/interfaces/seadrop/` — vendored SeaDrop 1.0 ABI (no OZ 4.x submodule)
 - `test/SeaDropMint.t.sol`
+- [`STUDIO_DROP_DRYRUN.md`](STUDIO_DROP_DRYRUN.md) — Base Sepolia / Sepolia ordered dry-run
+- [`MAINNET_PREP.md`](MAINNET_PREP.md) — checklist before any `4663` broadcast
