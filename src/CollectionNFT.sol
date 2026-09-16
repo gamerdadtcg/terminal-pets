@@ -25,7 +25,7 @@ interface IHopperClock {
 /// @title CollectionNFT
 /// @notice Terminal Pets — ERC-721Enumerable + ERC-2981.
 /// Royalties go to the RoyaltySplitter. Pre-reveal: 7.5% → TermFund. Post-reveal:
-/// 5% Hopper / 2.5% treasury. Tokens mint **Sealed**; `reveal()` flips art, enables
+/// 5% Hopper / 2.5% treasury. Tokens mint **Sealed**; `reveal()` flips metadata, enables
 /// `$TERM` trading and Ignite (owner anytime, or anyone after 24h).
 /// Public `mintTo` is the OpenSea-friendly mint path (up to publicSupply).
 /// Team reserve is owner-only via `teamMint` / `ownerMint`. Ignite spends `$TERM`

@@ -14,7 +14,7 @@ export function SiteFooter() {
           <p className="text-sm font-medium">{SITE.name}</p>
           <p className="max-w-sm text-sm text-muted-foreground">
             Collection on {SITE.chain}. Metadata names each token Terminal Pet
-            #id. On-chain SVG. No IPFS.
+            #id. Art intentionally removed; mechanics only.
           </p>
           <p className="max-w-lg text-xs leading-relaxed text-muted-foreground/80">
             {SITE.disclaimer}
@@ -29,12 +29,6 @@ export function SiteFooter() {
           </Link>
           <Link className="hover:text-foreground" href="/dial">
             Dial
-          </Link>
-          <Link className="hover:text-foreground" href="/gallery">
-            Gallery
-          </Link>
-          <Link className="hover:text-foreground" href="/art-pass">
-            Art pass
           </Link>
           <Link className="hover:text-foreground" href="/app">
             Terminal

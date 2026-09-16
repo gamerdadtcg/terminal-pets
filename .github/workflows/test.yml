@@ -30,8 +30,8 @@ jobs:
 
       - name: Run Forge build
         run: |
-          # CollectionNFT inlines TerminalRenderer (on-chain SVG), so runtime
-          # size exceeds EIP-170. Print the report, then require a clean compile.
+          # CollectionNFT inlines TerminalRenderer (placeholder SVG metadata), so
+          # runtime size can exceed EIP-170. Print the report, then require a clean compile.
           forge build --sizes || true
           forge build
 

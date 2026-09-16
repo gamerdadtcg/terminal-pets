@@ -11,7 +11,7 @@ out/
 /broadcast/*/31337/
 /broadcast/**/dry-run/
 
-# Docs (Foundry default). Keep the main art lock checked in.
+# Docs (Foundry default). Keep the mechanics-only art note checked in.
 docs/
 !docs/MAIN_ART_LOCK.md
 
@@ -32,8 +32,6 @@ node_modules/
 deployments/*
 !deployments/.gitkeep
 
-# Generated sample art (export via script/ExportSamples.s.sol)
+# Generated artifacts (art-pass stills removed; mechanics only)
 artifacts/*
-!artifacts/art-pass/
-!artifacts/art-pass/**
 agent-tools/

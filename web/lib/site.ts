@@ -4,7 +4,7 @@ export const SITE = {
   petName: "Terminal Pets",
   tagline: "Handheld pets that sleep until you Ignite them.",
     description:
-    "On-chain Tamagotchi terminals on Robinhood Chain. Mint on OpenSea. Pets mint Sealed for 24 hours: placeholder art, Ignite off, $TERM trading off, and 7.5% secondary royalties all to TermFund. Reveal flips art, Ignite, trading, and royalties to 5% Hopper / 2.5% treasury. Hopper claims stay locked 7 days after reveal while ETH accrues. Each pet comes with a $TERM Ignite allotment. Ignite splits that 1,000 $TERM 37.5% burn / 25% Hopper (as ETH) / 37.5% allotment refill, plus 0.002 ETH split 50% buy-and-burn $TERM / 50% Hopper. Team earns 0 from that ETH fee. Dial up to 3 Stock Tokens. Pulse pays Dialed Lit in Stock Tokens and undialed Lit in $TERM — typically to the TBA. Hopper stays ETH.",
+    "On-chain Tamagotchi terminals on Robinhood Chain. Mint on OpenSea. Pets mint Sealed for 24 hours: placeholder metadata, Ignite off, $TERM trading off, and 7.5% secondary royalties all to TermFund. Reveal flips metadata, Ignite, trading, and royalties to 5% Hopper / 2.5% treasury. Hopper claims stay locked 7 days after reveal while ETH accrues. Each pet comes with a $TERM Ignite allotment. Ignite splits that 1,000 $TERM 37.5% burn / 25% Hopper (as ETH) / 37.5% allotment refill, plus 0.002 ETH split 50% buy-and-burn $TERM / 50% Hopper. Team earns 0 from that ETH fee. Dial up to 3 Stock Tokens. Pulse pays Dialed Lit in Stock Tokens and undialed Lit in $TERM — typically to the TBA. Hopper stays ETH.",
   disclaimer:
     "Dial and Pulse Stock Token rewards are promotional on-chain rewards. They are not dividends, equity, shareholder rights, or ownership of any underlying company. Holding a pet or receiving Stock Tokens confers no legal interest in those companies. Not financial or investment advice.",
   chain: "Robinhood Chain",
@@ -38,7 +38,6 @@ export const SITE = {
   royaltyHopper: "5%",
   royaltyTreasury: "2.5%",
   artDomain: "AWAKEN_PET_V2",
-  comboSpace: "826 billion",
   explorer: "https://robinhoodchain.blockscout.com",
   rpc: "https://rpc.mainnet.chain.robinhood.com",
 } as const;
@@ -57,50 +56,6 @@ export const PULSE_BOOTSTRAP = [
 ] as const;
 
 export const PULSE_CYCLE = ["0.5", "0.6", "0.7", "0.8", "0.9", "1.0"] as const;
-
-export const SPECIES = [
-  { name: "Blob", id: 2, file: "species-Blob-id2-lit.svg" },
-  { name: "Cat", id: 3, file: "species-Cat-id3-lit.svg" },
-  { name: "Dino", id: 12, file: "species-Dino-id12-lit.svg" },
-  { name: "Fox", id: 16, file: "species-Fox-id16-lit.svg" },
-  { name: "Ghost", id: 7, file: "species-Ghost-id7-lit.svg" },
-  { name: "Bunny", id: 28, file: "species-Bunny-id28-lit.svg" },
-  { name: "Bird", id: 15, file: "species-Bird-id15-lit.svg" },
-  { name: "Frog", id: 5, file: "species-Frog-id5-lit.svg" },
-  { name: "Bear", id: 1, file: "species-Bear-id1-lit.svg" },
-  { name: "Robot", id: 11, file: "species-Robot-id11-lit.svg" },
-  { name: "Owl", id: 4, file: "species-Owl-id4-lit.svg" },
-  { name: "Bug", id: 6, file: "species-Bug-id6-lit.svg" },
-] as const;
-
-export const SHELLS = [
-  "Egg",
-  "Round",
-  "Square",
-  "Wave",
-  "Slim",
-  "Wide",
-  "Octagon",
-  "Clam",
-] as const;
-
-export const TRAIT_AXES = [
-  "Shell",
-  "Shell color",
-  "Buttons",
-  "Antenna",
-  "Wallpaper",
-  "Species",
-  "Body",
-  "Belly",
-  "Eyes",
-  "Pupil",
-  "Mouth",
-  "Cheeks",
-  "Ears",
-  "Accessory",
-  "Generation",
-] as const;
 
 export function publicLinks() {
   const opensea = process.env.NEXT_PUBLIC_OPENSEA_URL?.trim() ?? "";
@@ -164,8 +119,8 @@ export const FAQ = [
     a: "A token-bound account (ERC-6551) attached at mint. Pulse typically delivers Stock Tokens or $TERM there. Those assets travel with the NFT. The owner can withdraw. Delivery to the owner wallet is used if TBA delivery is off.",
   },
   {
-    q: "Why don’t OpenSea thumbs move?",
-    a: "The art is on-chain SVG with SMIL (blink, idle, Zzz). Marketplace cards and PNGs are a frozen frame. Open the Gallery to watch the live files.",
+    q: "Where is the pet art?",
+    a: "Art intentionally removed; mechanics only. Art will be reconnected separately. tokenURI is a placeholder SVG (PET# + state) so mint / reveal / Ignite metadata still works.",
   },
   {
     q: "Where do royalties go?",
@@ -177,7 +132,7 @@ export const FAQ = [
   },
   {
     q: "How does the 24h reveal work?",
-    a: "Tokens mint Sealed — placeholder metadata, Ignite off, $TERM public transfers off. Secondary royalties (7.5%) go entirely to TermFund. After 24 hours anyone can call reveal(); the owner can call it earlier. Reveal flips art live, turns on Ignite and $TERM trading, and switches royalties to 5% Hopper / 2.5% treasury. Hopper payouts then stay locked 7 days from that reveal timestamp so people can Ignite and see their Lit pets before claims open. ETH from Ignite and post-reveal royalties still accrues in the pot. LP is seeded later from TermFund (pre-reveal royalties + optional treasury $TERM), not by draining the Hopper or taking Ignite ETH.",
+    a: "Tokens mint Sealed — placeholder metadata, Ignite off, $TERM public transfers off. Secondary royalties (7.5%) go entirely to TermFund. After 24 hours anyone can call reveal(); the owner can call it earlier. Reveal flips metadata live, turns on Ignite and $TERM trading, and switches royalties to 5% Hopper / 2.5% treasury. Hopper payouts then stay locked 7 days from that reveal timestamp so people can Ignite before claims open. ETH from Ignite and post-reveal royalties still accrues in the pot. LP is seeded later from TermFund (pre-reveal royalties + optional treasury $TERM), not by draining the Hopper or taking Ignite ETH.",
   },
   {
     q: "How do $TERM trading fees work?",
