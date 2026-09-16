@@ -10,14 +10,14 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { contractsConfigured } from "@/lib/contracts";
-import { FAQ, SITE, publicLinks } from "@/lib/site";
+import { FAQ, SITE, mintAllocation, publicLinks } from "@/lib/site";
 import Link from "next/link";
 
 const STEPS = [
   {
     n: "01",
     title: "Mint on OpenSea",
-    body: `4,244 public Terminal Pets. Price TBD. Each token mints Sealed — placeholder metadata, TBA, and a $TERM allotment. Name is Terminal Pet #{id}. Ignite and $TERM trading stay off.`,
+    body: `${SITE.supply} total. Public mint is the remaining ${SITE.publicSupply} on OpenSea. ${SITE.teamReserve} stay reserved for the team for ${SITE.teamReserveUse}. Price TBD. Each token mints Sealed — placeholder metadata, TBA, and a $TERM allotment. Name is Terminal Pet #{id}. Ignite and $TERM trading stay off.`,
   },
   {
     n: "02",
@@ -58,8 +58,12 @@ const STEPS = [
 
 const ECON = [
   { label: "Max supply", value: String(SITE.supply) },
-  { label: "Public", value: String(SITE.publicSupply) },
-  { label: "Team reserve", value: String(SITE.teamReserve) },
+  { label: "Public mint", value: String(SITE.publicSupply) },
+  {
+    label: "Team reserve",
+    value: String(SITE.teamReserve),
+    note: "Airdrops, burns, giveaways",
+  },
   { label: "Mint price", value: SITE.mintPrice },
   { label: "Reveal window", value: SITE.revealWindow },
   { label: "Ignite", value: SITE.igniteFee },
@@ -108,7 +112,7 @@ const ROADMAP = [
   {
     state: "next" as const,
     title: "OpenSea import",
-    body: "Point the collection at the splitter. Honor ERC-2981. Open the 4,244. Pre-reveal earnings still hit the splitter — they just route 100% to TermFund until reveal.",
+    body: `Point the collection at the splitter. Honor ERC-2981. Open the ${SITE.publicSupply} public mint. ${SITE.teamReserve} stay reserved for the team for ${SITE.teamReserveUse}. Pre-reveal earnings still hit the splitter — they just route 100% to TermFund until reveal.`,
   },
 ] as const;
 
@@ -142,7 +146,7 @@ export function HubLanding() {
               The collection is {SITE.name} ({SITE.symbol}). Memecoin is $TERM.
             </p>
             <p className="max-w-xl text-sm text-muted-foreground">
-              {SITE.supply} handhelds. Mint on OpenSea. Pets mint Sealed for{" "}
+              {mintAllocation.sentence} Mint on OpenSea. Pets mint Sealed for{" "}
               {SITE.revealWindow}: placeholder metadata, Ignite off, $TERM
               transfers off. Secondary royalties ({SITE.royalty}) go 100% to
               TermFund — nothing to Hopper, nothing to treasury from that
@@ -174,8 +178,10 @@ export function HubLanding() {
               </Button>
             </div>
             <p className="font-mono text-[11px] text-muted-foreground">
-              Mint {SITE.mintPrice} · Sealed {SITE.revealWindow} · Ignite{" "}
-              {SITE.igniteFee} · Royalty {SITE.royalty}
+              {SITE.supply} total · {SITE.publicSupply} public /{" "}
+              {SITE.teamReserve} team · Mint {SITE.mintPrice} · Sealed{" "}
+              {SITE.revealWindow} · Ignite {SITE.igniteFee} · Royalty{" "}
+              {SITE.royalty}
             </p>
           </div>
 
@@ -228,12 +234,11 @@ export function HubLanding() {
             Mint. Reveal. Ignite. Dial. Hopper. Pulse. TBA.
           </h2>
           <p className="text-muted-foreground">
-            Pets mint Sealed. After {SITE.revealWindow} (or sooner if the owner
-            activates), reveal flips metadata, enables Ignite and $TERM
-            trading, and routes royalties to Hopper/treasury. Until then the
-            full{" "}
-            {SITE.royalty} creator royalty seeds TermFund. Ignite is hybrid:{" "}
-            {SITE.igniteFeeTerm} splits {SITE.igniteBurn} burn /{" "}
+            {mintAllocation.sentence} Pets mint Sealed. After {SITE.revealWindow}{" "}
+            (or sooner if the owner activates), reveal flips metadata, enables
+            Ignite and $TERM trading, and routes royalties to Hopper/treasury.
+            Until then the full {SITE.royalty} creator royalty seeds TermFund.
+            Ignite is hybrid: {SITE.igniteFeeTerm} splits {SITE.igniteBurn} burn /{" "}
             {SITE.igniteHopper} Hopper / {SITE.igniteAllotmentRefill} allotment
             refill, plus {SITE.igniteFeeEth} split {SITE.igniteEthSplit}. Dial
             aims Pulse.
@@ -307,8 +312,10 @@ export function HubLanding() {
             Fixed economics. Mint price still TBD.
           </h2>
           <p className="text-muted-foreground">
-            Supply is locked. Royalties are mode-switched at reveal: pre-reveal
-            the full {SITE.royalty} goes to TermFund; after reveal it is{" "}
+            Supply is locked at {SITE.supply}: {SITE.publicSupply} public mint,{" "}
+            {SITE.teamReserve} reserved for the team for {SITE.teamReserveUse}.
+            Royalties are mode-switched at reveal: pre-reveal the full{" "}
+            {SITE.royalty} goes to TermFund; after reveal it is{" "}
             {SITE.royaltyHopper} Hopper / {SITE.royaltyTreasury} treasury.
             Pulse is a ladder, not a fixed 0.5 ETH line. Ignite stays off until
             reveal, then {SITE.igniteFeeTerm} ({SITE.igniteSplit}) plus exactly{" "}
@@ -328,6 +335,9 @@ export function HubLanding() {
                   {row.label}
                 </p>
                 <CardTitle className="text-2xl tabular-nums">{row.value}</CardTitle>
+                {"note" in row && row.note ? (
+                  <p className="text-xs text-muted-foreground">{row.note}</p>
+                ) : null}
               </CardHeader>
             </Card>
           ))}
@@ -378,10 +388,10 @@ export function HubLanding() {
             Contracts ready. Not deployed.
           </h2>
           <p className="text-muted-foreground">
-            Ready to deploy — not broadcast. Deploy stays sealed (placeholder
-            metadata, Ignite off, $TERM trading off, royalties to TermFund)
-            until CollectionNFT.reveal(). Addresses stay empty until Robinhood
-            Chain deploy and the OpenSea import.
+            Ready to deploy — not broadcast. {mintAllocation.sentence} Deploy
+            stays sealed (placeholder metadata, Ignite off, $TERM trading off,
+            royalties to TermFund) until CollectionNFT.reveal(). Addresses stay
+            empty until Robinhood Chain deploy and the OpenSea import.
           </p>
         </div>
         <ol className="space-y-3">
@@ -460,7 +470,11 @@ export function HubLanding() {
               <CardTitle className="text-base">OpenSea</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3 text-sm text-muted-foreground">
-              <p>Public mint after import. Collection name {SITE.name}.</p>
+              <p>
+                Public mint after import: {SITE.publicSupply} of {SITE.supply}.{" "}
+                {SITE.teamReserve} reserved for the team for{" "}
+                {SITE.teamReserveUse}. Collection name {SITE.name}.
+              </p>
               {links.opensea ? (
                 <Button size="sm" asChild>
                   <a href={links.opensea} rel="noreferrer" target="_blank">

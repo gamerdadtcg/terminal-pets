@@ -13,6 +13,7 @@ export const SITE = {
   supply: 4444,
   teamReserve: 200,
   publicSupply: 4244,
+  teamReserveUse: "airdrops, burns, giveaways, and similar",
   mintPrice: "TBD",
   igniteFee: "1,000 $TERM + 0.002 ETH",
   igniteFeeTerm: "1,000 $TERM",
@@ -42,6 +43,12 @@ export const SITE = {
   rpc: "https://rpc.mainnet.chain.robinhood.com",
 } as const;
 
+/** Hub / app mint-split line. Matches CollectionConfig MAX_SUPPLY / TEAM_RESERVE / PUBLIC_SUPPLY. */
+export const mintAllocation = {
+  sentence: `Total supply is ${SITE.supply}. ${SITE.teamReserve} are reserved for the team for ${SITE.teamReserveUse}. Public mint is the remaining ${SITE.publicSupply}.`,
+  appHint: `${SITE.publicSupply} public / ${SITE.teamReserve} team (${SITE.teamReserveUse})`,
+} as const;
+
 export const PULSE_BOOTSTRAP = [
   "0.1",
   "0.2",
@@ -68,7 +75,7 @@ export function publicLinks() {
 export const FAQ = [
   {
     q: "When can I mint?",
-    a: "After the contracts land on Robinhood Chain and the OpenSea collection is imported. Mint price is TBD. Public supply is 4,244. Team reserve is 200. Each pet mints Sealed (placeholder metadata) with a TBA and a one-time $TERM Ignite allotment. Art, Ignite, and $TERM trading unlock at reveal.",
+    a: `After the contracts land on Robinhood Chain and the OpenSea collection is imported. Mint price is TBD. ${mintAllocation.sentence} Each pet mints Sealed (placeholder metadata) with a TBA and a one-time $TERM Ignite allotment. Art, Ignite, and $TERM trading unlock at reveal.`,
   },
   {
     q: "What is $TERM?",
