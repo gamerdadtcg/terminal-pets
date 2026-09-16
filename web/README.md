@@ -8,4 +8,4 @@ npm install
 npm run dev    # http://127.0.0.1:43147
 ```
 
-See the repository root README for deploy, 24h sealed reveal, OpenSea royalty → RoyaltySplitter (pre-reveal 100% TermFund; post-reveal 5/2.5), Pulse ladder, `$TERM` allotment, and contract addresses.
+See the repository root README for deploy, 24h sealed reveal, generative Pocket Critter metadata (sealed → egg → awake), OpenSea royalty → RoyaltySplitter (pre-reveal 100% TermFund; post-reveal 5/2.5), Pulse ladder, `$TERM` allotment, and contract addresses.

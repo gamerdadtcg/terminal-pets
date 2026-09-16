@@ -1,0 +1,125 @@
+{
+  "name": "Terminal Pet Egg #3",
+  "description": "A dormant Terminal Pet egg on a matching handheld device, gently rocking. Same token id as the awakened pet NFT.",
+  "image": "/art/dormant/3.gif",
+  "egg_id": "3",
+  "pet_id": "3",
+  "linked_pet_id": "3",
+  "dna": "pet:P01|egg:E01|pet_color:pink|eyes:tiny|mouth:surprised|accessory:flower|background:BG09|handheld:H05|shell_color:light_blue|shell_class:ALPHA|buttons:pink|antenna:double|screen:S05|fx:leaves",
+  "animation": {
+    "type": "egg_rock",
+    "frames": 8,
+    "duration_ms": 150,
+    "size": 512
+  },
+  "attributes": [
+    {
+      "trait_type": "Pet",
+      "value": "PUDD"
+    },
+    {
+      "trait_type": "Pet ID",
+      "value": "P01"
+    },
+    {
+      "trait_type": "Pet Rarity",
+      "value": "Common"
+    },
+    {
+      "trait_type": "Egg",
+      "value": "PUDD Cream"
+    },
+    {
+      "trait_type": "Egg ID",
+      "value": "E01"
+    },
+    {
+      "trait_type": "Egg Rarity",
+      "value": "Common"
+    },
+    {
+      "trait_type": "Pet Color",
+      "value": "pink"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "tiny"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "surprised"
+    },
+    {
+      "trait_type": "Accessory",
+      "value": "flower"
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dot Grid"
+    },
+    {
+      "trait_type": "Handheld",
+      "value": "Egg-shaped"
+    },
+    {
+      "trait_type": "Shell Color",
+      "value": "light_blue"
+    },
+    {
+      "trait_type": "Shell Class",
+      "value": "ALPHA"
+    },
+    {
+      "trait_type": "Buttons",
+      "value": "pink"
+    },
+    {
+      "trait_type": "Antenna",
+      "value": "double"
+    },
+    {
+      "trait_type": "Screen",
+      "value": "Dark Well LEDs"
+    },
+    {
+      "trait_type": "FX",
+      "value": "leaves"
+    },
+    {
+      "trait_type": "State",
+      "value": "Dormant"
+    }
+  ],
+  "rarity": {
+    "pet": "common",
+    "egg": "common",
+    "pet_color": "common",
+    "eyes": "common",
+    "mouth": "common",
+    "accessory": "common",
+    "background": "common",
+    "handheld": "common",
+    "shell_color": "common",
+    "shell_class": "common",
+    "buttons": "common",
+    "antenna": "common",
+    "screen": "common",
+    "fx": "common"
+  },
+  "traits": {
+    "pet": "P01",
+    "egg": "E01",
+    "pet_color": "pink",
+    "eyes": "tiny",
+    "mouth": "surprised",
+    "accessory": "flower",
+    "background": "BG09",
+    "handheld": "H05",
+    "shell_color": "light_blue",
+    "shell_class": "ALPHA",
+    "buttons": "pink",
+    "antenna": "double",
+    "screen": "S05",
+    "fx": "leaves"
+  }
+}

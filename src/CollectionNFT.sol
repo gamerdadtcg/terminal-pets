@@ -5,6 +5,7 @@ import {ERC721} from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import {ERC721Enumerable} from "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import {ERC2981} from "@openzeppelin/contracts/token/common/ERC2981.sol";
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
+import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
 import {IIgniteModule} from "./interfaces/IIgniteModule.sol";
 import {TerminalRenderer} from "./TerminalRenderer.sol";
 import {CollectionConfig} from "./CollectionConfig.sol";
@@ -32,7 +33,11 @@ interface IHopperClock {
 /// (37.5% burn / 25% Hopper-as-ETH / 37.5% allotment refill) plus 0.002 ETH
 /// (50% Hopper / 50% buy `$TERM` and burn). Hopper payouts stay locked 7 days
 /// after `reveal()`; Ignite during that week still accrues ETH in the pot.
+/// Product art is off-chain generative PNG/GIF (Pocket Critter). `tokenURI`
+/// serves sealed / dormant-egg / lit-pet JSON once metadata bases are set.
 contract CollectionNFT is ERC721Enumerable, ERC2981, Ownable {
+    using Strings for uint256;
+
     uint256 public immutable maxSupply;
     uint256 public immutable teamReserve;
     address public immutable hopper;
@@ -47,6 +52,13 @@ contract CollectionNFT is ERC721Enumerable, ERC2981, Ownable {
     uint256 public teamMinted;
     uint256 public publicMinted;
     string private _contractURIOverride;
+    /// @notice Pre-reveal metadata. No trailing slash → same URI for every token
+    /// (typical `hidden.json`). Trailing slash → `{base}{id}.json`.
+    string public hiddenURI;
+    /// @notice Revealed + Dormant (egg rock GIF). Trailing slash → `{id}.json`.
+    string public dormantBaseURI;
+    /// @notice Revealed + Lit (awake pet GIF). Trailing slash → `{id}.json`.
+    string public litBaseURI;
     uint256 private _nextTokenId = 1;
 
     error ZeroAddress();
@@ -72,6 +84,7 @@ contract CollectionNFT is ERC721Enumerable, ERC2981, Ownable {
     event TermTokenSet(address indexed termToken);
     event Revealed(uint256 timestamp);
     event ContractURIUpdated();
+    event MetadataURIsUpdated(string hiddenURI, string dormantBaseURI, string litBaseURI);
     event MetadataUpdate(uint256 _tokenId);
     event BatchMetadataUpdate(uint256 _fromTokenId, uint256 _toTokenId);
 
@@ -118,7 +131,7 @@ contract CollectionNFT is ERC721Enumerable, ERC2981, Ownable {
         emit TermTokenSet(termToken_);
     }
 
-    /// @notice Flip Sealed → live art, enable `$TERM` trading, enable Ignite, switch
+    /// @notice Flip Sealed → dormant egg metadata, enable `$TERM` trading, enable Ignite, switch
     /// royalties to 5% Hopper / 2.5% treasury. Owner may call early; anyone after `revealAfter`.
     function reveal() external {
         if (revealed) revert AlreadyRevealed();
@@ -159,6 +172,22 @@ contract CollectionNFT is ERC721Enumerable, ERC2981, Ownable {
     function setContractURI(string calldata uri) external onlyOwner {
         _contractURIOverride = uri;
         emit ContractURIUpdated();
+    }
+
+    /// @notice Point tokenURI at hosted Pocket Critter JSON (IPFS or HTTP).
+    /// Empty strings keep the on-chain fallback stub. Trailing `/` on a base
+    /// appends `{tokenId}.json` (matches `art/generator/generate_collection.py`).
+    function setMetadataURIs(string calldata hiddenURI_, string calldata dormantBaseURI_, string calldata litBaseURI_)
+        external
+        onlyOwner
+    {
+        hiddenURI = hiddenURI_;
+        dormantBaseURI = dormantBaseURI_;
+        litBaseURI = litBaseURI_;
+        emit MetadataURIsUpdated(hiddenURI_, dormantBaseURI_, litBaseURI_);
+        if (_nextTokenId > 1) {
+            emit BatchMetadataUpdate(1, _nextTokenId - 1);
+        }
     }
 
     /// @notice OpenSea collection metadata.
@@ -229,12 +258,21 @@ contract CollectionNFT is ERC721Enumerable, ERC2981, Ownable {
 
     function tokenURI(uint256 tokenId) public view override returns (string memory) {
         _requireOwned(tokenId);
-        if (!revealed) return TerminalRenderer.hiddenTokenURI(tokenId);
+        if (!revealed) {
+            if (bytes(hiddenURI).length != 0) return _metadataURI(hiddenURI, tokenId);
+            return TerminalRenderer.hiddenTokenURI(tokenId);
+        }
         bool lit = address(igniteModule) != address(0) && igniteModule.isLit(tokenId);
+        if (lit) {
+            if (bytes(litBaseURI).length != 0) return _metadataURI(litBaseURI, tokenId);
+        } else if (bytes(dormantBaseURI).length != 0) {
+            return _metadataURI(dormantBaseURI, tokenId);
+        }
         return TerminalRenderer.tokenURI(tokenId, lit);
     }
 
-    /// @notice Handheld pet traits rolled from tokenId; State follows Ignite. Sealed until reveal.
+    /// @notice Historical Track A rolls + Ignite state. Product traits live in
+    /// off-chain Pocket Critter JSON (`art/schema/traits.json`), not this table.
     function tokenTraits(uint256 tokenId) external view returns (TerminalRenderer.Traits memory) {
         _requireOwned(tokenId);
         if (!revealed) return TerminalRenderer.sealedTraits();
@@ -268,5 +306,15 @@ contract CollectionNFT is ERC721Enumerable, ERC2981, Ownable {
     /// @dev Royalty receiver is the RoyaltySplitter; per-token overrides are disabled.
     function _setTokenRoyalty(uint256, address, uint96) internal pure override {
         revert RoyaltyReceiverLocked();
+    }
+
+    /// @dev Trailing `/` → `{base}{tokenId}.json`. Otherwise return `base` as-is
+    /// (single sealed JSON for every token).
+    function _metadataURI(string memory base, uint256 tokenId) internal pure returns (string memory) {
+        bytes memory b = bytes(base);
+        if (b.length > 0 && b[b.length - 1] == "/") {
+            return string.concat(base, tokenId.toString(), ".json");
+        }
+        return base;
     }
 }

@@ -14,13 +14,16 @@ export function SiteFooter() {
           <p className="text-sm font-medium">{SITE.name}</p>
           <p className="max-w-sm text-sm text-muted-foreground">
             Collection on {SITE.chain}. Metadata names each token Terminal Pet
-            #id. Art intentionally removed; mechanics only.
+            #id. Generative PFPs: dormant egg, awake on Ignite.
           </p>
           <p className="max-w-lg text-xs leading-relaxed text-muted-foreground/80">
             {SITE.disclaimer}
           </p>
         </div>
         <div className="grid grid-cols-2 gap-x-10 gap-y-2 font-mono text-xs text-muted-foreground sm:text-right">
+          <Link className="hover:text-foreground" href="/#art">
+            Art
+          </Link>
           <Link className="hover:text-foreground" href="/#how">
             How it works
           </Link>

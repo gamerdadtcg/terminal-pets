@@ -6,7 +6,7 @@ Public collection name: **Terminal Pets**. NFT symbol: **TERM**. Memecoin: **`$T
 
 Collectors mint on OpenSea. After mint, each token is a unique handheld **pet** that starts **Sealed** (placeholder metadata, 24h reveal window) with a **TBA**. After `CollectionNFT.reveal()` it shows as **Dormant** until Ignite. Each token also gets a one-time **`$TERM` Ignite allotment** (placeholder **1,000 `$TERM`**) from token supply so the token half of the first wake does not need a live chart. **Ignite** is off until reveal. Then it is hybrid: that `$TERM` (**37.5% burn / 25% Hopper-as-ETH / 37.5% allotment escrow refill**) **plus exactly 0.002 ETH**. The ETH splits **50% buy `$TERM` and burn / 50% Hopper**. Team earns **0** from that ETH fee (not TermFund, not treasury). The 37.5% token cut returns to the per-pet allotment **pool** (that tokenId stays consumed). One-way **Dormant → Lit**. Lit stays with the NFT on transfer. **Royalties** (7.5% via **RoyaltySplitter**): **pre-reveal 100% → TermFund** (nothing to Hopper, nothing to treasury from that stream). **Post-reveal 5% Hopper / 2.5% treasury**. **Hopper** is ETH only after that: post-reveal NFT royalties, **50% of each Ignite ETH fee**, 25% of each Ignite `$TERM` fee (swapped to ETH when a router is set), plus, once the canonical TERM/ETH pool is live, a **1.5% TermMarket skim** of that pool’s volume. `$TERM` is **not** fee-on-transfer; public transfers are also **off until reveal**. **Dial**: Lit holders pick up to 3 Robinhood Chain Stock Tokens (weights = 100%). **Pulse** uses an escalating Hopper ETH **ladder** (not a fixed 0.5 ETH): bootstrap `0.1 → 1.0`, then cycle `0.5 → 1.0` forever (never back to 0.1). Snapshot Lit, read Dial. **Dialed Lit** swap their ETH share to Stock Tokens (ETH fallback if no router). **Undialed Lit** buy `$TERM` with that share and credit the TBA (or owner) — not raw ETH; claim reverts without router + `$TERM`. Hopper stays ETH. Dormant earn nothing. TermMarket ships in this repo but stays **inactive** until `TERM_POOL` and `TERM_SWAP_ROUTER` are set.
 
-This repo is a complete MVP: Foundry contracts, tests, a Robinhood Chain deploy script, and a Next.js hub + wallet dapp (wagmi / viem). The public homepage is a marketing hub. Contract addresses can stay empty until Robinhood Chain deploy.
+This repo is a complete MVP: Foundry contracts, tests, a Robinhood Chain deploy script, a Next.js hub + wallet dapp (wagmi / viem), and the Pocket Critter generative PFP art system under `art/`. The public homepage is a marketing hub. Contract addresses can stay empty until Robinhood Chain deploy.
 
 **Ready to deploy — not deployed. Do not broadcast to chain `4663` until explicitly asked.**
 
@@ -79,7 +79,7 @@ Deploy does **not** auto-reveal. Tokens mint **Sealed**. `CollectionNFT.revealAf
 
 `reveal()` is atomic:
 
-1. Flip metadata live (Sealed → Dormant traits; ERC-4906 batch update). Placeholder SVG stays until art reconnects.
+1. Flip metadata live (Sealed → Dormant egg JSON; ERC-4906 batch update). Product art is off-chain Pocket Critter GIF metadata once `setMetadataURIs` is called.
 2. Enable `$TERM` public transfers (`TermToken.enableTrading`).
 3. Enable Ignite (`IgniteModule.setIgniteEnabled(true)`).
 4. Switch RoyaltySplitter to live (`setLive`) — 5% Hopper / 2.5% treasury.
@@ -206,11 +206,36 @@ Read the comments at the top of `src/Hopper.sol`.
 
 ### Art / metadata
 
-Art intentionally removed; mechanics only. Art will be reconnected separately.
+Live product art is the **generative Pocket Critter** package vendored at [`art/`](art/README.md). Off-chain 2048 PNG compose / 512 GIF export (awake pet + matching dormant egg). Track A on-chain SVG (`scarfpack-3a194a4` / `TerminalRenderer` lit pets) is historical only — see [`docs/MAIN_ART_LOCK.md`](docs/MAIN_ART_LOCK.md).
 
-`tokenURI` / `hiddenTokenURI` still compile and serve a **placeholder SVG** (plain rectangle + `PET#{id}` + SEALED / DORMANT / LIT). Trait rolls keep seed `keccak256(abi.encodePacked(keccak256("AWAKEN_PET_V2"), tokenId))` and `ACC_N = 6` so a later art agent can reconnect drawing without remapping ids. There are **no** art-pass stills, gallery pages, or trait-catalog export scripts in this repo.
+`CollectionNFT.tokenURI` is lifecycle-switched:
 
-Metadata `name` is `Terminal Pet #{id}`. Collection `contractURI` name is `Terminal Pets`. `tokenTraits` returns Shell, Shell Color, Buttons, Antenna, Wallpaper, Species, Body, Eyes, Accessory, Generation, and State.
+| State | URI |
+| --- | --- |
+| Sealed | `hiddenURI` (typical single `hidden.json`) |
+| Revealed Dormant | `{dormantBaseURI}{id}.json` → egg rock GIF |
+| Lit (Ignite) | `{litBaseURI}{id}.json` → awake pet GIF |
+
+Owner sets bases with `setMetadataURIs`. Trailing `/` appends `{tokenId}.json`. ERC-4906 `MetadataUpdate` still fires on Ignite. Until URIs are set, a **fallback** on-chain data-URI stub (rectangle + `PET#` + state + `OFF-CHAIN ART`) keeps mint/reveal/Ignite tests working — it is not product art.
+
+`tokenTraits()` still returns the historical `AWAKEN_PET_V2` table for tests. Product traits are `art/schema/traits.json`. The old `ACC_N = 6` accessory list is obsolete for product art.
+
+Metadata `name` is `Terminal Pet #{id}` (egg JSON uses `Terminal Pet Egg #{id}`). Collection `contractURI` name is `Terminal Pets`.
+
+Regenerate sample GIFs (Python 3.10+ / Pillow):
+
+```bash
+pip install -r art/requirements.txt
+python art/generator/generate_collection.py \
+  --count 4444 --start 1 --limit 3 \
+  --out-art art/export/gif-test/art \
+  --out-metadata art/export/gif-test/metadata \
+  --out-egg art/export/gif-test/egg \
+  --out-egg-metadata art/export/gif-test/egg-metadata \
+  --seed 42
+```
+
+Full 4444 export is optional and gitignored (`art/export/gif-full/`). After pinning, pass `--art-image-base` / `--egg-image-base` or run `art/generator/rewrite_image_uris.py`.
 
 ### Mint allocation
 
@@ -267,7 +292,7 @@ Public marketing site and wallet tools share one Next.js app.
 
 | Route | What |
 | --- | --- |
-| `/` | Hub: hero, how it works, Hopper, economics, metadata note, status, FAQ, links |
+| `/` | Hub: hero, how it works, Hopper, economics, generative art preview, status, FAQ, links |
 | `/hopper` | Dedicated Hopper + Pulse ladder explainer |
 | `/dial` | Dial explainer |
 | `/app` | Ignite / allotment / Hopper / Pulse / TBA wallet tools (Dial picker not live) |
@@ -342,6 +367,7 @@ Placeholders still open:
 | Pulse DEX router | required for undialed `$TERM` and Dialed stocks | `PULSE_ROUTER` / `setRouter` + `setTerm` |
 | Chain contract addresses | empty | `web/.env.local` |
 | Mint price | `0` / TBD | `MINT_PRICE_WEI` |
+| Metadata URIs | unset → fallback stub | `CollectionNFT.setMetadataURIs` after pinning `art/` GIFs |
 
 Later, when someone says go (commands only — do not run them now):
 

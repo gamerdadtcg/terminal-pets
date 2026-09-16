@@ -1,0 +1,37 @@
+{
+  "tiers": {
+    "common": {
+      "weight": 60,
+      "label": "Common",
+      "order": 0
+    },
+    "rare": {
+      "weight": 25,
+      "label": "Rare",
+      "order": 1
+    },
+    "epic": {
+      "weight": 10,
+      "label": "Epic",
+      "order": 2
+    },
+    "legendary": {
+      "weight": 5,
+      "label": "Legendary",
+      "order": 3
+    }
+  },
+  "tier_weights_sum": 100,
+  "guidelines": {
+    "common_pct": "55-65",
+    "rare_pct": "20-25",
+    "epic_pct": "10-15",
+    "legendary_pct": "5-10",
+    "notes": [
+      "Eggs and pets are equal common (1:1 hatch mapping).",
+      "Shell class: ALPHA common, BETA rare, DELTA epic, OMEGA legendary.",
+      "Accessory none is always common.",
+      "Option weight defaults to tier weight; overridable later."
+    ]
+  }
+}

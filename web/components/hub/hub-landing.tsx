@@ -1,4 +1,5 @@
 import { ComingSoon } from "@/components/coming-soon";
+import { ArtGallery } from "@/components/hub/art-gallery";
 import { HopperExplainer } from "@/components/hub/hopper-explainer";
 import {
   Accordion,
@@ -24,12 +25,12 @@ const STEPS = [
   {
     n: "01",
     title: "Free mint",
-    body: `${mintScheduleCopy.sentence} ${mintAllocation.sentence} Mint on OpenSea. Each token mints Sealed — placeholder metadata, TBA, and a $TERM allotment. Name is Terminal Pet #{id}. Ignite and $TERM trading stay off.`,
+    body: `${mintScheduleCopy.sentence} ${mintAllocation.sentence} Mint on OpenSea. Each token mints Sealed — hidden metadata, TBA, and a $TERM allotment. Name is Terminal Pet #{id}. Ignite and $TERM trading stay off.`,
   },
   {
     n: "02",
     title: "24h reveal",
-    body: `Sealed for ${SITE.revealWindow}. Owner may call CollectionNFT.reveal() early; anyone can after that. One tx: metadata live, $TERM trading on, Ignite on, royalties switch from 7.5% TermFund to ${SITE.royaltyHopper} Hopper / ${SITE.royaltyTreasury} treasury.`,
+    body: `Sealed for ${SITE.revealWindow}. Owner may call CollectionNFT.reveal() early; anyone can after that. One tx: dormant egg metadata live, $TERM trading on, Ignite on, royalties switch from 7.5% TermFund to ${SITE.royaltyHopper} Hopper / ${SITE.royaltyTreasury} treasury.`,
   },
   {
     n: "03",
@@ -99,8 +100,13 @@ const ROADMAP = [
   },
   {
     state: "done" as const,
-    title: "NFT metadata stub",
-    body: `${SITE.artDomain} seed and trait tables stay. tokenURI is a placeholder SVG (PET# + state). Art intentionally removed; reconnect separately.`,
+    title: "Generative PFP metadata",
+    body: "Pocket Critter off-chain GIFs. tokenURI: sealed JSON → dormant egg → awake pet on Ignite. ERC-4906 MetadataUpdate stays. Old on-chain SVG pets are not product art.",
+  },
+  {
+    state: "next" as const,
+    title: "Pin collection GIFs",
+    body: "Generate the 4444 awake + egg GIFs, pin JSON to IPFS/HTTP, then CollectionNFT.setMetadataURIs. A 3-token sample is already in the repo.",
   },
   {
     state: "done" as const,
@@ -110,7 +116,7 @@ const ROADMAP = [
   {
     state: "now" as const,
     title: "Public hub",
-    body: "This site. Ignite / Pulse / Hopper / Dial hub pages. Terminal route is ready. Pet stills are not served.",
+    body: "This site. Ignite / Pulse / Hopper / Dial hub pages. Terminal route is ready. Generative sample GIFs on the hub.",
   },
   {
     state: "next" as const,
@@ -158,13 +164,16 @@ export function HubLanding() {
               {SITE.name}
             </h1>
             <p className="max-w-xl text-lg text-muted-foreground">
-              {SITE.tagline} Metadata names each token Terminal Pet #id.
-              The collection is {SITE.name} ({SITE.symbol}). Memecoin is $TERM.
+              {SITE.tagline} Generative Pocket Critter PFPs. Metadata names
+              each token Terminal Pet #id. The collection is {SITE.name} (
+              {SITE.symbol}). Memecoin is $TERM.
             </p>
             <p className="max-w-xl text-sm text-muted-foreground">
               {mintScheduleCopy.sentence} {mintAllocation.sentence} Mint on
-              OpenSea. Pets mint Sealed for {SITE.revealWindow}: placeholder
-              metadata, Ignite off, $TERM transfers off. Secondary royalties (
+              OpenSea. Pets mint Sealed for {SITE.revealWindow}: hidden
+              metadata, Ignite off, $TERM transfers off. Reveal shows a
+              dormant egg GIF; Ignite swaps metadata to the matching awake
+              pet. Secondary royalties (
               {SITE.royalty}) go 100% to TermFund — nothing to Hopper, nothing
               to treasury from that stream. Reveal flips metadata live, turns
               on Ignite and $TERM trading, and switches royalties to{" "}
@@ -237,33 +246,59 @@ export function HubLanding() {
             </div>
             <div className="rounded-[1.6rem] border border-border/70 bg-card/70 p-5">
               <p className="font-mono text-[11px] tracking-[0.28em] text-primary">
-                MECHANICS ONLY
+                GENERATIVE PFP
               </p>
               <p className="mt-3 text-lg font-medium">
-                Art intentionally removed. Art will be reconnected separately.
+                Dormant egg. Awake on Ignite.
               </p>
               <p className="mt-2 text-sm text-muted-foreground">
-                tokenURI stays a placeholder SVG: rectangle + PET# + state.
-                Seed {SITE.artDomain} and trait tables are unchanged.
+                Modular Pocket Critter GIFs (2048 compose, 512 export). Off-chain
+                JSON tokenURI — not the old on-chain SVG pets.
               </p>
+              <div className="mt-4 grid grid-cols-2 gap-2">
+                <figure className="overflow-hidden rounded-xl border border-border/70 bg-black/40">
+                  <img
+                    src="/art/dormant/2.gif"
+                    alt="Sample dormant Terminal Pet egg GIF"
+                    className="aspect-square w-full object-cover"
+                    width={512}
+                    height={512}
+                  />
+                  <figcaption className="px-2 py-1.5 font-mono text-[10px] text-muted-foreground">
+                    Dormant · SNAG egg
+                  </figcaption>
+                </figure>
+                <figure className="overflow-hidden rounded-xl border border-border/70 bg-black/40">
+                  <img
+                    src="/art/awake/2.gif"
+                    alt="Sample awakened Terminal Pet GIF"
+                    className="aspect-square w-full object-cover"
+                    width={512}
+                    height={512}
+                  />
+                  <figcaption className="px-2 py-1.5 font-mono text-[10px] text-muted-foreground">
+                    Lit · SNAG awake
+                  </figcaption>
+                </figure>
+              </div>
             </div>
             <div className="grid grid-cols-3 gap-3">
               <div className="rounded-2xl border border-border/70 bg-card/60 p-3">
                 <p className="font-mono text-[10px] text-primary">SEALED</p>
                 <p className="mt-1 text-xs text-muted-foreground">
-                  Hidden metadata until reveal.
+                  Hidden / generic metadata until reveal.
                 </p>
               </div>
               <div className="rounded-2xl border border-border/70 bg-card/60 p-3">
                 <p className="font-mono text-[10px] text-primary">DORMANT</p>
                 <p className="mt-1 text-xs text-muted-foreground">
-                  Traits live. Ignite still off.
+                  Matching egg rock GIF. Ignite still off.
                 </p>
               </div>
               <div className="rounded-2xl border border-border/70 bg-card/60 p-3">
                 <p className="font-mono text-[10px] text-primary">LIT</p>
                 <p className="mt-1 text-xs text-muted-foreground">
-                  After Ignite. Dial / Pulse eligible.
+                  Awake pet GIF. Dial / Pulse eligible.
                 </p>
               </div>
             </div>
@@ -436,25 +471,17 @@ export function HubLanding() {
               ART
             </p>
             <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-              Art intentionally removed; mechanics only.
+              Generative PFPs. Egg sleeps. Ignite wakes it.
             </h2>
             <p className="text-muted-foreground">
-              Art will be reconnected separately. CollectionNFT still mints,
-              reveals, and Ignites. tokenURI is a placeholder SVG (rectangle +
-              PET# + SEALED / DORMANT / LIT). Seed domain {SITE.artDomain} and
-              trait rolls are unchanged so a later art agent can plug drawing
-              back in without remapping ids.
+              {SITE.artSystem} system: modular layers, 12 pets, matching eggs,
+              Robinhood-green backgrounds ({SITE.artCompose}). Reveal serves the
+              dormant egg GIF. Ignite swaps tokenURI to the awake pet GIF
+              (ERC-4906). Old on-chain SVG Track A pets and art-pass trait
+              catalogs are not product art.
             </p>
           </div>
-          <Card className="max-w-2xl">
-            <CardHeader>
-              <CardTitle className="text-base">NFT interface intact</CardTitle>
-            </CardHeader>
-            <CardContent className="text-sm text-muted-foreground">
-              name, symbol, tokenURI, contractURI, sealedTraits, and ERC-2981
-              stay. No art-pass stills, no gallery, no species sheets.
-            </CardContent>
-          </Card>
+          <ArtGallery />
         </div>
       </section>
 
@@ -474,7 +501,7 @@ export function HubLanding() {
             {mintAllocation.sentence} Phase times are hub copy: CollectionNFT
             still only has mintOpen and mintPrice (default 0 / free) — no Team /
             GTD / FCFS / Public phase contracts yet. Deploy stays sealed
-            (placeholder metadata, Ignite off, $TERM trading off, royalties to
+            (hidden metadata, Ignite off, $TERM trading off, royalties to
             TermFund) until CollectionNFT.reveal(). Addresses stay empty until
             Robinhood Chain deploy and the OpenSea import.
           </p>
@@ -624,8 +651,8 @@ export function HubLanding() {
             </CardHeader>
             <CardContent className="space-y-3 text-sm text-muted-foreground">
               <p>
-                Contracts ready, not deployed. Art disconnected until a later
-                reconnect.
+                Contracts ready, not deployed. Generative PFP samples on the
+                hub. Full collection GIFs pin before mint.
               </p>
               <Button size="sm" variant="outline" asChild>
                 <Link href="/#status">See status</Link>

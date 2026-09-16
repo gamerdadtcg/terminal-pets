@@ -30,7 +30,7 @@ export default function HopperPage() {
                 MECHANICS
               </p>
               <p className="mt-2 text-sm text-muted-foreground">
-                Hopper holds ETH until Pulse. Pet art is disconnected.
+                Hopper holds ETH until Pulse. Pets show as egg GIFs until Ignite.
               </p>
             </div>
             <Button className="w-full" asChild>

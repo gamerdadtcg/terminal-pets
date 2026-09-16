@@ -26,7 +26,7 @@ export default function DialPage() {
                 DIAL
               </p>
               <p className="mt-2 text-sm text-muted-foreground">
-                Dial is Lit-only. Pet art is disconnected.
+                Dial is Lit-only. Awake pet GIF after Ignite.
               </p>
             </div>
             <Button className="w-full" asChild>

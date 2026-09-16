@@ -1,0 +1,5 @@
+{
+  "pet:P08|egg:E08|pet_color:frog_green|eyes:happy|mouth:open_smile|accessory:glasses|background:BG09|handheld:H08|shell_color:white|shell_class:ALPHA|buttons:white|antenna:star|screen:S04|fx:static": 1,
+  "pet:P02|egg:E02|pet_color:sand|eyes:angry|mouth:open_smile|accessory:bandana|background:BG10|handheld:H01|shell_color:blue|shell_class:BETA|buttons:gray|antenna:star|screen:S08|fx:sparkles": 2,
+  "pet:P01|egg:E01|pet_color:pink|eyes:tiny|mouth:surprised|accessory:flower|background:BG09|handheld:H05|shell_color:light_blue|shell_class:ALPHA|buttons:pink|antenna:double|screen:S05|fx:leaves": 3
+}

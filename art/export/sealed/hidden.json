@@ -1,0 +1,11 @@
+{
+  "name": "Terminal Pet",
+  "description": "A sealed Terminal Pet. Unique Pocket Critter traits reveal after the 24h window as a dormant egg GIF, then awaken to the matching pet GIF on Ignite.",
+  "image": "sealed.png",
+  "attributes": [
+    {
+      "trait_type": "State",
+      "value": "Sealed"
+    }
+  ]
+}
