@@ -14,7 +14,13 @@ fs_permissions = [
 
 [rpc_endpoints]
 robinhood = "${ROBINHOOD_RPC_URL}"
+robinhood_testnet = "${ROBINHOOD_TESTNET_RPC_URL}"
+# Alias so `forge script … --rpc-url testnet` resolves to Robinhood testnet (46630).
+testnet = "${ROBINHOOD_TESTNET_RPC_URL}"
 anvil = "http://127.0.0.1:8545"
 
 [etherscan]
-robinhood = { key = "${BLOCKSCOUT_API_KEY}", url = "https://robinhoodchain.blockscout.com/api" }
+# Custom Blockscout instances. `chain` lets Foundry pick the right verifier URL.
+# Blockscout often accepts an empty or dummy key; CLI flags are also in docs/TESTNET_DEPLOY.md.
+robinhood = { key = "${BLOCKSCOUT_API_KEY}", chain = 4663, url = "https://robinhoodchain.blockscout.com/api" }
+robinhood_testnet = { key = "${BLOCKSCOUT_API_KEY}", chain = 46630, url = "https://explorer.testnet.chain.robinhood.com/api/" }

@@ -17,7 +17,7 @@ Order is fixed:
 | 6 | NVDA | *unset* | — |
 | 7 | TSLA | *unset* | `0xC9f9c86933092BbbfFF3CCb4b105A4A94bf3Bd4E` |
 
-These are **Robinhood Chain Stock Tokens**, not equity. Owner calls `PulseDistributor.setStockToken(slot, token)` / `setStockTokens` when real addresses are known. **Do not invent mainnet addresses.** Testnet AMZN/TSLA come from [Robinhood Chain contract docs](https://docs.robinhood.com/chain/contracts/) and are **not** wired as deploy defaults.
+These are **Robinhood Chain Stock Tokens**, not equity. Owner calls `PulseDistributor.setStockToken(slot, token)` / `setStockTokens` when real addresses are known. **Do not invent mainnet addresses.** Testnet AMZN/TSLA come from [Robinhood Chain contract docs](https://docs.robinhood.com/chain/contracts/) and are **not** wired as deploy defaults. Wiring those two slots on RH testnet (`46630`): [`TESTNET_DEPLOY.md`](TESTNET_DEPLOY.md).
 
 ## Assignment by shell class
 
