@@ -2,12 +2,14 @@
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useState, type ReactNode } from "react";
+import { type Chain } from "viem";
 import { WagmiProvider, createConfig, http } from "wagmi";
 import { injected } from "wagmi/connectors";
 import {
   BASE_SEPOLIA_RPC,
   ROBINHOOD_RPC,
   ROBINHOOD_TESTNET_RPC,
+  activeChain,
   baseSepolia,
   configuredChainId,
   configuredRpc,
@@ -16,11 +18,21 @@ import {
   robinhoodTestnet,
 } from "@/lib/chain";
 
+function wagmiChains(): [Chain, ...Chain[]] {
+  const configured = activeChain();
+  const rest = [robinhoodChain, robinhoodTestnet, baseSepolia, foundry].filter(
+    (chain) => chain.id !== configured.id,
+  );
+  return [configured, ...rest];
+}
+
+const chains = wagmiChains();
+
 const rpcFor = (id: number, fallback: string) =>
   configuredChainId() === id ? configuredRpc() : fallback;
 
 const config = createConfig({
-  chains: [robinhoodChain, robinhoodTestnet, baseSepolia, foundry],
+  chains,
   connectors: [injected()],
   transports: {
     [robinhoodChain.id]: http(rpcFor(robinhoodChain.id, ROBINHOOD_RPC)),

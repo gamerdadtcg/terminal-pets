@@ -19,7 +19,7 @@ import {
 } from "@/lib/contracts";
 import { explorerAddress, explorerTx, formatEth } from "@/lib/format";
 import { SITE, mintAllocation, mintScheduleCopy } from "@/lib/site";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import Link from "next/link";
 import {
   useAccount,
@@ -50,10 +50,6 @@ export function TerminalApp() {
     hash,
   });
   const [action, setAction] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (isSuccess) setAction(null);
-  }, [isSuccess]);
 
   const statsContracts = useMemo(
     () =>
@@ -440,6 +436,7 @@ NEXT_PUBLIC_CHAIN_ID=4663`}
                   onClick={() =>
                     run("Mint", () =>
                       writeContract({
+                        chainId: configuredChainId(),
                         address: addresses.collection,
                         abi: collectionAbi,
                         functionName: "mint",

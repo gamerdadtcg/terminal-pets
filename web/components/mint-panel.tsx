@@ -27,7 +27,8 @@ import Link from "next/link";
 export function MintPanel() {
   const configured = collectionConfigured();
   const { address, isConnected, chainId } = useAccount();
-  const onTarget = chainId === configuredChainId();
+  const targetChainId = configuredChainId();
+  const onTarget = chainId === targetChainId;
   const chain = activeChain();
   const explorer = explorerUrl();
   const [mintTo, setMintTo] = useState("");
@@ -45,37 +46,44 @@ export function MintPanel() {
             address: addresses.collection,
             abi: collectionAbi,
             functionName: "mintOpen" as const,
+            chainId: targetChainId,
           },
           {
             address: addresses.collection,
             abi: collectionAbi,
             functionName: "mintPrice" as const,
+            chainId: targetChainId,
           },
           {
             address: addresses.collection,
             abi: collectionAbi,
             functionName: "publicMinted" as const,
+            chainId: targetChainId,
           },
           {
             address: addresses.collection,
             abi: collectionAbi,
             functionName: "publicSupply" as const,
+            chainId: targetChainId,
           },
           {
             address: addresses.collection,
             abi: collectionAbi,
             functionName: "totalSupply" as const,
+            chainId: targetChainId,
           },
           {
             address: addresses.collection,
             abi: collectionAbi,
             functionName: "maxSupply" as const,
+            chainId: targetChainId,
           },
           {
             address: addresses.collection,
             abi: collectionAbi,
             functionName: "numberMinted" as const,
             args: [address ?? zeroAddress],
+            chainId: targetChainId,
           },
         ]
       : [],
@@ -121,6 +129,7 @@ export function MintPanel() {
     const to = usingMintTo ? (recipient as Address) : undefined;
     if (to) {
       writeContract({
+        chainId: targetChainId,
         address: addresses.collection,
         abi: collectionAbi,
         functionName: "mintTo",
@@ -130,6 +139,7 @@ export function MintPanel() {
       return;
     }
     writeContract({
+      chainId: targetChainId,
       address: addresses.collection,
       abi: collectionAbi,
       functionName: "mint",

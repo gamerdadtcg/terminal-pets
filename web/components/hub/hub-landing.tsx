@@ -12,7 +12,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { collectionConfigured } from "@/lib/contracts";
-import { configuredChainId } from "@/lib/chain";
+import { activeChain, configuredChainId } from "@/lib/chain";
 import {
   FAQ,
   SITE,
@@ -145,6 +145,7 @@ const ROADMAP = [
 export function HubLanding() {
   const links = publicLinks();
   const live = collectionConfigured();
+  const chain = activeChain();
   const chainId = configuredChainId();
 
   return (
@@ -157,7 +158,7 @@ export function HubLanding() {
           <div className="space-y-6">
             <div className="flex flex-wrap items-center gap-2">
               <Badge variant="outline" className="font-mono">
-                {SITE.chain} · {chainId}
+                {chain.name} · {chainId}
               </Badge>
               <Badge variant="outline" className="font-mono">
                 Free mint · {mintSchedule.date} · {mintSchedule.timezoneLabel}
