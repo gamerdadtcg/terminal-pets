@@ -41,7 +41,8 @@ contract LaunchRevealTest is Test {
             address(hopper),
             address(splitter),
             owner,
-            CollectionConfig.ROYALTY_BPS
+            CollectionConfig.ROYALTY_BPS,
+            new address[](0)
         );
         term = new TermToken(owner);
         fund = new TermFund(owner, address(term), treasury);
@@ -78,7 +79,7 @@ contract LaunchRevealTest is Test {
         TerminalRenderer.Traits memory t = nft.tokenTraits(1);
         assertEq(t.state, "Sealed");
         assertEq(t.species, "Sealed");
-        assertEq(nft.tokenURI(1), TerminalRenderer.hiddenTokenURI(1));
+        assertEq(nft.tokenURI(1), nft.renderer().hiddenTokenURI(1));
     }
 
     function test_preReveal_igniteOff() public {

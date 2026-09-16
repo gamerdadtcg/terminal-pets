@@ -4,45 +4,11 @@ pragma solidity ^0.8.24;
 import {Test} from "forge-std/Test.sol";
 import {TerminalRenderer} from "../src/TerminalRenderer.sol";
 
-contract TerminalRendererHarness {
-    function roll(uint256 tokenId) external pure returns (TerminalRenderer.Roll memory) {
-        return TerminalRenderer.roll(tokenId);
-    }
-
-    function traits(uint256 tokenId, bool lit) external pure returns (TerminalRenderer.Traits memory) {
-        return TerminalRenderer.traits(tokenId, lit);
-    }
-
-    function fingerprint(uint256 tokenId) external pure returns (bytes32) {
-        return TerminalRenderer.fingerprint(tokenId);
-    }
-
-    function tokenURI(uint256 tokenId, bool lit) external pure returns (string memory) {
-        return TerminalRenderer.tokenURI(tokenId, lit);
-    }
-
-    function contractURI() external pure returns (string memory) {
-        return TerminalRenderer.contractURI();
-    }
-
-    function svg(uint256 tokenId, bool lit) external pure returns (string memory) {
-        return TerminalRenderer.svg(tokenId, lit);
-    }
-
-    function hiddenSvg(uint256 tokenId) external pure returns (string memory) {
-        return TerminalRenderer.hiddenSvg(tokenId);
-    }
-
-    function hiddenTokenURI(uint256 tokenId) external pure returns (string memory) {
-        return TerminalRenderer.hiddenTokenURI(tokenId);
-    }
-}
-
 contract TerminalRendererTest is Test {
-    TerminalRendererHarness internal r;
+    TerminalRenderer internal r;
 
     function setUp() public {
-        r = new TerminalRendererHarness();
+        r = new TerminalRenderer();
     }
 
     function test_roll_deterministic() public view {
@@ -93,7 +59,7 @@ contract TerminalRendererTest is Test {
         assertTrue(_contains(hidden, "PET#3"));
         assertTrue(_contains(hidden, "SEALED"));
         assertTrue(_contains(hidden, "OFF-CHAIN ART"));
-        assertEq(r.hiddenTokenURI(3), TerminalRenderer.hiddenTokenURI(3));
+        assertTrue(_startsWith(r.hiddenTokenURI(3), "data:application/json;base64,"));
     }
 
     function test_svg_isPlaceholder() public view {
@@ -102,7 +68,7 @@ contract TerminalRendererTest is Test {
         assertTrue(_contains(dormant, "PET#12"));
         assertTrue(_contains(dormant, "DORMANT"));
         assertTrue(_contains(lit, "LIT"));
-        assertFalse(_contains(lit, 'data-dino="1"'));
+        assertFalse(_contains(lit, "data-dino=\"1\""));
         assertFalse(_contains(lit, "Scarf"));
         assertFalse(_contains(lit, "Pack"));
     }

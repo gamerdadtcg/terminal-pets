@@ -108,7 +108,7 @@ Always point OpenSea creator earnings at the **RoyaltySplitter**. The splitter h
 Do **not** broadcast to chain `4663` until explicitly asked.
 
 1. Deploy contracts. Confirm `revealed = false`, `igniteEnabled = false`, `tradingEnabled = false`, splitter `live = false`.
-2. `teamMint` the 200 reserve. OpenSea import. Point **7.5%** earnings at the RoyaltySplitter. `setMintOpen(true)`.
+2. `teamMint` the 200 reserve. OpenSea **import existing** CollectionNFT (never Studio deploy-wizard). Point **7.5%** earnings at the RoyaltySplitter. Authorize SeaDrop. Configure Studio Drop stages (see [`docs/OPENSEA_STUDIO_SEADROP.md`](docs/OPENSEA_STUDIO_SEADROP.md)). Leave `mintOpen` false unless the hub should mint too.
 3. Mint window (up to 24h): secondary royalties fund TermFund. Hopper is untouched by that stream.
 4. `CollectionNFT.reveal()` — owner anytime, or anyone after 24h. Art + Ignite + `$TERM` trading + 5/2.5 royalties in one tx. Hopper payouts then lock 7 days from that timestamp.
 5. Later, when a DEX adapter exists: `TermFund.setRouter` + `seedLiquidity`. Set `TERM_SWAP_ROUTER` so Ignite can buy-and-burn the ETH half (and convert the `$TERM` Hopper cut). Optional `TERM_POOL` for TermMarket.
@@ -187,7 +187,7 @@ Add the network to any EVM wallet with those values.
 | `TermToken` | `$TERM` ERC-20 (`Terminal $TERM`). Owner mints treasury float + Ignite allotment escrow. Ignite burns 37.5%, refills allotment 37.5%, converts 25% to Hopper ETH. **Not fee-on-transfer.** Public transfers off until `reveal()`. |
 | `TermFund` | Custodies **pre-reveal 7.5% royalties** for `$TERM` LP. **No Ignite ETH.** No owner withdraw. `setRouter` + `seedLiquidity` when a DEX adapter exists. |
 | `TermMarket` | Canonical TERM/ETH swap companion. Skims 3% of opted-in pool volume → 1.5% Hopper / 1% burn / 0.5% treasury. Inactive until pool + swap router are set. Trading itself also waits on reveal. |
-| `CollectionNFT` | ERC-721Enumerable + ERC-2981. Mints **Sealed**. `reveal()` (owner anytime / anyone after 24h) flips metadata, Ignite, `$TERM` trading, and royalty mode. OpenSea-friendly `mintTo` (4244 public). Owner `teamMint` / `ownerMint` (200 reserve). Royalties locked to the RoyaltySplitter. Name **Terminal Pets**, symbol **TERM**. |
+| `CollectionNFT` | ERC-721Enumerable + ERC-2981 + **SeaDrop 1.0 token interface**. Mints **Sealed**. OpenSea Studio Drop calls `mintSeaDrop` on **this** contract (do **not** use Studio’s deploy-wizard). `reveal()` (owner anytime / anyone after 24h) flips metadata, Ignite, `$TERM` trading, and royalty mode. Public cap **4244** (`mintSeaDrop` + dapp `mint` / `mintTo`). Owner `teamMint` / `ownerMint` (200 reserve, not SeaDrop). Royalties locked to the RoyaltySplitter. Name **Terminal Pets**, symbol **TERM**. See [`docs/OPENSEA_STUDIO_SEADROP.md`](docs/OPENSEA_STUDIO_SEADROP.md). |
 | `IgniteModule` | Payable `ignite(tokenId)` — Dormant → Lit. **Off until reveal.** `$TERM` allotment or `transferFrom` (**25% Hopper / 37.5% burn / 37.5% allotment refill**) **plus exact 0.002 ETH (50% Hopper / 50% buy `$TERM` and burn)**. |
 | `Hopper` | ETH only. **Post-reveal** royalty slice + optional paid mint + **50% of Ignite ETH** + Ignite `$TERM` hopper cut (as ETH) + TermMarket skim when live. **No pre-reveal royalties. No admin withdraw.** Distributor locked once. |
 | `RoyaltySplitter` | ERC-2981 / OpenSea receiver. Pre-reveal: 100% → TermFund. Post-reveal (`setLive` in `reveal()`): 2/3 Hopper, 1/3 treasury. |
@@ -216,7 +216,7 @@ Live product art is the **generative Pocket Critter** package vendored at [`art/
 | Revealed Dormant | `{dormantBaseURI}{id}.json` → egg rock GIF |
 | Lit (Ignite) | `{litBaseURI}{id}.json` → awake pet GIF |
 
-Owner sets bases with `setMetadataURIs`. Trailing `/` appends `{tokenId}.json`. ERC-4906 `MetadataUpdate` still fires on Ignite. Until URIs are set, a **fallback** on-chain data-URI stub (rectangle + `PET#` + state + `OFF-CHAIN ART`) keeps mint/reveal/Ignite tests working — it is not product art.
+Owner sets bases with `setMetadataURIs`. Trailing `/` appends `{tokenId}.json`. ERC-4906 `MetadataUpdate` still fires on Ignite. Until URIs are set, CollectionNFT calls a separately deployed **fallback** renderer (`TerminalRenderer` contract, constructed by `CollectionNFT`) for a data-URI stub (rectangle + `PET#` + state + `OFF-CHAIN ART`) — it is not product art.
 
 **Test hosting (tokens 1–25, GIF only)** is already on the hub. After Vercel deploy, the owner can point:
 
@@ -251,32 +251,34 @@ Full 4444 export is optional and gitignored (`art/export/gif-full/`). After pinn
 
 | Path | Supply | Who |
 | --- | --- | --- |
-| Public / OpenSea (`mint`, `mintTo`) | **4244** | Anyone while `mintOpen` |
+| Public / OpenSea Studio Drop (`mintSeaDrop`) | **4244** | SeaDrop stages (Team / GTD / FCFS / Public) |
+| Dapp (`mint`, `mintTo`) | **4244** (same cap) | Anyone while `mintOpen` |
 | Team (`teamMint` / `ownerMint`) | **200** | Owner only, to treasury or any team wallet |
 | Total | **4444** | Team + public cannot exceed this |
 
-Public mint cannot consume the team reserve, even if the team has not minted yet. Unused team slots stay reserved; they are not released to OpenSea.
+Public mint cannot consume the team reserve, even if the team has not minted yet. Unused team slots stay reserved; they are not released to SeaDrop / OpenSea.
 
 `CollectionNFT` mint functions:
 
-- `mintTo(address to, uint256 quantity)` — marketplace / OpenSea-friendly (public cap)
+- `mintSeaDrop(address minter, uint256 quantity)` — **only allowed SeaDrop** (Studio Drop). Independent of `mintOpen`. Public cap.
+- `mintTo(address to, uint256 quantity)` — hub / dapp (public cap, `mintOpen`)
 - `mint(address to)` — single-token adapter (public cap)
 - `mint(uint256 quantity)` — dapp mint to the caller (public cap)
 - `teamMint` / `ownerMint` — owner-only reserve (team cap)
 
-Mint starts **closed**. After deploy, mint the reserve with `teamMint(TREASURY_ADDRESS, 200)` (or a dedicated team wallet). Then open public mint when the OpenSea collection is ready. Paid public mint ETH is forwarded to the Hopper.
+Mint starts **closed** for the dapp path. After deploy, mint the reserve with `teamMint(TREASURY_ADDRESS, 200)` (or a dedicated team wallet). Authorize SeaDrop in the constructor (`CollectionConfig.SEADROP` = `0x00005EA00Ac477B1030CE78506496e8C2dE24bf5`) or `updateAllowedSeaDrop`. Configure the Drop in Studio against **this** address — see [`docs/OPENSEA_STUDIO_SEADROP.md`](docs/OPENSEA_STUDIO_SEADROP.md). Paid dapp mint ETH is forwarded to the Hopper; SeaDrop primary proceeds go to the Studio creator-payout address (set to Hopper if that ETH should fuel Pulse).
 
 ## OpenSea: point royalties at the RoyaltySplitter
 
 ERC-2981 is wired to the **RoyaltySplitter** at `750` bps (7.5% of sale). **Pre-reveal** the splitter forwards **100% to TermFund**. **Post-reveal** it forwards 2/3 to the Hopper (5% of sale) and 1/3 to `TREASURY_ADDRESS` (2.5% of sale). Ignite fees do not go through the splitter.
 
 1. Deploy and verify CollectionNFT, Hopper, RoyaltySplitter, Ignite, and Pulse on [Blockscout](https://robinhoodchain.blockscout.com) (see Deploy).
-2. On OpenSea, **import an existing contract** and paste the `CollectionNFT` address on Robinhood Chain (`4663`).
+2. On OpenSea, **import an existing contract** and paste the `CollectionNFT` address. **Do not** use Studio “deploy Drop contract.”
 3. Open collection **earnings / creator royalties**.
 4. Set creator earnings to **7.5% (750 bps)** and the recipient to the **RoyaltySplitter** address (not Hopper, not a personal wallet, not treasury).
 5. If OpenSea offers “honor on-chain royalties” / ERC-2981, enable it. `royaltyInfo` already returns the splitter and 750 bps.
 6. Confirm the collection page shows the splitter as the fee recipient. Secondary sales that honor ERC-2981 then follow the live mode: TermFund until reveal, Hopper/treasury after.
-7. Primary mint: list the drop on OpenSea, or turn `mintOpen` on and let collectors use `mintTo` / the dapp. After mint, OpenSea will show **Sealed** metadata until `reveal()`, then Dormant; Ignite updates `tokenURI` to Lit.
+7. Primary mint: configure an OpenSea **Studio Drop against this CollectionNFT** (SeaDrop). Details: [`docs/OPENSEA_STUDIO_SEADROP.md`](docs/OPENSEA_STUDIO_SEADROP.md). After mint, OpenSea will show **Sealed** metadata until `reveal()`, then Dormant; Ignite updates `tokenURI` to Lit.
 
 Do not route creator earnings to an EOA or directly to Hopper. The splitter is what keeps the pre-reveal TermFund path and the post-reveal 5% / 2.5% split.
 
@@ -402,9 +404,11 @@ cp .env.example .env
 #   --verifier-url https://robinhoodchain.blockscout.com/api/
 ```
 
-After a future broadcast, copy TermToken, TermFund, TermMarket, Hopper, RoyaltySplitter, CollectionNFT, IgniteModule, PulseDistributor, TBA into `web/.env.local`, then `teamMint` / `setMintOpen`.
+After a future broadcast, copy TermToken, TermFund, TermMarket, Hopper, RoyaltySplitter, CollectionNFT, IgniteModule, PulseDistributor, TBA into `web/.env.local`, then `teamMint`. Configure Studio Drop against CollectionNFT (not `setMintOpen`, unless the hub should also mint).
 
 ## Tests
+
+`test/SeaDropMint.t.sol` covers SeaDrop `mintSeaDrop` / `getMintStats` / allowed SeaDrop, public 4244 cap vs `teamMint`, ERC-165, Studio `update*` forwards, and reveal / Ignite / Dial / `tokenURI` after a SeaDrop mint.
 
 `test/LaunchReveal.t.sol` covers the 24h window: sealed metadata, Ignite off, `$TERM` trading off, **pre-reveal royalties 100% TermFund** (Hopper and treasury unchanged, including when Hopper already holds ETH), owner may reveal early, anyone after 24h, and after reveal: revealed metadata + Ignite + trading + **5% Hopper / 2.5% treasury**.
 
@@ -423,9 +427,10 @@ forge test -vv
 ## Layout
 
 ```
-src/           CollectionNFT, Ignite, TermFund, TermMarket, Hopper, RoyaltySplitter, Pulse, TBA
+src/           CollectionNFT, Ignite, TermFund, TermMarket, Hopper, RoyaltySplitter, Pulse, TBA, SeaDrop interfaces
 script/        Deploy.s.sol
-test/          Foundry tests (including MockTermPool / MockTermSwapRouter)
+test/          Foundry tests (including MockSeaDrop / MockTermPool / MockTermSwapRouter)
+docs/          Dial, art lock, OpenSea Studio SeaDrop
 web/           Next.js hub (`/`), Hopper, Dial, Terminal (`/app`)
 ```
 

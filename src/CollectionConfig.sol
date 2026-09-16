@@ -61,6 +61,12 @@ library CollectionConfig {
 
     uint256 internal constant CHAIN_ID = 4663;
 
+    /// @notice Canonical SeaDrop 1.0 (OpenSea). Same CREATE2 address on every
+    /// chain OpenSea has deployed it to. Authorize this (or Studio's SeaDrop)
+    /// via `CollectionNFT` constructor / `updateAllowedSeaDrop`.
+    /// See https://github.com/ProjectOpenSea/seadrop and docs/OPENSEA_STUDIO_SEADROP.md.
+    address internal constant SEADROP = 0x00005EA00Ac477B1030CE78506496e8C2dE24bf5;
+
     /// @notice Robinhood Chain Stock Token Dial pool (PulseDistributor allowlist).
     /// Symbols (hub order): HOOD, AAPL, MSFT, GOOGL, AMZN, META, NVDA, TSLA.
     /// Mainnet ERC-20s are **not** hardcoded — owner `setStockToken` when known.

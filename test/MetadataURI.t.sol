@@ -9,7 +9,6 @@ import {RoyaltySplitter} from "../src/RoyaltySplitter.sol";
 import {IgniteModule} from "../src/IgniteModule.sol";
 import {TermToken} from "../src/TermToken.sol";
 import {TermFund} from "../src/TermFund.sol";
-import {TerminalRenderer} from "../src/TerminalRenderer.sol";
 
 contract MetadataURITest is Test {
     uint256 internal constant SUPPLY = 8;
@@ -40,7 +39,8 @@ contract MetadataURITest is Test {
             address(hopper),
             address(splitter),
             owner,
-            CollectionConfig.ROYALTY_BPS
+            CollectionConfig.ROYALTY_BPS,
+            new address[](0)
         );
         term = new TermToken(owner);
         fund = new TermFund(owner, address(term), treasury);
@@ -64,13 +64,13 @@ contract MetadataURITest is Test {
     function test_unsetURIs_fallBackToRenderer() public {
         vm.prank(alice);
         nft.mint(1);
-        assertEq(nft.tokenURI(1), TerminalRenderer.hiddenTokenURI(1));
+        assertEq(nft.tokenURI(1), nft.renderer().hiddenTokenURI(1));
         vm.prank(owner);
         nft.reveal();
-        assertEq(nft.tokenURI(1), TerminalRenderer.tokenURI(1, false));
+        assertEq(nft.tokenURI(1), nft.renderer().tokenURI(1, false));
         vm.prank(alice);
         ignite.ignite{value: ETH_FEE}(1);
-        assertEq(nft.tokenURI(1), TerminalRenderer.tokenURI(1, true));
+        assertEq(nft.tokenURI(1), nft.renderer().tokenURI(1, true));
     }
 
     function test_setMetadataURIs_onlyOwner() public {
