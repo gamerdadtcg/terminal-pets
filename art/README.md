@@ -88,6 +88,18 @@ Then owner-set `CollectionNFT.setMetadataURIs(hiddenURI, dormantBaseURI, litBase
 - `dormantBaseURI` — trailing slash, e.g. `ipfs://…/egg-metadata/` → `{id}.json`
 - `litBaseURI` — trailing slash, e.g. `ipfs://…/metadata/` → `{id}.json`
 
+### Test hosting
+
+The Vercel hub already hosts tokens **1–25** as animated GIFs (not PNG). After deploy:
+
+| Arg | HTTPS base |
+| --- | --- |
+| `hiddenURI` | `https://terminal-pets.vercel.app/metadata/hidden.json` |
+| `dormantBaseURI` | `https://terminal-pets.vercel.app/metadata/dormant/` |
+| `litBaseURI` | `https://terminal-pets.vercel.app/metadata/lit/` |
+
+Files: `web/public/art/test/{id}.gif` (awake), `web/public/art/test-egg/{id}.gif` (dormant egg), matching JSON under `web/public/metadata/{lit,dormant}/`. See `docs/MAIN_ART_LOCK.md`.
+
 Ignite already emits ERC-4906 `MetadataUpdate`. Reveal emits `BatchMetadataUpdate`.
 
 ## Layout

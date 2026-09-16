@@ -1,7 +1,7 @@
 {
   "name": "Terminal Pet Egg #2",
   "description": "A dormant Terminal Pet egg on a matching handheld device, gently rocking. Same token id as the awakened pet NFT.",
-  "image": "/art/dormant/2.gif",
+  "image": "https://terminal-pets.vercel.app/art/test-egg/2.gif",
   "egg_id": "2",
   "pet_id": "2",
   "linked_pet_id": "2",

@@ -1,3 +1,24 @@
+/** HTTPS bases for CollectionNFT.setMetadataURIs after the hub deploys. */
+export const TEST_METADATA_URIS = {
+  hiddenURI: "https://terminal-pets.vercel.app/metadata/hidden.json",
+  dormantBaseURI: "https://terminal-pets.vercel.app/metadata/dormant/",
+  litBaseURI: "https://terminal-pets.vercel.app/metadata/lit/",
+} as const;
+
+export const TEST_TOKEN_COUNT = 25;
+
+export const TEST_HOST_TOKENS = Array.from(
+  { length: TEST_TOKEN_COUNT },
+  (_, i) => {
+    const id = i + 1;
+    return {
+      id,
+      dormantSrc: `/art/test-egg/${id}.gif`,
+      awakeSrc: `/art/test/${id}.gif`,
+    };
+  },
+);
+
 export const ART_SAMPLES = [
   {
     id: 1,
@@ -5,8 +26,8 @@ export const ART_SAMPLES = [
     petId: "P08",
     egg: "E08",
     handheld: "H08 Large Rounded",
-    dormantSrc: "/art/dormant/1.gif",
-    awakeSrc: "/art/awake/1.gif",
+    dormantSrc: "/art/test-egg/1.gif",
+    awakeSrc: "/art/test/1.gif",
   },
   {
     id: 2,
@@ -14,8 +35,8 @@ export const ART_SAMPLES = [
     petId: "P02",
     egg: "E02",
     handheld: "H01 Classic",
-    dormantSrc: "/art/dormant/2.gif",
-    awakeSrc: "/art/awake/2.gif",
+    dormantSrc: "/art/test-egg/2.gif",
+    awakeSrc: "/art/test/2.gif",
   },
   {
     id: 3,
@@ -23,8 +44,8 @@ export const ART_SAMPLES = [
     petId: "P01",
     egg: "E01",
     handheld: "H05 Egg-shaped",
-    dormantSrc: "/art/dormant/3.gif",
-    awakeSrc: "/art/awake/3.gif",
+    dormantSrc: "/art/test-egg/3.gif",
+    awakeSrc: "/art/test/3.gif",
   },
 ] as const;
 

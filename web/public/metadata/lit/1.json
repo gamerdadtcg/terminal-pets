@@ -1,7 +1,7 @@
 {
   "name": "Terminal Pet #1",
   "description": "A Terminal Pet generative PFP \u2014 awake critter on a handheld device with animated screen FX. Egg trait records the matching hatch egg for this pet species.",
-  "image": "/art/awake/1.gif",
+  "image": "https://terminal-pets.vercel.app/art/test/1.gif",
   "pet_id": "1",
   "egg_id": "1",
   "dna": "pet:P08|egg:E08|pet_color:frog_green|eyes:happy|mouth:open_smile|accessory:glasses|background:BG09|handheld:H08|shell_color:white|shell_class:ALPHA|buttons:white|antenna:star|screen:S04|fx:static",
@@ -83,10 +83,6 @@
     {
       "trait_type": "FX",
       "value": "static"
-    },
-    {
-      "trait_type": "State",
-      "value": "Lit"
     }
   ],
   "rarity": {

@@ -1,0 +1,125 @@
+{
+  "name": "Terminal Pet Egg #4",
+  "description": "A dormant Terminal Pet egg on a matching handheld device, gently rocking. Same token id as the awakened pet NFT.",
+  "image": "https://terminal-pets.vercel.app/art/test-egg/4.gif",
+  "egg_id": "4",
+  "pet_id": "4",
+  "linked_pet_id": "4",
+  "dna": "pet:P06|egg:E06|pet_color:yellow|eyes:normal|mouth:open_smile|accessory:crown|background:BG01|handheld:H02|shell_color:black|shell_class:ALPHA|buttons:pink|antenna:heart|screen:S02|fx:scanlines",
+  "animation": {
+    "type": "egg_rock",
+    "frames": 8,
+    "duration_ms": 150,
+    "size": 512
+  },
+  "attributes": [
+    {
+      "trait_type": "Pet",
+      "value": "ZORP"
+    },
+    {
+      "trait_type": "Pet ID",
+      "value": "P06"
+    },
+    {
+      "trait_type": "Pet Rarity",
+      "value": "Epic"
+    },
+    {
+      "trait_type": "Egg",
+      "value": "ZORP Alien"
+    },
+    {
+      "trait_type": "Egg ID",
+      "value": "E06"
+    },
+    {
+      "trait_type": "Egg Rarity",
+      "value": "Epic"
+    },
+    {
+      "trait_type": "Pet Color",
+      "value": "yellow"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "normal"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "open_smile"
+    },
+    {
+      "trait_type": "Accessory",
+      "value": "crown"
+    },
+    {
+      "trait_type": "Background",
+      "value": "Robinhood Dark"
+    },
+    {
+      "trait_type": "Handheld",
+      "value": "Rounded Square"
+    },
+    {
+      "trait_type": "Shell Color",
+      "value": "black"
+    },
+    {
+      "trait_type": "Shell Class",
+      "value": "ALPHA"
+    },
+    {
+      "trait_type": "Buttons",
+      "value": "pink"
+    },
+    {
+      "trait_type": "Antenna",
+      "value": "heart"
+    },
+    {
+      "trait_type": "Screen",
+      "value": "Lavender Rounded"
+    },
+    {
+      "trait_type": "FX",
+      "value": "scanlines"
+    },
+    {
+      "trait_type": "State",
+      "value": "Dormant"
+    }
+  ],
+  "rarity": {
+    "pet": "epic",
+    "egg": "epic",
+    "pet_color": "common",
+    "eyes": "common",
+    "mouth": "common",
+    "accessory": "legendary",
+    "background": "common",
+    "handheld": "common",
+    "shell_color": "common",
+    "shell_class": "common",
+    "buttons": "common",
+    "antenna": "common",
+    "screen": "common",
+    "fx": "common"
+  },
+  "traits": {
+    "pet": "P06",
+    "egg": "E06",
+    "pet_color": "yellow",
+    "eyes": "normal",
+    "mouth": "open_smile",
+    "accessory": "crown",
+    "background": "BG01",
+    "handheld": "H02",
+    "shell_color": "black",
+    "shell_class": "ALPHA",
+    "buttons": "pink",
+    "antenna": "heart",
+    "screen": "S02",
+    "fx": "scanlines"
+  }
+}

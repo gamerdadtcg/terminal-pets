@@ -1,0 +1,120 @@
+{
+  "name": "Terminal Pet #12",
+  "description": "A Terminal Pet generative PFP \u2014 awake critter on a handheld device with animated screen FX. Egg trait records the matching hatch egg for this pet species.",
+  "image": "https://terminal-pets.vercel.app/art/test/12.gif",
+  "pet_id": "12",
+  "egg_id": "12",
+  "dna": "pet:P09|egg:E09|pet_color:cinnamon|eyes:happy|mouth:tiny|accessory:glasses|background:BG02|handheld:H03|shell_color:neon_green|shell_class:BETA|buttons:gray|antenna:flower|screen:S01|fx:scanlines",
+  "animation": {
+    "type": "fx",
+    "frames": 10,
+    "duration_ms": 120,
+    "size": 512
+  },
+  "attributes": [
+    {
+      "trait_type": "Pet",
+      "value": "BRUMBLE"
+    },
+    {
+      "trait_type": "Pet ID",
+      "value": "P09"
+    },
+    {
+      "trait_type": "Pet Rarity",
+      "value": "Common"
+    },
+    {
+      "trait_type": "Egg",
+      "value": "BRUMBLE Earth"
+    },
+    {
+      "trait_type": "Egg ID",
+      "value": "E09"
+    },
+    {
+      "trait_type": "Egg Rarity",
+      "value": "Common"
+    },
+    {
+      "trait_type": "Pet Color",
+      "value": "cinnamon"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "happy"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "tiny"
+    },
+    {
+      "trait_type": "Accessory",
+      "value": "glasses"
+    },
+    {
+      "trait_type": "Background",
+      "value": "Robinhood Green"
+    },
+    {
+      "trait_type": "Handheld",
+      "value": "Wide"
+    },
+    {
+      "trait_type": "Shell Color",
+      "value": "neon_green"
+    },
+    {
+      "trait_type": "Shell Class",
+      "value": "BETA"
+    },
+    {
+      "trait_type": "Buttons",
+      "value": "gray"
+    },
+    {
+      "trait_type": "Antenna",
+      "value": "flower"
+    },
+    {
+      "trait_type": "Screen",
+      "value": "Classic Vintage"
+    },
+    {
+      "trait_type": "FX",
+      "value": "scanlines"
+    }
+  ],
+  "rarity": {
+    "pet": "common",
+    "egg": "common",
+    "pet_color": "common",
+    "eyes": "common",
+    "mouth": "common",
+    "accessory": "common",
+    "background": "common",
+    "handheld": "common",
+    "shell_color": "legendary",
+    "shell_class": "rare",
+    "buttons": "common",
+    "antenna": "common",
+    "screen": "common",
+    "fx": "common"
+  },
+  "traits": {
+    "pet": "P09",
+    "egg": "E09",
+    "pet_color": "cinnamon",
+    "eyes": "happy",
+    "mouth": "tiny",
+    "accessory": "glasses",
+    "background": "BG02",
+    "handheld": "H03",
+    "shell_color": "neon_green",
+    "shell_class": "BETA",
+    "buttons": "gray",
+    "antenna": "flower",
+    "screen": "S01",
+    "fx": "scanlines"
+  }
+}
