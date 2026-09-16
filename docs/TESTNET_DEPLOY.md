@@ -143,6 +143,8 @@ Confirm console:
 
 Leave these unset (or `0` for lock / Pulse rungs) for production-shaped deploys. Do **not** retarget the existing 7-day / 0.1 ETH testnet stack.
 
+Recorded SHORT-LOCK 900s MICRO stack (not 7-day CollectionNFT `0xe1cC988…`): [`RH_TESTNET_MICRO_SMOKE.md`](RH_TESTNET_MICRO_SMOKE.md) / [`deployments/robinhood-testnet-micro.json`](../deployments/robinhood-testnet-micro.json).
+
 **Note:** full stack deploy still needs enough gas (**~0.002+ ETH historically**); if under that, wait for faucet for the broadcast itself. Tiny Ignite / Pulse env only shrinks *post-deploy* smoke costs, not constructor gas.
 
 ## 5. Post-deploy smoke (owner txs)
@@ -268,9 +270,9 @@ Notes:
 
 ## 7. Record addresses
 
-Recorded 46630 addresses: [`RH_TESTNET_DEPLOY_ADDRESSES.md`](RH_TESTNET_DEPLOY_ADDRESSES.md) and [`deployments/robinhood-testnet.json`](../deployments/robinhood-testnet.json).
+Recorded 46630 addresses (7-day stack): [`RH_TESTNET_DEPLOY_ADDRESSES.md`](RH_TESTNET_DEPLOY_ADDRESSES.md) and [`deployments/robinhood-testnet.json`](../deployments/robinhood-testnet.json). SHORT-LOCK 900s MICRO stack (not CollectionNFT `0xe1cC988…`): [`RH_TESTNET_MICRO_SMOKE.md`](RH_TESTNET_MICRO_SMOKE.md) / [`deployments/robinhood-testnet-micro.json`](../deployments/robinhood-testnet-micro.json).
 
-`deployments/` is gitignored except `.gitkeep` and the checked-in testnet address file (Foundry also has write permission there). After a real testnet broadcast, write **`deployments/robinhood-testnet.json`** (do not commit secrets):
+`deployments/` is gitignored except `.gitkeep` and the checked-in 7-day / MICRO testnet address files (Foundry also has write permission there). After a real testnet broadcast, write **`deployments/robinhood-testnet.json`** for the 7-day stack (do not overwrite the MICRO file; do not commit secrets):
 
 ```json
 {

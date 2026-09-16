@@ -1,0 +1,74 @@
+{
+  "label": "SHORT-LOCK MICRO STACK (not the 7-day CollectionNFT)",
+  "chainId": 46630,
+  "rpc": "https://rpc.testnet.chain.robinhood.com",
+  "explorer": "https://explorer.testnet.chain.robinhood.com",
+  "branch": "cursor/pulse-ladder-env-b870",
+  "pr": 13,
+  "deployer": "0xA71c8cAC3bc8bc1085f87885fD2898f970edDc37",
+  "treasury": "0x0c821a853711bF03C4C6b776CfD657f2ee97733e",
+  "balance_before_wei": "1694313990000000",
+  "balance_before_eth": "0.001694313990",
+  "balance_after_wei": "1465849270000000",
+  "balance_after_eth": "0.001465849270",
+  "balance_delta_wei": "-228464720000000",
+  "micro_params": {
+    "HOPPER_LOCK_SECONDS": 900,
+    "IGNITE_FEE_ETH": "50000000000000",
+    "PULSE_BOOTSTRAP_START_WEI": "100000000000000",
+    "PULSE_CYCLE_START_WEI": "100000000000000",
+    "PULSE_LADDER_STEP_WEI": "10000000000000"
+  },
+  "contracts": {
+    "Hopper": "0x7329D15266c3fD8315779b5F5FF24C42CA005BAD",
+    "RoyaltySplitter": "0x5a15Eba73d42dB76CCCF00dC62291D7eC3C5518C",
+    "CollectionNFT": "0xA6aF17571a2CdB542C656E207e57d8b17A69CF27",
+    "TermToken": "0x49Ecc4D6e36c4c3D6f4A218fb015231E4a7b5733",
+    "TermFund": "0x54A54CBd96DEc065737f0d358D42196F1e7b1C7d",
+    "TermMarket": "0x165d624e7Fec0f6a9dced06ff7CB7B89aC43e36c",
+    "IgniteModule": "0x190C05B3733Dd94E14AD94296AF105FED47f7a8b",
+    "PulseDistributor": "0x32B52DAFcC68cBB34202e67E402DD0A54EC8815C",
+    "ERC6551Registry": "0xb5588164545ae5D5cf156Bebdb3E1beacb7bB8F2",
+    "ReceivableAccount": "0x022f32c67a9cd722986f39aEF09B465790B65437"
+  },
+  "verified": {
+    "payoutLock": 900,
+    "igniteFeeEth": "50000000000000",
+    "pulseThreshold_at_deploy": "100000000000000",
+    "pulseThreshold_after_pulse": "110000000000000",
+    "ladderIndex_after_pulse": 1
+  },
+  "smoke": {
+    "setStockToken_0_AMZN": "0x8ff45aa6b9db3ebac1cb42a6d7a76fb2e3f72d5777cb956494ac5e134f4d528f",
+    "setStockToken_4_AMZN": "FAILED DuplicateStock (AMZN on slot0; token1 ALPHA dials slot0)",
+    "setStockToken_7_TSLA": "0xc2ee7b522d650bd673b02c2ee441725bbebfb0b1f070b0cd2d523a67317569fb",
+    "teamMint_1": "0x1ed6131b307b6114f250103cd817d4a3a4796daf5b89e7017ff54dcaf1ce54ea",
+    "reveal": "0x898ec9a204147fdd6c58e759c222aec4ead5806da6817cc8f39665ab5d39c4a2",
+    "hopper_deposit_0.0001": "0x53be1f66f95a452eabd160980253f6ed5fbc31b298628074605b5eeb99ed84b9",
+    "setShellClassOverride_1_ALPHA": "0x573cf4e201e4680a3850d928c2403ed49b377d34810784f393dbdfc4bdc84080",
+    "ignite_1_0.00005": "0x196cac08418d2c0808ebe0629a34c29d641429a01829b38db234f8c7033afe14",
+    "tokenId": 1,
+    "hopperAvail_before_pulse_wei": "125000000000000",
+    "revealedAt": 1789586231,
+    "hopperUnlockTime": 1789587131,
+    "hopperUnlockTime_PT": "2026-09-16 12:32:11 PDT",
+    "setMetadataURIs": "SKIPPED (optional; gas conserved)",
+    "pulse": {
+      "tx": "0xab876fed2fdf7553e754c86f6dc76430d3f452dc164db9c67aa50e047d7ac31a",
+      "epoch": 0,
+      "amount_wei": "125000000000000",
+      "share_wei": "125000000000000",
+      "litCount": 1,
+      "note": "Landed (likely via concurrent worker or prior attempt); epochCount=1 confirmed"
+    },
+    "claim": {
+      "tx": "0xcf2b392df64ef24f3ca297673af5db8e860d2c2acfda5e97249cbad517398fee",
+      "tokenId": 1,
+      "status": "0x1",
+      "payout_wei": "125000000000000",
+      "path": "ETH via dialed+unrouted hopper.release (slot0 AMZN)"
+    },
+    "status": "COMPLETE \u2014 pulse+claim OK"
+  },
+  "note": "SECOND stack \u2014 short 900s Hopper lock + micro Pulse ladder. Distinct from 7-day CollectionNFT at 0xe1cC988CeC1C29764ba18523635De82d0C9B518F. Never mainnet 4663."
+}

@@ -18,6 +18,7 @@ docs/*
 !docs/OPENSEA_STUDIO_SEADROP.md
 !docs/TESTNET_DEPLOY.md
 !docs/RH_TESTNET_DEPLOY_ADDRESSES.md
+!docs/RH_TESTNET_MICRO_SMOKE.md
 
 # Dotenv file
 .env
@@ -36,6 +37,7 @@ node_modules/
 deployments/*
 !deployments/.gitkeep
 !deployments/robinhood-testnet.json
+!deployments/robinhood-testnet-micro.json
 
 # Generated artifacts
 artifacts/*
