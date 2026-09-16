@@ -100,19 +100,19 @@ export function ArtGallery() {
               </dd>
             </div>
           </dl>
-          <div className="-mx-1 flex gap-2 overflow-x-auto pb-1 [scrollbar-width:thin]">
+          <div className="-mx-1 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2 [scrollbar-width:thin]">
             {TEST_HOST_TOKENS.map((token) => (
               <figure
                 key={token.id}
-                className="w-[7.5rem] shrink-0 overflow-hidden rounded-xl border border-border/70 bg-black/40"
+                className="w-[17rem] shrink-0 snap-start overflow-hidden rounded-2xl border border-border/70 bg-black/40"
               >
                 <div className="grid grid-cols-2">
                   <img
                     src={token.dormantSrc}
                     alt={`Token ${token.id} dormant egg GIF`}
                     className="aspect-square w-full object-cover"
-                    width={128}
-                    height={128}
+                    width={256}
+                    height={256}
                     loading="lazy"
                     decoding="async"
                   />
@@ -120,13 +120,13 @@ export function ArtGallery() {
                     src={token.awakeSrc}
                     alt={`Token ${token.id} awake pet GIF`}
                     className="aspect-square w-full object-cover"
-                    width={128}
-                    height={128}
+                    width={256}
+                    height={256}
                     loading="lazy"
                     decoding="async"
                   />
                 </div>
-                <figcaption className="px-2 py-1 font-mono text-[10px] text-muted-foreground">
+                <figcaption className="px-3 py-2 font-mono text-xs tracking-wide text-muted-foreground">
                   #{token.id} egg · lit
                 </figcaption>
               </figure>
