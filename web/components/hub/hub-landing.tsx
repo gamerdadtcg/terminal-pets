@@ -40,7 +40,7 @@ const STEPS = [
   {
     n: "04",
     title: "Ignite",
-    body: `Off until reveal. Then pay ${SITE.igniteFeeTerm} (allotment or wallet, ${SITE.igniteSplit}) plus exactly ${SITE.igniteFeeEth}. ${SITE.igniteHopper} of $TERM becomes Hopper ETH once a swap router is set. ${SITE.igniteBurn} burns. ${SITE.igniteAllotmentRefill} returns to allotment escrow. The ETH splits ${SITE.igniteEthSplit} — not TermFund, not treasury.`,
+    body: `Off until reveal. Then pay ${SITE.igniteFeeTerm} (allotment or wallet, ${SITE.igniteSplit}) plus exactly ${SITE.igniteFeeEth}. ${SITE.igniteHopper} of $TERM becomes Hopper ETH once a swap router is set. ${SITE.igniteBurn} burns. ${SITE.igniteAllotmentRefill} returns to allotment escrow. The ETH splits ${SITE.igniteEthSplit} — not TermFund, not treasury. On-screen, Ignite is the hatch: the egg cracks, splits, flashes, and the pet wakes.`,
   },
   {
     n: "05",
@@ -254,11 +254,12 @@ export function HubLanding() {
                 GENERATIVE PFP
               </p>
               <p className="mt-3 text-lg font-medium">
-                Dormant egg. Awake on Ignite.
+                Dormant egg. Ignite cracks it open.
               </p>
               <p className="mt-2 text-sm text-muted-foreground">
                 Modular Pocket Critter GIFs (2048 compose, 512 export). Off-chain
-                JSON tokenURI — not the old on-chain SVG pets.
+                JSON tokenURI — not the old on-chain SVG pets. Ignite is the
+                hatch: crack, split, flash, awake pet.
               </p>
               <div className="mt-4 grid grid-cols-2 gap-2">
                 <figure className="overflow-hidden rounded-xl border border-border/70 bg-black/40">
@@ -286,6 +287,21 @@ export function HubLanding() {
                   </figcaption>
                 </figure>
               </div>
+              <figure className="mt-2 overflow-hidden rounded-xl border border-primary/25 bg-black/40">
+                <img
+                  src="/art/hatch/snag_hatch.gif"
+                  alt="SNAG Ignite hatch GIF: egg cracks, splits, flashes, and the pet wakes"
+                  className="aspect-square w-full object-cover"
+                  width={512}
+                  height={512}
+                />
+                <figcaption className="px-2 py-1.5 font-mono text-[10px] text-muted-foreground">
+                  Hatch · Ignite cracks the egg. Pet wakes.{" "}
+                  <Link href="/#art" className="text-primary underline-offset-2 hover:underline">
+                    More hatches
+                  </Link>
+                </figcaption>
+              </figure>
             </div>
             <div className="grid grid-cols-3 gap-3">
               <div className="rounded-2xl border border-border/70 bg-card/60 p-3">
@@ -303,7 +319,7 @@ export function HubLanding() {
               <div className="rounded-2xl border border-border/70 bg-card/60 p-3">
                 <p className="font-mono text-[10px] text-primary">LIT</p>
                 <p className="mt-1 text-xs text-muted-foreground">
-                  Awake pet GIF. Dial / Pulse eligible.
+                  Hatch complete. Awake pet GIF. Dial / Pulse eligible.
                 </p>
               </div>
             </div>
@@ -477,15 +493,16 @@ export function HubLanding() {
               ART
             </p>
             <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-              Generative PFPs. Egg sleeps. Ignite wakes it.
+              Generative PFPs. Egg sleeps. Ignite cracks it open.
             </h2>
             <p className="text-muted-foreground">
               {SITE.artSystem} system: modular layers, 12 pets, matching eggs,
               Robinhood-green backgrounds ({SITE.artCompose}). Reveal serves the
-              dormant egg GIF. Ignite swaps tokenURI to the awake pet GIF
-              (ERC-4906). This hub hosts tokens 1–25 as animated GIFs for
-              setMetadataURIs. Old on-chain SVG Track A pets and art-pass trait
-              catalogs are not product art.
+              dormant egg GIF. Ignite is the hatch — crack, split, flash — then
+              tokenURI swaps to the awake pet GIF (ERC-4906). Composed hatch
+              GIFs are below; frame PNGs stay in the art package. This hub hosts
+              tokens 1–25 as animated GIFs for setMetadataURIs. Old on-chain SVG
+              Track A pets and art-pass trait catalogs are not product art.
             </p>
           </div>
           <ArtGallery />

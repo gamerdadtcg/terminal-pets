@@ -19,6 +19,53 @@ export const TEST_HOST_TOKENS = Array.from(
   },
 );
 
+/** Composed Ignite hatch GIFs (crack → split → flash → awake). Native <img> only. */
+export const HATCH_PRIMARY = {
+  src: "/art/hatch/snag_hatch.gif",
+  pet: "SNAG",
+  petId: "P02",
+  alt: "SNAG Ignite hatch GIF: egg cracks, splits, flashes, and the pet wakes",
+  caption: "SNAG · Ignite hatch · crack → split → flash → awake",
+} as const;
+
+export const HATCH_OTHERS = [
+  {
+    src: "/art/hatch/P01_pudd_hatch.gif",
+    pet: "PUDD",
+    petId: "P01",
+    alt: "PUDD Ignite hatch GIF: egg cracks open and the pet wakes",
+    caption: "PUDD · P01",
+  },
+  {
+    src: "/art/hatch/P04_puppo_hatch.gif",
+    pet: "PUPPO",
+    petId: "P04",
+    alt: "PUPPO Ignite hatch GIF: egg cracks open and the pet wakes",
+    caption: "PUPPO · P04",
+  },
+  {
+    src: "/art/hatch/P08_blop_hatch.gif",
+    pet: "BLOP",
+    petId: "P08",
+    alt: "BLOP Ignite hatch GIF: egg cracks open and the pet wakes",
+    caption: "BLOP · P08",
+  },
+  {
+    src: "/art/hatch/P12_bolt_hatch.gif",
+    pet: "BOLT",
+    petId: "P12",
+    alt: "BOLT Ignite hatch GIF: egg cracks open and the pet wakes",
+    caption: "BOLT · P12",
+  },
+  {
+    src: "/art/hatch/anim_hatch.gif",
+    pet: "Full device",
+    petId: "anim",
+    alt: "Full-device Ignite hatch GIF: egg cracks, splits, flashes, pet wakes",
+    caption: "Full device · anim_hatch",
+  },
+] as const;
+
 export const ART_SAMPLES = [
   {
     id: 1,

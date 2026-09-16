@@ -1,6 +1,8 @@
 import {
   ART_SAMPLES,
   ART_SHEETS,
+  HATCH_OTHERS,
+  HATCH_PRIMARY,
   TEST_HOST_TOKENS,
   TEST_METADATA_URIS,
   TEST_TOKEN_COUNT,
@@ -34,9 +36,65 @@ function PetFrame({
   );
 }
 
+function HatchReveal() {
+  return (
+    <Card className="overflow-hidden border-primary/25">
+      <CardHeader className="gap-2">
+        <p className="font-mono text-[11px] text-primary">HATCH / IGNITE REVEAL</p>
+        <CardTitle className="text-xl sm:text-2xl">
+          Crack. Split. Flash. Awake.
+        </CardTitle>
+        <p className="text-sm text-muted-foreground">
+          Ignite breaks the dormant egg open. The shell cracks, splits, flashes,
+          and the matching pet wakes on the handheld. These are composed hatch
+          GIFs (native loops) — not the frame PNGs in{" "}
+          <code className="font-mono text-xs">art/anim/hatch/</code>.
+        </p>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <figure className="overflow-hidden rounded-2xl border border-primary/20 bg-black/40">
+          {/* GIFs must use img so the loop stays animated. */}
+          <img
+            src={HATCH_PRIMARY.src}
+            alt={HATCH_PRIMARY.alt}
+            className="mx-auto aspect-square w-full max-w-2xl object-cover"
+            width={512}
+            height={512}
+            decoding="async"
+          />
+          <figcaption className="px-3 py-2.5 font-mono text-xs tracking-wide text-muted-foreground">
+            {HATCH_PRIMARY.caption}
+          </figcaption>
+        </figure>
+        <div className="-mx-1 flex snap-x snap-mandatory gap-3 overflow-x-auto pb-2 [scrollbar-width:thin]">
+          {HATCH_OTHERS.map((hatch) => (
+            <figure
+              key={hatch.src}
+              className="w-[min(18rem,78vw)] shrink-0 snap-start overflow-hidden rounded-2xl border border-border/70 bg-black/40"
+            >
+              <img
+                src={hatch.src}
+                alt={hatch.alt}
+                className="aspect-square w-full object-cover"
+                width={512}
+                height={512}
+                decoding="async"
+              />
+              <figcaption className="px-3 py-2 font-mono text-[10px] tracking-wide text-muted-foreground">
+                {hatch.caption}
+              </figcaption>
+            </figure>
+          ))}
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
 export function ArtGallery() {
   return (
     <div className="space-y-8">
+      <HatchReveal />
       <div className="grid gap-4 md:grid-cols-3">
         {ART_SAMPLES.map((sample) => (
           <Card key={sample.id} className="overflow-hidden">
