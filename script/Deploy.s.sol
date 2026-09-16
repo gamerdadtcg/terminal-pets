@@ -38,6 +38,8 @@ import {ReceivableAccount} from "../src/tba/ReceivableAccount.sol";
 ///   TBA_REGISTRY / TBA_IMPLEMENTATION / TBA_SALT
 ///   MINT_OPEN              "true" to open public mint at deploy
 ///   SEADROP_ADDRESS        default canonical SeaDrop 1.0; `address(0)` = none (update later)
+///   HOPPER_LOCK_SECONDS    optional payout lock after reveal (0 / unset → CollectionConfig.HOPPER_LOCK = 7 days)
+///                          Testnet Pulse smoke: 900 (15m) on a NEW deploy. Do not retarget an existing 7d Hopper.
 ///
 /// Pulse thresholds are a ladder in PulseDistributor (not a deploy env).
 /// Ignite allotment: MAX_SUPPLY × IGNITE_FEE_TERM minted to IgniteModule.
@@ -64,6 +66,7 @@ contract Deploy is Script {
         address tbaImplementation;
         bytes32 tbaSalt;
         address seaDrop;
+        uint256 hopperLock;
     }
 
     function run() external {
@@ -97,10 +100,11 @@ contract Deploy is Script {
         p.tbaImplementation = vm.envOr("TBA_IMPLEMENTATION", address(0));
         p.tbaSalt = vm.envOr("TBA_SALT", bytes32(0));
         p.seaDrop = vm.envOr("SEADROP_ADDRESS", CollectionConfig.SEADROP);
+        p.hopperLock = vm.envOr("HOPPER_LOCK_SECONDS", uint256(0));
     }
 
     function _deploy(Params memory p) internal {
-        Hopper hopper = new Hopper(p.owner);
+        Hopper hopper = new Hopper(p.owner, p.hopperLock);
         RoyaltySplitter splitter = new RoyaltySplitter(address(hopper), p.treasury, p.owner);
         address[] memory allowedSeaDrop;
         if (p.seaDrop != address(0)) {
@@ -174,6 +178,7 @@ contract Deploy is Script {
         if (p.mintOpen) nft.setMintOpen(true);
 
         console.log("Hopper", address(hopper));
+        console.log("HopperPayoutLock", hopper.payoutLock());
         console.log("RoyaltySplitter", address(splitter));
         console.log("Treasury", p.treasury);
         console.log("TermToken", address(term));

@@ -30,7 +30,7 @@ contract HopperLockTest is Test {
 
     function setUp() public {
         vm.startPrank(owner);
-        hopper = new Hopper(owner);
+        hopper = new Hopper(owner, 0);
         RoyaltySplitter splitter = new RoyaltySplitter(address(hopper), treasury, owner);
         nft = new CollectionNFT(
             CollectionConfig.NAME,
@@ -152,5 +152,29 @@ contract HopperLockTest is Test {
         vm.expectRevert(abi.encodeWithSelector(Hopper.HopperLocked.selector, hopper.hopperUnlockTime()));
         vm.prank(address(pulse));
         hopper.reserve(0.1 ether);
+    }
+
+    function test_zeroPayoutLockUsesCollectionConfigDefault() public {
+        Hopper h = new Hopper(owner, 0);
+        assertEq(h.payoutLock(), CollectionConfig.HOPPER_LOCK);
+        assertEq(CollectionConfig.HOPPER_LOCK, 7 days);
+    }
+
+    function test_customPayoutLock_unlocksAfterConfiguredDuration() public {
+        uint256 lock = 15 minutes;
+        Hopper h = new Hopper(owner, lock);
+        assertEq(h.payoutLock(), lock);
+
+        h.bindCollection();
+        h.notifyReveal();
+
+        uint256 unlock = h.hopperUnlockTime();
+        assertEq(unlock, block.timestamp + lock);
+        assertFalse(h.hopperUnlocked());
+
+        vm.warp(unlock - 1);
+        assertFalse(h.hopperUnlocked());
+        vm.warp(unlock);
+        assertTrue(h.hopperUnlocked());
     }
 }

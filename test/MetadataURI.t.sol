@@ -29,7 +29,7 @@ contract MetadataURITest is Test {
 
     function setUp() public {
         vm.startPrank(owner);
-        hopper = new Hopper(owner);
+        hopper = new Hopper(owner, 0);
         splitter = new RoyaltySplitter(address(hopper), treasury, owner);
         nft = new CollectionNFT(
             CollectionConfig.NAME,

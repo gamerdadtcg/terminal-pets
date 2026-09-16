@@ -45,12 +45,13 @@ Recommended:
 | `SEADROP_ADDRESS=0x0000000000000000000000000000000000000000` | Authorizes **no** SeaDrop. Canonical 1.0 is not listed on RH testnet. Unset would default to `CollectionConfig.SEADROP` and whitelist an address that is not a Studio Drop on this chain. |
 | `MINT_OPEN=false` | Keep dapp mint closed; smoke uses `teamMint`. |
 | `OWNER` | Defaults to the deployer. Leave blank unless a different owner EOA should own the stack. |
+| `HOPPER_LOCK_SECONDS` | Optional. Unset or `0` → production default `CollectionConfig.HOPPER_LOCK` (7 days). For a **new** Pulse+claim smoke stack only, set `900` (15 minutes). Do **not** change or retarget the existing 7-day testnet deploy. |
 
 Leave DEX adapters blank (`TERM_LP_ROUTER`, `TERM_POOL`, `TERM_SWAP_ROUTER`, `PULSE_ROUTER`). Testnet smoke does not need a live pool. Ignite will park the `$TERM` Hopper cut and the ETH burn-half until a router exists — that is expected.
 
 Leave stock tokens unset at deploy. Owner `setStockToken` after, using only the [documented AMZN + TSLA samples](DIAL.md). **Do not invent** HOOD / AAPL / MSFT / GOOGL / META / NVDA addresses.
 
-`CollectionConfig` defaults still apply: free mint **4444** total, **200** team reserve / **4244** public, Ignite **0.002 ETH** + **1,000 `$TERM`**, Hopper lock **7 days after `reveal()`**.
+`CollectionConfig` defaults still apply: free mint **4444** total, **200** team reserve / **4244** public, Ignite **0.002 ETH** + **1,000 `$TERM`**, Hopper lock **7 days after `reveal()`** unless `HOPPER_LOCK_SECONDS` is set on a new deploy.
 
 ## 3. Dry-run (no `--broadcast`)
 
@@ -99,6 +100,20 @@ forge script script/Deploy.s.sol:Deploy \
 ```
 
 Copy the console-logged addresses into `deployments/robinhood-testnet.json` (shape below). Foundry also writes `broadcast/Deploy.s.sol/46630/`.
+
+### 4.1 Short-lock Pulse smoke (new stack only)
+
+The recorded 46630 Hopper is a **7-day** lock. Leave that stack alone.
+
+To smoke Pulse + claim without waiting a week, broadcast a **second** testnet deploy with a 15-minute lock:
+
+```bash
+source .env
+export HOPPER_LOCK_SECONDS=900
+forge script script/Deploy.s.sol:Deploy --rpc-url testnet --broadcast
+```
+
+Confirm console `HopperPayoutLock` is `900`. Record those new addresses separately; do not overwrite the 7-day `deployments/robinhood-testnet.json` unless you intend to. Unset `HOPPER_LOCK_SECONDS` (or set `0`) for any production-shaped deploy — that uses `CollectionConfig.HOPPER_LOCK` (7 days). **Do not broadcast to mainnet.**
 
 ## 5. Post-deploy smoke (owner txs)
 
@@ -153,7 +168,7 @@ Owner may call immediately (24h delay is for *anyone else*).
 cast send "$COLLECTION" "reveal()" --rpc-url testnet
 ```
 
-This enables Ignite, `$TERM` transfers, dormant-egg metadata, and the 5/2.5 royalty split. It also **starts** the Hopper 7-day payout lock (`hopperUnlockTime = revealedAt + 7 days`).
+This enables Ignite, `$TERM` transfers, dormant-egg metadata, and the 5/2.5 royalty split. It also **starts** the Hopper payout lock (`hopperUnlockTime = revealedAt + payoutLock`). Default `payoutLock` is 7 days. A short-lock smoke deploy with `HOPPER_LOCK_SECONDS=900` uses 15 minutes instead.
 
 ### 5.5 Ignite one token
 
@@ -182,7 +197,9 @@ cast call "$HOPPER" "hopperUnlockTime()(uint256)" --rpc-url testnet
 cast call "$HOPPER" "hopperUnlocked()(bool)" --rpc-url testnet
 ```
 
-`hopperUnlocked()` must be **false** until seven days after reveal. Pulse / `reserve` / `release` stay locked. Ignite deposits during that week still accrue. Do not wait this out for smoke; just confirm the timestamp is `revealedAt + 604800`.
+`hopperUnlocked()` is **false** until `revealedAt + payoutLock`. On the existing 7-day testnet stack that is `revealedAt + 604800`. Pulse / `reserve` / `release` stay locked. Ignite deposits during the lock still accrue.
+
+**Short-lock Pulse + claim smoke** needs a **new** deploy. Do not change the existing 7-day Hopper. Set `HOPPER_LOCK_SECONDS=900` (15 minutes) in `.env` and broadcast `Deploy.s.sol` again to testnet. Console logs `HopperPayoutLock` as `900`. After `reveal()`, wait 15 minutes (or `cast call` until `hopperUnlocked()` is true), then Pulse / claim. Leave `HOPPER_LOCK_SECONDS` unset (or `0`) for production-shaped 7-day deploys.
 
 ## 6. Verify on Blockscout (46630)
 
@@ -259,7 +276,7 @@ Do not invent a `deployments/robinhood-mainnet.json` from this plan.
 
 ## References
 
-- `script/Deploy.s.sol` — deploy script (`PRIVATE_KEY`, `TREASURY_ADDRESS`, optional `SEADROP_ADDRESS`)
+- `script/Deploy.s.sol` — deploy script (`PRIVATE_KEY`, `TREASURY_ADDRESS`, optional `SEADROP_ADDRESS`, optional `HOPPER_LOCK_SECONDS`)
 - `script/smoke-testnet.md` — read-only `cast call` cheatsheet
 - `docs/DIAL.md` — Dial slots and testnet AMZN/TSLA
 - `docs/OPENSEA_STUDIO_SEADROP.md` — Studio Drop (not this network)

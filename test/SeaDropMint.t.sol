@@ -55,7 +55,7 @@ contract SeaDropMintTest is Test {
         allowed[0] = address(seaDrop);
 
         vm.startPrank(owner);
-        hopper = new Hopper(owner);
+        hopper = new Hopper(owner, 0);
         splitter = new RoyaltySplitter(address(hopper), treasury, owner);
         nft = new CollectionNFT(
             CollectionConfig.NAME,
