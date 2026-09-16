@@ -257,8 +257,9 @@ export function TerminalApp() {
           <p className="text-muted-foreground">
             Terminal Pets mint Sealed with a TBA and a one-time $TERM Ignite
             allotment. Reveal (24h, or sooner if the owner activates) flips
-            art live, enables Ignite and $TERM trading, and switches royalties
-            from 7.5% TermFund to 5% Hopper / 2.5% treasury. Ignite is hybrid:
+            metadata live, enables Ignite and $TERM trading, and switches
+            royalties from 7.5% TermFund to 5% Hopper / 2.5% treasury. Ignite
+            is hybrid:
             1,000 $TERM ({SITE.igniteSplit}) plus exactly 0.002 ETH (
             {SITE.igniteEthSplit}). Team earns 0 from that ETH fee. After
             reveal, Hopper ETH comes from 5% of each secondary sale, 50% of

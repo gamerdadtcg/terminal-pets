@@ -10,8 +10,6 @@ evm_version = "cancun"
 fs_permissions = [
     { access = "read-write", path = "./deployments" },
     { access = "read-write", path = "./artifacts" },
-    { access = "read-write", path = "./web/public/pets" },
-    { access = "read-write", path = "./web/public/art-pass" },
 ]
 
 [rpc_endpoints]

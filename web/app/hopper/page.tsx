@@ -1,6 +1,5 @@
 import { HopperUnlockCountdown } from "@/components/hopper-unlock-countdown";
 import { HopperExplainer } from "@/components/hub/hopper-explainer";
-import { PetFrame } from "@/components/pet-frame";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { Button } from "@/components/ui/button";
@@ -26,13 +25,12 @@ export default function HopperPage() {
             <HopperExplainer />
           </div>
           <aside className="space-y-4 lg:pt-16">
-            <div className="rounded-2xl border border-border/70 bg-card/70 p-2">
-              <PetFrame
-                src="/pets/species-Ghost-id7-lit.svg"
-                label="Ghost #7 Lit"
-              />
-              <p className="mt-2 px-1 font-mono text-[11px] text-muted-foreground">
-                Hopper holds ETH until Pulse
+            <div className="rounded-2xl border border-border/70 bg-card/70 p-4">
+              <p className="font-mono text-[11px] tracking-[0.28em] text-primary">
+                MECHANICS
+              </p>
+              <p className="mt-2 text-sm text-muted-foreground">
+                Hopper holds ETH until Pulse. Pet art is disconnected.
               </p>
             </div>
             <Button className="w-full" asChild>

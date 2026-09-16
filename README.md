@@ -79,7 +79,7 @@ Deploy does **not** auto-reveal. Tokens mint **Sealed**. `CollectionNFT.revealAf
 
 `reveal()` is atomic:
 
-1. Flip metadata / art live (Sealed → Dormant traits; ERC-4906 batch update).
+1. Flip metadata live (Sealed → Dormant traits; ERC-4906 batch update). Placeholder SVG stays until art reconnects.
 2. Enable `$TERM` public transfers (`TermToken.enableTrading`).
 3. Enable Ignite (`IgniteModule.setIgniteEnabled(true)`).
 4. Switch RoyaltySplitter to live (`setLive`) — 5% Hopper / 2.5% treasury.
@@ -187,7 +187,7 @@ Add the network to any EVM wallet with those values.
 | `TermToken` | `$TERM` ERC-20 (`Terminal $TERM`). Owner mints treasury float + Ignite allotment escrow. Ignite burns 37.5%, refills allotment 37.5%, converts 25% to Hopper ETH. **Not fee-on-transfer.** Public transfers off until `reveal()`. |
 | `TermFund` | Custodies **pre-reveal 7.5% royalties** for `$TERM` LP. **No Ignite ETH.** No owner withdraw. `setRouter` + `seedLiquidity` when a DEX adapter exists. |
 | `TermMarket` | Canonical TERM/ETH swap companion. Skims 3% of opted-in pool volume → 1.5% Hopper / 1% burn / 0.5% treasury. Inactive until pool + swap router are set. Trading itself also waits on reveal. |
-| `CollectionNFT` | ERC-721Enumerable + ERC-2981. Mints **Sealed**. `reveal()` (owner anytime / anyone after 24h) flips art, Ignite, `$TERM` trading, and royalty mode. OpenSea-friendly `mintTo` (4244 public). Owner `teamMint` / `ownerMint` (200 reserve). Royalties locked to the RoyaltySplitter. Name **Terminal Pets**, symbol **TERM**. |
+| `CollectionNFT` | ERC-721Enumerable + ERC-2981. Mints **Sealed**. `reveal()` (owner anytime / anyone after 24h) flips metadata, Ignite, `$TERM` trading, and royalty mode. OpenSea-friendly `mintTo` (4244 public). Owner `teamMint` / `ownerMint` (200 reserve). Royalties locked to the RoyaltySplitter. Name **Terminal Pets**, symbol **TERM**. |
 | `IgniteModule` | Payable `ignite(tokenId)` — Dormant → Lit. **Off until reveal.** `$TERM` allotment or `transferFrom` (**25% Hopper / 37.5% burn / 37.5% allotment refill**) **plus exact 0.002 ETH (50% Hopper / 50% buy `$TERM` and burn)**. |
 | `Hopper` | ETH only. **Post-reveal** royalty slice + optional paid mint + **50% of Ignite ETH** + Ignite `$TERM` hopper cut (as ETH) + TermMarket skim when live. **No pre-reveal royalties. No admin withdraw.** Distributor locked once. |
 | `RoyaltySplitter` | ERC-2981 / OpenSea receiver. Pre-reveal: 100% → TermFund. Post-reveal (`setLive` in `reveal()`): 2/3 Hopper, 1/3 treasury. |
@@ -206,29 +206,9 @@ Read the comments at the top of `src/Hopper.sol`.
 
 ### Art / metadata
 
-Token art is on-chain SVG (no IPFS) — Tamagotchi-style handheld pets. Traits are derived from `keccak256(abi.encodePacked("AWAKEN_PET_V2", tokenId))` (seed unchanged). **Three visual states:**
+Art intentionally removed; mechanics only. Art will be reconnected separately.
 
-1. **Sealed / unrevealed** (mint → `reveal()`): one fixed gunmetal + gold handheld. SMIL **teaser reel** of possible lit pets (optional `?` poster as frame 0). Labeled UNREVEALED / SEALED. Does not leak this token’s shell or pet.
-2. **Dormant** (after reveal, before Ignite): **the token’s real shell stays fully colored**. Dark screen, **spotted mystery egg** (same shape for every token; spots jitter only). No species silhouette. Zzz optional.
-3. **Lit** (after Ignite): **same handheld chrome**. Only the screen changes: full color species, wallpaper, glow, blink, idle jitter. `tokenURI(..., true)` is this end state (what OpenSea shows).
-4. **Wake preview** (`wakeSvg`): hub/gallery SMIL — egg → crack → screen flash → Lit pet. Not the marketplace still.
-
-Until `reveal()`, `tokenURI` uses `hiddenSvg`. After reveal, categorical space is about **826 billion** combos (`8×12×8×6×8×12×12×4×6×3×6×3×5×6×4`: shell × shell color × buttons × antenna × wallpaper × species × body × belly × eyes × pupil × mouth × cheeks × ears × accessory × generation). Accessories are None, Bow, Cap, Star, Glasses, Halo. Species use distinct silhouettes (blob, cat, dino, fox, ghost, bunny, bird, frog, bear, robot, owl, bug). Dino / Ghost / Bird / Robot are drawn to read as those names. Dino Lit is a left-facing creature (round head, snout, neck, torso, hips, planted legs with feet, tapering tail, ridge on the spine). Bird glasses are thin rims on the pupils with a short arch — not a second pair of eyes. Each species has its own **face anchor** (eye center, gap, mouth, hat) so eyes and accessories sit on that head. Shells have 8 outlines (egg, round, square, wave, slim, wide, octagon, clam). The device prints centered `PET#{id}` and generation on the bezel. Art-pass stills: `artifacts/art-pass/` and `web/public/art-pass/`.
-
-OpenSea marketplace thumbnails often **do not play SVG SMIL animation**, even though the `image` data URI includes `<animate>`. Chat previews and PNG exports are also a single frozen frame.
-
-**How to see the animation**
-
-1. Run the dapp (`cd web && npm run dev`) and open **http://127.0.0.1:43147/gallery** or **http://127.0.0.1:43147/art-pass**. Those pages embed the raw SVGs with `<object>` so Chrome / Firefox / Safari play blink, idle, Zzz, the unrevealed teaser reel, and the Ignite crack sequence.
-2. Still PNG/GIF previews: `artifacts/art-pass/` and hub **`/art-pass/`** (12-species Lit sheet, Dino body sheet, Bird glasses vs bare, glasses combos, **trait catalog**, **100-pet sheet**, contrast sheet, teaser GIF, wake GIF). **`/art-pass/traits`** is every rolled option. **`/art-pass/sample-100`** is token ids 1–100 Lit.
-3. Or download a `.svg` (not `.png`) from `web/public/pets/` / `web/public/art-pass/` and open it with File → Open.
-4. Do **not** open the PNG, a Cursor/chat image, or an OpenSea card and expect motion. Those never play SMIL.
-
-Regenerate stills (no chain): `forge script script/ExportArtPass.s.sol && python3 script/rasterize_art_pass.py`
-
-Trait catalog (every option on a frozen base pet): `mkdir -p artifacts/art-pass/traits web/public/art-pass/traits && forge script script/ExportTraitCatalog.s.sol && python3 script/rasterize_trait_catalog.py` then open **http://127.0.0.1:43147/art-pass/traits**.
-
-100-pet combo sheet: `mkdir -p artifacts/art-pass/sample-100 web/public/art-pass/sample-100 && forge script script/ExportSample100.s.sol && python3 script/rasterize_art_pass.py` then open **http://127.0.0.1:43147/art-pass/sample-100**.
+`tokenURI` / `hiddenTokenURI` still compile and serve a **placeholder SVG** (plain rectangle + `PET#{id}` + SEALED / DORMANT / LIT). Trait rolls keep seed `keccak256(abi.encodePacked(keccak256("AWAKEN_PET_V2"), tokenId))` and `ACC_N = 6` so a later art agent can reconnect drawing without remapping ids. There are **no** art-pass stills, gallery pages, or trait-catalog export scripts in this repo.
 
 Metadata `name` is `Terminal Pet #{id}`. Collection `contractURI` name is `Terminal Pets`. `tokenTraits` returns Shell, Shell Color, Buttons, Antenna, Wallpaper, Species, Body, Eyes, Accessory, Generation, and State.
 
@@ -287,10 +267,9 @@ Public marketing site and wallet tools share one Next.js app.
 
 | Route | What |
 | --- | --- |
-| `/` | Hub: hero, how it works, Hopper, economics, art, status, FAQ, links |
+| `/` | Hub: hero, how it works, Hopper, economics, metadata note, status, FAQ, links |
 | `/hopper` | Dedicated Hopper + Pulse ladder explainer |
 | `/dial` | Dial explainer |
-| `/gallery` | Live SMIL SVGs (blink / idle / Zzz) |
 | `/app` | Ignite / allotment / Hopper / Pulse / TBA wallet tools (Dial picker not live) |
 
 ```bash
@@ -390,7 +369,7 @@ After a future broadcast, copy TermToken, TermFund, TermMarket, Hopper, RoyaltyS
 
 ## Tests
 
-`test/LaunchReveal.t.sol` covers the 24h window: sealed metadata, Ignite off, `$TERM` trading off, **pre-reveal royalties 100% TermFund** (Hopper and treasury unchanged, including when Hopper already holds ETH), owner may reveal early, anyone after 24h, and after reveal: live art + Ignite + trading + **5% Hopper / 2.5% treasury**.
+`test/LaunchReveal.t.sol` covers the 24h window: sealed metadata, Ignite off, `$TERM` trading off, **pre-reveal royalties 100% TermFund** (Hopper and treasury unchanged, including when Hopper already holds ETH), owner may reveal early, anyone after 24h, and after reveal: revealed metadata + Ignite + trading + **5% Hopper / 2.5% treasury**.
 
 `test/AwakenTerminals.t.sol` covers mint, **post-reveal** royalties (5/2.5), hybrid Ignite (0 ETH reverts; with mock router 25% Hopper ETH / 37.5% burn / 37.5% allotment refill + **0.002 ETH 50% Hopper / 50% buy-and-burn `$TERM`**; escrow refill; flushHopperTerm; flushIgniteEthBurn; claim-then-wallet `$TERM`), TermFund `seedLiquidity` does not spend allotment, no TermFund owner withdraw, Dial, Pulse ladder first rung, pro-rata Lit, **Dialed → stocks / undialed → `$TERM`**, TBA `$TERM` (not ETH), undialed revert without router, double-claim.
 
@@ -408,7 +387,7 @@ forge test -vv
 src/           CollectionNFT, Ignite, TermFund, TermMarket, Hopper, RoyaltySplitter, Pulse, TBA
 script/        Deploy.s.sol
 test/          Foundry tests (including MockTermPool / MockTermSwapRouter)
-web/           Next.js hub (`/`), Hopper, gallery, Terminal (`/app`)
+web/           Next.js hub (`/`), Hopper, Dial, Terminal (`/app`)
 ```
 
 Out of scope: a live DEX on Robinhood Chain, launchpad, and any real-world stock-token product. TermMarket is the fee companion; production skim stays off until a pool + router are set.

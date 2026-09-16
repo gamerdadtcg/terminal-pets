@@ -1,6 +1,5 @@
 import { ComingSoon } from "@/components/coming-soon";
 import { HopperExplainer } from "@/components/hub/hopper-explainer";
-import { PetFrame } from "@/components/pet-frame";
 import {
   Accordion,
   AccordionContent,
@@ -11,14 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { contractsConfigured } from "@/lib/contracts";
-import {
-  FAQ,
-  SHELLS,
-  SITE,
-  SPECIES,
-  TRAIT_AXES,
-  publicLinks,
-} from "@/lib/site";
+import { FAQ, SITE, publicLinks } from "@/lib/site";
 import Link from "next/link";
 
 const STEPS = [
@@ -30,7 +22,7 @@ const STEPS = [
   {
     n: "02",
     title: "24h reveal",
-    body: `Sealed for ${SITE.revealWindow}. Owner may call CollectionNFT.reveal() early; anyone can after that. One tx: art live, $TERM trading on, Ignite on, royalties switch from 7.5% TermFund to ${SITE.royaltyHopper} Hopper / ${SITE.royaltyTreasury} treasury.`,
+    body: `Sealed for ${SITE.revealWindow}. Owner may call CollectionNFT.reveal() early; anyone can after that. One tx: metadata live, $TERM trading on, Ignite on, royalties switch from 7.5% TermFund to ${SITE.royaltyHopper} Hopper / ${SITE.royaltyTreasury} treasury.`,
   },
   {
     n: "03",
@@ -90,18 +82,18 @@ const ROADMAP = [
   },
   {
     state: "done" as const,
-    title: "On-chain art",
-    body: `${SITE.artDomain} renderer. 12 species, 8 shells, SMIL sleep and wake. Tokens mint Sealed until reveal.`,
+    title: "NFT metadata stub",
+    body: `${SITE.artDomain} seed and trait tables stay. tokenURI is a placeholder SVG (PET# + state). Art intentionally removed; reconnect separately.`,
   },
   {
     state: "done" as const,
     title: "24h reveal gates",
-    body: "Mint → sealed metadata, Ignite off, $TERM trading off, 7.5% royalties → TermFund. CollectionNFT.reveal() flips art, Ignite, trading, and 5/2.5 royalties in one tx. Owner early; anyone after 24h.",
+    body: "Mint → sealed metadata, Ignite off, $TERM trading off, 7.5% royalties → TermFund. CollectionNFT.reveal() flips metadata, Ignite, trading, and 5/2.5 royalties in one tx. Owner early; anyone after 24h.",
   },
   {
     state: "now" as const,
     title: "Public hub",
-    body: "This site. Gallery plays the live SVGs. Terminal route is ready.",
+    body: "This site. Ignite / Pulse / Hopper / Dial hub pages. Terminal route is ready. Pet stills are not served.",
   },
   {
     state: "next" as const,
@@ -151,17 +143,18 @@ export function HubLanding() {
             </p>
             <p className="max-w-xl text-sm text-muted-foreground">
               {SITE.supply} handhelds. Mint on OpenSea. Pets mint Sealed for{" "}
-              {SITE.revealWindow}: placeholder art, Ignite off, $TERM transfers
-              off. Secondary royalties ({SITE.royalty}) go 100% to TermFund —
-              nothing to Hopper, nothing to treasury from that stream. Reveal
-              flips art live, turns on Ignite and $TERM trading, and switches
-              royalties to {SITE.royaltyHopper} Hopper / {SITE.royaltyTreasury}{" "}
-              treasury. Each pet includes a $TERM allotment for the token half
-              of Ignite. That 1,000 $TERM splits {SITE.igniteBurn} burn /{" "}
-              {SITE.igniteHopper} Hopper (as ETH) / {SITE.igniteAllotmentRefill}{" "}
-              allotment refill, plus {SITE.igniteFeeEth} split{" "}
-              {SITE.igniteEthSplit}. Team earns 0 from that ETH. Dial
-              aims a Lit Pulse at Stock Tokens — or leave it and earn $TERM.
+              {SITE.revealWindow}: placeholder metadata, Ignite off, $TERM
+              transfers off. Secondary royalties ({SITE.royalty}) go 100% to
+              TermFund — nothing to Hopper, nothing to treasury from that
+              stream. Reveal flips metadata live, turns on Ignite and $TERM
+              trading, and switches royalties to {SITE.royaltyHopper} Hopper /{" "}
+              {SITE.royaltyTreasury} treasury. Each pet includes a $TERM
+              allotment for the token half of Ignite. That 1,000 $TERM splits{" "}
+              {SITE.igniteBurn} burn / {SITE.igniteHopper} Hopper (as ETH) /{" "}
+              {SITE.igniteAllotmentRefill} allotment refill, plus{" "}
+              {SITE.igniteFeeEth} split {SITE.igniteEthSplit}. Team earns 0
+              from that ETH. Dial aims a Lit Pulse at Stock Tokens — or leave
+              it and earn $TERM.
             </p>
             <div className="flex flex-wrap gap-2">
               {links.opensea ? (
@@ -177,7 +170,7 @@ export function HubLanding() {
                 <Link href="/app">Ignite / Pulse app</Link>
               </Button>
               <Button variant="ghost" asChild>
-                <Link href="/gallery">Watch pets move</Link>
+                <Link href="/hopper">Hopper lock</Link>
               </Button>
             </div>
             <p className="font-mono text-[11px] text-muted-foreground">
@@ -186,27 +179,38 @@ export function HubLanding() {
             </p>
           </div>
 
-          <div className="grid grid-cols-2 gap-3 sm:gap-4">
-            <div className="col-span-2 rounded-[1.6rem] border border-primary/25 bg-card/70 p-3 shadow-[0_0_80px_rgba(240,180,41,0.08)]">
-              <PetFrame
-                src="/pets/species-Dino-id12-lit.svg"
-                label="Dino #12 Lit"
-              />
-              <p className="mt-2 px-1 font-mono text-[11px] text-muted-foreground">
-                PET#12 · Dino · Lit · full traits + blink
+          <div className="grid gap-3">
+            <div className="rounded-[1.6rem] border border-primary/25 bg-card/70 p-5 shadow-[0_0_80px_rgba(240,180,41,0.08)]">
+              <p className="font-mono text-[11px] tracking-[0.28em] text-primary">
+                MECHANICS ONLY
+              </p>
+              <p className="mt-3 text-lg font-medium">
+                Art intentionally removed. Art will be reconnected separately.
+              </p>
+              <p className="mt-2 text-sm text-muted-foreground">
+                tokenURI stays a placeholder SVG: rectangle + PET# + state.
+                Seed {SITE.artDomain} and trait tables are unchanged.
               </p>
             </div>
-            <div className="rounded-2xl border border-border/70 bg-card/60 p-2">
-              <PetFrame src="/pets/sealed-id3.svg" label="Cat #3 Sealed" />
-              <p className="mt-1 px-1 font-mono text-[10px] text-muted-foreground">
-                PET#3 · Unrevealed · possible-outcomes reel
-              </p>
-            </div>
-            <div className="rounded-2xl border border-border/70 bg-card/60 p-2">
-              <PetFrame src="/pets/id-1-dormant.svg" label="Bear #1 Dormant" />
-              <p className="mt-1 px-1 font-mono text-[10px] text-muted-foreground">
-                PET#1 · Dormant · spotted egg
-              </p>
+            <div className="grid grid-cols-3 gap-3">
+              <div className="rounded-2xl border border-border/70 bg-card/60 p-3">
+                <p className="font-mono text-[10px] text-primary">SEALED</p>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  Hidden metadata until reveal.
+                </p>
+              </div>
+              <div className="rounded-2xl border border-border/70 bg-card/60 p-3">
+                <p className="font-mono text-[10px] text-primary">DORMANT</p>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  Traits live. Ignite still off.
+                </p>
+              </div>
+              <div className="rounded-2xl border border-border/70 bg-card/60 p-3">
+                <p className="font-mono text-[10px] text-primary">LIT</p>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  After Ignite. Dial / Pulse eligible.
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -225,8 +229,9 @@ export function HubLanding() {
           </h2>
           <p className="text-muted-foreground">
             Pets mint Sealed. After {SITE.revealWindow} (or sooner if the owner
-            activates), reveal flips the art, enables Ignite and $TERM trading,
-            and routes royalties to Hopper/treasury. Until then the full{" "}
+            activates), reveal flips metadata, enables Ignite and $TERM
+            trading, and routes royalties to Hopper/treasury. Until then the
+            full{" "}
             {SITE.royalty} creator royalty seeds TermFund. Ignite is hybrid:{" "}
             {SITE.igniteFeeTerm} splits {SITE.igniteBurn} burn /{" "}
             {SITE.igniteHopper} Hopper / {SITE.igniteAllotmentRefill} allotment
@@ -336,71 +341,28 @@ export function HubLanding() {
         <div className="mx-auto max-w-6xl scroll-mt-28 px-4 py-16 sm:px-6">
           <div className="mb-8 max-w-2xl space-y-3">
             <p className="font-mono text-[11px] tracking-[0.28em] text-primary">
-              {SITE.artDomain}
+              ART
             </p>
             <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-              Twelve species. Two states. Fully on-chain.
+              Art intentionally removed; mechanics only.
             </h2>
             <p className="text-muted-foreground">
-              Seed is keccak of the domain plus token id. About {SITE.comboSpace}{" "}
-              categorical combos, plus jitter. Unrevealed cycles possible lit
-              pets on one gold handheld. After reveal, Dormant is a spotted
-              mystery egg until Ignite cracks it — same shell the whole time.
+              Art will be reconnected separately. CollectionNFT still mints,
+              reveals, and Ignites. tokenURI is a placeholder SVG (rectangle +
+              PET# + SEALED / DORMANT / LIT). Seed domain {SITE.artDomain} and
+              trait rolls are unchanged so a later art agent can plug drawing
+              back in without remapping ids.
             </p>
           </div>
-          <div className="mb-6 flex flex-wrap gap-2">
-            {SPECIES.map((pet) => (
-              <Badge key={pet.name} variant="outline" className="font-mono">
-                {pet.name}
-              </Badge>
-            ))}
-          </div>
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            {SPECIES.slice(0, 4).map((pet) => (
-              <Card key={pet.file}>
-                <CardContent className="pt-4">
-                  <PetFrame
-                    src={`/pets/${pet.file}`}
-                    label={`${pet.name} #${pet.id} Lit`}
-                  />
-                  <p className="mt-2 font-mono text-[11px] text-muted-foreground">
-                    {pet.name} · PET#{pet.id}
-                  </p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-          <div className="mt-6 grid gap-4 md:grid-cols-2">
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-base">Trait axes</CardTitle>
-              </CardHeader>
-              <CardContent className="flex flex-wrap gap-1.5">
-                {TRAIT_AXES.map((axis) => (
-                  <Badge key={axis} variant="secondary">
-                    {axis}
-                  </Badge>
-                ))}
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-base">Shells</CardTitle>
-              </CardHeader>
-              <CardContent className="flex flex-wrap gap-1.5">
-                {SHELLS.map((shell) => (
-                  <Badge key={shell} variant="secondary">
-                    {shell}
-                  </Badge>
-                ))}
-              </CardContent>
-            </Card>
-          </div>
-          <div className="mt-6">
-            <Button variant="outline" asChild>
-              <Link href="/gallery">Open the live SVG gallery</Link>
-            </Button>
-          </div>
+          <Card className="max-w-2xl">
+            <CardHeader>
+              <CardTitle className="text-base">NFT interface intact</CardTitle>
+            </CardHeader>
+            <CardContent className="text-sm text-muted-foreground">
+              name, symbol, tokenURI, contractURI, sealedTraits, and ERC-2981
+              stay. No art-pass stills, no gallery, no species sheets.
+            </CardContent>
+          </Card>
         </div>
       </section>
 
@@ -416,10 +378,10 @@ export function HubLanding() {
             Contracts ready. Not deployed.
           </h2>
           <p className="text-muted-foreground">
-            Ready to deploy — not broadcast. Deploy stays sealed (art hidden,
-            Ignite off, $TERM trading off, royalties to TermFund) until
-            CollectionNFT.reveal(). Addresses stay empty until Robinhood Chain
-            deploy and the OpenSea import.
+            Ready to deploy — not broadcast. Deploy stays sealed (placeholder
+            metadata, Ignite off, $TERM trading off, royalties to TermFund)
+            until CollectionNFT.reveal(). Addresses stay empty until Robinhood
+            Chain deploy and the OpenSea import.
           </p>
         </div>
         <ol className="space-y-3">
@@ -558,12 +520,15 @@ export function HubLanding() {
           </Card>
           <Card>
             <CardHeader>
-              <CardTitle className="text-base">Gallery</CardTitle>
+              <CardTitle className="text-base">Status</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3 text-sm text-muted-foreground">
-              <p>Live SMIL. Chat PNGs and marketplace thumbs stay frozen.</p>
+              <p>
+                Contracts ready, not deployed. Art disconnected until a later
+                reconnect.
+              </p>
               <Button size="sm" variant="outline" asChild>
-                <Link href="/gallery">Watch pets move</Link>
+                <Link href="/#status">See status</Link>
               </Button>
             </CardContent>
           </Card>
