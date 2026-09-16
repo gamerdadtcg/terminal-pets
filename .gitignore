@@ -11,12 +11,13 @@ out/
 /broadcast/*/31337/
 /broadcast/**/dry-run/
 
-# Docs (Foundry default). Keep the live art lock, Dial notes, SeaDrop Studio guide, and testnet deploy plan checked in.
+# Docs (Foundry default). Keep the live art lock, Dial notes, SeaDrop Studio guide, testnet deploy plan, and recorded 46630 addresses checked in.
 docs/*
 !docs/MAIN_ART_LOCK.md
 !docs/DIAL.md
 !docs/OPENSEA_STUDIO_SEADROP.md
 !docs/TESTNET_DEPLOY.md
+!docs/RH_TESTNET_DEPLOY_ADDRESSES.md
 
 # Dotenv file
 .env
@@ -34,6 +35,7 @@ node_modules/
 .next/
 deployments/*
 !deployments/.gitkeep
+!deployments/robinhood-testnet.json
 
 # Generated artifacts
 artifacts/*

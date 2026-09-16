@@ -211,7 +211,9 @@ Notes:
 
 ## 7. Record addresses
 
-`deployments/` is gitignored except `.gitkeep` (Foundry also has write permission there). After a real testnet broadcast, write **`deployments/robinhood-testnet.json`** locally (do not commit secrets):
+Recorded 46630 addresses: [`RH_TESTNET_DEPLOY_ADDRESSES.md`](RH_TESTNET_DEPLOY_ADDRESSES.md) and [`deployments/robinhood-testnet.json`](../deployments/robinhood-testnet.json).
+
+`deployments/` is gitignored except `.gitkeep` and the checked-in testnet address file (Foundry also has write permission there). After a real testnet broadcast, write **`deployments/robinhood-testnet.json`** (do not commit secrets):
 
 ```json
 {
