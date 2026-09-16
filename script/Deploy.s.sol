@@ -177,7 +177,12 @@ contract Deploy is Script {
         console.log("PublicSupply", p.maxSupply - p.teamReserve);
         console.log("RevealAfter", nft.revealAfter());
         console.log("Pre-reveal: sealed metadata, Ignite off, $TERM trading off, 7.5% royalties -> TermFund");
-        console.log("Reveal: owner anytime, or anyone after 24h. Then art + Ignite + trading + 5/2.5 royalty split");
+        console.log(
+            "Reveal: owner anytime, or anyone after 24h. Then dormant-egg metadata + Ignite + trading + 5/2.5 royalty split"
+        );
+        console.log(
+            "Metadata: owner setMetadataURIs(hidden, dormantBase/, litBase/) after pinning Pocket Critter JSON/GIFs"
+        );
         console.log("Do NOT auto-reveal at deploy. CollectionNFT.reveal() is the activation.");
         console.log("Team mint: CollectionNFT.teamMint(TREASURY_ADDRESS or TEAM_WALLET, qty)");
         console.log("READY TO DEPLOY - do not broadcast to 4663 until the user says go.");

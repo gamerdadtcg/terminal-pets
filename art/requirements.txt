@@ -1,0 +1,2 @@
+# Python 3.10+ recommended. Compose + collection export.
+Pillow>=10.0.0

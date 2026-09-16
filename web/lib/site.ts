@@ -4,7 +4,7 @@ export const SITE = {
   petName: "Terminal Pets",
   tagline: "Handheld pets that sleep until you Ignite them.",
     description:
-    "On-chain Tamagotchi terminals on Robinhood Chain. Free mint Friday, September 18, 2026, America/Los_Angeles (PT). Mint on OpenSea. Pets mint Sealed for 24 hours: placeholder metadata, Ignite off, $TERM trading off, and 7.5% secondary royalties all to TermFund. Reveal flips metadata, Ignite, trading, and royalties to 5% Hopper / 2.5% treasury. Hopper claims stay locked 7 days after reveal while ETH accrues. Each pet comes with a $TERM Ignite allotment. Ignite splits that 1,000 $TERM 37.5% burn / 25% Hopper (as ETH) / 37.5% allotment refill, plus 0.002 ETH split 50% buy-and-burn $TERM / 50% Hopper. Team earns 0 from that ETH fee. Dial up to 3 Stock Tokens. Pulse pays Dialed Lit in Stock Tokens and undialed Lit in $TERM — typically to the TBA. Hopper stays ETH.",
+    "Generative Pocket Critter PFPs on Robinhood Chain. Free mint Friday, September 18, 2026, America/Los_Angeles (PT). Mint on OpenSea. Pets mint Sealed for 24 hours: hidden metadata, Ignite off, $TERM trading off, and 7.5% secondary royalties all to TermFund. Reveal shows a dormant egg GIF, turns on Ignite and trading, and switches royalties to 5% Hopper / 2.5% treasury. Hopper claims stay locked 7 days after reveal while ETH accrues. Each pet comes with a $TERM Ignite allotment. Ignite splits that 1,000 $TERM 37.5% burn / 25% Hopper (as ETH) / 37.5% allotment refill, plus 0.002 ETH split 50% buy-and-burn $TERM / 50% Hopper. Team earns 0 from that ETH fee. Dial up to 3 Stock Tokens. Pulse pays Dialed Lit in Stock Tokens and undialed Lit in $TERM — typically to the TBA. Hopper stays ETH.",
   disclaimer:
     "Dial and Pulse Stock Token rewards are promotional on-chain rewards. They are not dividends, equity, shareholder rights, or ownership of any underlying company. Holding a pet or receiving Stock Tokens confers no legal interest in those companies. Not financial or investment advice.",
   chain: "Robinhood Chain",
@@ -38,7 +38,8 @@ export const SITE = {
   royalty: "7.5%",
   royaltyHopper: "5%",
   royaltyTreasury: "2.5%",
-  artDomain: "AWAKEN_PET_V2",
+  artSystem: "Pocket Critter",
+  artCompose: "2048 PNG compose / 512 GIF export",
   explorer: "https://robinhoodchain.blockscout.com",
   rpc: "https://rpc.mainnet.chain.robinhood.com",
 } as const;
@@ -108,7 +109,7 @@ export function publicLinks() {
 export const FAQ = [
   {
     q: "When can I mint?",
-    a: `${mintScheduleCopy.sentence} ${mintAllocation.sentence} After contracts land on Robinhood Chain and the OpenSea collection is imported. Each pet mints Sealed (placeholder metadata) with a TBA and a one-time $TERM Ignite allotment. Art, Ignite, and $TERM trading unlock at reveal.`,
+    a: `${mintScheduleCopy.sentence} ${mintAllocation.sentence} After contracts land on Robinhood Chain and the OpenSea collection is imported. Each pet mints Sealed (hidden metadata) with a TBA and a one-time $TERM Ignite allotment. Dormant egg art, Ignite, and $TERM trading unlock at reveal.`,
   },
   {
     q: "How many can I mint?",
@@ -164,7 +165,7 @@ export const FAQ = [
   },
   {
     q: "Where is the pet art?",
-    a: "Art intentionally removed; mechanics only. Art will be reconnected separately. tokenURI is a placeholder SVG (PET# + state) so mint / reveal / Ignite metadata still works.",
+    a: "Generative Pocket Critter PFPs — off-chain composed PNG/GIF, not on-chain SVG. Tokens mint Sealed (hidden metadata), reveal as a dormant egg rock GIF, then swap to the matching awake pet GIF on Ignite. Sample previews are on this hub. The old Track A TerminalRenderer SVG pets are not product art.",
   },
   {
     q: "Where do royalties go?",
@@ -176,7 +177,7 @@ export const FAQ = [
   },
   {
     q: "How does the 24h reveal work?",
-    a: "Tokens mint Sealed — placeholder metadata, Ignite off, $TERM public transfers off. Secondary royalties (7.5%) go entirely to TermFund. After 24 hours anyone can call reveal(); the owner can call it earlier. Reveal flips metadata live, turns on Ignite and $TERM trading, and switches royalties to 5% Hopper / 2.5% treasury. Hopper payouts then stay locked 7 days from that reveal timestamp so people can Ignite before claims open. ETH from Ignite and post-reveal royalties still accrues in the pot. LP is seeded later from TermFund (pre-reveal royalties + optional treasury $TERM), not by draining the Hopper or taking Ignite ETH.",
+    a: "Tokens mint Sealed — hidden metadata, Ignite off, $TERM public transfers off. Secondary royalties (7.5%) go entirely to TermFund. After 24 hours anyone can call reveal(); the owner can call it earlier. Reveal serves dormant egg metadata, turns on Ignite and $TERM trading, and switches royalties to 5% Hopper / 2.5% treasury. Hopper payouts then stay locked 7 days from that reveal timestamp so people can Ignite before claims open. ETH from Ignite and post-reveal royalties still accrues in the pot. LP is seeded later from TermFund (pre-reveal royalties + optional treasury $TERM), not by draining the Hopper or taking Ignite ETH.",
   },
   {
     q: "How do $TERM trading fees work?",

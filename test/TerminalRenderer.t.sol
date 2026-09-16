@@ -92,7 +92,7 @@ contract TerminalRendererTest is Test {
         string memory hidden = r.hiddenSvg(3);
         assertTrue(_contains(hidden, "PET#3"));
         assertTrue(_contains(hidden, "SEALED"));
-        assertTrue(_contains(hidden, "ART REMOVED"));
+        assertTrue(_contains(hidden, "OFF-CHAIN ART"));
         assertEq(r.hiddenTokenURI(3), TerminalRenderer.hiddenTokenURI(3));
     }
 

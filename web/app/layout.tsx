@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     template: "%s · Terminal Pets",
   },
   description:
-    "Handheld pets that sleep until you Ignite them. Free mint Friday, September 18, 2026 PT. 1,000 $TERM + 0.002 ETH. Live $TERM trades skim 3% (Hopper / burn / treasury). Mint. Ignite. Dormant→Lit. Hopper. Pulse. Dial. TBA. Robinhood Chain.",
+    "Handheld pets that sleep until you Ignite them. Generative Pocket Critter PFPs. Free mint Friday, September 18, 2026 PT. 1,000 $TERM + 0.002 ETH. Live $TERM trades skim 3% (Hopper / burn / treasury). Mint. Ignite. Dormant→Lit. Hopper. Pulse. Dial. TBA. Robinhood Chain.",
   openGraph: {
     title: "Terminal Pets",
     description:

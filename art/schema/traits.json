@@ -1,0 +1,3221 @@
+{
+  "version": 1,
+  "canvas": [
+    2048,
+    2048
+  ],
+  "incompatibilities": [
+    {
+      "screen": "S03_wide",
+      "handheld": [
+        "H04",
+        "H06",
+        "H07"
+      ],
+      "reason": "Wide bezel too wide for tall/capsule/compact screen wells"
+    },
+    {
+      "screen": "S04_tall",
+      "handheld": [
+        "H03",
+        "H07"
+      ],
+      "reason": "Tall bezel too tall for wide/compact wells"
+    },
+    {
+      "screen": "S07_thick",
+      "handheld": [
+        "H07"
+      ],
+      "reason": "Thick border eats too much of compact inner rect"
+    }
+  ],
+  "backgrounds": [
+    {
+      "id": "BG01",
+      "name": "Robinhood Dark",
+      "file": "BG01_solid_dark.png",
+      "hex": "#007A03",
+      "rarity": "common",
+      "weight": 60
+    },
+    {
+      "id": "BG02",
+      "name": "Robinhood Green",
+      "file": "BG02_solid_mdark.png",
+      "hex": "#00C805",
+      "rarity": "common",
+      "weight": 60
+    },
+    {
+      "id": "BG03",
+      "name": "Robinhood Light",
+      "file": "BG03_solid_medium.png",
+      "hex": "#5CFF60",
+      "rarity": "common",
+      "weight": 60
+    },
+    {
+      "id": "BG04",
+      "name": "Robinhood Green Vignette",
+      "file": "BG04_solid_bright.png",
+      "hex": "#00C805",
+      "rarity": "legendary",
+      "weight": 5
+    },
+    {
+      "id": "BG05",
+      "name": "Split Vertical Dark/Light",
+      "file": "BG05_split_v.png",
+      "rarity": "common",
+      "weight": 60
+    },
+    {
+      "id": "BG06",
+      "name": "Split Horizontal Dark/Light",
+      "file": "BG06_split_h.png",
+      "rarity": "common",
+      "weight": 60
+    },
+    {
+      "id": "BG07",
+      "name": "Diagonal Dark/Core",
+      "file": "BG07_diagonal.png",
+      "rarity": "rare",
+      "weight": 25
+    },
+    {
+      "id": "BG08",
+      "name": "Soft Vignette Core",
+      "file": "BG08_vignette.png",
+      "rarity": "common",
+      "weight": 60
+    },
+    {
+      "id": "BG09",
+      "name": "Dot Grid",
+      "file": "BG09_dots.png",
+      "rarity": "common",
+      "weight": 60
+    },
+    {
+      "id": "BG10",
+      "name": "Chevrons",
+      "file": "BG10_chevrons.png",
+      "rarity": "rare",
+      "weight": 25
+    },
+    {
+      "id": "BG11",
+      "name": "Soft Pixel Pattern",
+      "file": "BG11_soft_pixels.png",
+      "rarity": "common",
+      "weight": 60
+    },
+    {
+      "id": "BG12",
+      "name": "Triband",
+      "file": "BG12_triband.png",
+      "rarity": "rare",
+      "weight": 25
+    },
+    {
+      "id": "BG13",
+      "name": "Corner Accent",
+      "file": "BG13_corners.png",
+      "rarity": "epic",
+      "weight": 10
+    },
+    {
+      "id": "BG14",
+      "name": "Radial Soft",
+      "file": "BG14_radial.png",
+      "rarity": "epic",
+      "weight": 10
+    }
+  ],
+  "handhelds": [
+    {
+      "id": "H01",
+      "name": "Classic",
+      "file": "H01_classic.png",
+      "mask": "H01_mask.png",
+      "rarity": "common",
+      "weight": 60
+    },
+    {
+      "id": "H02",
+      "name": "Rounded Square",
+      "file": "H02_rounded_square.png",
+      "mask": "H02_mask.png",
+      "rarity": "common",
+      "weight": 60
+    },
+    {
+      "id": "H03",
+      "name": "Wide",
+      "file": "H03_wide.png",
+      "mask": "H03_mask.png",
+      "rarity": "common",
+      "weight": 60
+    },
+    {
+      "id": "H04",
+      "name": "Tall",
+      "file": "H04_tall.png",
+      "mask": "H04_mask.png",
+      "rarity": "rare",
+      "weight": 25
+    },
+    {
+      "id": "H05",
+      "name": "Egg-shaped",
+      "file": "H05_egg.png",
+      "mask": "H05_mask.png",
+      "rarity": "common",
+      "weight": 60
+    },
+    {
+      "id": "H06",
+      "name": "Capsule",
+      "file": "H06_capsule.png",
+      "mask": "H06_mask.png",
+      "rarity": "rare",
+      "weight": 25
+    },
+    {
+      "id": "H07",
+      "name": "Compact",
+      "file": "H07_compact.png",
+      "mask": "H07_mask.png",
+      "rarity": "common",
+      "weight": 60
+    },
+    {
+      "id": "H08",
+      "name": "Large Rounded",
+      "file": "H08_large.png",
+      "mask": "H08_mask.png",
+      "rarity": "common",
+      "weight": 60
+    },
+    {
+      "id": "H09",
+      "name": "Retro Toy",
+      "file": "H09_retro.png",
+      "mask": "H09_mask.png",
+      "rarity": "epic",
+      "weight": 10
+    },
+    {
+      "id": "H10",
+      "name": "Collector",
+      "file": "H10_collector.png",
+      "mask": "H10_mask.png",
+      "rarity": "legendary",
+      "weight": 5
+    }
+  ],
+  "shell_colors": [
+    {
+      "id": "white",
+      "hex": "#F5F5F5",
+      "rarity": "common",
+      "weight": 60
+    },
+    {
+      "id": "black",
+      "hex": "#1A1A1A",
+      "rarity": "common",
+      "weight": 60
+    },
+    {
+      "id": "light_gray",
+      "hex": "#C8C8C8",
+      "rarity": "common",
+      "weight": 60
+    },
+    {
+      "id": "dark_gray",
+      "hex": "#4A4A4A",
+      "rarity": "common",
+      "weight": 60
+    },
+    {
+      "id": "cream",
+      "hex": "#F5E6C8",
+      "rarity": "common",
+      "weight": 60
+    },
+    {
+      "id": "pink",
+      "hex": "#FF8FB8",
+      "rarity": "common",
+      "weight": 60
+    },
+    {
+      "id": "red",
+      "hex": "#E84545",
+      "rarity": "common",
+      "weight": 60
+    },
+    {
+      "id": "orange",
+      "hex": "#FF8C42",
+      "rarity": "rare",
+      "weight": 25
+    },
+    {
+      "id": "yellow",
+      "hex": "#FFD93D",
+      "rarity": "rare",
+      "weight": 25
+    },
+    {
+      "id": "purple",
+      "hex": "#7B5EA7",
+      "rarity": "rare",
+      "weight": 25
+    },
+    {
+      "id": "lavender",
+      "hex": "#C5A3E0",
+      "rarity": "epic",
+      "weight": 10
+    },
+    {
+      "id": "blue",
+      "hex": "#3D7EFF",
+      "rarity": "common",
+      "weight": 60
+    },
+    {
+      "id": "light_blue",
+      "hex": "#7EC8FF",
+      "rarity": "common",
+      "weight": 60
+    },
+    {
+      "id": "mint",
+      "hex": "#7DFFC8",
+      "rarity": "epic",
+      "weight": 10
+    },
+    {
+      "id": "neon_green",
+      "hex": "#39FF14",
+      "optional": true,
+      "rarity": "legendary",
+      "weight": 5
+    }
+  ],
+  "shell_class": [
+    {
+      "id": "ALPHA",
+      "file": "alpha.png",
+      "rarity": "common",
+      "weight": 60
+    },
+    {
+      "id": "BETA",
+      "file": "beta.png",
+      "rarity": "rare",
+      "weight": 25
+    },
+    {
+      "id": "DELTA",
+      "file": "delta.png",
+      "rarity": "epic",
+      "weight": 10
+    },
+    {
+      "id": "OMEGA",
+      "file": "omega.png",
+      "rarity": "legendary",
+      "weight": 5
+    }
+  ],
+  "buttons": [
+    {
+      "id": "white",
+      "file": "buttons_white.png",
+      "hex": "#F0F0F0",
+      "rarity": "common",
+      "weight": 60
+    },
+    {
+      "id": "black",
+      "file": "buttons_black.png",
+      "hex": "#222222",
+      "rarity": "common",
+      "weight": 60
+    },
+    {
+      "id": "gray",
+      "file": "buttons_gray.png",
+      "hex": "#888888",
+      "rarity": "common",
+      "weight": 60
+    },
+    {
+      "id": "pink",
+      "file": "buttons_pink.png",
+      "hex": "#FF7AB0",
+      "rarity": "common",
+      "weight": 60
+    },
+    {
+      "id": "blue",
+      "file": "buttons_blue.png",
+      "hex": "#4A90FF",
+      "rarity": "common",
+      "weight": 60
+    },
+    {
+      "id": "green",
+      "file": "buttons_green.png",
+      "hex": "#3DCC7A",
+      "rarity": "rare",
+      "weight": 25
+    },
+    {
+      "id": "yellow",
+      "file": "buttons_yellow.png",
+      "hex": "#FFD040",
+      "rarity": "rare",
+      "weight": 25
+    },
+    {
+      "id": "orange",
+      "file": "buttons_orange.png",
+      "hex": "#FF8A30",
+      "rarity": "epic",
+      "weight": 10
+    }
+  ],
+  "antennas": [
+    {
+      "id": "classic",
+      "file": "A01_classic.png",
+      "rarity": "common",
+      "weight": 60
+    },
+    {
+      "id": "star",
+      "file": "A02_star.png",
+      "rarity": "common",
+      "weight": 60
+    },
+    {
+      "id": "heart",
+      "file": "A03_heart.png",
+      "rarity": "common",
+      "weight": 60
+    },
+    {
+      "id": "lightning",
+      "file": "A04_lightning.png",
+      "rarity": "rare",
+      "weight": 25
+    },
+    {
+      "id": "flower",
+      "file": "A05_flower.png",
+      "rarity": "common",
+      "weight": 60
+    },
+    {
+      "id": "spiral",
+      "file": "A06_spiral.png",
+      "rarity": "common",
+      "weight": 60
+    },
+    {
+      "id": "double",
+      "file": "A07_double.png",
+      "rarity": "common",
+      "weight": 60
+    },
+    {
+      "id": "mushroom",
+      "file": "A08_mushroom.png",
+      "rarity": "rare",
+      "weight": 25
+    },
+    {
+      "id": "crown",
+      "file": "A09_crown.png",
+      "rarity": "epic",
+      "weight": 10
+    },
+    {
+      "id": "orb",
+      "file": "A10_orb.png",
+      "rarity": "legendary",
+      "weight": 5
+    }
+  ],
+  "screens": [
+    {
+      "id": "S01",
+      "name": "Classic Vintage",
+      "file": "S01_classic.png",
+      "well": "dark",
+      "rarity": "common",
+      "weight": 60
+    },
+    {
+      "id": "S02",
+      "name": "Lavender Rounded",
+      "file": "S02_rounded.png",
+      "well": "dark",
+      "rarity": "common",
+      "weight": 60
+    },
+    {
+      "id": "S03",
+      "name": "Gold Chrome",
+      "file": "S03_wide.png",
+      "well": "dark",
+      "rarity": "epic",
+      "weight": 10
+    },
+    {
+      "id": "S04",
+      "name": "Neon Cyber",
+      "file": "S04_tall.png",
+      "well": "dark",
+      "rarity": "rare",
+      "weight": 25
+    },
+    {
+      "id": "S05",
+      "name": "Dark Well LEDs",
+      "file": "S05_dark.png",
+      "well": "dark",
+      "rarity": "common",
+      "weight": 60
+    },
+    {
+      "id": "S06",
+      "name": "Pearl Light Well",
+      "file": "S06_light.png",
+      "well": "light",
+      "rarity": "rare",
+      "weight": 25
+    },
+    {
+      "id": "S07",
+      "name": "Jeweled Thick",
+      "file": "S07_thick.png",
+      "well": "dark",
+      "rarity": "legendary",
+      "weight": 5
+    },
+    {
+      "id": "S08",
+      "name": "Minimal Ice Blue",
+      "file": "S08_minimal.png",
+      "well": "dark",
+      "rarity": "common",
+      "weight": 60
+    }
+  ],
+  "screen_effects": [
+    {
+      "id": "static",
+      "file": "FX01_static.png",
+      "rarity": "common",
+      "weight": 60
+    },
+    {
+      "id": "scanlines",
+      "file": "FX02_scanlines.png",
+      "rarity": "common",
+      "weight": 60
+    },
+    {
+      "id": "sparkles",
+      "file": "FX03_sparkles.png",
+      "rarity": "common",
+      "weight": 60
+    },
+    {
+      "id": "stars",
+      "file": "FX04_stars.png",
+      "rarity": "common",
+      "weight": 60
+    },
+    {
+      "id": "bubbles",
+      "file": "FX05_bubbles.png",
+      "rarity": "common",
+      "weight": 60
+    },
+    {
+      "id": "lightning",
+      "file": "FX06_lightning.png",
+      "rarity": "epic",
+      "weight": 10
+    },
+    {
+      "id": "pixel_rain",
+      "file": "FX07_pixel_rain.png",
+      "rarity": "rare",
+      "weight": 25
+    },
+    {
+      "id": "glitch",
+      "file": "FX08_glitch.png",
+      "rarity": "legendary",
+      "weight": 5
+    },
+    {
+      "id": "clouds",
+      "file": "FX09_clouds.png",
+      "rarity": "common",
+      "weight": 60
+    },
+    {
+      "id": "fire",
+      "file": "FX10_fire.png",
+      "rarity": "rare",
+      "weight": 25
+    },
+    {
+      "id": "leaves",
+      "file": "FX11_leaves.png",
+      "rarity": "common",
+      "weight": 60
+    },
+    {
+      "id": "digital_grid",
+      "file": "FX12_digital_grid.png",
+      "rarity": "rare",
+      "weight": 25
+    }
+  ],
+  "eggs": [
+    {
+      "id": "E01",
+      "file": "E01_pudd_cream.png",
+      "name": "PUDD Cream",
+      "pet": "PUDD",
+      "pet_id": "P01",
+      "rarity": "common",
+      "weight": 60
+    },
+    {
+      "id": "E02",
+      "file": "E02_snag_green.png",
+      "name": "SNAG Green",
+      "pet": "SNAG",
+      "pet_id": "P02",
+      "rarity": "common",
+      "weight": 60
+    },
+    {
+      "id": "E03",
+      "file": "E03_meowlet_lavender.png",
+      "name": "MEOWLET Lavender",
+      "pet": "MEOWLET",
+      "pet_id": "P03",
+      "rarity": "rare",
+      "weight": 25
+    },
+    {
+      "id": "E04",
+      "file": "E04_puppo_tan.png",
+      "name": "PUPPO Tan",
+      "pet": "PUPPO",
+      "pet_id": "P04",
+      "rarity": "common",
+      "weight": 60
+    },
+    {
+      "id": "E05",
+      "file": "E05_hoplit_mint.png",
+      "name": "HOPLIT Mint",
+      "pet": "HOPLIT",
+      "pet_id": "P05",
+      "rarity": "common",
+      "weight": 60
+    },
+    {
+      "id": "E06",
+      "file": "E06_zorp_alien.png",
+      "name": "ZORP Alien",
+      "pet": "ZORP",
+      "pet_id": "P06",
+      "rarity": "epic",
+      "weight": 10
+    },
+    {
+      "id": "E07",
+      "file": "E07_drakelet_peach.png",
+      "name": "DRAKELET Peach",
+      "pet": "DRAKELET",
+      "pet_id": "P07",
+      "rarity": "epic",
+      "weight": 10
+    },
+    {
+      "id": "E08",
+      "file": "E08_blop_magenta.png",
+      "name": "BLOP Magenta",
+      "pet": "BLOP",
+      "pet_id": "P08",
+      "rarity": "common",
+      "weight": 60
+    },
+    {
+      "id": "E09",
+      "file": "E09_brumble_earth.png",
+      "name": "BRUMBLE Earth",
+      "pet": "BRUMBLE",
+      "pet_id": "P09",
+      "rarity": "common",
+      "weight": 60
+    },
+    {
+      "id": "E10",
+      "file": "E10_pip_yellow.png",
+      "name": "PIP Yellow",
+      "pet": "PIP",
+      "pet_id": "P10",
+      "rarity": "rare",
+      "weight": 25
+    },
+    {
+      "id": "E11",
+      "file": "E11_gilli_blue.png",
+      "name": "GILLI Blue",
+      "pet": "GILLI",
+      "pet_id": "P11",
+      "rarity": "rare",
+      "weight": 25
+    },
+    {
+      "id": "E12",
+      "file": "E12_bolt_robot.png",
+      "name": "BOLT Robot",
+      "pet": "BOLT",
+      "pet_id": "P12",
+      "rarity": "legendary",
+      "weight": 5
+    }
+  ],
+  "pets": {
+    "P01": {
+      "name": "PUDD",
+      "folder": "P01_pudd",
+      "colors": [
+        {
+          "id": "pink",
+          "hex": "#FF9EC8",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "blue",
+          "hex": "#7EC8FF",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "mint",
+          "hex": "#7DFFB8",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "lavender",
+          "hex": "#C9A0FF",
+          "rarity": "legendary",
+          "weight": 5
+        },
+        {
+          "id": "cream",
+          "hex": "#FFE8B8",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "peach",
+          "hex": "#FFB090",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "lilac",
+          "hex": "#E0B0FF",
+          "rarity": "epic",
+          "weight": 10
+        },
+        {
+          "id": "sky",
+          "hex": "#A0D8FF",
+          "rarity": "rare",
+          "weight": 25
+        }
+      ],
+      "eyes": [
+        {
+          "id": "normal",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "happy",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "sleepy",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "angry",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "excited",
+          "rarity": "rare",
+          "weight": 25
+        },
+        {
+          "id": "sparkly",
+          "rarity": "epic",
+          "weight": 10
+        },
+        {
+          "id": "hearts",
+          "rarity": "legendary",
+          "weight": 5
+        },
+        {
+          "id": "wink",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "tiny",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "surprised",
+          "rarity": "rare",
+          "weight": 25
+        }
+      ],
+      "mouths": [
+        {
+          "id": "smile",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "open_smile",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "frown",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "tiny",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "surprised",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "tongue",
+          "rarity": "rare",
+          "weight": 25
+        },
+        {
+          "id": "angry",
+          "rarity": "legendary",
+          "weight": 5
+        },
+        {
+          "id": "laugh",
+          "rarity": "rare",
+          "weight": 25
+        },
+        {
+          "id": "sad",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "funny",
+          "rarity": "epic",
+          "weight": 10
+        }
+      ],
+      "accessories": [
+        {
+          "id": "none",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "hat",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "crown",
+          "rarity": "legendary",
+          "weight": 5
+        },
+        {
+          "id": "bow",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "bandana",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "headphones",
+          "rarity": "rare",
+          "weight": 25
+        },
+        {
+          "id": "glasses",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "flower",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "bowtie",
+          "rarity": "rare",
+          "weight": 25
+        },
+        {
+          "id": "party_hat",
+          "rarity": "epic",
+          "weight": 10
+        }
+      ],
+      "rarity": "common",
+      "weight": 60
+    },
+    "P02": {
+      "name": "SNAG",
+      "folder": "P02_snag",
+      "colors": [
+        {
+          "id": "green",
+          "hex": "#5CBF60",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "lime",
+          "hex": "#A8E63A",
+          "rarity": "rare",
+          "weight": 25
+        },
+        {
+          "id": "teal",
+          "hex": "#3DB8A0",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "orange",
+          "hex": "#FF8C42",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "sand",
+          "hex": "#D4B896",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "forest",
+          "hex": "#3A8B5C",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "olive",
+          "hex": "#8B9A3C",
+          "rarity": "legendary",
+          "weight": 5
+        },
+        {
+          "id": "aqua",
+          "hex": "#4ECDC4",
+          "rarity": "epic",
+          "weight": 10
+        }
+      ],
+      "eyes": [
+        {
+          "id": "normal",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "happy",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "sleepy",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "angry",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "excited",
+          "rarity": "rare",
+          "weight": 25
+        },
+        {
+          "id": "sparkly",
+          "rarity": "epic",
+          "weight": 10
+        },
+        {
+          "id": "hearts",
+          "rarity": "legendary",
+          "weight": 5
+        },
+        {
+          "id": "wink",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "tiny",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "surprised",
+          "rarity": "rare",
+          "weight": 25
+        }
+      ],
+      "mouths": [
+        {
+          "id": "smile",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "open_smile",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "frown",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "tiny",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "surprised",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "tongue",
+          "rarity": "rare",
+          "weight": 25
+        },
+        {
+          "id": "angry",
+          "rarity": "legendary",
+          "weight": 5
+        },
+        {
+          "id": "laugh",
+          "rarity": "rare",
+          "weight": 25
+        },
+        {
+          "id": "sad",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "funny",
+          "rarity": "epic",
+          "weight": 10
+        }
+      ],
+      "accessories": [
+        {
+          "id": "none",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "hat",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "crown",
+          "rarity": "legendary",
+          "weight": 5
+        },
+        {
+          "id": "bow",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "bandana",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "glasses",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "flower",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "bowtie",
+          "rarity": "rare",
+          "weight": 25
+        },
+        {
+          "id": "party_hat",
+          "rarity": "epic",
+          "weight": 10
+        }
+      ],
+      "rarity": "common",
+      "weight": 60
+    },
+    "P03": {
+      "name": "MEOWLET",
+      "folder": "P03_meowlet",
+      "colors": [
+        {
+          "id": "orange",
+          "hex": "#FF9A4A",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "gray",
+          "hex": "#A0A0A8",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "cream",
+          "hex": "#F5E6C8",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "calico",
+          "hex": "#E8A070",
+          "rarity": "legendary",
+          "weight": 5
+        },
+        {
+          "id": "black",
+          "hex": "#3A3A42",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "white",
+          "hex": "#F0F0F0",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "chocolate",
+          "hex": "#8B5A3C",
+          "rarity": "rare",
+          "weight": 25
+        },
+        {
+          "id": "silver",
+          "hex": "#C0C0C8",
+          "rarity": "epic",
+          "weight": 10
+        }
+      ],
+      "eyes": [
+        {
+          "id": "normal",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "happy",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "sleepy",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "angry",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "excited",
+          "rarity": "rare",
+          "weight": 25
+        },
+        {
+          "id": "sparkly",
+          "rarity": "epic",
+          "weight": 10
+        },
+        {
+          "id": "hearts",
+          "rarity": "legendary",
+          "weight": 5
+        },
+        {
+          "id": "wink",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "tiny",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "surprised",
+          "rarity": "rare",
+          "weight": 25
+        }
+      ],
+      "mouths": [
+        {
+          "id": "smile",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "open_smile",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "frown",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "tiny",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "surprised",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "tongue",
+          "rarity": "rare",
+          "weight": 25
+        },
+        {
+          "id": "angry",
+          "rarity": "legendary",
+          "weight": 5
+        },
+        {
+          "id": "laugh",
+          "rarity": "rare",
+          "weight": 25
+        },
+        {
+          "id": "sad",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "funny",
+          "rarity": "epic",
+          "weight": 10
+        }
+      ],
+      "accessories": [
+        {
+          "id": "none",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "hat",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "crown",
+          "rarity": "legendary",
+          "weight": 5
+        },
+        {
+          "id": "bow",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "bandana",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "headphones",
+          "rarity": "rare",
+          "weight": 25
+        },
+        {
+          "id": "glasses",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "flower",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "bowtie",
+          "rarity": "rare",
+          "weight": 25
+        },
+        {
+          "id": "party_hat",
+          "rarity": "epic",
+          "weight": 10
+        }
+      ],
+      "rarity": "rare",
+      "weight": 25
+    },
+    "P04": {
+      "name": "PUPPO",
+      "folder": "P04_puppo",
+      "colors": [
+        {
+          "id": "tan",
+          "hex": "#D4A574",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "brown",
+          "hex": "#8B6914",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "golden",
+          "hex": "#E8C060",
+          "rarity": "legendary",
+          "weight": 5
+        },
+        {
+          "id": "white",
+          "hex": "#F5F0E8",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "spotty",
+          "hex": "#C89060",
+          "rarity": "epic",
+          "weight": 10
+        },
+        {
+          "id": "cocoa",
+          "hex": "#6B4423",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "honey",
+          "hex": "#E8B848",
+          "rarity": "rare",
+          "weight": 25
+        },
+        {
+          "id": "ash",
+          "hex": "#9A9080",
+          "rarity": "common",
+          "weight": 60
+        }
+      ],
+      "eyes": [
+        {
+          "id": "normal",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "happy",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "sleepy",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "angry",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "excited",
+          "rarity": "rare",
+          "weight": 25
+        },
+        {
+          "id": "sparkly",
+          "rarity": "epic",
+          "weight": 10
+        },
+        {
+          "id": "hearts",
+          "rarity": "legendary",
+          "weight": 5
+        },
+        {
+          "id": "wink",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "tiny",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "surprised",
+          "rarity": "rare",
+          "weight": 25
+        }
+      ],
+      "mouths": [
+        {
+          "id": "smile",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "open_smile",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "frown",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "tiny",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "surprised",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "tongue",
+          "rarity": "rare",
+          "weight": 25
+        },
+        {
+          "id": "angry",
+          "rarity": "legendary",
+          "weight": 5
+        },
+        {
+          "id": "laugh",
+          "rarity": "rare",
+          "weight": 25
+        },
+        {
+          "id": "sad",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "funny",
+          "rarity": "epic",
+          "weight": 10
+        }
+      ],
+      "accessories": [
+        {
+          "id": "none",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "hat",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "crown",
+          "rarity": "legendary",
+          "weight": 5
+        },
+        {
+          "id": "bow",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "bandana",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "headphones",
+          "rarity": "rare",
+          "weight": 25
+        },
+        {
+          "id": "glasses",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "flower",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "bowtie",
+          "rarity": "rare",
+          "weight": 25
+        },
+        {
+          "id": "party_hat",
+          "rarity": "epic",
+          "weight": 10
+        }
+      ],
+      "rarity": "common",
+      "weight": 60
+    },
+    "P05": {
+      "name": "HOPLIT",
+      "folder": "P05_hoplit",
+      "colors": [
+        {
+          "id": "white",
+          "hex": "#F8F4F0",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "pink",
+          "hex": "#FFB0C8",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "gray",
+          "hex": "#B0B0B8",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "brown",
+          "hex": "#C89870",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "lavender",
+          "hex": "#D0B8E8",
+          "rarity": "epic",
+          "weight": 10
+        },
+        {
+          "id": "cream",
+          "hex": "#FFF0D0",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "peach",
+          "hex": "#FFC8A0",
+          "rarity": "rare",
+          "weight": 25
+        },
+        {
+          "id": "mint",
+          "hex": "#C0F0D8",
+          "rarity": "legendary",
+          "weight": 5
+        }
+      ],
+      "eyes": [
+        {
+          "id": "normal",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "happy",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "sleepy",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "angry",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "excited",
+          "rarity": "rare",
+          "weight": 25
+        },
+        {
+          "id": "sparkly",
+          "rarity": "epic",
+          "weight": 10
+        },
+        {
+          "id": "hearts",
+          "rarity": "legendary",
+          "weight": 5
+        },
+        {
+          "id": "wink",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "tiny",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "surprised",
+          "rarity": "rare",
+          "weight": 25
+        }
+      ],
+      "mouths": [
+        {
+          "id": "smile",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "open_smile",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "frown",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "tiny",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "surprised",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "tongue",
+          "rarity": "rare",
+          "weight": 25
+        },
+        {
+          "id": "angry",
+          "rarity": "legendary",
+          "weight": 5
+        },
+        {
+          "id": "laugh",
+          "rarity": "rare",
+          "weight": 25
+        },
+        {
+          "id": "sad",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "funny",
+          "rarity": "epic",
+          "weight": 10
+        }
+      ],
+      "accessories": [
+        {
+          "id": "none",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "hat",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "crown",
+          "rarity": "legendary",
+          "weight": 5
+        },
+        {
+          "id": "bow",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "bandana",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "headphones",
+          "rarity": "rare",
+          "weight": 25
+        },
+        {
+          "id": "glasses",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "flower",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "bowtie",
+          "rarity": "rare",
+          "weight": 25
+        },
+        {
+          "id": "party_hat",
+          "rarity": "epic",
+          "weight": 10
+        }
+      ],
+      "rarity": "common",
+      "weight": 60
+    },
+    "P06": {
+      "name": "ZORP",
+      "folder": "P06_zorp",
+      "colors": [
+        {
+          "id": "lime",
+          "hex": "#B8FF40",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "purple",
+          "hex": "#A060E0",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "cyan",
+          "hex": "#40E0E0",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "magenta",
+          "hex": "#E040A0",
+          "rarity": "rare",
+          "weight": 25
+        },
+        {
+          "id": "yellow",
+          "hex": "#E8E040",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "indigo",
+          "hex": "#6060C0",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "alien_green",
+          "hex": "#80FF80",
+          "rarity": "epic",
+          "weight": 10
+        },
+        {
+          "id": "plasma",
+          "hex": "#FF60FF",
+          "rarity": "legendary",
+          "weight": 5
+        }
+      ],
+      "eyes": [
+        {
+          "id": "normal",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "happy",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "sleepy",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "angry",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "excited",
+          "rarity": "rare",
+          "weight": 25
+        },
+        {
+          "id": "sparkly",
+          "rarity": "epic",
+          "weight": 10
+        },
+        {
+          "id": "hearts",
+          "rarity": "legendary",
+          "weight": 5
+        },
+        {
+          "id": "wink",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "tiny",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "surprised",
+          "rarity": "rare",
+          "weight": 25
+        }
+      ],
+      "mouths": [
+        {
+          "id": "smile",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "open_smile",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "frown",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "tiny",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "surprised",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "tongue",
+          "rarity": "rare",
+          "weight": 25
+        },
+        {
+          "id": "angry",
+          "rarity": "legendary",
+          "weight": 5
+        },
+        {
+          "id": "laugh",
+          "rarity": "rare",
+          "weight": 25
+        },
+        {
+          "id": "sad",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "funny",
+          "rarity": "epic",
+          "weight": 10
+        }
+      ],
+      "accessories": [
+        {
+          "id": "none",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "hat",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "crown",
+          "rarity": "legendary",
+          "weight": 5
+        },
+        {
+          "id": "bow",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "bandana",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "headphones",
+          "rarity": "rare",
+          "weight": 25
+        },
+        {
+          "id": "glasses",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "flower",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "bowtie",
+          "rarity": "rare",
+          "weight": 25
+        },
+        {
+          "id": "party_hat",
+          "rarity": "epic",
+          "weight": 10
+        }
+      ],
+      "rarity": "epic",
+      "weight": 10
+    },
+    "P07": {
+      "name": "DRAKELET",
+      "folder": "P07_drakelet",
+      "colors": [
+        {
+          "id": "crimson",
+          "hex": "#E04040",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "emerald",
+          "hex": "#40B060",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "sapphire",
+          "hex": "#4060C0",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "gold",
+          "hex": "#E0B040",
+          "rarity": "legendary",
+          "weight": 5
+        },
+        {
+          "id": "violet",
+          "hex": "#8040C0",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "slate",
+          "hex": "#708090",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "copper",
+          "hex": "#C07040",
+          "rarity": "rare",
+          "weight": 25
+        },
+        {
+          "id": "ice",
+          "hex": "#A0D0E8",
+          "rarity": "epic",
+          "weight": 10
+        }
+      ],
+      "eyes": [
+        {
+          "id": "normal",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "happy",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "sleepy",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "angry",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "excited",
+          "rarity": "rare",
+          "weight": 25
+        },
+        {
+          "id": "sparkly",
+          "rarity": "epic",
+          "weight": 10
+        },
+        {
+          "id": "hearts",
+          "rarity": "legendary",
+          "weight": 5
+        },
+        {
+          "id": "wink",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "tiny",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "surprised",
+          "rarity": "rare",
+          "weight": 25
+        }
+      ],
+      "mouths": [
+        {
+          "id": "smile",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "open_smile",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "frown",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "tiny",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "surprised",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "tongue",
+          "rarity": "rare",
+          "weight": 25
+        },
+        {
+          "id": "angry",
+          "rarity": "legendary",
+          "weight": 5
+        },
+        {
+          "id": "laugh",
+          "rarity": "rare",
+          "weight": 25
+        },
+        {
+          "id": "sad",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "funny",
+          "rarity": "epic",
+          "weight": 10
+        }
+      ],
+      "accessories": [
+        {
+          "id": "none",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "glasses",
+          "rarity": "rare",
+          "weight": 25
+        }
+      ],
+      "rarity": "epic",
+      "weight": 10
+    },
+    "P08": {
+      "name": "BLOP",
+      "folder": "P08_blop",
+      "colors": [
+        {
+          "id": "frog_green",
+          "hex": "#60C050",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "olive",
+          "hex": "#8B9A40",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "teal",
+          "hex": "#40A090",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "yellow_frog",
+          "hex": "#D0C040",
+          "rarity": "epic",
+          "weight": 10
+        },
+        {
+          "id": "blue_frog",
+          "hex": "#50A0C0",
+          "rarity": "rare",
+          "weight": 25
+        },
+        {
+          "id": "pink_frog",
+          "hex": "#E080A0",
+          "rarity": "legendary",
+          "weight": 5
+        },
+        {
+          "id": "dark_green",
+          "hex": "#3A8040",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "moss",
+          "hex": "#70A060",
+          "rarity": "common",
+          "weight": 60
+        }
+      ],
+      "eyes": [
+        {
+          "id": "normal",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "happy",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "sleepy",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "angry",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "excited",
+          "rarity": "rare",
+          "weight": 25
+        },
+        {
+          "id": "sparkly",
+          "rarity": "epic",
+          "weight": 10
+        },
+        {
+          "id": "hearts",
+          "rarity": "legendary",
+          "weight": 5
+        },
+        {
+          "id": "wink",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "tiny",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "surprised",
+          "rarity": "rare",
+          "weight": 25
+        }
+      ],
+      "mouths": [
+        {
+          "id": "smile",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "open_smile",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "frown",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "tiny",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "surprised",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "tongue",
+          "rarity": "rare",
+          "weight": 25
+        },
+        {
+          "id": "angry",
+          "rarity": "legendary",
+          "weight": 5
+        },
+        {
+          "id": "laugh",
+          "rarity": "rare",
+          "weight": 25
+        },
+        {
+          "id": "sad",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "funny",
+          "rarity": "epic",
+          "weight": 10
+        }
+      ],
+      "accessories": [
+        {
+          "id": "none",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "hat",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "crown",
+          "rarity": "legendary",
+          "weight": 5
+        },
+        {
+          "id": "bow",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "bandana",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "headphones",
+          "rarity": "rare",
+          "weight": 25
+        },
+        {
+          "id": "glasses",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "flower",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "bowtie",
+          "rarity": "rare",
+          "weight": 25
+        },
+        {
+          "id": "party_hat",
+          "rarity": "epic",
+          "weight": 10
+        }
+      ],
+      "rarity": "common",
+      "weight": 60
+    },
+    "P09": {
+      "name": "BRUMBLE",
+      "folder": "P09_brumble",
+      "colors": [
+        {
+          "id": "brown",
+          "hex": "#A07040",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "honey",
+          "hex": "#D0A050",
+          "rarity": "rare",
+          "weight": 25
+        },
+        {
+          "id": "cinnamon",
+          "hex": "#B07040",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "cream",
+          "hex": "#E8D0B0",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "dark_brown",
+          "hex": "#604020",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "ginger",
+          "hex": "#C08040",
+          "rarity": "epic",
+          "weight": 10
+        },
+        {
+          "id": "mocha",
+          "hex": "#806040",
+          "rarity": "legendary",
+          "weight": 5
+        },
+        {
+          "id": "sand",
+          "hex": "#D0B890",
+          "rarity": "common",
+          "weight": 60
+        }
+      ],
+      "eyes": [
+        {
+          "id": "normal",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "happy",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "sleepy",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "angry",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "excited",
+          "rarity": "rare",
+          "weight": 25
+        },
+        {
+          "id": "sparkly",
+          "rarity": "epic",
+          "weight": 10
+        },
+        {
+          "id": "hearts",
+          "rarity": "legendary",
+          "weight": 5
+        },
+        {
+          "id": "wink",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "tiny",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "surprised",
+          "rarity": "rare",
+          "weight": 25
+        }
+      ],
+      "mouths": [
+        {
+          "id": "smile",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "open_smile",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "frown",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "tiny",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "surprised",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "tongue",
+          "rarity": "rare",
+          "weight": 25
+        },
+        {
+          "id": "angry",
+          "rarity": "legendary",
+          "weight": 5
+        },
+        {
+          "id": "laugh",
+          "rarity": "rare",
+          "weight": 25
+        },
+        {
+          "id": "sad",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "funny",
+          "rarity": "epic",
+          "weight": 10
+        }
+      ],
+      "accessories": [
+        {
+          "id": "none",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "hat",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "crown",
+          "rarity": "legendary",
+          "weight": 5
+        },
+        {
+          "id": "bow",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "bandana",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "headphones",
+          "rarity": "rare",
+          "weight": 25
+        },
+        {
+          "id": "glasses",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "flower",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "bowtie",
+          "rarity": "rare",
+          "weight": 25
+        },
+        {
+          "id": "party_hat",
+          "rarity": "epic",
+          "weight": 10
+        }
+      ],
+      "rarity": "common",
+      "weight": 60
+    },
+    "P10": {
+      "name": "PIP",
+      "folder": "P10_pip",
+      "colors": [
+        {
+          "id": "yellow",
+          "hex": "#F0D040",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "bluebird",
+          "hex": "#50A0E0",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "red",
+          "hex": "#E05050",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "green",
+          "hex": "#60C060",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "orange",
+          "hex": "#F09040",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "purple",
+          "hex": "#9060C0",
+          "rarity": "epic",
+          "weight": 10
+        },
+        {
+          "id": "pink",
+          "hex": "#F080A0",
+          "rarity": "rare",
+          "weight": 25
+        },
+        {
+          "id": "white",
+          "hex": "#F0F0E8",
+          "rarity": "legendary",
+          "weight": 5
+        }
+      ],
+      "eyes": [
+        {
+          "id": "normal",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "happy",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "sleepy",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "angry",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "excited",
+          "rarity": "rare",
+          "weight": 25
+        },
+        {
+          "id": "sparkly",
+          "rarity": "epic",
+          "weight": 10
+        },
+        {
+          "id": "hearts",
+          "rarity": "legendary",
+          "weight": 5
+        },
+        {
+          "id": "wink",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "tiny",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "surprised",
+          "rarity": "rare",
+          "weight": 25
+        }
+      ],
+      "mouths": [
+        {
+          "id": "smile",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "open_smile",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "frown",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "tiny",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "surprised",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "tongue",
+          "rarity": "rare",
+          "weight": 25
+        },
+        {
+          "id": "angry",
+          "rarity": "legendary",
+          "weight": 5
+        },
+        {
+          "id": "laugh",
+          "rarity": "rare",
+          "weight": 25
+        },
+        {
+          "id": "sad",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "funny",
+          "rarity": "epic",
+          "weight": 10
+        }
+      ],
+      "accessories": [
+        {
+          "id": "none",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "hat",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "crown",
+          "rarity": "legendary",
+          "weight": 5
+        },
+        {
+          "id": "bow",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "bandana",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "glasses",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "flower",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "bowtie",
+          "rarity": "rare",
+          "weight": 25
+        },
+        {
+          "id": "party_hat",
+          "rarity": "epic",
+          "weight": 10
+        }
+      ],
+      "rarity": "rare",
+      "weight": 25
+    },
+    "P11": {
+      "name": "GILLI",
+      "folder": "P11_gilli",
+      "colors": [
+        {
+          "id": "pink",
+          "hex": "#FF90B0",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "peach",
+          "hex": "#FFB090",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "lavender",
+          "hex": "#C0A0E0",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "mint",
+          "hex": "#90E0C0",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "blue",
+          "hex": "#90C0F0",
+          "rarity": "rare",
+          "weight": 25
+        },
+        {
+          "id": "coral",
+          "hex": "#FF8070",
+          "rarity": "legendary",
+          "weight": 5
+        },
+        {
+          "id": "lilac",
+          "hex": "#D0B0E8",
+          "rarity": "epic",
+          "weight": 10
+        },
+        {
+          "id": "cream",
+          "hex": "#FFE0D0",
+          "rarity": "common",
+          "weight": 60
+        }
+      ],
+      "eyes": [
+        {
+          "id": "normal",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "happy",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "sleepy",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "angry",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "excited",
+          "rarity": "rare",
+          "weight": 25
+        },
+        {
+          "id": "sparkly",
+          "rarity": "epic",
+          "weight": 10
+        },
+        {
+          "id": "hearts",
+          "rarity": "legendary",
+          "weight": 5
+        },
+        {
+          "id": "wink",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "tiny",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "surprised",
+          "rarity": "rare",
+          "weight": 25
+        }
+      ],
+      "mouths": [
+        {
+          "id": "smile",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "open_smile",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "frown",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "tiny",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "surprised",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "tongue",
+          "rarity": "rare",
+          "weight": 25
+        },
+        {
+          "id": "angry",
+          "rarity": "legendary",
+          "weight": 5
+        },
+        {
+          "id": "laugh",
+          "rarity": "rare",
+          "weight": 25
+        },
+        {
+          "id": "sad",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "funny",
+          "rarity": "epic",
+          "weight": 10
+        }
+      ],
+      "accessories": [
+        {
+          "id": "none",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "hat",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "crown",
+          "rarity": "legendary",
+          "weight": 5
+        },
+        {
+          "id": "bow",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "bandana",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "glasses",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "flower",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "bowtie",
+          "rarity": "rare",
+          "weight": 25
+        },
+        {
+          "id": "party_hat",
+          "rarity": "epic",
+          "weight": 10
+        }
+      ],
+      "rarity": "rare",
+      "weight": 25
+    },
+    "P12": {
+      "name": "BOLT",
+      "folder": "P12_nib",
+      "colors": [
+        {
+          "id": "steel",
+          "hex": "#6A8FA8",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "chrome",
+          "hex": "#C0C8D0",
+          "rarity": "legendary",
+          "weight": 5
+        },
+        {
+          "id": "slate",
+          "hex": "#708090",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "mint",
+          "hex": "#7DFFC8",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "sky",
+          "hex": "#7EC8FF",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "graphite",
+          "hex": "#4A5560",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "ice",
+          "hex": "#B8D4E8",
+          "rarity": "rare",
+          "weight": 25
+        },
+        {
+          "id": "crimson",
+          "hex": "#E05050",
+          "rarity": "epic",
+          "weight": 10
+        }
+      ],
+      "eyes": [
+        {
+          "id": "normal",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "happy",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "sleepy",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "angry",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "excited",
+          "rarity": "rare",
+          "weight": 25
+        },
+        {
+          "id": "sparkly",
+          "rarity": "epic",
+          "weight": 10
+        },
+        {
+          "id": "hearts",
+          "rarity": "legendary",
+          "weight": 5
+        },
+        {
+          "id": "wink",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "tiny",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "surprised",
+          "rarity": "rare",
+          "weight": 25
+        }
+      ],
+      "mouths": [
+        {
+          "id": "smile",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "open_smile",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "frown",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "tiny",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "surprised",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "tongue",
+          "rarity": "rare",
+          "weight": 25
+        },
+        {
+          "id": "angry",
+          "rarity": "legendary",
+          "weight": 5
+        },
+        {
+          "id": "laugh",
+          "rarity": "rare",
+          "weight": 25
+        },
+        {
+          "id": "sad",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "funny",
+          "rarity": "epic",
+          "weight": 10
+        }
+      ],
+      "accessories": [
+        {
+          "id": "none",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "hat",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "crown",
+          "rarity": "legendary",
+          "weight": 5
+        },
+        {
+          "id": "bow",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "bandana",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "headphones",
+          "rarity": "rare",
+          "weight": 25
+        },
+        {
+          "id": "glasses",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "flower",
+          "rarity": "common",
+          "weight": 60
+        },
+        {
+          "id": "bowtie",
+          "rarity": "rare",
+          "weight": 25
+        },
+        {
+          "id": "party_hat",
+          "rarity": "epic",
+          "weight": 10
+        }
+      ],
+      "rarity": "legendary",
+      "weight": 5
+    }
+  },
+  "rarity_tiers": {
+    "common": {
+      "weight": 60,
+      "label": "Common",
+      "order": 0
+    },
+    "rare": {
+      "weight": 25,
+      "label": "Rare",
+      "order": 1
+    },
+    "epic": {
+      "weight": 10,
+      "label": "Epic",
+      "order": 2
+    },
+    "legendary": {
+      "weight": 5,
+      "label": "Legendary",
+      "order": 3
+    }
+  }
+}

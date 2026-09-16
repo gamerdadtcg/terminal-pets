@@ -1,0 +1,1187 @@
+{
+  "canvas": {
+    "w": 2048,
+    "h": 2048
+  },
+  "pixel_grid": 64,
+  "notes": "Screen content (pets/FX/eggs) uses uniform integer pixel scale: pixel_size = min(screen.w, screen.h) // 64. Scale is always square (ps*64)\u00d7(ps*64) via NEAREST; tall/wide wells letterbox/pillarbox (center paste) \u2014 they never squash pets. screen.w/h remain the well rect (may be non-square). Pet body/eyes/mouth/accessory given in 64-grid; compose places via scale_pixel_to_screen + centered paste.",
+  "handhelds": {
+    "H01": {
+      "id": "H01",
+      "name": "Classic",
+      "screen": {
+        "x": 640,
+        "y": 560,
+        "w": 768,
+        "h": 768
+      },
+      "buttons": [
+        {
+          "x": 763,
+          "y": 1430,
+          "r": 48
+        },
+        {
+          "x": 1024,
+          "y": 1430,
+          "r": 48
+        },
+        {
+          "x": 1285,
+          "y": 1430,
+          "r": 48
+        }
+      ],
+      "antenna": {
+        "x": 1024,
+        "y": 380
+      },
+      "shell_class": {
+        "x": 1024,
+        "y": 1601
+      },
+      "pet_id": {
+        "x": 1024,
+        "y": 1669,
+        "align": "center"
+      },
+      "pixel_size": 12,
+      "body_bbox": {
+        "x": 520,
+        "y": 420,
+        "w": 1008,
+        "h": 1280
+      }
+    },
+    "H02": {
+      "id": "H02",
+      "name": "Rounded Square",
+      "screen": {
+        "x": 640,
+        "y": 480,
+        "w": 768,
+        "h": 768
+      },
+      "buttons": [
+        {
+          "x": 775,
+          "y": 1340,
+          "r": 46
+        },
+        {
+          "x": 1024,
+          "y": 1340,
+          "r": 46
+        },
+        {
+          "x": 1273,
+          "y": 1340,
+          "r": 46
+        }
+      ],
+      "antenna": {
+        "x": 1024,
+        "y": 300
+      },
+      "shell_class": {
+        "x": 1024,
+        "y": 1500
+      },
+      "pet_id": {
+        "x": 1024,
+        "y": 1568,
+        "align": "center"
+      },
+      "pixel_size": 12,
+      "body_bbox": {
+        "x": 540,
+        "y": 360,
+        "w": 968,
+        "h": 1220
+      }
+    },
+    "H03": {
+      "id": "H03",
+      "name": "Wide",
+      "screen": {
+        "x": 576,
+        "y": 600,
+        "w": 896,
+        "h": 640
+      },
+      "buttons": [
+        {
+          "x": 703,
+          "y": 1318,
+          "r": 50
+        },
+        {
+          "x": 1024,
+          "y": 1318,
+          "r": 50
+        },
+        {
+          "x": 1345,
+          "y": 1318,
+          "r": 50
+        }
+      ],
+      "antenna": {
+        "x": 1024,
+        "y": 400
+      },
+      "shell_class": {
+        "x": 1024,
+        "y": 1463
+      },
+      "pet_id": {
+        "x": 1024,
+        "y": 1531,
+        "align": "center"
+      },
+      "pixel_size": 10,
+      "body_bbox": {
+        "x": 420,
+        "y": 440,
+        "w": 1208,
+        "h": 1160
+      }
+    },
+    "H04": {
+      "id": "H04",
+      "name": "Tall",
+      "screen": {
+        "x": 704,
+        "y": 480,
+        "w": 640,
+        "h": 896
+      },
+      "buttons": [
+        {
+          "x": 798,
+          "y": 1485,
+          "r": 44
+        },
+        {
+          "x": 1024,
+          "y": 1485,
+          "r": 44
+        },
+        {
+          "x": 1250,
+          "y": 1485,
+          "r": 44
+        }
+      ],
+      "antenna": {
+        "x": 1024,
+        "y": 300
+      },
+      "shell_class": {
+        "x": 1024,
+        "y": 1662
+      },
+      "pet_id": {
+        "x": 1024,
+        "y": 1730,
+        "align": "center"
+      },
+      "pixel_size": 10,
+      "body_bbox": {
+        "x": 580,
+        "y": 340,
+        "w": 888,
+        "h": 1400
+      }
+    },
+    "H05": {
+      "id": "H05",
+      "name": "Egg-shaped",
+      "screen": {
+        "x": 684,
+        "y": 572,
+        "w": 680,
+        "h": 680
+      },
+      "buttons": [
+        {
+          "x": 867,
+          "y": 1342,
+          "r": 44
+        },
+        {
+          "x": 1024,
+          "y": 1342,
+          "r": 46
+        },
+        {
+          "x": 1181,
+          "y": 1342,
+          "r": 44
+        }
+      ],
+      "antenna": {
+        "x": 1024,
+        "y": 320
+      },
+      "shell_class": {
+        "x": 1024,
+        "y": 1500
+      },
+      "pet_id": {
+        "x": 1024,
+        "y": 1568,
+        "align": "center"
+      },
+      "pixel_size": 11,
+      "body_bbox": {
+        "x": 560,
+        "y": 360,
+        "w": 928,
+        "h": 1280
+      }
+    },
+    "H06": {
+      "id": "H06",
+      "name": "Capsule",
+      "screen": {
+        "x": 712,
+        "y": 548,
+        "w": 624,
+        "h": 752
+      },
+      "buttons": [
+        {
+          "x": 863,
+          "y": 1376,
+          "r": 42
+        },
+        {
+          "x": 1024,
+          "y": 1376,
+          "r": 42
+        },
+        {
+          "x": 1185,
+          "y": 1376,
+          "r": 42
+        }
+      ],
+      "antenna": {
+        "x": 1024,
+        "y": 340
+      },
+      "shell_class": {
+        "x": 1024,
+        "y": 1520
+      },
+      "pet_id": {
+        "x": 1024,
+        "y": 1588,
+        "align": "center"
+      },
+      "pixel_size": 10,
+      "body_bbox": {
+        "x": 600,
+        "y": 380,
+        "w": 848,
+        "h": 1280
+      }
+    },
+    "H07": {
+      "id": "H07",
+      "name": "Compact",
+      "screen": {
+        "x": 704,
+        "y": 600,
+        "w": 640,
+        "h": 640
+      },
+      "buttons": [
+        {
+          "x": 821,
+          "y": 1334,
+          "r": 40
+        },
+        {
+          "x": 1024,
+          "y": 1334,
+          "r": 40
+        },
+        {
+          "x": 1227,
+          "y": 1334,
+          "r": 40
+        }
+      ],
+      "antenna": {
+        "x": 1024,
+        "y": 400
+      },
+      "shell_class": {
+        "x": 1024,
+        "y": 1495
+      },
+      "pet_id": {
+        "x": 1024,
+        "y": 1563,
+        "align": "center"
+      },
+      "pixel_size": 10,
+      "body_bbox": {
+        "x": 620,
+        "y": 440,
+        "w": 808,
+        "h": 1120
+      }
+    },
+    "H08": {
+      "id": "H08",
+      "name": "Large Rounded",
+      "screen": {
+        "x": 576,
+        "y": 480,
+        "w": 896,
+        "h": 896
+      },
+      "buttons": [
+        {
+          "x": 729,
+          "y": 1474,
+          "r": 52
+        },
+        {
+          "x": 1024,
+          "y": 1474,
+          "r": 52
+        },
+        {
+          "x": 1319,
+          "y": 1474,
+          "r": 52
+        }
+      ],
+      "antenna": {
+        "x": 1024,
+        "y": 280
+      },
+      "shell_class": {
+        "x": 1024,
+        "y": 1639
+      },
+      "pet_id": {
+        "x": 1024,
+        "y": 1707,
+        "align": "center"
+      },
+      "pixel_size": 14,
+      "body_bbox": {
+        "x": 460,
+        "y": 320,
+        "w": 1128,
+        "h": 1440
+      }
+    },
+    "H09": {
+      "id": "H09",
+      "name": "Retro Toy",
+      "screen": {
+        "x": 640,
+        "y": 560,
+        "w": 768,
+        "h": 704
+      },
+      "buttons": [
+        {
+          "x": 757,
+          "y": 1388,
+          "r": 50
+        },
+        {
+          "x": 1024,
+          "y": 1388,
+          "r": 52
+        },
+        {
+          "x": 1291,
+          "y": 1388,
+          "r": 50
+        }
+      ],
+      "antenna": {
+        "x": 1024,
+        "y": 360
+      },
+      "shell_class": {
+        "x": 1024,
+        "y": 1579
+      },
+      "pet_id": {
+        "x": 1024,
+        "y": 1647,
+        "align": "center"
+      },
+      "pixel_size": 11,
+      "body_bbox": {
+        "x": 500,
+        "y": 400,
+        "w": 1048,
+        "h": 1280
+      }
+    },
+    "H10": {
+      "id": "H10",
+      "name": "Collector",
+      "screen": {
+        "x": 640,
+        "y": 540,
+        "w": 768,
+        "h": 768
+      },
+      "buttons": [
+        {
+          "x": 766,
+          "y": 1408,
+          "r": 46
+        },
+        {
+          "x": 1035,
+          "y": 1408,
+          "r": 48
+        },
+        {
+          "x": 1304,
+          "y": 1408,
+          "r": 46
+        }
+      ],
+      "antenna": {
+        "x": 1040,
+        "y": 330
+      },
+      "shell_class": {
+        "x": 1024,
+        "y": 1577
+      },
+      "pet_id": {
+        "x": 1024,
+        "y": 1645,
+        "align": "center"
+      },
+      "pixel_size": 12,
+      "body_bbox": {
+        "x": 520,
+        "y": 380,
+        "w": 1016,
+        "h": 1300
+      }
+    }
+  },
+  "pets": {
+    "P01": {
+      "id": "P01",
+      "name": "PUDD",
+      "folder": "P01_pudd",
+      "body_64": {
+        "x": 16,
+        "y": 20,
+        "w": 32,
+        "h": 36
+      },
+      "eyes_64": {
+        "x": 26,
+        "y": 26,
+        "w": 12,
+        "h": 6
+      },
+      "mouth_64": {
+        "x": 28,
+        "y": 34,
+        "w": 8,
+        "h": 4
+      },
+      "accessory_64": {
+        "x": 20,
+        "y": 11,
+        "w": 24,
+        "h": 10
+      },
+      "view": "front",
+      "body": {
+        "x": 832,
+        "y": 800,
+        "w": 384,
+        "h": 432,
+        "note": "derived from body_64 @ H01 pixel_size=12; compose scales via screen rect"
+      },
+      "eyes": {
+        "x": 952,
+        "y": 872,
+        "w": 144,
+        "h": 72,
+        "note": "derived from *_64 @ H01 pixel_size=12; compose scales via screen rect"
+      },
+      "mouth": {
+        "x": 976,
+        "y": 968,
+        "w": 96,
+        "h": 48,
+        "note": "derived from *_64 @ H01 pixel_size=12; compose scales via screen rect"
+      },
+      "accessory": {
+        "x": 880,
+        "y": 692,
+        "w": 288,
+        "h": 120,
+        "note": "derived from *_64 @ H01 pixel_size=12; compose scales via screen rect"
+      }
+    },
+    "P02": {
+      "id": "P02",
+      "name": "SNAG",
+      "folder": "P02_snag",
+      "body_64": {
+        "x": 10,
+        "y": 18,
+        "w": 44,
+        "h": 36
+      },
+      "eyes_64": {
+        "x": 16,
+        "y": 22,
+        "w": 8,
+        "h": 7
+      },
+      "mouth_64": {
+        "x": 7,
+        "y": 30,
+        "w": 11,
+        "h": 5
+      },
+      "accessory_64": {
+        "x": 18,
+        "y": 5,
+        "w": 16,
+        "h": 11
+      },
+      "view": "three_quarter_left",
+      "body": {
+        "x": 760,
+        "y": 776,
+        "w": 528,
+        "h": 432,
+        "note": "derived from body_64 @ H01 pixel_size=12; compose scales via screen rect"
+      },
+      "eyes": {
+        "x": 832,
+        "y": 824,
+        "w": 96,
+        "h": 84,
+        "note": "derived from *_64 @ H01 pixel_size=12; compose scales via screen rect"
+      },
+      "mouth": {
+        "x": 724,
+        "y": 920,
+        "w": 132,
+        "h": 60,
+        "note": "derived from *_64 @ H01 pixel_size=12; compose scales via screen rect"
+      },
+      "accessory": {
+        "x": 856,
+        "y": 620,
+        "w": 192,
+        "h": 132,
+        "note": "derived from *_64 @ H01 pixel_size=12; compose scales via screen rect"
+      }
+    },
+    "P03": {
+      "id": "P03",
+      "name": "MEOWLET",
+      "folder": "P03_meowlet",
+      "body_64": {
+        "x": 14,
+        "y": 14,
+        "w": 36,
+        "h": 40
+      },
+      "eyes_64": {
+        "x": 20,
+        "y": 28,
+        "w": 24,
+        "h": 8
+      },
+      "mouth_64": {
+        "x": 28,
+        "y": 38,
+        "w": 8,
+        "h": 4
+      },
+      "accessory_64": {
+        "x": 24,
+        "y": 10,
+        "w": 16,
+        "h": 12
+      },
+      "view": "front",
+      "body": {
+        "x": 808,
+        "y": 728,
+        "w": 432,
+        "h": 480,
+        "note": "derived from body_64 @ H01 pixel_size=12; compose scales via screen rect"
+      },
+      "eyes": {
+        "x": 880,
+        "y": 896,
+        "w": 288,
+        "h": 96,
+        "note": "derived from *_64 @ H01 pixel_size=12; compose scales via screen rect"
+      },
+      "mouth": {
+        "x": 976,
+        "y": 1016,
+        "w": 96,
+        "h": 48,
+        "note": "derived from *_64 @ H01 pixel_size=12; compose scales via screen rect"
+      },
+      "accessory": {
+        "x": 928,
+        "y": 680,
+        "w": 192,
+        "h": 144,
+        "note": "derived from *_64 @ H01 pixel_size=12; compose scales via screen rect"
+      }
+    },
+    "P04": {
+      "id": "P04",
+      "name": "PUPPO",
+      "folder": "P04_puppo",
+      "body_64": {
+        "x": 5,
+        "y": 14,
+        "w": 54,
+        "h": 42
+      },
+      "eyes_64": {
+        "x": 22,
+        "y": 24,
+        "w": 20,
+        "h": 7
+      },
+      "mouth_64": {
+        "x": 28,
+        "y": 38,
+        "w": 8,
+        "h": 4
+      },
+      "accessory_64": {
+        "x": 24,
+        "y": 8,
+        "w": 16,
+        "h": 10
+      },
+      "view": "front",
+      "body": {
+        "x": 700,
+        "y": 728,
+        "w": 648,
+        "h": 504,
+        "note": "derived from *_64 @ H01 pixel_size=12; compose scales via screen rect"
+      },
+      "eyes": {
+        "x": 904,
+        "y": 848,
+        "w": 240,
+        "h": 84,
+        "note": "derived from *_64 @ H01 pixel_size=12; compose scales via screen rect"
+      },
+      "mouth": {
+        "x": 976,
+        "y": 1016,
+        "w": 96,
+        "h": 48,
+        "note": "derived from *_64 @ H01 pixel_size=12; compose scales via screen rect"
+      },
+      "accessory": {
+        "x": 928,
+        "y": 656,
+        "w": 192,
+        "h": 120,
+        "note": "derived from *_64 @ H01 pixel_size=12; compose scales via screen rect"
+      }
+    },
+    "P05": {
+      "id": "P05",
+      "name": "HOPLIT",
+      "folder": "P05_hoplit",
+      "body_64": {
+        "x": 18,
+        "y": 8,
+        "w": 28,
+        "h": 48
+      },
+      "eyes_64": {
+        "x": 24,
+        "y": 32,
+        "w": 16,
+        "h": 6
+      },
+      "mouth_64": {
+        "x": 28,
+        "y": 44,
+        "w": 8,
+        "h": 4
+      },
+      "accessory_64": {
+        "x": 26,
+        "y": 10,
+        "w": 12,
+        "h": 12
+      },
+      "view": "front",
+      "body": {
+        "x": 856,
+        "y": 656,
+        "w": 336,
+        "h": 576,
+        "note": "derived from body_64 @ H01 pixel_size=12; compose scales via screen rect"
+      },
+      "eyes": {
+        "x": 928,
+        "y": 944,
+        "w": 192,
+        "h": 72,
+        "note": "derived from *_64 @ H01 pixel_size=12; compose scales via screen rect"
+      },
+      "mouth": {
+        "x": 976,
+        "y": 1088,
+        "w": 96,
+        "h": 48,
+        "note": "derived from *_64 @ H01 pixel_size=12; compose scales via screen rect"
+      },
+      "accessory": {
+        "x": 952,
+        "y": 680,
+        "w": 144,
+        "h": 144,
+        "note": "derived from *_64 @ H01 pixel_size=12; compose scales via screen rect"
+      }
+    },
+    "P06": {
+      "id": "P06",
+      "name": "ZORP",
+      "folder": "P06_zorp",
+      "body_64": {
+        "x": 16,
+        "y": 10,
+        "w": 32,
+        "h": 44
+      },
+      "eyes_64": {
+        "x": 17,
+        "y": 16,
+        "w": 30,
+        "h": 14
+      },
+      "mouth_64": {
+        "x": 29,
+        "y": 46,
+        "w": 6,
+        "h": 3
+      },
+      "accessory_64": {
+        "x": 18,
+        "y": 1,
+        "w": 28,
+        "h": 11
+      },
+      "view": "front",
+      "body": {
+        "x": 832,
+        "y": 680,
+        "w": 384,
+        "h": 528,
+        "note": "derived from body_64 @ H01 pixel_size=12; compose scales via screen rect"
+      },
+      "eyes": {
+        "x": 844,
+        "y": 752,
+        "w": 360,
+        "h": 168,
+        "note": "derived from *_64 @ H01 pixel_size=12; compose scales via screen rect"
+      },
+      "mouth": {
+        "x": 988,
+        "y": 1112,
+        "w": 72,
+        "h": 36,
+        "note": "derived from *_64 @ H01 pixel_size=12; compose scales via screen rect"
+      },
+      "accessory": {
+        "x": 856,
+        "y": 572,
+        "w": 336,
+        "h": 132,
+        "note": "derived from *_64 @ H01 pixel_size=12; compose scales via screen rect"
+      }
+    },
+    "P07": {
+      "id": "P07",
+      "name": "DRAKELET",
+      "folder": "P07_drakelet",
+      "body_64": {
+        "x": 0,
+        "y": 1,
+        "w": 64,
+        "h": 58
+      },
+      "eyes_64": {
+        "x": 17,
+        "y": 17,
+        "w": 9,
+        "h": 7
+      },
+      "mouth_64": {
+        "x": 1,
+        "y": 25,
+        "w": 12,
+        "h": 6
+      },
+      "accessory_64": {
+        "x": 26,
+        "y": 32,
+        "w": 12,
+        "h": 9
+      },
+      "view": "three_quarter_left",
+      "body": {
+        "x": 640,
+        "y": 572,
+        "w": 768,
+        "h": 696,
+        "note": "derived from *_64 @ H01 pixel_size=12; compose scales via screen rect"
+      },
+      "eyes": {
+        "x": 844,
+        "y": 764,
+        "w": 108,
+        "h": 84,
+        "note": "derived from *_64 @ H01 pixel_size=12; compose scales via screen rect"
+      },
+      "mouth": {
+        "x": 652,
+        "y": 860,
+        "w": 144,
+        "h": 72,
+        "note": "derived from *_64 @ H01 pixel_size=12; compose scales via screen rect"
+      },
+      "accessory": {
+        "x": 952,
+        "y": 944,
+        "w": 144,
+        "h": 108,
+        "note": "derived from *_64 @ H01 pixel_size=12; compose scales via screen rect"
+      }
+    },
+    "P08": {
+      "id": "P08",
+      "name": "BLOP",
+      "folder": "P08_blop",
+      "body_64": {
+        "x": 10,
+        "y": 22,
+        "w": 44,
+        "h": 32
+      },
+      "eyes_64": {
+        "x": 15,
+        "y": 15,
+        "w": 34,
+        "h": 12
+      },
+      "mouth_64": {
+        "x": 16,
+        "y": 44,
+        "w": 32,
+        "h": 7
+      },
+      "accessory_64": {
+        "x": 27,
+        "y": 8,
+        "w": 10,
+        "h": 9
+      },
+      "view": "front",
+      "body": {
+        "x": 760,
+        "y": 824,
+        "w": 528,
+        "h": 384,
+        "note": "derived from body_64 @ H01 pixel_size=12; compose scales via screen rect"
+      },
+      "eyes": {
+        "x": 820,
+        "y": 740,
+        "w": 408,
+        "h": 144,
+        "note": "derived from *_64 @ H01 pixel_size=12; compose scales via screen rect"
+      },
+      "mouth": {
+        "x": 832,
+        "y": 1088,
+        "w": 384,
+        "h": 84,
+        "note": "derived from *_64 @ H01 pixel_size=12; compose scales via screen rect"
+      },
+      "accessory": {
+        "x": 964,
+        "y": 656,
+        "w": 120,
+        "h": 108,
+        "note": "derived from *_64 @ H01 pixel_size=12; compose scales via screen rect"
+      }
+    },
+    "P09": {
+      "id": "P09",
+      "name": "BRUMBLE",
+      "folder": "P09_brumble",
+      "body_64": {
+        "x": 14,
+        "y": 16,
+        "w": 36,
+        "h": 40
+      },
+      "eyes_64": {
+        "x": 22,
+        "y": 26,
+        "w": 20,
+        "h": 8
+      },
+      "mouth_64": {
+        "x": 26,
+        "y": 40,
+        "w": 12,
+        "h": 5
+      },
+      "accessory_64": {
+        "x": 24,
+        "y": 8,
+        "w": 16,
+        "h": 10
+      },
+      "view": "front",
+      "body": {
+        "x": 808,
+        "y": 752,
+        "w": 432,
+        "h": 480,
+        "note": "derived from body_64 @ H01 pixel_size=12; compose scales via screen rect"
+      },
+      "eyes": {
+        "x": 904,
+        "y": 872,
+        "w": 240,
+        "h": 96,
+        "note": "derived from *_64 @ H01 pixel_size=12; compose scales via screen rect"
+      },
+      "mouth": {
+        "x": 952,
+        "y": 1040,
+        "w": 144,
+        "h": 60,
+        "note": "derived from *_64 @ H01 pixel_size=12; compose scales via screen rect"
+      },
+      "accessory": {
+        "x": 928,
+        "y": 656,
+        "w": 192,
+        "h": 120,
+        "note": "derived from *_64 @ H01 pixel_size=12; compose scales via screen rect"
+      }
+    },
+    "P10": {
+      "id": "P10",
+      "name": "PIP",
+      "folder": "P10_pip",
+      "body_64": {
+        "x": 8,
+        "y": 2,
+        "w": 50,
+        "h": 58
+      },
+      "eyes_64": {
+        "x": 28,
+        "y": 17,
+        "w": 8,
+        "h": 8
+      },
+      "mouth_64": {
+        "x": 4,
+        "y": 18,
+        "w": 14,
+        "h": 12
+      },
+      "accessory_64": {
+        "x": 26,
+        "y": 2,
+        "w": 14,
+        "h": 10
+      },
+      "view": "front",
+      "body": {
+        "x": 736,
+        "y": 584,
+        "w": 600,
+        "h": 696,
+        "note": "derived from *_64 @ H01 pixel_size=12; compose scales via screen rect"
+      },
+      "eyes": {
+        "x": 976,
+        "y": 764,
+        "w": 96,
+        "h": 96,
+        "note": "derived from *_64 @ H01 pixel_size=12; compose scales via screen rect"
+      },
+      "mouth": {
+        "x": 688,
+        "y": 776,
+        "w": 168,
+        "h": 144,
+        "note": "derived from *_64 @ H01 pixel_size=12; compose scales via screen rect"
+      },
+      "accessory": {
+        "x": 952,
+        "y": 584,
+        "w": 168,
+        "h": 120,
+        "note": "derived from *_64 @ H01 pixel_size=12; compose scales via screen rect"
+      }
+    },
+    "P11": {
+      "id": "P11",
+      "name": "GILLI",
+      "folder": "P11_gilli",
+      "body_64": {
+        "x": 3,
+        "y": 11,
+        "w": 58,
+        "h": 46
+      },
+      "eyes_64": {
+        "x": 20,
+        "y": 24,
+        "w": 24,
+        "h": 8
+      },
+      "mouth_64": {
+        "x": 28,
+        "y": 36,
+        "w": 10,
+        "h": 5
+      },
+      "accessory_64": {
+        "x": 26,
+        "y": 9,
+        "w": 12,
+        "h": 8
+      },
+      "view": "front",
+      "body": {
+        "x": 676,
+        "y": 692,
+        "w": 696,
+        "h": 552,
+        "note": "derived from *_64 @ H01 pixel_size=12; compose scales via screen rect"
+      },
+      "eyes": {
+        "x": 880,
+        "y": 848,
+        "w": 288,
+        "h": 96,
+        "note": "derived from *_64 @ H01 pixel_size=12; compose scales via screen rect"
+      },
+      "mouth": {
+        "x": 976,
+        "y": 992,
+        "w": 120,
+        "h": 60,
+        "note": "derived from *_64 @ H01 pixel_size=12; compose scales via screen rect"
+      },
+      "accessory": {
+        "x": 952,
+        "y": 668,
+        "w": 144,
+        "h": 96,
+        "note": "derived from *_64 @ H01 pixel_size=12; compose scales via screen rect"
+      }
+    },
+    "P12": {
+      "id": "P12",
+      "name": "BOLT",
+      "folder": "P12_nib",
+      "body_64": {
+        "x": 6,
+        "y": 0,
+        "w": 52,
+        "h": 59
+      },
+      "eyes_64": {
+        "x": 21,
+        "y": 18,
+        "w": 22,
+        "h": 8
+      },
+      "mouth_64": {
+        "x": 24,
+        "y": 29,
+        "w": 16,
+        "h": 4
+      },
+      "accessory_64": {
+        "x": 22,
+        "y": 0,
+        "w": 20,
+        "h": 12
+      },
+      "view": "front",
+      "body": {
+        "x": 712,
+        "y": 560,
+        "w": 624,
+        "h": 708,
+        "note": "derived from *_64 @ H01 pixel_size=12; compose scales via screen rect"
+      },
+      "eyes": {
+        "x": 892,
+        "y": 776,
+        "w": 264,
+        "h": 96,
+        "note": "derived from *_64 @ H01 pixel_size=12; compose scales via screen rect"
+      },
+      "mouth": {
+        "x": 928,
+        "y": 908,
+        "w": 192,
+        "h": 48,
+        "note": "derived from *_64 @ H01 pixel_size=12; compose scales via screen rect"
+      },
+      "accessory": {
+        "x": 904,
+        "y": 560,
+        "w": 240,
+        "h": 144,
+        "note": "derived from *_64 @ H01 pixel_size=12; compose scales via screen rect"
+      }
+    }
+  },
+  "egg": {
+    "pos_64": {
+      "x": 16,
+      "y": 14,
+      "w": 32,
+      "h": 40
+    },
+    "notes": "Same screen-centered egg position for all pets/handhelds"
+  }
+}

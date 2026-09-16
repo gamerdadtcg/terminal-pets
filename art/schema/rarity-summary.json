@@ -1,0 +1,4541 @@
+{
+  "version": 1,
+  "rarity_tiers": {
+    "common": {
+      "weight": 60,
+      "label": "Common",
+      "order": 0
+    },
+    "rare": {
+      "weight": 25,
+      "label": "Rare",
+      "order": 1
+    },
+    "epic": {
+      "weight": 10,
+      "label": "Epic",
+      "order": 2
+    },
+    "legendary": {
+      "weight": 5,
+      "label": "Legendary",
+      "order": 3
+    }
+  },
+  "categories": {
+    "backgrounds": {
+      "count": 14,
+      "tier_counts": {
+        "common": 8,
+        "rare": 3,
+        "epic": 2,
+        "legendary": 1
+      },
+      "options": [
+        {
+          "id": "BG01",
+          "rarity": "common",
+          "weight": 60,
+          "probability": 0.10344827586206896,
+          "percent": 10.3448
+        },
+        {
+          "id": "BG02",
+          "rarity": "common",
+          "weight": 60,
+          "probability": 0.10344827586206896,
+          "percent": 10.3448
+        },
+        {
+          "id": "BG03",
+          "rarity": "common",
+          "weight": 60,
+          "probability": 0.10344827586206896,
+          "percent": 10.3448
+        },
+        {
+          "id": "BG04",
+          "rarity": "legendary",
+          "weight": 5,
+          "probability": 0.008620689655172414,
+          "percent": 0.8621
+        },
+        {
+          "id": "BG05",
+          "rarity": "common",
+          "weight": 60,
+          "probability": 0.10344827586206896,
+          "percent": 10.3448
+        },
+        {
+          "id": "BG06",
+          "rarity": "common",
+          "weight": 60,
+          "probability": 0.10344827586206896,
+          "percent": 10.3448
+        },
+        {
+          "id": "BG07",
+          "rarity": "rare",
+          "weight": 25,
+          "probability": 0.04310344827586207,
+          "percent": 4.3103
+        },
+        {
+          "id": "BG08",
+          "rarity": "common",
+          "weight": 60,
+          "probability": 0.10344827586206896,
+          "percent": 10.3448
+        },
+        {
+          "id": "BG09",
+          "rarity": "common",
+          "weight": 60,
+          "probability": 0.10344827586206896,
+          "percent": 10.3448
+        },
+        {
+          "id": "BG10",
+          "rarity": "rare",
+          "weight": 25,
+          "probability": 0.04310344827586207,
+          "percent": 4.3103
+        },
+        {
+          "id": "BG11",
+          "rarity": "common",
+          "weight": 60,
+          "probability": 0.10344827586206896,
+          "percent": 10.3448
+        },
+        {
+          "id": "BG12",
+          "rarity": "rare",
+          "weight": 25,
+          "probability": 0.04310344827586207,
+          "percent": 4.3103
+        },
+        {
+          "id": "BG13",
+          "rarity": "epic",
+          "weight": 10,
+          "probability": 0.017241379310344827,
+          "percent": 1.7241
+        },
+        {
+          "id": "BG14",
+          "rarity": "epic",
+          "weight": 10,
+          "probability": 0.017241379310344827,
+          "percent": 1.7241
+        }
+      ]
+    },
+    "handhelds": {
+      "count": 10,
+      "tier_counts": {
+        "common": 6,
+        "rare": 2,
+        "epic": 1,
+        "legendary": 1
+      },
+      "options": [
+        {
+          "id": "H01",
+          "rarity": "common",
+          "weight": 60,
+          "probability": 0.1411764705882353,
+          "percent": 14.1176
+        },
+        {
+          "id": "H02",
+          "rarity": "common",
+          "weight": 60,
+          "probability": 0.1411764705882353,
+          "percent": 14.1176
+        },
+        {
+          "id": "H03",
+          "rarity": "common",
+          "weight": 60,
+          "probability": 0.1411764705882353,
+          "percent": 14.1176
+        },
+        {
+          "id": "H04",
+          "rarity": "rare",
+          "weight": 25,
+          "probability": 0.058823529411764705,
+          "percent": 5.8824
+        },
+        {
+          "id": "H05",
+          "rarity": "common",
+          "weight": 60,
+          "probability": 0.1411764705882353,
+          "percent": 14.1176
+        },
+        {
+          "id": "H06",
+          "rarity": "rare",
+          "weight": 25,
+          "probability": 0.058823529411764705,
+          "percent": 5.8824
+        },
+        {
+          "id": "H07",
+          "rarity": "common",
+          "weight": 60,
+          "probability": 0.1411764705882353,
+          "percent": 14.1176
+        },
+        {
+          "id": "H08",
+          "rarity": "common",
+          "weight": 60,
+          "probability": 0.1411764705882353,
+          "percent": 14.1176
+        },
+        {
+          "id": "H09",
+          "rarity": "epic",
+          "weight": 10,
+          "probability": 0.023529411764705882,
+          "percent": 2.3529
+        },
+        {
+          "id": "H10",
+          "rarity": "legendary",
+          "weight": 5,
+          "probability": 0.011764705882352941,
+          "percent": 1.1765
+        }
+      ]
+    },
+    "shell_colors": {
+      "count": 15,
+      "tier_counts": {
+        "common": 9,
+        "rare": 3,
+        "epic": 2,
+        "legendary": 1
+      },
+      "options": [
+        {
+          "id": "white",
+          "rarity": "common",
+          "weight": 60,
+          "probability": 0.09375,
+          "percent": 9.375
+        },
+        {
+          "id": "black",
+          "rarity": "common",
+          "weight": 60,
+          "probability": 0.09375,
+          "percent": 9.375
+        },
+        {
+          "id": "light_gray",
+          "rarity": "common",
+          "weight": 60,
+          "probability": 0.09375,
+          "percent": 9.375
+        },
+        {
+          "id": "dark_gray",
+          "rarity": "common",
+          "weight": 60,
+          "probability": 0.09375,
+          "percent": 9.375
+        },
+        {
+          "id": "cream",
+          "rarity": "common",
+          "weight": 60,
+          "probability": 0.09375,
+          "percent": 9.375
+        },
+        {
+          "id": "pink",
+          "rarity": "common",
+          "weight": 60,
+          "probability": 0.09375,
+          "percent": 9.375
+        },
+        {
+          "id": "red",
+          "rarity": "common",
+          "weight": 60,
+          "probability": 0.09375,
+          "percent": 9.375
+        },
+        {
+          "id": "orange",
+          "rarity": "rare",
+          "weight": 25,
+          "probability": 0.0390625,
+          "percent": 3.9062
+        },
+        {
+          "id": "yellow",
+          "rarity": "rare",
+          "weight": 25,
+          "probability": 0.0390625,
+          "percent": 3.9062
+        },
+        {
+          "id": "purple",
+          "rarity": "rare",
+          "weight": 25,
+          "probability": 0.0390625,
+          "percent": 3.9062
+        },
+        {
+          "id": "lavender",
+          "rarity": "epic",
+          "weight": 10,
+          "probability": 0.015625,
+          "percent": 1.5625
+        },
+        {
+          "id": "blue",
+          "rarity": "common",
+          "weight": 60,
+          "probability": 0.09375,
+          "percent": 9.375
+        },
+        {
+          "id": "light_blue",
+          "rarity": "common",
+          "weight": 60,
+          "probability": 0.09375,
+          "percent": 9.375
+        },
+        {
+          "id": "mint",
+          "rarity": "epic",
+          "weight": 10,
+          "probability": 0.015625,
+          "percent": 1.5625
+        },
+        {
+          "id": "neon_green",
+          "rarity": "legendary",
+          "weight": 5,
+          "probability": 0.0078125,
+          "percent": 0.7812
+        }
+      ]
+    },
+    "shell_class": {
+      "count": 4,
+      "tier_counts": {
+        "common": 1,
+        "rare": 1,
+        "epic": 1,
+        "legendary": 1
+      },
+      "options": [
+        {
+          "id": "ALPHA",
+          "rarity": "common",
+          "weight": 60,
+          "probability": 0.6,
+          "percent": 60.0
+        },
+        {
+          "id": "BETA",
+          "rarity": "rare",
+          "weight": 25,
+          "probability": 0.25,
+          "percent": 25.0
+        },
+        {
+          "id": "DELTA",
+          "rarity": "epic",
+          "weight": 10,
+          "probability": 0.1,
+          "percent": 10.0
+        },
+        {
+          "id": "OMEGA",
+          "rarity": "legendary",
+          "weight": 5,
+          "probability": 0.05,
+          "percent": 5.0
+        }
+      ]
+    },
+    "buttons": {
+      "count": 8,
+      "tier_counts": {
+        "common": 5,
+        "rare": 2,
+        "epic": 1,
+        "legendary": 0
+      },
+      "options": [
+        {
+          "id": "white",
+          "rarity": "common",
+          "weight": 60,
+          "probability": 0.16666666666666666,
+          "percent": 16.6667
+        },
+        {
+          "id": "black",
+          "rarity": "common",
+          "weight": 60,
+          "probability": 0.16666666666666666,
+          "percent": 16.6667
+        },
+        {
+          "id": "gray",
+          "rarity": "common",
+          "weight": 60,
+          "probability": 0.16666666666666666,
+          "percent": 16.6667
+        },
+        {
+          "id": "pink",
+          "rarity": "common",
+          "weight": 60,
+          "probability": 0.16666666666666666,
+          "percent": 16.6667
+        },
+        {
+          "id": "blue",
+          "rarity": "common",
+          "weight": 60,
+          "probability": 0.16666666666666666,
+          "percent": 16.6667
+        },
+        {
+          "id": "green",
+          "rarity": "rare",
+          "weight": 25,
+          "probability": 0.06944444444444445,
+          "percent": 6.9444
+        },
+        {
+          "id": "yellow",
+          "rarity": "rare",
+          "weight": 25,
+          "probability": 0.06944444444444445,
+          "percent": 6.9444
+        },
+        {
+          "id": "orange",
+          "rarity": "epic",
+          "weight": 10,
+          "probability": 0.027777777777777776,
+          "percent": 2.7778
+        }
+      ]
+    },
+    "antennas": {
+      "count": 10,
+      "tier_counts": {
+        "common": 6,
+        "rare": 2,
+        "epic": 1,
+        "legendary": 1
+      },
+      "options": [
+        {
+          "id": "classic",
+          "rarity": "common",
+          "weight": 60,
+          "probability": 0.1411764705882353,
+          "percent": 14.1176
+        },
+        {
+          "id": "star",
+          "rarity": "common",
+          "weight": 60,
+          "probability": 0.1411764705882353,
+          "percent": 14.1176
+        },
+        {
+          "id": "heart",
+          "rarity": "common",
+          "weight": 60,
+          "probability": 0.1411764705882353,
+          "percent": 14.1176
+        },
+        {
+          "id": "lightning",
+          "rarity": "rare",
+          "weight": 25,
+          "probability": 0.058823529411764705,
+          "percent": 5.8824
+        },
+        {
+          "id": "flower",
+          "rarity": "common",
+          "weight": 60,
+          "probability": 0.1411764705882353,
+          "percent": 14.1176
+        },
+        {
+          "id": "spiral",
+          "rarity": "common",
+          "weight": 60,
+          "probability": 0.1411764705882353,
+          "percent": 14.1176
+        },
+        {
+          "id": "double",
+          "rarity": "common",
+          "weight": 60,
+          "probability": 0.1411764705882353,
+          "percent": 14.1176
+        },
+        {
+          "id": "mushroom",
+          "rarity": "rare",
+          "weight": 25,
+          "probability": 0.058823529411764705,
+          "percent": 5.8824
+        },
+        {
+          "id": "crown",
+          "rarity": "epic",
+          "weight": 10,
+          "probability": 0.023529411764705882,
+          "percent": 2.3529
+        },
+        {
+          "id": "orb",
+          "rarity": "legendary",
+          "weight": 5,
+          "probability": 0.011764705882352941,
+          "percent": 1.1765
+        }
+      ]
+    },
+    "screens": {
+      "count": 8,
+      "tier_counts": {
+        "common": 4,
+        "rare": 2,
+        "epic": 1,
+        "legendary": 1
+      },
+      "options": [
+        {
+          "id": "S01",
+          "rarity": "common",
+          "weight": 60,
+          "probability": 0.19672131147540983,
+          "percent": 19.6721
+        },
+        {
+          "id": "S02",
+          "rarity": "common",
+          "weight": 60,
+          "probability": 0.19672131147540983,
+          "percent": 19.6721
+        },
+        {
+          "id": "S03",
+          "rarity": "epic",
+          "weight": 10,
+          "probability": 0.03278688524590164,
+          "percent": 3.2787
+        },
+        {
+          "id": "S04",
+          "rarity": "rare",
+          "weight": 25,
+          "probability": 0.08196721311475409,
+          "percent": 8.1967
+        },
+        {
+          "id": "S05",
+          "rarity": "common",
+          "weight": 60,
+          "probability": 0.19672131147540983,
+          "percent": 19.6721
+        },
+        {
+          "id": "S06",
+          "rarity": "rare",
+          "weight": 25,
+          "probability": 0.08196721311475409,
+          "percent": 8.1967
+        },
+        {
+          "id": "S07",
+          "rarity": "legendary",
+          "weight": 5,
+          "probability": 0.01639344262295082,
+          "percent": 1.6393
+        },
+        {
+          "id": "S08",
+          "rarity": "common",
+          "weight": 60,
+          "probability": 0.19672131147540983,
+          "percent": 19.6721
+        }
+      ]
+    },
+    "screen_effects": {
+      "count": 12,
+      "tier_counts": {
+        "common": 7,
+        "rare": 3,
+        "epic": 1,
+        "legendary": 1
+      },
+      "options": [
+        {
+          "id": "static",
+          "rarity": "common",
+          "weight": 60,
+          "probability": 0.11764705882352941,
+          "percent": 11.7647
+        },
+        {
+          "id": "scanlines",
+          "rarity": "common",
+          "weight": 60,
+          "probability": 0.11764705882352941,
+          "percent": 11.7647
+        },
+        {
+          "id": "sparkles",
+          "rarity": "common",
+          "weight": 60,
+          "probability": 0.11764705882352941,
+          "percent": 11.7647
+        },
+        {
+          "id": "stars",
+          "rarity": "common",
+          "weight": 60,
+          "probability": 0.11764705882352941,
+          "percent": 11.7647
+        },
+        {
+          "id": "bubbles",
+          "rarity": "common",
+          "weight": 60,
+          "probability": 0.11764705882352941,
+          "percent": 11.7647
+        },
+        {
+          "id": "lightning",
+          "rarity": "epic",
+          "weight": 10,
+          "probability": 0.0196078431372549,
+          "percent": 1.9608
+        },
+        {
+          "id": "pixel_rain",
+          "rarity": "rare",
+          "weight": 25,
+          "probability": 0.049019607843137254,
+          "percent": 4.902
+        },
+        {
+          "id": "glitch",
+          "rarity": "legendary",
+          "weight": 5,
+          "probability": 0.00980392156862745,
+          "percent": 0.9804
+        },
+        {
+          "id": "clouds",
+          "rarity": "common",
+          "weight": 60,
+          "probability": 0.11764705882352941,
+          "percent": 11.7647
+        },
+        {
+          "id": "fire",
+          "rarity": "rare",
+          "weight": 25,
+          "probability": 0.049019607843137254,
+          "percent": 4.902
+        },
+        {
+          "id": "leaves",
+          "rarity": "common",
+          "weight": 60,
+          "probability": 0.11764705882352941,
+          "percent": 11.7647
+        },
+        {
+          "id": "digital_grid",
+          "rarity": "rare",
+          "weight": 25,
+          "probability": 0.049019607843137254,
+          "percent": 4.902
+        }
+      ]
+    },
+    "eggs": {
+      "count": 12,
+      "tier_counts": {
+        "common": 6,
+        "rare": 3,
+        "epic": 2,
+        "legendary": 1
+      },
+      "options": [
+        {
+          "id": "E01",
+          "rarity": "common",
+          "weight": 60,
+          "probability": 0.13043478260869565,
+          "percent": 13.0435
+        },
+        {
+          "id": "E02",
+          "rarity": "common",
+          "weight": 60,
+          "probability": 0.13043478260869565,
+          "percent": 13.0435
+        },
+        {
+          "id": "E03",
+          "rarity": "rare",
+          "weight": 25,
+          "probability": 0.05434782608695652,
+          "percent": 5.4348
+        },
+        {
+          "id": "E04",
+          "rarity": "common",
+          "weight": 60,
+          "probability": 0.13043478260869565,
+          "percent": 13.0435
+        },
+        {
+          "id": "E05",
+          "rarity": "common",
+          "weight": 60,
+          "probability": 0.13043478260869565,
+          "percent": 13.0435
+        },
+        {
+          "id": "E06",
+          "rarity": "epic",
+          "weight": 10,
+          "probability": 0.021739130434782608,
+          "percent": 2.1739
+        },
+        {
+          "id": "E07",
+          "rarity": "epic",
+          "weight": 10,
+          "probability": 0.021739130434782608,
+          "percent": 2.1739
+        },
+        {
+          "id": "E08",
+          "rarity": "common",
+          "weight": 60,
+          "probability": 0.13043478260869565,
+          "percent": 13.0435
+        },
+        {
+          "id": "E09",
+          "rarity": "common",
+          "weight": 60,
+          "probability": 0.13043478260869565,
+          "percent": 13.0435
+        },
+        {
+          "id": "E10",
+          "rarity": "rare",
+          "weight": 25,
+          "probability": 0.05434782608695652,
+          "percent": 5.4348
+        },
+        {
+          "id": "E11",
+          "rarity": "rare",
+          "weight": 25,
+          "probability": 0.05434782608695652,
+          "percent": 5.4348
+        },
+        {
+          "id": "E12",
+          "rarity": "legendary",
+          "weight": 5,
+          "probability": 0.010869565217391304,
+          "percent": 1.087
+        }
+      ]
+    },
+    "pets": {
+      "count": 12,
+      "tier_counts": {
+        "common": 6,
+        "rare": 3,
+        "epic": 2,
+        "legendary": 1
+      },
+      "options": [
+        {
+          "id": "P01",
+          "rarity": "common",
+          "weight": 60,
+          "probability": 0.13043478260869565,
+          "percent": 13.0435
+        },
+        {
+          "id": "P02",
+          "rarity": "common",
+          "weight": 60,
+          "probability": 0.13043478260869565,
+          "percent": 13.0435
+        },
+        {
+          "id": "P03",
+          "rarity": "rare",
+          "weight": 25,
+          "probability": 0.05434782608695652,
+          "percent": 5.4348
+        },
+        {
+          "id": "P04",
+          "rarity": "common",
+          "weight": 60,
+          "probability": 0.13043478260869565,
+          "percent": 13.0435
+        },
+        {
+          "id": "P05",
+          "rarity": "common",
+          "weight": 60,
+          "probability": 0.13043478260869565,
+          "percent": 13.0435
+        },
+        {
+          "id": "P06",
+          "rarity": "epic",
+          "weight": 10,
+          "probability": 0.021739130434782608,
+          "percent": 2.1739
+        },
+        {
+          "id": "P07",
+          "rarity": "epic",
+          "weight": 10,
+          "probability": 0.021739130434782608,
+          "percent": 2.1739
+        },
+        {
+          "id": "P08",
+          "rarity": "common",
+          "weight": 60,
+          "probability": 0.13043478260869565,
+          "percent": 13.0435
+        },
+        {
+          "id": "P09",
+          "rarity": "common",
+          "weight": 60,
+          "probability": 0.13043478260869565,
+          "percent": 13.0435
+        },
+        {
+          "id": "P10",
+          "rarity": "rare",
+          "weight": 25,
+          "probability": 0.05434782608695652,
+          "percent": 5.4348
+        },
+        {
+          "id": "P11",
+          "rarity": "rare",
+          "weight": 25,
+          "probability": 0.05434782608695652,
+          "percent": 5.4348
+        },
+        {
+          "id": "P12",
+          "rarity": "legendary",
+          "weight": 5,
+          "probability": 0.010869565217391304,
+          "percent": 1.087
+        }
+      ]
+    },
+    "per_pet": {
+      "P01": {
+        "colors": {
+          "count": 8,
+          "tier_counts": {
+            "common": 5,
+            "rare": 1,
+            "epic": 1,
+            "legendary": 1
+          },
+          "options": [
+            {
+              "id": "pink",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.17647058823529413,
+              "percent": 17.6471
+            },
+            {
+              "id": "blue",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.17647058823529413,
+              "percent": 17.6471
+            },
+            {
+              "id": "mint",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.17647058823529413,
+              "percent": 17.6471
+            },
+            {
+              "id": "lavender",
+              "rarity": "legendary",
+              "weight": 5,
+              "probability": 0.014705882352941176,
+              "percent": 1.4706
+            },
+            {
+              "id": "cream",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.17647058823529413,
+              "percent": 17.6471
+            },
+            {
+              "id": "peach",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.17647058823529413,
+              "percent": 17.6471
+            },
+            {
+              "id": "lilac",
+              "rarity": "epic",
+              "weight": 10,
+              "probability": 0.029411764705882353,
+              "percent": 2.9412
+            },
+            {
+              "id": "sky",
+              "rarity": "rare",
+              "weight": 25,
+              "probability": 0.07352941176470588,
+              "percent": 7.3529
+            }
+          ]
+        },
+        "eyes": {
+          "count": 10,
+          "tier_counts": {
+            "common": 6,
+            "rare": 2,
+            "epic": 1,
+            "legendary": 1
+          },
+          "options": [
+            {
+              "id": "normal",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "happy",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "sleepy",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "angry",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "excited",
+              "rarity": "rare",
+              "weight": 25,
+              "probability": 0.058823529411764705,
+              "percent": 5.8824
+            },
+            {
+              "id": "sparkly",
+              "rarity": "epic",
+              "weight": 10,
+              "probability": 0.023529411764705882,
+              "percent": 2.3529
+            },
+            {
+              "id": "hearts",
+              "rarity": "legendary",
+              "weight": 5,
+              "probability": 0.011764705882352941,
+              "percent": 1.1765
+            },
+            {
+              "id": "wink",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "tiny",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "surprised",
+              "rarity": "rare",
+              "weight": 25,
+              "probability": 0.058823529411764705,
+              "percent": 5.8824
+            }
+          ]
+        },
+        "mouths": {
+          "count": 10,
+          "tier_counts": {
+            "common": 6,
+            "rare": 2,
+            "epic": 1,
+            "legendary": 1
+          },
+          "options": [
+            {
+              "id": "smile",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "open_smile",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "frown",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "tiny",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "surprised",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "tongue",
+              "rarity": "rare",
+              "weight": 25,
+              "probability": 0.058823529411764705,
+              "percent": 5.8824
+            },
+            {
+              "id": "angry",
+              "rarity": "legendary",
+              "weight": 5,
+              "probability": 0.011764705882352941,
+              "percent": 1.1765
+            },
+            {
+              "id": "laugh",
+              "rarity": "rare",
+              "weight": 25,
+              "probability": 0.058823529411764705,
+              "percent": 5.8824
+            },
+            {
+              "id": "sad",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "funny",
+              "rarity": "epic",
+              "weight": 10,
+              "probability": 0.023529411764705882,
+              "percent": 2.3529
+            }
+          ]
+        },
+        "accessories": {
+          "count": 10,
+          "tier_counts": {
+            "common": 6,
+            "rare": 2,
+            "epic": 1,
+            "legendary": 1
+          },
+          "options": [
+            {
+              "id": "none",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "hat",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "crown",
+              "rarity": "legendary",
+              "weight": 5,
+              "probability": 0.011764705882352941,
+              "percent": 1.1765
+            },
+            {
+              "id": "bow",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "bandana",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "headphones",
+              "rarity": "rare",
+              "weight": 25,
+              "probability": 0.058823529411764705,
+              "percent": 5.8824
+            },
+            {
+              "id": "glasses",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "flower",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "bowtie",
+              "rarity": "rare",
+              "weight": 25,
+              "probability": 0.058823529411764705,
+              "percent": 5.8824
+            },
+            {
+              "id": "party_hat",
+              "rarity": "epic",
+              "weight": 10,
+              "probability": 0.023529411764705882,
+              "percent": 2.3529
+            }
+          ]
+        }
+      },
+      "P02": {
+        "colors": {
+          "count": 8,
+          "tier_counts": {
+            "common": 5,
+            "rare": 1,
+            "epic": 1,
+            "legendary": 1
+          },
+          "options": [
+            {
+              "id": "green",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.17647058823529413,
+              "percent": 17.6471
+            },
+            {
+              "id": "lime",
+              "rarity": "rare",
+              "weight": 25,
+              "probability": 0.07352941176470588,
+              "percent": 7.3529
+            },
+            {
+              "id": "teal",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.17647058823529413,
+              "percent": 17.6471
+            },
+            {
+              "id": "orange",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.17647058823529413,
+              "percent": 17.6471
+            },
+            {
+              "id": "sand",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.17647058823529413,
+              "percent": 17.6471
+            },
+            {
+              "id": "forest",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.17647058823529413,
+              "percent": 17.6471
+            },
+            {
+              "id": "olive",
+              "rarity": "legendary",
+              "weight": 5,
+              "probability": 0.014705882352941176,
+              "percent": 1.4706
+            },
+            {
+              "id": "aqua",
+              "rarity": "epic",
+              "weight": 10,
+              "probability": 0.029411764705882353,
+              "percent": 2.9412
+            }
+          ]
+        },
+        "eyes": {
+          "count": 10,
+          "tier_counts": {
+            "common": 6,
+            "rare": 2,
+            "epic": 1,
+            "legendary": 1
+          },
+          "options": [
+            {
+              "id": "normal",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "happy",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "sleepy",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "angry",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "excited",
+              "rarity": "rare",
+              "weight": 25,
+              "probability": 0.058823529411764705,
+              "percent": 5.8824
+            },
+            {
+              "id": "sparkly",
+              "rarity": "epic",
+              "weight": 10,
+              "probability": 0.023529411764705882,
+              "percent": 2.3529
+            },
+            {
+              "id": "hearts",
+              "rarity": "legendary",
+              "weight": 5,
+              "probability": 0.011764705882352941,
+              "percent": 1.1765
+            },
+            {
+              "id": "wink",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "tiny",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "surprised",
+              "rarity": "rare",
+              "weight": 25,
+              "probability": 0.058823529411764705,
+              "percent": 5.8824
+            }
+          ]
+        },
+        "mouths": {
+          "count": 10,
+          "tier_counts": {
+            "common": 6,
+            "rare": 2,
+            "epic": 1,
+            "legendary": 1
+          },
+          "options": [
+            {
+              "id": "smile",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "open_smile",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "frown",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "tiny",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "surprised",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "tongue",
+              "rarity": "rare",
+              "weight": 25,
+              "probability": 0.058823529411764705,
+              "percent": 5.8824
+            },
+            {
+              "id": "angry",
+              "rarity": "legendary",
+              "weight": 5,
+              "probability": 0.011764705882352941,
+              "percent": 1.1765
+            },
+            {
+              "id": "laugh",
+              "rarity": "rare",
+              "weight": 25,
+              "probability": 0.058823529411764705,
+              "percent": 5.8824
+            },
+            {
+              "id": "sad",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "funny",
+              "rarity": "epic",
+              "weight": 10,
+              "probability": 0.023529411764705882,
+              "percent": 2.3529
+            }
+          ]
+        },
+        "accessories": {
+          "count": 9,
+          "tier_counts": {
+            "common": 6,
+            "rare": 1,
+            "epic": 1,
+            "legendary": 1
+          },
+          "options": [
+            {
+              "id": "none",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.15,
+              "percent": 15.0
+            },
+            {
+              "id": "hat",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.15,
+              "percent": 15.0
+            },
+            {
+              "id": "crown",
+              "rarity": "legendary",
+              "weight": 5,
+              "probability": 0.0125,
+              "percent": 1.25
+            },
+            {
+              "id": "bow",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.15,
+              "percent": 15.0
+            },
+            {
+              "id": "bandana",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.15,
+              "percent": 15.0
+            },
+            {
+              "id": "glasses",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.15,
+              "percent": 15.0
+            },
+            {
+              "id": "flower",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.15,
+              "percent": 15.0
+            },
+            {
+              "id": "bowtie",
+              "rarity": "rare",
+              "weight": 25,
+              "probability": 0.0625,
+              "percent": 6.25
+            },
+            {
+              "id": "party_hat",
+              "rarity": "epic",
+              "weight": 10,
+              "probability": 0.025,
+              "percent": 2.5
+            }
+          ]
+        }
+      },
+      "P03": {
+        "colors": {
+          "count": 8,
+          "tier_counts": {
+            "common": 5,
+            "rare": 1,
+            "epic": 1,
+            "legendary": 1
+          },
+          "options": [
+            {
+              "id": "orange",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.17647058823529413,
+              "percent": 17.6471
+            },
+            {
+              "id": "gray",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.17647058823529413,
+              "percent": 17.6471
+            },
+            {
+              "id": "cream",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.17647058823529413,
+              "percent": 17.6471
+            },
+            {
+              "id": "calico",
+              "rarity": "legendary",
+              "weight": 5,
+              "probability": 0.014705882352941176,
+              "percent": 1.4706
+            },
+            {
+              "id": "black",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.17647058823529413,
+              "percent": 17.6471
+            },
+            {
+              "id": "white",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.17647058823529413,
+              "percent": 17.6471
+            },
+            {
+              "id": "chocolate",
+              "rarity": "rare",
+              "weight": 25,
+              "probability": 0.07352941176470588,
+              "percent": 7.3529
+            },
+            {
+              "id": "silver",
+              "rarity": "epic",
+              "weight": 10,
+              "probability": 0.029411764705882353,
+              "percent": 2.9412
+            }
+          ]
+        },
+        "eyes": {
+          "count": 10,
+          "tier_counts": {
+            "common": 6,
+            "rare": 2,
+            "epic": 1,
+            "legendary": 1
+          },
+          "options": [
+            {
+              "id": "normal",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "happy",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "sleepy",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "angry",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "excited",
+              "rarity": "rare",
+              "weight": 25,
+              "probability": 0.058823529411764705,
+              "percent": 5.8824
+            },
+            {
+              "id": "sparkly",
+              "rarity": "epic",
+              "weight": 10,
+              "probability": 0.023529411764705882,
+              "percent": 2.3529
+            },
+            {
+              "id": "hearts",
+              "rarity": "legendary",
+              "weight": 5,
+              "probability": 0.011764705882352941,
+              "percent": 1.1765
+            },
+            {
+              "id": "wink",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "tiny",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "surprised",
+              "rarity": "rare",
+              "weight": 25,
+              "probability": 0.058823529411764705,
+              "percent": 5.8824
+            }
+          ]
+        },
+        "mouths": {
+          "count": 10,
+          "tier_counts": {
+            "common": 6,
+            "rare": 2,
+            "epic": 1,
+            "legendary": 1
+          },
+          "options": [
+            {
+              "id": "smile",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "open_smile",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "frown",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "tiny",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "surprised",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "tongue",
+              "rarity": "rare",
+              "weight": 25,
+              "probability": 0.058823529411764705,
+              "percent": 5.8824
+            },
+            {
+              "id": "angry",
+              "rarity": "legendary",
+              "weight": 5,
+              "probability": 0.011764705882352941,
+              "percent": 1.1765
+            },
+            {
+              "id": "laugh",
+              "rarity": "rare",
+              "weight": 25,
+              "probability": 0.058823529411764705,
+              "percent": 5.8824
+            },
+            {
+              "id": "sad",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "funny",
+              "rarity": "epic",
+              "weight": 10,
+              "probability": 0.023529411764705882,
+              "percent": 2.3529
+            }
+          ]
+        },
+        "accessories": {
+          "count": 10,
+          "tier_counts": {
+            "common": 6,
+            "rare": 2,
+            "epic": 1,
+            "legendary": 1
+          },
+          "options": [
+            {
+              "id": "none",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "hat",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "crown",
+              "rarity": "legendary",
+              "weight": 5,
+              "probability": 0.011764705882352941,
+              "percent": 1.1765
+            },
+            {
+              "id": "bow",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "bandana",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "headphones",
+              "rarity": "rare",
+              "weight": 25,
+              "probability": 0.058823529411764705,
+              "percent": 5.8824
+            },
+            {
+              "id": "glasses",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "flower",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "bowtie",
+              "rarity": "rare",
+              "weight": 25,
+              "probability": 0.058823529411764705,
+              "percent": 5.8824
+            },
+            {
+              "id": "party_hat",
+              "rarity": "epic",
+              "weight": 10,
+              "probability": 0.023529411764705882,
+              "percent": 2.3529
+            }
+          ]
+        }
+      },
+      "P04": {
+        "colors": {
+          "count": 8,
+          "tier_counts": {
+            "common": 5,
+            "rare": 1,
+            "epic": 1,
+            "legendary": 1
+          },
+          "options": [
+            {
+              "id": "tan",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.17647058823529413,
+              "percent": 17.6471
+            },
+            {
+              "id": "brown",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.17647058823529413,
+              "percent": 17.6471
+            },
+            {
+              "id": "golden",
+              "rarity": "legendary",
+              "weight": 5,
+              "probability": 0.014705882352941176,
+              "percent": 1.4706
+            },
+            {
+              "id": "white",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.17647058823529413,
+              "percent": 17.6471
+            },
+            {
+              "id": "spotty",
+              "rarity": "epic",
+              "weight": 10,
+              "probability": 0.029411764705882353,
+              "percent": 2.9412
+            },
+            {
+              "id": "cocoa",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.17647058823529413,
+              "percent": 17.6471
+            },
+            {
+              "id": "honey",
+              "rarity": "rare",
+              "weight": 25,
+              "probability": 0.07352941176470588,
+              "percent": 7.3529
+            },
+            {
+              "id": "ash",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.17647058823529413,
+              "percent": 17.6471
+            }
+          ]
+        },
+        "eyes": {
+          "count": 10,
+          "tier_counts": {
+            "common": 6,
+            "rare": 2,
+            "epic": 1,
+            "legendary": 1
+          },
+          "options": [
+            {
+              "id": "normal",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "happy",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "sleepy",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "angry",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "excited",
+              "rarity": "rare",
+              "weight": 25,
+              "probability": 0.058823529411764705,
+              "percent": 5.8824
+            },
+            {
+              "id": "sparkly",
+              "rarity": "epic",
+              "weight": 10,
+              "probability": 0.023529411764705882,
+              "percent": 2.3529
+            },
+            {
+              "id": "hearts",
+              "rarity": "legendary",
+              "weight": 5,
+              "probability": 0.011764705882352941,
+              "percent": 1.1765
+            },
+            {
+              "id": "wink",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "tiny",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "surprised",
+              "rarity": "rare",
+              "weight": 25,
+              "probability": 0.058823529411764705,
+              "percent": 5.8824
+            }
+          ]
+        },
+        "mouths": {
+          "count": 10,
+          "tier_counts": {
+            "common": 6,
+            "rare": 2,
+            "epic": 1,
+            "legendary": 1
+          },
+          "options": [
+            {
+              "id": "smile",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "open_smile",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "frown",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "tiny",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "surprised",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "tongue",
+              "rarity": "rare",
+              "weight": 25,
+              "probability": 0.058823529411764705,
+              "percent": 5.8824
+            },
+            {
+              "id": "angry",
+              "rarity": "legendary",
+              "weight": 5,
+              "probability": 0.011764705882352941,
+              "percent": 1.1765
+            },
+            {
+              "id": "laugh",
+              "rarity": "rare",
+              "weight": 25,
+              "probability": 0.058823529411764705,
+              "percent": 5.8824
+            },
+            {
+              "id": "sad",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "funny",
+              "rarity": "epic",
+              "weight": 10,
+              "probability": 0.023529411764705882,
+              "percent": 2.3529
+            }
+          ]
+        },
+        "accessories": {
+          "count": 10,
+          "tier_counts": {
+            "common": 6,
+            "rare": 2,
+            "epic": 1,
+            "legendary": 1
+          },
+          "options": [
+            {
+              "id": "none",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "hat",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "crown",
+              "rarity": "legendary",
+              "weight": 5,
+              "probability": 0.011764705882352941,
+              "percent": 1.1765
+            },
+            {
+              "id": "bow",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "bandana",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "headphones",
+              "rarity": "rare",
+              "weight": 25,
+              "probability": 0.058823529411764705,
+              "percent": 5.8824
+            },
+            {
+              "id": "glasses",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "flower",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "bowtie",
+              "rarity": "rare",
+              "weight": 25,
+              "probability": 0.058823529411764705,
+              "percent": 5.8824
+            },
+            {
+              "id": "party_hat",
+              "rarity": "epic",
+              "weight": 10,
+              "probability": 0.023529411764705882,
+              "percent": 2.3529
+            }
+          ]
+        }
+      },
+      "P05": {
+        "colors": {
+          "count": 8,
+          "tier_counts": {
+            "common": 5,
+            "rare": 1,
+            "epic": 1,
+            "legendary": 1
+          },
+          "options": [
+            {
+              "id": "white",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.17647058823529413,
+              "percent": 17.6471
+            },
+            {
+              "id": "pink",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.17647058823529413,
+              "percent": 17.6471
+            },
+            {
+              "id": "gray",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.17647058823529413,
+              "percent": 17.6471
+            },
+            {
+              "id": "brown",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.17647058823529413,
+              "percent": 17.6471
+            },
+            {
+              "id": "lavender",
+              "rarity": "epic",
+              "weight": 10,
+              "probability": 0.029411764705882353,
+              "percent": 2.9412
+            },
+            {
+              "id": "cream",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.17647058823529413,
+              "percent": 17.6471
+            },
+            {
+              "id": "peach",
+              "rarity": "rare",
+              "weight": 25,
+              "probability": 0.07352941176470588,
+              "percent": 7.3529
+            },
+            {
+              "id": "mint",
+              "rarity": "legendary",
+              "weight": 5,
+              "probability": 0.014705882352941176,
+              "percent": 1.4706
+            }
+          ]
+        },
+        "eyes": {
+          "count": 10,
+          "tier_counts": {
+            "common": 6,
+            "rare": 2,
+            "epic": 1,
+            "legendary": 1
+          },
+          "options": [
+            {
+              "id": "normal",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "happy",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "sleepy",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "angry",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "excited",
+              "rarity": "rare",
+              "weight": 25,
+              "probability": 0.058823529411764705,
+              "percent": 5.8824
+            },
+            {
+              "id": "sparkly",
+              "rarity": "epic",
+              "weight": 10,
+              "probability": 0.023529411764705882,
+              "percent": 2.3529
+            },
+            {
+              "id": "hearts",
+              "rarity": "legendary",
+              "weight": 5,
+              "probability": 0.011764705882352941,
+              "percent": 1.1765
+            },
+            {
+              "id": "wink",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "tiny",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "surprised",
+              "rarity": "rare",
+              "weight": 25,
+              "probability": 0.058823529411764705,
+              "percent": 5.8824
+            }
+          ]
+        },
+        "mouths": {
+          "count": 10,
+          "tier_counts": {
+            "common": 6,
+            "rare": 2,
+            "epic": 1,
+            "legendary": 1
+          },
+          "options": [
+            {
+              "id": "smile",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "open_smile",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "frown",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "tiny",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "surprised",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "tongue",
+              "rarity": "rare",
+              "weight": 25,
+              "probability": 0.058823529411764705,
+              "percent": 5.8824
+            },
+            {
+              "id": "angry",
+              "rarity": "legendary",
+              "weight": 5,
+              "probability": 0.011764705882352941,
+              "percent": 1.1765
+            },
+            {
+              "id": "laugh",
+              "rarity": "rare",
+              "weight": 25,
+              "probability": 0.058823529411764705,
+              "percent": 5.8824
+            },
+            {
+              "id": "sad",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "funny",
+              "rarity": "epic",
+              "weight": 10,
+              "probability": 0.023529411764705882,
+              "percent": 2.3529
+            }
+          ]
+        },
+        "accessories": {
+          "count": 10,
+          "tier_counts": {
+            "common": 6,
+            "rare": 2,
+            "epic": 1,
+            "legendary": 1
+          },
+          "options": [
+            {
+              "id": "none",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "hat",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "crown",
+              "rarity": "legendary",
+              "weight": 5,
+              "probability": 0.011764705882352941,
+              "percent": 1.1765
+            },
+            {
+              "id": "bow",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "bandana",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "headphones",
+              "rarity": "rare",
+              "weight": 25,
+              "probability": 0.058823529411764705,
+              "percent": 5.8824
+            },
+            {
+              "id": "glasses",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "flower",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "bowtie",
+              "rarity": "rare",
+              "weight": 25,
+              "probability": 0.058823529411764705,
+              "percent": 5.8824
+            },
+            {
+              "id": "party_hat",
+              "rarity": "epic",
+              "weight": 10,
+              "probability": 0.023529411764705882,
+              "percent": 2.3529
+            }
+          ]
+        }
+      },
+      "P06": {
+        "colors": {
+          "count": 8,
+          "tier_counts": {
+            "common": 5,
+            "rare": 1,
+            "epic": 1,
+            "legendary": 1
+          },
+          "options": [
+            {
+              "id": "lime",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.17647058823529413,
+              "percent": 17.6471
+            },
+            {
+              "id": "purple",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.17647058823529413,
+              "percent": 17.6471
+            },
+            {
+              "id": "cyan",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.17647058823529413,
+              "percent": 17.6471
+            },
+            {
+              "id": "magenta",
+              "rarity": "rare",
+              "weight": 25,
+              "probability": 0.07352941176470588,
+              "percent": 7.3529
+            },
+            {
+              "id": "yellow",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.17647058823529413,
+              "percent": 17.6471
+            },
+            {
+              "id": "indigo",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.17647058823529413,
+              "percent": 17.6471
+            },
+            {
+              "id": "alien_green",
+              "rarity": "epic",
+              "weight": 10,
+              "probability": 0.029411764705882353,
+              "percent": 2.9412
+            },
+            {
+              "id": "plasma",
+              "rarity": "legendary",
+              "weight": 5,
+              "probability": 0.014705882352941176,
+              "percent": 1.4706
+            }
+          ]
+        },
+        "eyes": {
+          "count": 10,
+          "tier_counts": {
+            "common": 6,
+            "rare": 2,
+            "epic": 1,
+            "legendary": 1
+          },
+          "options": [
+            {
+              "id": "normal",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "happy",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "sleepy",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "angry",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "excited",
+              "rarity": "rare",
+              "weight": 25,
+              "probability": 0.058823529411764705,
+              "percent": 5.8824
+            },
+            {
+              "id": "sparkly",
+              "rarity": "epic",
+              "weight": 10,
+              "probability": 0.023529411764705882,
+              "percent": 2.3529
+            },
+            {
+              "id": "hearts",
+              "rarity": "legendary",
+              "weight": 5,
+              "probability": 0.011764705882352941,
+              "percent": 1.1765
+            },
+            {
+              "id": "wink",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "tiny",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "surprised",
+              "rarity": "rare",
+              "weight": 25,
+              "probability": 0.058823529411764705,
+              "percent": 5.8824
+            }
+          ]
+        },
+        "mouths": {
+          "count": 10,
+          "tier_counts": {
+            "common": 6,
+            "rare": 2,
+            "epic": 1,
+            "legendary": 1
+          },
+          "options": [
+            {
+              "id": "smile",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "open_smile",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "frown",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "tiny",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "surprised",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "tongue",
+              "rarity": "rare",
+              "weight": 25,
+              "probability": 0.058823529411764705,
+              "percent": 5.8824
+            },
+            {
+              "id": "angry",
+              "rarity": "legendary",
+              "weight": 5,
+              "probability": 0.011764705882352941,
+              "percent": 1.1765
+            },
+            {
+              "id": "laugh",
+              "rarity": "rare",
+              "weight": 25,
+              "probability": 0.058823529411764705,
+              "percent": 5.8824
+            },
+            {
+              "id": "sad",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "funny",
+              "rarity": "epic",
+              "weight": 10,
+              "probability": 0.023529411764705882,
+              "percent": 2.3529
+            }
+          ]
+        },
+        "accessories": {
+          "count": 10,
+          "tier_counts": {
+            "common": 6,
+            "rare": 2,
+            "epic": 1,
+            "legendary": 1
+          },
+          "options": [
+            {
+              "id": "none",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "hat",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "crown",
+              "rarity": "legendary",
+              "weight": 5,
+              "probability": 0.011764705882352941,
+              "percent": 1.1765
+            },
+            {
+              "id": "bow",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "bandana",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "headphones",
+              "rarity": "rare",
+              "weight": 25,
+              "probability": 0.058823529411764705,
+              "percent": 5.8824
+            },
+            {
+              "id": "glasses",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "flower",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "bowtie",
+              "rarity": "rare",
+              "weight": 25,
+              "probability": 0.058823529411764705,
+              "percent": 5.8824
+            },
+            {
+              "id": "party_hat",
+              "rarity": "epic",
+              "weight": 10,
+              "probability": 0.023529411764705882,
+              "percent": 2.3529
+            }
+          ]
+        }
+      },
+      "P07": {
+        "colors": {
+          "count": 8,
+          "tier_counts": {
+            "common": 5,
+            "rare": 1,
+            "epic": 1,
+            "legendary": 1
+          },
+          "options": [
+            {
+              "id": "crimson",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.17647058823529413,
+              "percent": 17.6471
+            },
+            {
+              "id": "emerald",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.17647058823529413,
+              "percent": 17.6471
+            },
+            {
+              "id": "sapphire",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.17647058823529413,
+              "percent": 17.6471
+            },
+            {
+              "id": "gold",
+              "rarity": "legendary",
+              "weight": 5,
+              "probability": 0.014705882352941176,
+              "percent": 1.4706
+            },
+            {
+              "id": "violet",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.17647058823529413,
+              "percent": 17.6471
+            },
+            {
+              "id": "slate",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.17647058823529413,
+              "percent": 17.6471
+            },
+            {
+              "id": "copper",
+              "rarity": "rare",
+              "weight": 25,
+              "probability": 0.07352941176470588,
+              "percent": 7.3529
+            },
+            {
+              "id": "ice",
+              "rarity": "epic",
+              "weight": 10,
+              "probability": 0.029411764705882353,
+              "percent": 2.9412
+            }
+          ]
+        },
+        "eyes": {
+          "count": 10,
+          "tier_counts": {
+            "common": 6,
+            "rare": 2,
+            "epic": 1,
+            "legendary": 1
+          },
+          "options": [
+            {
+              "id": "normal",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "happy",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "sleepy",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "angry",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "excited",
+              "rarity": "rare",
+              "weight": 25,
+              "probability": 0.058823529411764705,
+              "percent": 5.8824
+            },
+            {
+              "id": "sparkly",
+              "rarity": "epic",
+              "weight": 10,
+              "probability": 0.023529411764705882,
+              "percent": 2.3529
+            },
+            {
+              "id": "hearts",
+              "rarity": "legendary",
+              "weight": 5,
+              "probability": 0.011764705882352941,
+              "percent": 1.1765
+            },
+            {
+              "id": "wink",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "tiny",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "surprised",
+              "rarity": "rare",
+              "weight": 25,
+              "probability": 0.058823529411764705,
+              "percent": 5.8824
+            }
+          ]
+        },
+        "mouths": {
+          "count": 10,
+          "tier_counts": {
+            "common": 6,
+            "rare": 2,
+            "epic": 1,
+            "legendary": 1
+          },
+          "options": [
+            {
+              "id": "smile",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "open_smile",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "frown",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "tiny",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "surprised",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "tongue",
+              "rarity": "rare",
+              "weight": 25,
+              "probability": 0.058823529411764705,
+              "percent": 5.8824
+            },
+            {
+              "id": "angry",
+              "rarity": "legendary",
+              "weight": 5,
+              "probability": 0.011764705882352941,
+              "percent": 1.1765
+            },
+            {
+              "id": "laugh",
+              "rarity": "rare",
+              "weight": 25,
+              "probability": 0.058823529411764705,
+              "percent": 5.8824
+            },
+            {
+              "id": "sad",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "funny",
+              "rarity": "epic",
+              "weight": 10,
+              "probability": 0.023529411764705882,
+              "percent": 2.3529
+            }
+          ]
+        },
+        "accessories": {
+          "count": 2,
+          "tier_counts": {
+            "common": 1,
+            "rare": 1,
+            "epic": 0,
+            "legendary": 0
+          },
+          "options": [
+            {
+              "id": "none",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.7058823529411765,
+              "percent": 70.5882
+            },
+            {
+              "id": "glasses",
+              "rarity": "rare",
+              "weight": 25,
+              "probability": 0.29411764705882354,
+              "percent": 29.4118
+            }
+          ]
+        }
+      },
+      "P08": {
+        "colors": {
+          "count": 8,
+          "tier_counts": {
+            "common": 5,
+            "rare": 1,
+            "epic": 1,
+            "legendary": 1
+          },
+          "options": [
+            {
+              "id": "frog_green",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.17647058823529413,
+              "percent": 17.6471
+            },
+            {
+              "id": "olive",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.17647058823529413,
+              "percent": 17.6471
+            },
+            {
+              "id": "teal",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.17647058823529413,
+              "percent": 17.6471
+            },
+            {
+              "id": "yellow_frog",
+              "rarity": "epic",
+              "weight": 10,
+              "probability": 0.029411764705882353,
+              "percent": 2.9412
+            },
+            {
+              "id": "blue_frog",
+              "rarity": "rare",
+              "weight": 25,
+              "probability": 0.07352941176470588,
+              "percent": 7.3529
+            },
+            {
+              "id": "pink_frog",
+              "rarity": "legendary",
+              "weight": 5,
+              "probability": 0.014705882352941176,
+              "percent": 1.4706
+            },
+            {
+              "id": "dark_green",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.17647058823529413,
+              "percent": 17.6471
+            },
+            {
+              "id": "moss",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.17647058823529413,
+              "percent": 17.6471
+            }
+          ]
+        },
+        "eyes": {
+          "count": 10,
+          "tier_counts": {
+            "common": 6,
+            "rare": 2,
+            "epic": 1,
+            "legendary": 1
+          },
+          "options": [
+            {
+              "id": "normal",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "happy",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "sleepy",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "angry",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "excited",
+              "rarity": "rare",
+              "weight": 25,
+              "probability": 0.058823529411764705,
+              "percent": 5.8824
+            },
+            {
+              "id": "sparkly",
+              "rarity": "epic",
+              "weight": 10,
+              "probability": 0.023529411764705882,
+              "percent": 2.3529
+            },
+            {
+              "id": "hearts",
+              "rarity": "legendary",
+              "weight": 5,
+              "probability": 0.011764705882352941,
+              "percent": 1.1765
+            },
+            {
+              "id": "wink",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "tiny",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "surprised",
+              "rarity": "rare",
+              "weight": 25,
+              "probability": 0.058823529411764705,
+              "percent": 5.8824
+            }
+          ]
+        },
+        "mouths": {
+          "count": 10,
+          "tier_counts": {
+            "common": 6,
+            "rare": 2,
+            "epic": 1,
+            "legendary": 1
+          },
+          "options": [
+            {
+              "id": "smile",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "open_smile",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "frown",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "tiny",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "surprised",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "tongue",
+              "rarity": "rare",
+              "weight": 25,
+              "probability": 0.058823529411764705,
+              "percent": 5.8824
+            },
+            {
+              "id": "angry",
+              "rarity": "legendary",
+              "weight": 5,
+              "probability": 0.011764705882352941,
+              "percent": 1.1765
+            },
+            {
+              "id": "laugh",
+              "rarity": "rare",
+              "weight": 25,
+              "probability": 0.058823529411764705,
+              "percent": 5.8824
+            },
+            {
+              "id": "sad",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "funny",
+              "rarity": "epic",
+              "weight": 10,
+              "probability": 0.023529411764705882,
+              "percent": 2.3529
+            }
+          ]
+        },
+        "accessories": {
+          "count": 10,
+          "tier_counts": {
+            "common": 6,
+            "rare": 2,
+            "epic": 1,
+            "legendary": 1
+          },
+          "options": [
+            {
+              "id": "none",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "hat",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "crown",
+              "rarity": "legendary",
+              "weight": 5,
+              "probability": 0.011764705882352941,
+              "percent": 1.1765
+            },
+            {
+              "id": "bow",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "bandana",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "headphones",
+              "rarity": "rare",
+              "weight": 25,
+              "probability": 0.058823529411764705,
+              "percent": 5.8824
+            },
+            {
+              "id": "glasses",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "flower",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "bowtie",
+              "rarity": "rare",
+              "weight": 25,
+              "probability": 0.058823529411764705,
+              "percent": 5.8824
+            },
+            {
+              "id": "party_hat",
+              "rarity": "epic",
+              "weight": 10,
+              "probability": 0.023529411764705882,
+              "percent": 2.3529
+            }
+          ]
+        }
+      },
+      "P09": {
+        "colors": {
+          "count": 8,
+          "tier_counts": {
+            "common": 5,
+            "rare": 1,
+            "epic": 1,
+            "legendary": 1
+          },
+          "options": [
+            {
+              "id": "brown",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.17647058823529413,
+              "percent": 17.6471
+            },
+            {
+              "id": "honey",
+              "rarity": "rare",
+              "weight": 25,
+              "probability": 0.07352941176470588,
+              "percent": 7.3529
+            },
+            {
+              "id": "cinnamon",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.17647058823529413,
+              "percent": 17.6471
+            },
+            {
+              "id": "cream",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.17647058823529413,
+              "percent": 17.6471
+            },
+            {
+              "id": "dark_brown",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.17647058823529413,
+              "percent": 17.6471
+            },
+            {
+              "id": "ginger",
+              "rarity": "epic",
+              "weight": 10,
+              "probability": 0.029411764705882353,
+              "percent": 2.9412
+            },
+            {
+              "id": "mocha",
+              "rarity": "legendary",
+              "weight": 5,
+              "probability": 0.014705882352941176,
+              "percent": 1.4706
+            },
+            {
+              "id": "sand",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.17647058823529413,
+              "percent": 17.6471
+            }
+          ]
+        },
+        "eyes": {
+          "count": 10,
+          "tier_counts": {
+            "common": 6,
+            "rare": 2,
+            "epic": 1,
+            "legendary": 1
+          },
+          "options": [
+            {
+              "id": "normal",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "happy",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "sleepy",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "angry",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "excited",
+              "rarity": "rare",
+              "weight": 25,
+              "probability": 0.058823529411764705,
+              "percent": 5.8824
+            },
+            {
+              "id": "sparkly",
+              "rarity": "epic",
+              "weight": 10,
+              "probability": 0.023529411764705882,
+              "percent": 2.3529
+            },
+            {
+              "id": "hearts",
+              "rarity": "legendary",
+              "weight": 5,
+              "probability": 0.011764705882352941,
+              "percent": 1.1765
+            },
+            {
+              "id": "wink",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "tiny",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "surprised",
+              "rarity": "rare",
+              "weight": 25,
+              "probability": 0.058823529411764705,
+              "percent": 5.8824
+            }
+          ]
+        },
+        "mouths": {
+          "count": 10,
+          "tier_counts": {
+            "common": 6,
+            "rare": 2,
+            "epic": 1,
+            "legendary": 1
+          },
+          "options": [
+            {
+              "id": "smile",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "open_smile",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "frown",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "tiny",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "surprised",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "tongue",
+              "rarity": "rare",
+              "weight": 25,
+              "probability": 0.058823529411764705,
+              "percent": 5.8824
+            },
+            {
+              "id": "angry",
+              "rarity": "legendary",
+              "weight": 5,
+              "probability": 0.011764705882352941,
+              "percent": 1.1765
+            },
+            {
+              "id": "laugh",
+              "rarity": "rare",
+              "weight": 25,
+              "probability": 0.058823529411764705,
+              "percent": 5.8824
+            },
+            {
+              "id": "sad",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "funny",
+              "rarity": "epic",
+              "weight": 10,
+              "probability": 0.023529411764705882,
+              "percent": 2.3529
+            }
+          ]
+        },
+        "accessories": {
+          "count": 10,
+          "tier_counts": {
+            "common": 6,
+            "rare": 2,
+            "epic": 1,
+            "legendary": 1
+          },
+          "options": [
+            {
+              "id": "none",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "hat",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "crown",
+              "rarity": "legendary",
+              "weight": 5,
+              "probability": 0.011764705882352941,
+              "percent": 1.1765
+            },
+            {
+              "id": "bow",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "bandana",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "headphones",
+              "rarity": "rare",
+              "weight": 25,
+              "probability": 0.058823529411764705,
+              "percent": 5.8824
+            },
+            {
+              "id": "glasses",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "flower",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "bowtie",
+              "rarity": "rare",
+              "weight": 25,
+              "probability": 0.058823529411764705,
+              "percent": 5.8824
+            },
+            {
+              "id": "party_hat",
+              "rarity": "epic",
+              "weight": 10,
+              "probability": 0.023529411764705882,
+              "percent": 2.3529
+            }
+          ]
+        }
+      },
+      "P10": {
+        "colors": {
+          "count": 8,
+          "tier_counts": {
+            "common": 5,
+            "rare": 1,
+            "epic": 1,
+            "legendary": 1
+          },
+          "options": [
+            {
+              "id": "yellow",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.17647058823529413,
+              "percent": 17.6471
+            },
+            {
+              "id": "bluebird",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.17647058823529413,
+              "percent": 17.6471
+            },
+            {
+              "id": "red",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.17647058823529413,
+              "percent": 17.6471
+            },
+            {
+              "id": "green",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.17647058823529413,
+              "percent": 17.6471
+            },
+            {
+              "id": "orange",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.17647058823529413,
+              "percent": 17.6471
+            },
+            {
+              "id": "purple",
+              "rarity": "epic",
+              "weight": 10,
+              "probability": 0.029411764705882353,
+              "percent": 2.9412
+            },
+            {
+              "id": "pink",
+              "rarity": "rare",
+              "weight": 25,
+              "probability": 0.07352941176470588,
+              "percent": 7.3529
+            },
+            {
+              "id": "white",
+              "rarity": "legendary",
+              "weight": 5,
+              "probability": 0.014705882352941176,
+              "percent": 1.4706
+            }
+          ]
+        },
+        "eyes": {
+          "count": 10,
+          "tier_counts": {
+            "common": 6,
+            "rare": 2,
+            "epic": 1,
+            "legendary": 1
+          },
+          "options": [
+            {
+              "id": "normal",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "happy",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "sleepy",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "angry",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "excited",
+              "rarity": "rare",
+              "weight": 25,
+              "probability": 0.058823529411764705,
+              "percent": 5.8824
+            },
+            {
+              "id": "sparkly",
+              "rarity": "epic",
+              "weight": 10,
+              "probability": 0.023529411764705882,
+              "percent": 2.3529
+            },
+            {
+              "id": "hearts",
+              "rarity": "legendary",
+              "weight": 5,
+              "probability": 0.011764705882352941,
+              "percent": 1.1765
+            },
+            {
+              "id": "wink",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "tiny",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "surprised",
+              "rarity": "rare",
+              "weight": 25,
+              "probability": 0.058823529411764705,
+              "percent": 5.8824
+            }
+          ]
+        },
+        "mouths": {
+          "count": 10,
+          "tier_counts": {
+            "common": 6,
+            "rare": 2,
+            "epic": 1,
+            "legendary": 1
+          },
+          "options": [
+            {
+              "id": "smile",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "open_smile",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "frown",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "tiny",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "surprised",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "tongue",
+              "rarity": "rare",
+              "weight": 25,
+              "probability": 0.058823529411764705,
+              "percent": 5.8824
+            },
+            {
+              "id": "angry",
+              "rarity": "legendary",
+              "weight": 5,
+              "probability": 0.011764705882352941,
+              "percent": 1.1765
+            },
+            {
+              "id": "laugh",
+              "rarity": "rare",
+              "weight": 25,
+              "probability": 0.058823529411764705,
+              "percent": 5.8824
+            },
+            {
+              "id": "sad",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "funny",
+              "rarity": "epic",
+              "weight": 10,
+              "probability": 0.023529411764705882,
+              "percent": 2.3529
+            }
+          ]
+        },
+        "accessories": {
+          "count": 9,
+          "tier_counts": {
+            "common": 6,
+            "rare": 1,
+            "epic": 1,
+            "legendary": 1
+          },
+          "options": [
+            {
+              "id": "none",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.15,
+              "percent": 15.0
+            },
+            {
+              "id": "hat",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.15,
+              "percent": 15.0
+            },
+            {
+              "id": "crown",
+              "rarity": "legendary",
+              "weight": 5,
+              "probability": 0.0125,
+              "percent": 1.25
+            },
+            {
+              "id": "bow",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.15,
+              "percent": 15.0
+            },
+            {
+              "id": "bandana",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.15,
+              "percent": 15.0
+            },
+            {
+              "id": "glasses",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.15,
+              "percent": 15.0
+            },
+            {
+              "id": "flower",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.15,
+              "percent": 15.0
+            },
+            {
+              "id": "bowtie",
+              "rarity": "rare",
+              "weight": 25,
+              "probability": 0.0625,
+              "percent": 6.25
+            },
+            {
+              "id": "party_hat",
+              "rarity": "epic",
+              "weight": 10,
+              "probability": 0.025,
+              "percent": 2.5
+            }
+          ]
+        }
+      },
+      "P11": {
+        "colors": {
+          "count": 8,
+          "tier_counts": {
+            "common": 5,
+            "rare": 1,
+            "epic": 1,
+            "legendary": 1
+          },
+          "options": [
+            {
+              "id": "pink",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.17647058823529413,
+              "percent": 17.6471
+            },
+            {
+              "id": "peach",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.17647058823529413,
+              "percent": 17.6471
+            },
+            {
+              "id": "lavender",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.17647058823529413,
+              "percent": 17.6471
+            },
+            {
+              "id": "mint",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.17647058823529413,
+              "percent": 17.6471
+            },
+            {
+              "id": "blue",
+              "rarity": "rare",
+              "weight": 25,
+              "probability": 0.07352941176470588,
+              "percent": 7.3529
+            },
+            {
+              "id": "coral",
+              "rarity": "legendary",
+              "weight": 5,
+              "probability": 0.014705882352941176,
+              "percent": 1.4706
+            },
+            {
+              "id": "lilac",
+              "rarity": "epic",
+              "weight": 10,
+              "probability": 0.029411764705882353,
+              "percent": 2.9412
+            },
+            {
+              "id": "cream",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.17647058823529413,
+              "percent": 17.6471
+            }
+          ]
+        },
+        "eyes": {
+          "count": 10,
+          "tier_counts": {
+            "common": 6,
+            "rare": 2,
+            "epic": 1,
+            "legendary": 1
+          },
+          "options": [
+            {
+              "id": "normal",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "happy",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "sleepy",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "angry",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "excited",
+              "rarity": "rare",
+              "weight": 25,
+              "probability": 0.058823529411764705,
+              "percent": 5.8824
+            },
+            {
+              "id": "sparkly",
+              "rarity": "epic",
+              "weight": 10,
+              "probability": 0.023529411764705882,
+              "percent": 2.3529
+            },
+            {
+              "id": "hearts",
+              "rarity": "legendary",
+              "weight": 5,
+              "probability": 0.011764705882352941,
+              "percent": 1.1765
+            },
+            {
+              "id": "wink",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "tiny",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "surprised",
+              "rarity": "rare",
+              "weight": 25,
+              "probability": 0.058823529411764705,
+              "percent": 5.8824
+            }
+          ]
+        },
+        "mouths": {
+          "count": 10,
+          "tier_counts": {
+            "common": 6,
+            "rare": 2,
+            "epic": 1,
+            "legendary": 1
+          },
+          "options": [
+            {
+              "id": "smile",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "open_smile",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "frown",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "tiny",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "surprised",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "tongue",
+              "rarity": "rare",
+              "weight": 25,
+              "probability": 0.058823529411764705,
+              "percent": 5.8824
+            },
+            {
+              "id": "angry",
+              "rarity": "legendary",
+              "weight": 5,
+              "probability": 0.011764705882352941,
+              "percent": 1.1765
+            },
+            {
+              "id": "laugh",
+              "rarity": "rare",
+              "weight": 25,
+              "probability": 0.058823529411764705,
+              "percent": 5.8824
+            },
+            {
+              "id": "sad",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "funny",
+              "rarity": "epic",
+              "weight": 10,
+              "probability": 0.023529411764705882,
+              "percent": 2.3529
+            }
+          ]
+        },
+        "accessories": {
+          "count": 9,
+          "tier_counts": {
+            "common": 6,
+            "rare": 1,
+            "epic": 1,
+            "legendary": 1
+          },
+          "options": [
+            {
+              "id": "none",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.15,
+              "percent": 15.0
+            },
+            {
+              "id": "hat",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.15,
+              "percent": 15.0
+            },
+            {
+              "id": "crown",
+              "rarity": "legendary",
+              "weight": 5,
+              "probability": 0.0125,
+              "percent": 1.25
+            },
+            {
+              "id": "bow",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.15,
+              "percent": 15.0
+            },
+            {
+              "id": "bandana",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.15,
+              "percent": 15.0
+            },
+            {
+              "id": "glasses",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.15,
+              "percent": 15.0
+            },
+            {
+              "id": "flower",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.15,
+              "percent": 15.0
+            },
+            {
+              "id": "bowtie",
+              "rarity": "rare",
+              "weight": 25,
+              "probability": 0.0625,
+              "percent": 6.25
+            },
+            {
+              "id": "party_hat",
+              "rarity": "epic",
+              "weight": 10,
+              "probability": 0.025,
+              "percent": 2.5
+            }
+          ]
+        }
+      },
+      "P12": {
+        "colors": {
+          "count": 8,
+          "tier_counts": {
+            "common": 5,
+            "rare": 1,
+            "epic": 1,
+            "legendary": 1
+          },
+          "options": [
+            {
+              "id": "steel",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.17647058823529413,
+              "percent": 17.6471
+            },
+            {
+              "id": "chrome",
+              "rarity": "legendary",
+              "weight": 5,
+              "probability": 0.014705882352941176,
+              "percent": 1.4706
+            },
+            {
+              "id": "slate",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.17647058823529413,
+              "percent": 17.6471
+            },
+            {
+              "id": "mint",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.17647058823529413,
+              "percent": 17.6471
+            },
+            {
+              "id": "sky",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.17647058823529413,
+              "percent": 17.6471
+            },
+            {
+              "id": "graphite",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.17647058823529413,
+              "percent": 17.6471
+            },
+            {
+              "id": "ice",
+              "rarity": "rare",
+              "weight": 25,
+              "probability": 0.07352941176470588,
+              "percent": 7.3529
+            },
+            {
+              "id": "crimson",
+              "rarity": "epic",
+              "weight": 10,
+              "probability": 0.029411764705882353,
+              "percent": 2.9412
+            }
+          ]
+        },
+        "eyes": {
+          "count": 10,
+          "tier_counts": {
+            "common": 6,
+            "rare": 2,
+            "epic": 1,
+            "legendary": 1
+          },
+          "options": [
+            {
+              "id": "normal",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "happy",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "sleepy",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "angry",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "excited",
+              "rarity": "rare",
+              "weight": 25,
+              "probability": 0.058823529411764705,
+              "percent": 5.8824
+            },
+            {
+              "id": "sparkly",
+              "rarity": "epic",
+              "weight": 10,
+              "probability": 0.023529411764705882,
+              "percent": 2.3529
+            },
+            {
+              "id": "hearts",
+              "rarity": "legendary",
+              "weight": 5,
+              "probability": 0.011764705882352941,
+              "percent": 1.1765
+            },
+            {
+              "id": "wink",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "tiny",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "surprised",
+              "rarity": "rare",
+              "weight": 25,
+              "probability": 0.058823529411764705,
+              "percent": 5.8824
+            }
+          ]
+        },
+        "mouths": {
+          "count": 10,
+          "tier_counts": {
+            "common": 6,
+            "rare": 2,
+            "epic": 1,
+            "legendary": 1
+          },
+          "options": [
+            {
+              "id": "smile",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "open_smile",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "frown",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "tiny",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "surprised",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "tongue",
+              "rarity": "rare",
+              "weight": 25,
+              "probability": 0.058823529411764705,
+              "percent": 5.8824
+            },
+            {
+              "id": "angry",
+              "rarity": "legendary",
+              "weight": 5,
+              "probability": 0.011764705882352941,
+              "percent": 1.1765
+            },
+            {
+              "id": "laugh",
+              "rarity": "rare",
+              "weight": 25,
+              "probability": 0.058823529411764705,
+              "percent": 5.8824
+            },
+            {
+              "id": "sad",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "funny",
+              "rarity": "epic",
+              "weight": 10,
+              "probability": 0.023529411764705882,
+              "percent": 2.3529
+            }
+          ]
+        },
+        "accessories": {
+          "count": 10,
+          "tier_counts": {
+            "common": 6,
+            "rare": 2,
+            "epic": 1,
+            "legendary": 1
+          },
+          "options": [
+            {
+              "id": "none",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "hat",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "crown",
+              "rarity": "legendary",
+              "weight": 5,
+              "probability": 0.011764705882352941,
+              "percent": 1.1765
+            },
+            {
+              "id": "bow",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "bandana",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "headphones",
+              "rarity": "rare",
+              "weight": 25,
+              "probability": 0.058823529411764705,
+              "percent": 5.8824
+            },
+            {
+              "id": "glasses",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "flower",
+              "rarity": "common",
+              "weight": 60,
+              "probability": 0.1411764705882353,
+              "percent": 14.1176
+            },
+            {
+              "id": "bowtie",
+              "rarity": "rare",
+              "weight": 25,
+              "probability": 0.058823529411764705,
+              "percent": 5.8824
+            },
+            {
+              "id": "party_hat",
+              "rarity": "epic",
+              "weight": 10,
+              "probability": 0.023529411764705882,
+              "percent": 2.3529
+            }
+          ]
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "description": "Layer stack bottom → top for composed NFT. All layers are 2048×2048 transparent PNGs unless noted.",
+  "order": [
+    {"index": 1, "id": "background", "dir": "layers/backgrounds", "notes": "Full-bleed; Robinhood-green family only"},
+    {"index": 2, "id": "handheld_shape", "dir": "layers/handhelds", "notes": "Neutral gray shaded shell + structure; tinted by shell_color at compose"},
+    {"index": 3, "id": "shell_color", "dir": "schema/traits.json#shell_colors", "notes": "Multiply/tint of handheld fill mask (H##_mask.png)"},
+    {"index": 4, "id": "shell_class", "dir": "layers/shell_class", "notes": "ALPHA/BETA/DELTA/OMEGA mark; repositioned to handheld.shell_class anchor"},
+    {"index": 5, "id": "pet_id", "dir": "dynamic", "notes": "Rendered at compose: PET #NNNN; never baked into handheld art"},
+    {"index": 6, "id": "screen", "dir": "layers/screens", "notes": "Bezel + inner well; inner rect from anchors; may be dark or light well"},
+    {"index": 7, "id": "screen_effect", "dir": "layers/screen_effects", "notes": "64-grid pixel FX scaled NEAREST into screen rect; BEHIND pet. Awaken may override."},
+    {"index": 8, "id": "pet_body", "dir": "layers/pets/*/body.png or colors/", "notes": "Dormant: replace with egg"},
+    {"index": 9, "id": "pet_color", "dir": "layers/pets/*/colors", "notes": "Pre-tinted body PNGs preferred; or tint at compose"},
+    {"index": 10, "id": "pet_eyes", "dir": "layers/pets/*/eyes", "notes": "Pet-specific anchors"},
+    {"index": 11, "id": "pet_mouth", "dir": "layers/pets/*/mouths", "notes": "Pet-specific; PIP beak variants"},
+    {"index": 12, "id": "pet_accessory", "dir": "layers/pets/*/accessories", "notes": "Pet-specific placement"},
+    {"index": 13, "id": "buttons", "dir": "layers/buttons", "notes": "3 circular buttons; repositioned to handheld.buttons anchors"},
+    {"index": 14, "id": "antenna", "dir": "layers/antennas", "notes": "Top nub attach; repositioned to handheld.antenna anchor"}
+  ],
+  "modes": {
+    "awakened": "Full pet stack (body+color+eyes+mouth+accessory) over screen_effect",
+    "dormant": "Replace pet layers 8–12 with egg (+ optional egg_rock animation). Screen effect still applies unless awaken override.",
+    "awaken_temp": "Temporarily overrides screen_effect with awaken FX while showing pet"
+  }
+}

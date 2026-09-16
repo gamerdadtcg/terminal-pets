@@ -5,9 +5,12 @@ import {Base64} from "@openzeppelin/contracts/utils/Base64.sol";
 import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
 
 /// @title TerminalRenderer
-/// @notice Mechanics-only placeholder. Pet drawing is removed; art will be
-/// reconnected separately. Seed domain `AWAKEN_PET_V2` is unchanged.
-/// Accessories stay `ACC_N = 6` (None, Bow, Cap, Star, Glasses, Halo).
+/// @notice Historical Track A leftover + on-chain **fallback** metadata only.
+/// Live product art is the off-chain Pocket Critter generator (`art/`) — composed
+/// PNG/GIF, not these SVG pets. Do not restore scarfpack / lit-SVG drawing here.
+/// `ACC_N` and the old accessory names are obsolete for product traits
+/// (`art/schema/traits.json` is canonical). Seed `AWAKEN_PET_V2` is kept so
+/// existing tests stay deterministic.
 library TerminalRenderer {
     using Strings for uint256;
 
@@ -163,7 +166,7 @@ library TerminalRenderer {
     function contractURI() internal pure returns (string memory) {
         string memory image = hiddenSvg(0);
         string memory json = string.concat(
-            '{"name":"Terminal Pets","description":"Handheld pets on Robinhood Chain. Art removed pending reconnect. Mint Sealed, Ignite to Lit.","image":"data:image/svg+xml;base64,',
+            '{"name":"Terminal Pets","description":"Handheld pets on Robinhood Chain. Generative Pocket Critter PFPs: sealed, then dormant egg, then awake on Ignite. On-chain SVG here is a fallback stub until metadata URIs are set.","image":"data:image/svg+xml;base64,',
             Base64.encode(bytes(image)),
             '","external_link":"https://terminalpets.xyz"}'
         );
@@ -181,7 +184,7 @@ library TerminalRenderer {
             '<text x="200" y="230" text-anchor="middle" fill="#94a3b8" font-size="16" font-family="monospace">',
             state,
             "</text>",
-            '<text x="200" y="270" text-anchor="middle" fill="#64748b" font-size="11" font-family="monospace">ART REMOVED</text>',
+            '<text x="200" y="270" text-anchor="middle" fill="#64748b" font-size="11" font-family="monospace">OFF-CHAIN ART</text>',
             "</svg>"
         );
     }
@@ -215,7 +218,7 @@ library TerminalRenderer {
         string memory json = string.concat(
             '{"name":"Terminal Pet #',
             tokenId.toString(),
-            '","description":"A handheld Terminal Pet. Art pending reconnect. Dormant until Ignite.","image":"data:image/svg+xml;base64,',
+            '","description":"A handheld Terminal Pet. Fallback stub - product art is off-chain generative GIF. Dormant until Ignite.","image":"data:image/svg+xml;base64,',
             Base64.encode(bytes(image)),
             '","attributes":[',
             attrs,
