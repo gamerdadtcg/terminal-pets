@@ -6,7 +6,8 @@ const path = require("path");
 
 const publicDir = path.join(__dirname, "..", "public");
 const GIF89A = Buffer.from("GIF89a");
-const ORIGIN = "https://terminal-pets.vercel.app";
+// Canonical public origin. terminal-pets.vercel.app still resolves as a fallback alias.
+const ORIGIN = "https://terminalpets.xyz";
 
 function mustGif(filePath) {
   const fd = fs.openSync(filePath, "r");

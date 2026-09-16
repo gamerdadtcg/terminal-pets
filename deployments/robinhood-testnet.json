@@ -125,6 +125,7 @@
   "notes": [
     "Broadcast to chainId 46630 only (never 4663 mainnet).",
     "Forge script resumed after RPC 429 mid-broadcast; final 3 wiring txs sent via cast.",
-    "Heavy Cloudflare 429 rate limits throughout."
+    "Heavy Cloudflare 429 rate limits throughout.",
+    "tokenURI_1_* vercel.app /metadata/{dormant,lit} values are historical recorded URIs. That hub tree is gone. New deploys use https://terminalpets.xyz/metadata/hidden.json (vercel.app hidden.json still resolves)."
   ]
 }

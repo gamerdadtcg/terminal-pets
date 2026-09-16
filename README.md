@@ -4,6 +4,8 @@ Greenfield NFT collection for **Robinhood Chain** (EVM L2, chain id `4663`, nati
 
 Public collection name: **Terminal Pets**. NFT symbol: **TERM**. Memecoin: **`$TERM`**.
 
+Public site: **https://terminalpets.xyz**. `https://terminal-pets.vercel.app` remains a working fallback alias until DNS is fully cut over. Sealed metadata: **https://terminalpets.xyz/metadata/hidden.json** (the vercel.app path still resolves).
+
 Collectors mint on **this hub** (`/mint` → `CollectionNFT.mint` / `mintTo` while `mintOpen`). OpenSea Studio BYO import is currently blocked — do **not** send collectors to the Studio deploy-wizard. After mint, each token is a unique handheld **pet** that starts **Sealed**: every `tokenURI` is the same `hidden.json` until `CollectionNFT.reveal()`, so collectors **cannot see traits**. Hub carousel GIFs are **examples / not mint supply**. After `CollectionNFT.reveal()` it shows as **Dormant** until Ignite. Each token also gets a one-time **`$TERM` Ignite allotment** (placeholder **1,000 `$TERM`**) from token supply so the token half of the first wake does not need a live chart. **Ignite** is off until reveal. Then it is hybrid: that `$TERM` (**37.5% burn / 25% Hopper-as-ETH / 37.5% allotment escrow refill**) **plus exactly 0.002 ETH**. The ETH splits **50% buy `$TERM` and burn / 50% Hopper**. Team earns **0** from that ETH fee (not TermFund, not treasury). The 37.5% token cut returns to the per-pet allotment **pool** (that tokenId stays consumed). One-way **Dormant → Lit**. Lit stays with the NFT on transfer. **Royalties** (7.5% via **RoyaltySplitter**): **pre-reveal 100% → TermFund** (nothing to Hopper, nothing to treasury from that stream). **Post-reveal 5% Hopper / 2.5% treasury**. **Hopper** is ETH only after that: post-reveal NFT royalties, **50% of each Ignite ETH fee**, 25% of each Ignite `$TERM` fee (swapped to ETH when a router is set), plus, once the canonical TERM/ETH pool is live, a **1.5% TermMarket skim** of that pool’s volume. `$TERM` is **not** fee-on-transfer; public transfers are also **off until reveal**. **Dial**: Ignite assigns **1–4** Robinhood Chain Stock Tokens from a fixed 7-token pool (**AAPL, MSFT, GOOGL, AMZN, META, NVDA, TSLA**) by shell class (**ALPHA 1 / BETA 2 / DELTA 3 / OMEGA 4**). The on-chain array still has 8 slots; slot 0 is unused (no HOOD token — leave `address(0)`). Holders do not pick. Equal weights (bps = 10_000). See [`docs/DIAL.md`](docs/DIAL.md). **Pulse** uses an escalating Hopper ETH **ladder** (not a fixed 0.5 ETH): bootstrap `0.1 → 1.0`, then cycle `0.5 → 1.0` forever (never back to 0.1). Snapshot Lit, read Dial. **Dialed Lit** swap their ETH share to those Stock Tokens (ETH fallback if no router). **Undialed Lit** (no assignment, or slots still `address(0)`) buy `$TERM` with that share and credit the TBA (or owner) — not raw ETH; claim reverts without router + `$TERM`. Hopper stays ETH. Dormant earn nothing. TermMarket ships in this repo but stays **inactive** until `TERM_POOL` and `TERM_SWAP_ROUTER` are set.
 
 This repo is a complete MVP: Foundry contracts, tests, a Robinhood Chain deploy script, a Next.js hub + wallet dapp (wagmi / viem), and the Pocket Critter generative PFP art system under `art/`. The public homepage is a marketing hub. Contract addresses can stay empty until Robinhood Chain deploy.
@@ -107,7 +109,7 @@ Always point OpenSea creator earnings at the **RoyaltySplitter**. The splitter h
 
 Do **not** broadcast to chain `4663` until explicitly asked.
 
-1. Deploy contracts. Confirm `revealed = false`, `igniteEnabled = false`, `tradingEnabled = false`, splitter `live = false`. Set `hiddenURI` only (`https://terminal-pets.vercel.app/metadata/hidden.json`). Do **not** publish 4444 lit/dormant JSON to `web/public/metadata/{lit,dormant}` or git.
+1. Deploy contracts. Confirm `revealed = false`, `igniteEnabled = false`, `tradingEnabled = false`, splitter `live = false`. Set `hiddenURI` only (`https://terminalpets.xyz/metadata/hidden.json`; `https://terminal-pets.vercel.app/metadata/hidden.json` still resolves until DNS is fully cut over). Do **not** publish 4444 lit/dormant JSON to `web/public/metadata/{lit,dormant}` or git.
 2. `teamMint` the 200 reserve to the mainnet team wallet **Thursday, September 17, 2026, 8:00 PM PT** (see [`docs/MAINNET_PREP.md`](docs/MAINNET_PREP.md)). That is owner-only — not a public mint. **Hub mint is primary** (`setMintOpen(true)` Friday). OpenSea Studio currently has **no BYO import** and **no Base Sepolia** in Drop create — do not send collectors to the wizard. Point **7.5%** earnings at the RoyaltySplitter if a collection page exists. Rehearse on Base Sepolia first: [`docs/STUDIO_DROP_DRYRUN.md`](docs/STUDIO_DROP_DRYRUN.md).
 3. Mint window (up to 24h): every `tokenURI` is the same sealed `hidden.json` (collectors cannot see traits). Secondary royalties fund TermFund. Hopper is untouched by that stream. **Thursday Sep 17 2026, 8:00 PM PT:** owner `teamMint` 200 to the team wallet (not a public mint). **Friday Sep 18:** GTD 8:00 AM / FCFS 9:00 AM / Public 10:00 AM PT, 1 per phase, free, 4444 total / 200 team / 4244 public. `mintOpen` stays closed until Friday phases.
 4. `CollectionNFT.reveal()` — owner anytime, or anyone after 24h. Then (and only then) point `dormantBaseURI` / `litBaseURI` at the **private 4444 pin**. Art + Ignite + `$TERM` trading + 5/2.5 royalties in one tx. Hopper payouts then lock 7 days from that timestamp.
@@ -226,7 +228,7 @@ Owner sets bases with `setMetadataURIs`. Trailing `/` appends `{tokenId}.json`. 
 
 | Public on this hub | Role |
 | --- | --- |
-| `https://terminal-pets.vercel.app/metadata/hidden.json` | **Only** collection metadata until after reveal |
+| `https://terminalpets.xyz/metadata/hidden.json` | **Only** collection metadata until after reveal. `https://terminal-pets.vercel.app/metadata/hidden.json` still resolves as a fallback alias until DNS is fully cut over. |
 | `web/public/art/examples/{awake,egg}/` | Demo GIFs, labeled examples / not mint supply |
 | `web/public/metadata/{lit,dormant}/` | **Do not commit or deploy** until after reveal policy |
 
@@ -340,6 +342,8 @@ NEXT_PUBLIC_SPLITTER_ADDRESS=
 NEXT_PUBLIC_TERM_ADDRESS=
 NEXT_PUBLIC_TERM_FUND_ADDRESS=
 NEXT_PUBLIC_TERM_MARKET_ADDRESS=
+NEXT_PUBLIC_SITE_URL=https://terminalpets.xyz
+# terminal-pets.vercel.app still resolves as a fallback alias until DNS cutover.
 NEXT_PUBLIC_OPENSEA_URL=
 NEXT_PUBLIC_X_URL=
 

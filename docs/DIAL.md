@@ -2,6 +2,8 @@
 
 Lit pets do **not** pick Stock Tokens. Dial is assigned on Ignite from the on-chain 8-slot allowlist, by **shell class**. Slot 0 is unused. The **live pool** collectors see is seven Robinhood Chain Stock Tokens.
 
+Public hub: **https://terminalpets.xyz** (`https://terminal-pets.vercel.app` remains a fallback alias until DNS is fully cut over). Explainer lives at `/dial` on that origin.
+
 ## Stock pool (hub + contract allowlist)
 
 Order is fixed. Slot 0 used to reserve HOOD; the official Robinhood Chain registry (`/rhj/assets`, chainId `4663`) has **no HOOD stock token**. Leave slot 0 `address(0)`. Do **not** invent a HOOD ERC-20. Hub copy lists only the seven live symbols.

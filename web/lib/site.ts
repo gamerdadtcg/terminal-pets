@@ -1,9 +1,27 @@
 import { DIAL_COPY } from "./dial";
 
+/**
+ * Canonical public production origin.
+ * Override with NEXT_PUBLIC_SITE_URL. `terminal-pets.vercel.app` still
+ * resolves as a fallback alias until DNS is fully cut over.
+ */
+export const DEFAULT_SITE_URL = "https://terminalpets.xyz";
+export const SITE_URL_ALIAS = "https://terminal-pets.vercel.app";
+
+export const SITE_URL = (
+  process.env.NEXT_PUBLIC_SITE_URL?.trim() || DEFAULT_SITE_URL
+).replace(/\/$/, "");
+
+export const SEALED_METADATA_PATH = "/metadata/hidden.json";
+export const SEALED_METADATA_URI = `${SITE_URL}${SEALED_METADATA_PATH}`;
+export const SEALED_METADATA_URI_ALIAS = `${SITE_URL_ALIAS}${SEALED_METADATA_PATH}`;
+
 export const SITE = {
   name: "Terminal Pets",
   symbol: "TERM",
   petName: "Terminal Pets",
+  url: SITE_URL,
+  urlAlias: SITE_URL_ALIAS,
   tagline: "Handheld pets that sleep until you Ignite them.",
     description:
     "Generative Pocket Critter PFPs on Robinhood Chain. Free mint Friday, September 18, 2026, America/Los_Angeles (PT). Mint on this hub (CollectionNFT.mint / mintTo while mintOpen). Pets mint Sealed for 24 hours: every tokenURI is the same hidden.json — collectors cannot see traits until CollectionNFT.reveal(). Hub carousel GIFs are examples / not mint supply. Ignite off, $TERM trading off, and 7.5% secondary royalties all to TermFund until reveal. Reveal shows a dormant egg GIF, turns on Ignite and trading, and switches royalties to 5% Hopper / 2.5% treasury. Hopper claims stay locked 7 days after reveal while ETH accrues. Each pet comes with a $TERM Ignite allotment. Ignite splits that 1,000 $TERM 37.5% burn / 25% Hopper (as ETH) / 37.5% allotment refill, plus 0.002 ETH split 50% buy-and-burn $TERM / 50% Hopper. Team earns 0 from that ETH fee. Dial assigns 1–4 Stock Tokens by shell class at Ignite. Pulse pays Dialed Lit in Stock Tokens and undialed Lit in $TERM — typically to the TBA. Hopper stays ETH.",
@@ -96,8 +114,11 @@ export const mintScheduleCopy = {
 export const sealedCopy = {
   badge: "Sealed until reveal",
   label: "examples / not mint supply",
+  hiddenUri: SEALED_METADATA_URI,
+  hiddenUriAlias: SEALED_METADATA_URI_ALIAS,
   tokenUri:
     "Until CollectionNFT.reveal(), every tokenURI is the same sealed hidden.json. Collectors cannot see traits.",
+  tokenUriLine: `Until CollectionNFT.reveal(), every tokenURI is ${SEALED_METADATA_URI}. Collectors cannot see traits. ${SEALED_METADATA_URI_ALIAS} still resolves until DNS is fully cut over.`,
   carousel:
     "Hub GIFs are examples / not mint supply. They are not live collection tokenIds.",
   sentence:
@@ -186,7 +207,7 @@ export const FAQ = [
   },
   {
     q: "Can I see traits at mint?",
-    a: "No. Until CollectionNFT.reveal(), every tokenURI is the same sealed hidden.json. Collectors cannot see traits, species, or rarity. Hub carousel GIFs are examples / not mint supply and are not the live 4444 files.",
+    a: `No. Until CollectionNFT.reveal(), every tokenURI is ${SEALED_METADATA_URI}. Collectors cannot see traits, species, or rarity. ${SEALED_METADATA_URI_ALIAS} still resolves as a fallback alias until DNS is fully cut over. Hub carousel GIFs are examples / not mint supply and are not the live 4444 files.`,
   },
   {
     q: "Where is the pet art?",

@@ -1,7 +1,7 @@
 {
   "name": "Terminal Pet (Sealed)",
   "description": "Sealed Terminal Pet. Until CollectionNFT.reveal(), every tokenURI is this single hidden.json. Collectors cannot see traits, species, rarity, or token-specific art. Hub carousel GIFs are examples / not mint supply.",
-  "image": "https://terminal-pets.vercel.app/art/sealed.png",
+  "image": "https://terminalpets.xyz/art/sealed.png",
   "attributes": [
     {
       "trait_type": "State",

@@ -10,7 +10,7 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: `Dial · ${SITE.name}`,
   description:
-    `Ignite assigns 1–4 Robinhood Chain Stock Tokens by shell class (ALPHA–OMEGA) from ${DIAL_COPY.poolLine}. Pulse converts Hopper ETH per Dial.`,
+    `Ignite assigns 1–4 Robinhood Chain Stock Tokens by shell class (ALPHA–OMEGA) from ${DIAL_COPY.poolLine}. Pulse converts Hopper ETH per Dial. Hub: ${SITE.url}.`,
 };
 
 export default function DialPage() {

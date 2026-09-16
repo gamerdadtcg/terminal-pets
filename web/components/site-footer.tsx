@@ -1,4 +1,4 @@
-import { publicLinks, SITE } from "@/lib/site";
+import { publicLinks, sealedCopy, SITE } from "@/lib/site";
 import Link from "next/link";
 
 export function SiteFooter() {
@@ -13,9 +13,11 @@ export function SiteFooter() {
           </p>
           <p className="text-sm font-medium">{SITE.name}</p>
           <p className="max-w-sm text-sm text-muted-foreground">
-            Collection on {SITE.chain}. Mint on this hub. Until reveal, every
-            tokenURI is sealed hidden.json — collectors cannot see traits.
-            Hub GIFs are examples / not mint supply.
+            Collection on {SITE.chain}. Mint on this hub ({SITE.url}). Until
+            reveal, every tokenURI is {sealedCopy.hiddenUri} — collectors
+            cannot see traits. Hub GIFs are examples / not mint supply.{" "}
+            {SITE.urlAlias} remains a fallback alias until DNS is fully cut
+            over.
           </p>
           <p className="max-w-lg text-xs leading-relaxed text-muted-foreground/80">
             {SITE.disclaimer}

@@ -4,7 +4,7 @@ Ordered rehearsal of **import-existing CollectionNFT + Studio Drop** on a chain 
 
 **Hub mint is the primary public path.** OpenSea Studio’s current Drop-create UI has **no bring-your-own / import-existing CollectionNFT** and **no Base Sepolia** in the chain picker. Do **not** tell users to mint via the Studio deploy-wizard (that would be a different ERC721SeaDrop). Collectors mint on the hub (`/mint`) with `CollectionNFT.mint` / `mintTo` while on-chain `mintOpen` is true. The hub shows a closed state when `mintOpen` is false.
 
-**Anti-snipe:** until `CollectionNFT.reveal()`, every `tokenURI` is the same sealed `hidden.json`. Collectors cannot see traits. Hub carousel GIFs are **examples / not mint supply**. Do **not** host 4444 (or tokenId) lit/dormant JSON at `web/public/metadata/{lit,dormant}` or point `setMetadataURIs` dormant/lit bases at this hub before reveal.
+**Anti-snipe:** until `CollectionNFT.reveal()`, every `tokenURI` is the same sealed `https://terminalpets.xyz/metadata/hidden.json` (`https://terminal-pets.vercel.app/metadata/hidden.json` still resolves until DNS is fully cut over). Collectors cannot see traits. Hub carousel GIFs are **examples / not mint supply**. Do **not** host 4444 (or tokenId) lit/dormant JSON at `web/public/metadata/{lit,dormant}` or point `setMetadataURIs` dormant/lit bases at this hub before reveal.
 
 Current Base Sepolia dry-run CollectionNFT: `0xe1cC988CeC1C29764ba18523635De82d0C9B518F` (chain `84532`). Hub env: `NEXT_PUBLIC_CHAIN_ID=84532` and `NEXT_PUBLIC_COLLECTION_NFT` (or the built-in 84532 fallback). Robinhood mainnet `4663` stays env-driven and is **not** broadcast from this document.
 
@@ -148,7 +148,7 @@ Set **hiddenURI only** for the mint window. Every `tokenURI` is this JSON until 
 ```bash
 cast send "$COLLECTION" \
   "setMetadataURIs(string,string,string)" \
-  "https://terminal-pets.vercel.app/metadata/hidden.json" \
+  "https://terminalpets.xyz/metadata/hidden.json" \
   "" \
   "" \
   --rpc-url base_sepolia
@@ -216,7 +216,7 @@ cast call "$COLLECTION" "getMintStats(address)(uint256,uint256,uint256)" "$MINTE
 cast send "$COLLECTION" "reveal()" --rpc-url base_sepolia
 ```
 
-Expect `tokenURI` still `https://terminal-pets.vercel.app/metadata/hidden.json` until reveal (same URI for every token). After reveal, point dormant/lit bases at a **private pin**, not this hub’s old `/metadata/dormant/` tree. Ignite and `$TERM` transfers turn on. RoyaltySplitter `live` → 5% Hopper / 2.5% treasury.
+Expect `tokenURI` still `https://terminalpets.xyz/metadata/hidden.json` until reveal (same URI for every token). `https://terminal-pets.vercel.app/metadata/hidden.json` still resolves as a fallback alias until DNS is fully cut over. After reveal, point dormant/lit bases at a **private pin**, not this hub’s old `/metadata/dormant/` tree. Ignite and `$TERM` transfers turn on. RoyaltySplitter `live` → 5% Hopper / 2.5% treasury.
 
 4. **Ignite** the minted token from its owner. Exact **0.002 ETH** (production). Without `TERM_SWAP_ROUTER`, 25% `$TERM` parks as `pendingHopperTerm` and 50% of the ETH parks as `pendingIgniteEthBurn`. Hopper still receives 50% of the 0.002 ETH.
 
