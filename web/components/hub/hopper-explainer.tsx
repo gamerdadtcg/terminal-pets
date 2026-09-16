@@ -155,8 +155,8 @@ export function HopperExplainer({ compact = false }: { compact?: boolean }) {
               Pre-reveal royalties (full {SITE.royalty} → TermFund). After
               reveal, team treasury ({SITE.royaltyTreasury} of each sale)
               stays out. The burn half of Ignite ETH never enters (it buys
-              $TERM and burns). Mint price is TBD and, if
-              paid, is a separate path.
+              $TERM and burns). Mint is free (0 ETH). If a mint price is later
+              set, paid proceeds are a separate path.
             </p>
             <p>
               The distributor address can be locked once. After that the owner
