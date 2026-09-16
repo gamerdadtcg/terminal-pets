@@ -135,7 +135,8 @@ contract PulseLadderTest is Test {
     }
 
     function test_zeroLadderArgsUseCollectionConfigDefaults() public {
-        PulseDistributor p = new PulseDistributor(address(hopper), address(nft), address(ignite), SUPPLY, owner, 0, 0, 0);
+        PulseDistributor p =
+            new PulseDistributor(address(hopper), address(nft), address(ignite), SUPPLY, owner, 0, 0, 0);
         assertEq(p.bootstrapStart(), CollectionConfig.PULSE_BOOTSTRAP_START_WEI);
         assertEq(p.cycleStart(), CollectionConfig.PULSE_CYCLE_START_WEI);
         assertEq(p.ladderStep(), CollectionConfig.PULSE_LADDER_STEP_WEI);
