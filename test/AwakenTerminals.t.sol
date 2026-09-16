@@ -58,7 +58,8 @@ contract AwakenTerminalsTest is Test {
             address(hopper),
             address(splitter),
             owner,
-            CollectionConfig.ROYALTY_BPS
+            CollectionConfig.ROYALTY_BPS,
+            new address[](0)
         );
         term = new TermToken(owner);
         termFund = new TermFund(owner, address(term), treasury);
@@ -148,6 +149,7 @@ contract AwakenTerminalsTest is Test {
             uint256(CollectionConfig.ROYALTY_HOPPER_BPS) + CollectionConfig.ROYALTY_TREASURY_BPS,
             CollectionConfig.ROYALTY_BPS
         );
+        assertEq(CollectionConfig.SEADROP, 0x00005EA00Ac477B1030CE78506496e8C2dE24bf5);
     }
 
     function test_mintTo_openSeaPath() public {

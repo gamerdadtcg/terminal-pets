@@ -11,7 +11,7 @@ import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
 /// `ACC_N` and the old accessory names are obsolete for product traits
 /// (`art/schema/traits.json` is canonical). Seed `AWAKEN_PET_V2` is kept so
 /// existing tests stay deterministic.
-library TerminalRenderer {
+contract TerminalRenderer {
     using Strings for uint256;
 
     uint8 internal constant ACC_N = 6;
@@ -54,7 +54,7 @@ library TerminalRenderer {
         string state;
     }
 
-    function roll(uint256 tokenId) internal pure returns (Roll memory a) {
+    function roll(uint256 tokenId) public pure returns (Roll memory a) {
         uint256 s = uint256(keccak256(abi.encodePacked(keccak256("AWAKEN_PET_V2"), tokenId)));
         a.shell = uint8(s % 8);
         a.shellColor = uint8((s >> 8) % 12);
@@ -74,7 +74,7 @@ library TerminalRenderer {
         a.jx = uint8((s >> 120) % 7);
     }
 
-    function fingerprint(uint256 tokenId) internal pure returns (bytes32) {
+    function fingerprint(uint256 tokenId) public pure returns (bytes32) {
         Roll memory a = roll(tokenId);
         return keccak256(
             abi.encodePacked(
@@ -97,11 +97,11 @@ library TerminalRenderer {
         );
     }
 
-    function traits(uint256 tokenId, bool lit) internal pure returns (Traits memory t) {
+    function traits(uint256 tokenId, bool lit) public pure returns (Traits memory t) {
         return traitsFromRoll(roll(tokenId), lit);
     }
 
-    function traitsFromRoll(Roll memory a, bool lit) internal pure returns (Traits memory t) {
+    function traitsFromRoll(Roll memory a, bool lit) public pure returns (Traits memory t) {
         t.shell = _shellName(a.shell);
         t.shellColor = _shellColorName(a.shellColor);
         t.buttonColor = _buttonName(a.button);
@@ -120,7 +120,7 @@ library TerminalRenderer {
         t.state = lit ? "Lit" : "Dormant";
     }
 
-    function sealedTraits() internal pure returns (Traits memory t) {
+    function sealedTraits() public pure returns (Traits memory t) {
         t.shell = "Sealed";
         t.shellColor = "Sealed";
         t.buttonColor = "Sealed";
@@ -139,31 +139,31 @@ library TerminalRenderer {
         t.state = "Sealed";
     }
 
-    function svg(uint256 tokenId, bool lit) internal pure returns (string memory) {
+    function svg(uint256 tokenId, bool lit) public pure returns (string memory) {
         return _placeholder(tokenId, lit ? "LIT" : "DORMANT");
     }
 
-    function svgFromRoll(uint256 tokenId, Roll memory, bool lit) internal pure returns (string memory) {
+    function svgFromRoll(uint256 tokenId, Roll memory, bool lit) public pure returns (string memory) {
         return svg(tokenId, lit);
     }
 
-    function hiddenSvg(uint256 tokenId) internal pure returns (string memory) {
+    function hiddenSvg(uint256 tokenId) public pure returns (string memory) {
         return _placeholder(tokenId, "SEALED");
     }
 
-    function wakeSvg(uint256 tokenId) internal pure returns (string memory) {
+    function wakeSvg(uint256 tokenId) public pure returns (string memory) {
         return _placeholder(tokenId, "WAKE");
     }
 
-    function tokenURI(uint256 tokenId, bool lit) internal pure returns (string memory) {
+    function tokenURI(uint256 tokenId, bool lit) public pure returns (string memory) {
         return _jsonURI(tokenId, svg(tokenId, lit), traits(tokenId, lit));
     }
 
-    function hiddenTokenURI(uint256 tokenId) internal pure returns (string memory) {
+    function hiddenTokenURI(uint256 tokenId) public pure returns (string memory) {
         return _jsonURI(tokenId, hiddenSvg(tokenId), sealedTraits());
     }
 
-    function contractURI() internal pure returns (string memory) {
+    function contractURI() public pure returns (string memory) {
         string memory image = hiddenSvg(0);
         string memory json = string.concat(
             '{"name":"Terminal Pets","description":"Handheld pets on Robinhood Chain. Generative Pocket Critter PFPs: sealed, then dormant egg, then awake on Ignite. On-chain SVG here is a fallback stub until metadata URIs are set.","image":"data:image/svg+xml;base64,',

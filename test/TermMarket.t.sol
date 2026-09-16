@@ -155,7 +155,8 @@ contract TermMarketTest is Test {
             address(hopper),
             address(splitter),
             owner,
-            CollectionConfig.ROYALTY_BPS
+            CollectionConfig.ROYALTY_BPS,
+            new address[](0)
         );
         TermFund fund = new TermFund(owner, address(term), treasury);
         IgniteModule ignite = new IgniteModule(

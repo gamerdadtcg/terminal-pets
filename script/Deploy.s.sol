@@ -37,6 +37,7 @@ import {ReceivableAccount} from "../src/tba/ReceivableAccount.sol";
 ///   TREASURY_ADDRESS       required — 2.5% royalties + TermFund extra `$TERM` source / LP recipient
 ///   TBA_REGISTRY / TBA_IMPLEMENTATION / TBA_SALT
 ///   MINT_OPEN              "true" to open public mint at deploy
+///   SEADROP_ADDRESS        default canonical SeaDrop 1.0; `address(0)` = none (update later)
 ///
 /// Pulse thresholds are a ladder in PulseDistributor (not a deploy env).
 /// Ignite allotment: MAX_SUPPLY × IGNITE_FEE_TERM minted to IgniteModule.
@@ -62,6 +63,7 @@ contract Deploy is Script {
         address tbaRegistry;
         address tbaImplementation;
         bytes32 tbaSalt;
+        address seaDrop;
     }
 
     function run() external {
@@ -94,13 +96,27 @@ contract Deploy is Script {
         p.tbaRegistry = vm.envOr("TBA_REGISTRY", address(0));
         p.tbaImplementation = vm.envOr("TBA_IMPLEMENTATION", address(0));
         p.tbaSalt = vm.envOr("TBA_SALT", bytes32(0));
+        p.seaDrop = vm.envOr("SEADROP_ADDRESS", CollectionConfig.SEADROP);
     }
 
     function _deploy(Params memory p) internal {
         Hopper hopper = new Hopper(p.owner);
         RoyaltySplitter splitter = new RoyaltySplitter(address(hopper), p.treasury, p.owner);
+        address[] memory allowedSeaDrop;
+        if (p.seaDrop != address(0)) {
+            allowedSeaDrop = new address[](1);
+            allowedSeaDrop[0] = p.seaDrop;
+        }
         CollectionNFT nft = new CollectionNFT(
-            p.name, p.symbol, p.maxSupply, p.teamReserve, address(hopper), address(splitter), p.owner, p.royaltyBps
+            p.name,
+            p.symbol,
+            p.maxSupply,
+            p.teamReserve,
+            address(hopper),
+            address(splitter),
+            p.owner,
+            p.royaltyBps,
+            allowedSeaDrop
         );
 
         uint256 allotment = p.maxSupply * p.igniteFeeTerm;
@@ -178,6 +194,7 @@ contract Deploy is Script {
         console.log("IgniteFeeETH", p.igniteFeeEth);
         console.log("TeamReserve", p.teamReserve);
         console.log("PublicSupply", p.maxSupply - p.teamReserve);
+        console.log("SeaDrop", p.seaDrop);
         console.log("RevealAfter", nft.revealAfter());
         console.log("Pre-reveal: sealed metadata, Ignite off, $TERM trading off, 7.5% royalties -> TermFund");
         console.log(
@@ -188,6 +205,7 @@ contract Deploy is Script {
         );
         console.log("Do NOT auto-reveal at deploy. CollectionNFT.reveal() is the activation.");
         console.log("Team mint: CollectionNFT.teamMint(TREASURY_ADDRESS or TEAM_WALLET, qty)");
+        console.log("OpenSea Studio Drop: do NOT use deploy-wizard; configure Drop against this CollectionNFT");
         console.log("READY TO DEPLOY - do not broadcast to 4663 until the user says go.");
     }
 }

@@ -40,7 +40,8 @@ contract HopperLockTest is Test {
             address(hopper),
             address(splitter),
             owner,
-            CollectionConfig.ROYALTY_BPS
+            CollectionConfig.ROYALTY_BPS,
+            new address[](0)
         );
         term = new TermToken(owner);
         TermFund fund = new TermFund(owner, address(term), treasury);

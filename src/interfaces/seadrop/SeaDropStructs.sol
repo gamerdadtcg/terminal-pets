@@ -1,0 +1,58 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.24;
+
+/// @notice Structs matching ProjectOpenSea/seadrop `src/lib/SeaDropStructs.sol` (SeaDrop 1.0).
+/// Vendored so this repo can stay on OpenZeppelin 5 / solc 0.8.24 without pulling
+/// SeaDrop's ERC721A + OZ 4.x tree.
+
+struct PublicDrop {
+    uint80 mintPrice;
+    uint48 startTime;
+    uint48 endTime;
+    uint16 maxTotalMintableByWallet;
+    uint16 feeBps;
+    bool restrictFeeRecipients;
+}
+
+struct TokenGatedDropStage {
+    uint80 mintPrice;
+    uint16 maxTotalMintableByWallet;
+    uint48 startTime;
+    uint48 endTime;
+    uint8 dropStageIndex;
+    uint32 maxTokenSupplyForStage;
+    uint16 feeBps;
+    bool restrictFeeRecipients;
+}
+
+struct MintParams {
+    uint256 mintPrice;
+    uint256 maxTotalMintableByWallet;
+    uint256 startTime;
+    uint256 endTime;
+    uint256 dropStageIndex;
+    uint256 maxTokenSupplyForStage;
+    uint256 feeBps;
+    bool restrictFeeRecipients;
+}
+
+struct TokenGatedMintParams {
+    address allowedNftToken;
+    uint256[] allowedNftTokenIds;
+}
+
+struct AllowListData {
+    bytes32 merkleRoot;
+    string[] publicKeyURIs;
+    string allowListURI;
+}
+
+struct SignedMintValidationParams {
+    uint80 minMintPrice;
+    uint24 maxMaxTotalMintableByWallet;
+    uint40 minStartTime;
+    uint40 maxEndTime;
+    uint40 maxMaxTokenSupplyForStage;
+    uint16 minFeeBps;
+    uint16 maxFeeBps;
+}
