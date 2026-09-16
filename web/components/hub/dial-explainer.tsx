@@ -32,7 +32,7 @@ export function DialExplainer() {
         </h2>
         <p className="text-muted-foreground">
           After Ignite (allotment $TERM + 0.002 ETH), Dial is assigned
-          automatically: {DIAL_COPY.classLine}, drawn from the eight Robinhood
+          automatically: {DIAL_COPY.classLine}, drawn from the seven Robinhood
           Chain Stock Tokens below. Picks are random without replacement,
           deterministic from token id. When someone Pulses, Hopper ETH swaps
           into those tokens (or $TERM if a Dial has no filled addresses).
@@ -46,7 +46,7 @@ export function DialExplainer() {
         </CardHeader>
         <CardContent className="space-y-3">
           <p className="text-sm text-muted-foreground">
-            Eight Robinhood Chain Stock Tokens. Owner fills ERC-20 addresses
+            Seven Robinhood Chain Stock Tokens. Owner fills ERC-20 addresses
             when they are known. Not a holder menu.
           </p>
           <ul className="grid grid-cols-2 gap-2 sm:grid-cols-4">

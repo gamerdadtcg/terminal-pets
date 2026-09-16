@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { collectionConfigured } from "@/lib/contracts";
 import { configuredChainId } from "@/lib/chain";
+import { DIAL_COPY } from "@/lib/dial";
 import {
   FAQ,
   SITE,
@@ -48,7 +49,7 @@ const STEPS = [
   {
     n: "05",
     title: "Dial",
-    body: "Ignite assigns 1–4 Robinhood Chain Stock Tokens by shell class (ALPHA 1 … OMEGA 4) from HOOD, AAPL, MSFT, GOOGL, AMZN, META, NVDA, TSLA. Holders do not pick.",
+    body: `Ignite assigns 1–4 Robinhood Chain Stock Tokens by shell class (ALPHA 1 … OMEGA 4) from ${DIAL_COPY.poolLine}. Holders do not pick.`,
   },
   {
     n: "06",
@@ -78,9 +79,14 @@ const ECON = [
   { label: "Mint price", value: SITE.mintPrice, note: "0 ETH" },
   { label: "Mint date", value: "Fri Sep 18", note: mintSchedule.date },
   {
+    label: "Team allocation",
+    value: "Thu 8 PM PT",
+    note: `${mintSchedule.teamAllocation.date} · owner teamMint`,
+  },
+  {
     label: "Per phase",
     value: String(mintSchedule.perPhase),
-    note: "1 in every phase opened for you",
+    note: "1 in every public phase opened for you",
   },
   { label: "Reveal window", value: SITE.revealWindow },
   { label: "Ignite", value: SITE.igniteFee },
@@ -139,7 +145,7 @@ const ROADMAP = [
   {
     state: "next" as const,
     title: "OpenSea Studio (not the mint path)",
-    body: `Studio Drop create currently has no BYO import and no Base Sepolia. Hub mint is primary. Do not use Studio’s deploy-Drop wizard. OpenSea can still show the collection after import. ${SITE.publicSupply} public / ${SITE.teamReserve} team. Phase times are hub copy until on-chain mintOpen.`,
+    body: `Studio Drop create currently has no BYO import and no Base Sepolia. Hub mint is primary. Do not use Studio’s deploy-Drop wizard. OpenSea can still show the collection after import. ${SITE.publicSupply} public / ${SITE.teamReserve} team. Public mintOpen stays closed until Friday GTD / FCFS / Public. Thursday teamMint is owner-only.`,
   },
 ] as const;
 
@@ -339,6 +345,18 @@ export function HubLanding() {
           </CardHeader>
           <CardContent className="space-y-4">
             <ol className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
+              <li className="rounded-xl border border-border/70 bg-background/40 px-3 py-3">
+                <p className="font-mono text-[11px] text-primary">
+                  {mintSchedule.teamAllocation.shortDate} ·{" "}
+                  {mintSchedule.teamAllocation.time}
+                </p>
+                <p className="mt-1 text-sm font-medium">
+                  {mintSchedule.teamAllocation.name}
+                  <span className="ml-1 font-normal text-muted-foreground">
+                    (owner-only · not public)
+                  </span>
+                </p>
+              </li>
               {mintSchedule.phases.map((phase) => (
                 <li
                   key={`loop-${phase.name}`}
@@ -409,10 +427,10 @@ export function HubLanding() {
             Shell class assigns 1–4 stocks. No holder picker.
           </h2>
           <p className="text-muted-foreground">
-            Lit only. ALPHA 1 / BETA 2 / DELTA 3 / OMEGA 4 from HOOD, AAPL,
-            MSFT, GOOGL, AMZN, META, NVDA, TSLA. Equal weights. Unfilled Dial
-            addresses → that pet’s share buys $TERM. Pulse credits the TBA;
-            tokens travel with the NFT.
+            Lit only. ALPHA 1 / BETA 2 / DELTA 3 / OMEGA 4 from{" "}
+            {DIAL_COPY.poolLine}. Equal weights. Unfilled Dial addresses → that
+            pet’s share buys $TERM. Pulse credits the TBA; tokens travel with
+            the NFT.
           </p>
           <Button variant="outline" asChild>
             <Link href="/dial">Open the Dial page</Link>
@@ -502,8 +520,8 @@ export function HubLanding() {
           </h2>
           <p className="text-muted-foreground">
             {mintScheduleCopy.sentence} {mintAllocation.sentence} CollectionNFT
-            has mintOpen + mintPrice (default 0 / free) — Team / GTD / FCFS /
-            Public times are hub copy, not phase contracts. Mint on{" "}
+            has mintOpen + mintPrice (default 0 / free) — GTD / FCFS / Public
+            times are hub copy, not phase contracts. Mint on{" "}
             <Link href="/mint" className="text-primary underline-offset-2 hover:underline">
               /mint
             </Link>{" "}
@@ -700,7 +718,7 @@ export function HubLanding() {
             </CardHeader>
             <CardContent className="space-y-3 text-sm text-muted-foreground">
               <p>
-                8 Stock Tokens, ALPHA–OMEGA 1–4 legs, assigned at Ignite, TBA
+                7 Stock Tokens, ALPHA–OMEGA 1–4 legs, assigned at Ignite, TBA
                 delivery.
               </p>
               <Button size="sm" variant="outline" asChild>

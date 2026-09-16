@@ -15,8 +15,9 @@ import {IERC6551Registry} from "./interfaces/IERC6551Registry.sol";
 /// @title PulseDistributor
 /// @notice When the Hopper (ETH) is at or above the current ladder threshold,
 /// anyone can Pulse. Snapshots Lit membership and each Dial. Dial is assigned
-/// automatically at Ignite: 1–4 Robinhood Chain Stock Tokens from an 8-token
-/// owner allowlist, by shell class (ALPHA 1 / BETA 2 / DELTA 3 / OMEGA 4).
+/// automatically at Ignite: 1–4 Robinhood Chain Stock Tokens from the live
+/// 7-token allowlist (slots 1–7), by shell class (ALPHA 1 / BETA 2 / DELTA 3 /
+/// OMEGA 4). Slot 0 of the fixed 8-slot array stays unused (`address(0)`).
 /// Holders do not pick. Dialed Lit claims swap that share to those stocks.
 /// Undialed Lit (no assignment, or assigned slots still address(0)) buy `$TERM`
 /// via the same router and credit the TBA (or owner). Hopper itself stays ETH.
@@ -87,10 +88,11 @@ contract PulseDistributor is Ownable, ReentrancyGuard, IPulseDial {
         uint8 shellClass;
     }
 
-    /// @notice Allowlisted Robinhood Chain Stock Tokens. Index order is hub order:
-    /// HOOD, AAPL, MSFT, GOOGL, AMZN, META, NVDA, TSLA. Owner fills real ERC-20
-    /// addresses when known. Unset slots stay `address(0)` — do not invent mainnet
-    /// addresses. Optional Robinhood Chain **testnet** samples (not defaults):
+    /// @notice Allowlisted Robinhood Chain Stock Tokens. Fixed 8-slot array:
+    /// slot 0 unused (no HOOD token — leave `address(0)`). Live pool slots 1–7:
+    /// AAPL, MSFT, GOOGL, AMZN, META, NVDA, TSLA. Owner fills real ERC-20
+    /// addresses when known. Unset slots stay `address(0)` — do not invent a
+    /// HOOD ERC-20. Optional Robinhood Chain **testnet** samples (not defaults):
     /// AMZN `0x5884aD2f920c162CFBbACc88C9C51AA75eC09E02`,
     /// TSLA `0xC9f9c86933092BbbfFF3CCb4b105A4A94bf3Bd4E`
     /// (https://docs.robinhood.com/chain/contracts/).
@@ -191,7 +193,7 @@ contract PulseDistributor is Ownable, ReentrancyGuard, IPulseDial {
         emit StockTokenSet(index, token);
     }
 
-    /// @notice Replace the full 8-token allowlist. Zero addresses are placeholders.
+    /// @notice Replace the full 8-slot allowlist. Slot 0 stays unused; zeros are placeholders.
     function setStockTokens(address[8] calldata tokens) external onlyOwner {
         for (uint8 i; i < STOCK_POOL_SIZE; ++i) {
             if (tokens[i] != address(0)) {

@@ -53,7 +53,7 @@ Recommended:
 
 Leave DEX adapters blank (`TERM_LP_ROUTER`, `TERM_POOL`, `TERM_SWAP_ROUTER`, `PULSE_ROUTER`). Testnet smoke does not need a live pool. Ignite will park the `$TERM` Hopper cut and the ETH burn-half until a router exists — that is expected.
 
-Leave stock tokens unset at deploy. Owner `setStockToken` after, using only the [documented AMZN + TSLA samples](DIAL.md). **Do not invent** HOOD / AAPL / MSFT / GOOGL / META / NVDA addresses.
+Leave stock tokens unset at deploy. Owner `setStockToken` after, using only the [documented AMZN + TSLA samples](DIAL.md) on slots 4 and 7. Slot 0 stays unused (`address(0)` — no HOOD token). **Do not invent** AAPL / MSFT / GOOGL / META / NVDA or a HOOD ERC-20 on testnet.
 
 `CollectionConfig` defaults still apply when the env vars above are unset: free mint **4444** total, **200** team reserve / **4244** public, Ignite **0.002 ETH** + **1,000 `$TERM`**, Hopper lock **7 days after `reveal()`**, Pulse ladder **0.1 → 1.0** then **0.5 → 1.0**. Set `HOPPER_LOCK_SECONDS` / `IGNITE_FEE_ETH` / `PULSE_*_WEI` only on a **new** smoke deploy.
 

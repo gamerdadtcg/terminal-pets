@@ -2,6 +2,7 @@ import { DialExplainer } from "@/components/hub/dial-explainer";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { Button } from "@/components/ui/button";
+import { DIAL_COPY } from "@/lib/dial";
 import { SITE } from "@/lib/site";
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -9,7 +10,7 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: `Dial · ${SITE.name}`,
   description:
-    "Ignite assigns 1–4 Robinhood Chain Stock Tokens by shell class (ALPHA–OMEGA) from HOOD, AAPL, MSFT, GOOGL, AMZN, META, NVDA, TSLA. Pulse converts Hopper ETH per Dial.",
+    `Ignite assigns 1–4 Robinhood Chain Stock Tokens by shell class (ALPHA–OMEGA) from ${DIAL_COPY.poolLine}. Pulse converts Hopper ETH per Dial.`,
 };
 
 export default function DialPage() {
@@ -26,7 +27,7 @@ export default function DialPage() {
                 DIAL
               </p>
               <p className="mt-2 text-sm text-muted-foreground">
-                Eight Stock Tokens. ALPHA 1 … OMEGA 4. Assigned at Ignite —
+                Seven Stock Tokens. ALPHA 1 … OMEGA 4. Assigned at Ignite —
                 holders do not pick. Awake pet GIF after Ignite.
               </p>
             </div>
