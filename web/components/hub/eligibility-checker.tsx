@@ -236,6 +236,12 @@ export function EligibilityChecker({
           />
         </div>
       )}
+      {compact && (
+        <div className="mt-4 space-y-1 font-mono text-[11px] text-muted-foreground">
+          <p>GTD: {GTD_PARTNERS.map((item) => item.name).join(" · ")}</p>
+          <p>FCFS: {FCFS_PARTNERS.map((item) => item.name).join(" · ")}</p>
+        </div>
+      )}
 
       <p className="mt-4 text-sm text-muted-foreground">{ELIGIBILITY_COPY.schedule}</p>
       <p className="mt-1 text-sm text-muted-foreground">
