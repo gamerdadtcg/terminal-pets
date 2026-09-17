@@ -17,18 +17,18 @@ export const ARCADE_CLOSE_ISO =
 
 export const ARCADE_PATH = "/arcade";
 
-/** Hub example SNAG (P02) — not mint supply. */
+/** Example BOLT pet only (P12 robot) — not the handheld token art. */
 export const ARCADE_PET = {
-  name: "SNAG",
-  petId: "P02",
-  src: "/art/examples/awake/2.gif",
+  name: "BOLT",
+  petId: "P12",
+  src: "/art/arcade/bolt.png",
 } as const;
 
 export const ARCADE_COPY = {
   title: "Ignite the Dial",
   badge: "ARCADE · TOP 150 GTD",
   prompt: "> IGNITE THE DIAL",
-  play: "> JUMP SNAG · DODGE GLITCH PANELS · CATCH TICKS",
+  play: "> CLIMB BOLT · STEER · DODGE GLITCH PADS",
   locked: "> SCORE LOCKED",
   accepted: "> WALLET ACCEPTED",
   gtd: "> TOP 150 GTD",

@@ -172,7 +172,7 @@ export const FAQ = [
   },
   {
     q: "What is the arcade?",
-    a: "Ignite the Dial is a short CRT jumper at /arcade. Pilot example SNAG (not mint supply), jump over glitch panels (hits are penalties), catch Dial ticks, and chain combos. One best score per wallet. Top 150 wallets lock GTD (and FCFS via GTD) on the hub checker. Play before Friday, September 18, 2026 5:00 AM PT so winners can merge before the 7:00 AM PT hub redeploy. Hub preview only — not an on-chain mint allowlist.",
+    a: "Ignite the Dial is a short CRT climber at /arcade. Bounce example BOLT (the robot pet, not the handheld token art) up the Dial, steer around glitch pads (hits are penalties), catch Dial ticks, and chain combos. One best score per wallet. Top 150 wallets lock GTD (and FCFS via GTD) on the hub checker. Play before Friday, September 18, 2026 5:00 AM PT so winners can merge before the 7:00 AM PT hub redeploy. Hub preview only — not an on-chain mint allowlist.",
   },
   {
     q: "How many can I mint?",

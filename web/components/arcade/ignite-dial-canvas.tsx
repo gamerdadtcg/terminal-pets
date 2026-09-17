@@ -16,13 +16,14 @@ export type ArcadeRunResult = {
   durationMs: number;
 };
 
-type Panel = {
+type Pad = {
   x: number;
   y: number;
   w: number;
   h: number;
+  kind: "pad" | "glitch";
+  vx: number;
   scored: boolean;
-  hit: boolean;
 };
 
 type Pickup = {
@@ -43,12 +44,12 @@ type Floater = {
 
 const W = 720;
 const H = 440;
-const GROUND = H - 54;
-const PET_W = 52;
-const PET_H = 52;
-const GRAVITY = 2450;
-const JUMP_V = -640;
-const HOLD_GRAVITY = 1280;
+const PET_W = 50;
+const PET_H = 56;
+const GRAVITY = 1580;
+const BOUNCE = -790;
+const GLITCH_BOUNCE = -520;
+const MAX_VX = 360;
 
 function pickTick(): { symbol: ArcadeTickSymbol; points: number } {
   if (Math.random() < 0.08) return { symbol: "OMEGA", points: 120 };
@@ -69,6 +70,12 @@ function aabb(
   return ax < bx + bw && ax + aw > bx && ay < by + bh && ay + ah > by;
 }
 
+function wrapX(x: number) {
+  if (x + PET_W / 2 < 0) return x + W;
+  if (x + PET_W / 2 > W) return x - W;
+  return x;
+}
+
 export function IgniteDialCanvas({
   active,
   onEnd,
@@ -77,7 +84,6 @@ export function IgniteDialCanvas({
   onEnd: (result: ArcadeRunResult) => void;
 }) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const petRef = useRef<HTMLImageElement | null>(null);
   const onEndRef = useRef(onEnd);
 
   useEffect(() => {
@@ -86,28 +92,91 @@ export function IgniteDialCanvas({
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    const sprite = petRef.current;
-    if (!canvas || !active) return;
+    if (!canvas) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
-    const view = canvas;
     const g = ctx;
+    const view = canvas;
+
+    const sprite = new Image();
+    sprite.src = ARCADE_PET.src;
+    let cancelled = false;
+    let frame = 0;
+
+    function drawSprite(
+      x: number,
+      y: number,
+      face: number,
+      squash: number,
+      ghost: boolean,
+    ) {
+      if (!sprite.complete || sprite.naturalWidth === 0) return;
+      const h = PET_H * squash;
+      const w = PET_W / squash;
+      g.save();
+      g.imageSmoothingEnabled = false;
+      if (ghost) g.globalAlpha = 0.45;
+      g.translate(x + PET_W / 2, y + PET_H);
+      g.scale(face, 1);
+      g.drawImage(sprite, -w / 2, -h, w, h);
+      g.restore();
+    }
+
+    function drawBolt(
+      x: number,
+      y: number,
+      face: number,
+      squash: number,
+      ghost: boolean,
+    ) {
+      drawSprite(x, y, face, squash, ghost);
+      if (x < PET_W) drawSprite(x + W, y, face, squash, ghost);
+      if (x + PET_W > W) drawSprite(x - W, y, face, squash, ghost);
+    }
+
+    if (!active) {
+      function preview() {
+        if (cancelled) return;
+        g.fillStyle = "#07110c";
+        g.fillRect(0, 0, W, H);
+        g.strokeStyle = "rgba(124,255,154,0.06)";
+        for (let x = 0; x < W; x += 28) {
+          g.beginPath();
+          g.moveTo(x, 0);
+          g.lineTo(x, H);
+          g.stroke();
+        }
+        g.fillStyle = "rgba(124,255,154,0.7)";
+        g.fillRect(W / 2 - 48, H - 78, 96, 12);
+        drawBolt((W - PET_W) / 2, H - 78 - PET_H, 1, 1, false);
+        g.fillStyle = "rgba(0,0,0,0.12)";
+        for (let y = 0; y < H; y += 3) g.fillRect(0, y, W, 1);
+      }
+      if (sprite.complete) preview();
+      else sprite.onload = preview;
+      return () => {
+        cancelled = true;
+      };
+    }
+
     view.focus();
 
     const pet = {
-      x: 118,
-      y: GROUND - PET_H,
-      vy: 0,
-      grounded: true,
-      jumps: 2,
+      x: (W - PET_W) / 2,
+      y: H - 98,
+      vx: 0,
+      vy: BOUNCE,
     };
-    let holding = false;
-    let coyote = 0;
-    let jumpBuf = 0;
+    let camY = 0;
+    let face = 1;
+    let squash = 1;
+    let left = false;
+    let right = false;
+    let pointerX: number | null = null;
     let hitIFrames = 0;
     let shake = 0;
     let flash = 0;
-    const panels: Panel[] = [];
+    const pads: Pad[] = [];
     const pickups: Pickup[] = [];
     const floaters: Floater[] = [];
     let score = 0;
@@ -116,11 +185,11 @@ export function IgniteDialCanvas({
     let combo = 1;
     let comboT = 0;
     let charge = 100;
-    let spawnAcc = 0.9;
+    let bestHeight = 0;
+    let topY = H - 36;
     let last = performance.now();
     const started = last;
     let ended = false;
-    let scrollX = 0;
 
     function float(x: number, y: number, text: string, color: string) {
       floaters.push({ x, y, text, life: 0.7, color });
@@ -129,7 +198,6 @@ export function IgniteDialCanvas({
     function endRun(now: number) {
       if (ended) return;
       ended = true;
-      if (sprite) sprite.style.opacity = "0";
       onEndRef.current({
         score,
         ticksCaught,
@@ -138,236 +206,194 @@ export function IgniteDialCanvas({
       });
     }
 
-    function jump() {
-      if (pet.grounded || coyote > 0) {
-        pet.vy = JUMP_V;
-        pet.grounded = false;
-        coyote = 0;
-        jumpBuf = 0;
-        pet.jumps = 1;
-        return;
-      }
-      if (pet.jumps > 0) {
-        pet.jumps -= 1;
-        pet.vy = JUMP_V;
-        jumpBuf = 0;
-        return;
-      }
-      jumpBuf = 0.12;
-    }
-
-    function placePet(rot = 0) {
-      if (!sprite) return;
-      sprite.style.left = `${(pet.x / W) * 100}%`;
-      sprite.style.top = `${(pet.y / H) * 100}%`;
-      sprite.style.transform = `rotate(${rot}deg)`;
-    }
-
-    function spawn(elapsed: number) {
-      const heat = Math.min(1, elapsed / 34_000);
-      const x = W + 30;
-      const roll = Math.random();
-      if (roll < 0.42) {
-        const h = 36 + heat * 22 + Math.random() * 10;
-        panels.push({
-          x,
-          y: GROUND - h,
-          w: 38 + heat * 16,
-          h,
-          scored: false,
-          hit: false,
-        });
-        if (Math.random() < 0.7) {
-          const tick = pickTick();
-          pickups.push({
-            x: x + 18,
-            y: GROUND - h - 58,
-            r: 14,
-            symbol: tick.symbol,
-            points: tick.points,
-          });
-        }
-        return;
-      }
-      if (roll < 0.68) {
-        const h = 86 + heat * 50;
-        panels.push({
-          x,
-          y: 48,
-          w: 44 + heat * 10,
-          h,
-          scored: false,
-          hit: false,
-        });
+    function addPad(y: number, heat: number, forcePad = false) {
+      const glitchChance = forcePad ? 0 : 0.08 + heat * 0.3;
+      const kind: Pad["kind"] = Math.random() < glitchChance ? "glitch" : "pad";
+      const w = Math.max(54, 102 - heat * 34 + Math.random() * 18);
+      const pad: Pad = {
+        x: 18 + Math.random() * (W - w - 36),
+        y,
+        w,
+        h: 12,
+        kind,
+        vx: heat > 0.28 && Math.random() < 0.28 ? (Math.random() < 0.5 ? -70 : 70) : 0,
+        scored: false,
+      };
+      pads.push(pad);
+      if (kind === "pad" && Math.random() < 0.34) {
         const tick = pickTick();
         pickups.push({
-          x: x + 22,
-          y: GROUND - 36,
-          r: 14,
+          x: pad.x + pad.w / 2,
+          y: pad.y - 22,
+          r: tick.symbol === "OMEGA" ? 16 : 13,
           symbol: tick.symbol,
           points: tick.points,
         });
-        return;
       }
-      const gap = 124 - heat * 32;
-      const minTop = 58;
-      const maxTop = GROUND - gap - 36;
-      const topH = minTop + Math.random() * Math.max(20, maxTop - minTop - 48);
-      panels.push({
-        x,
-        y: 48,
-        w: 48,
-        h: topH,
-        scored: false,
-        hit: false,
-      });
-      panels.push({
-        x,
-        y: 48 + topH + gap,
-        w: 48,
-        h: GROUND - (48 + topH + gap),
-        scored: false,
-        hit: false,
-      });
-      const tick = pickTick();
-      pickups.push({
-        x: x + 24,
-        y: 48 + topH + gap / 2,
-        r: tick.symbol === "OMEGA" ? 16 : 14,
-        symbol: tick.symbol,
-        points: tick.points,
-      });
+    }
+
+    function fillPads(heat: number) {
+      while (topY > camY - 180) {
+        const gap = 62 + heat * 46 + Math.random() * 22;
+        topY -= gap;
+        addPad(topY, heat, pads.length < 4);
+      }
+    }
+
+    addPad(H - 36, 0, true);
+    addPad(H - 108, 0, true);
+    addPad(H - 178, 0, true);
+    topY = H - 178;
+    fillPads(0);
+
+    function localX(event: PointerEvent) {
+      const rect = view.getBoundingClientRect();
+      return ((event.clientX - rect.left) / rect.width) * W;
     }
 
     const onKey = (event: KeyboardEvent) => {
-      if (event.key === " " || event.key === "ArrowUp" || event.key === "w" || event.key === "W") {
-        if (event.type === "keydown" && !event.repeat) jump();
-        holding = event.type === "keydown";
+      const down = event.type === "keydown";
+      if (
+        event.key === "ArrowLeft" ||
+        event.key === "a" ||
+        event.key === "A"
+      ) {
+        left = down;
+        event.preventDefault();
+      }
+      if (
+        event.key === "ArrowRight" ||
+        event.key === "d" ||
+        event.key === "D"
+      ) {
+        right = down;
         event.preventDefault();
       }
     };
 
     const onPointer = (event: PointerEvent) => {
-      if (event.type === "pointerdown") {
-        holding = true;
-        jump();
-        event.preventDefault();
+      if (event.type === "pointerleave" || event.type === "pointercancel") {
+        pointerX = null;
+        return;
       }
-      if (event.type === "pointerup" || event.type === "pointercancel") {
-        holding = false;
-      }
+      pointerX = localX(event);
+      event.preventDefault();
     };
 
     window.addEventListener("keydown", onKey);
     window.addEventListener("keyup", onKey);
     view.addEventListener("pointerdown", onPointer);
+    view.addEventListener("pointermove", onPointer);
     view.addEventListener("pointerup", onPointer);
+    view.addEventListener("pointerleave", onPointer);
     view.addEventListener("pointercancel", onPointer);
 
-    let frame = 0;
+    function bounceOn(pad: Pad) {
+      const screenY = pad.y - camY;
+      if (pad.kind === "glitch") {
+        pet.vy = GLITCH_BOUNCE;
+        squash = 0.78;
+        if (hitIFrames <= 0) {
+          pad.scored = true;
+          glitchesHit += 1;
+          combo = 1;
+          comboT = 0;
+          charge -= 22;
+          hitIFrames = 0.55;
+          shake = 0.28;
+          flash = 0.5;
+          float(pet.x + 20, screenY - 8, "PENALTY", "#ff6b8a");
+        }
+        return;
+      }
+      pet.vy = BOUNCE;
+      squash = 0.72;
+      if (!pad.scored) {
+        pad.scored = true;
+        combo = Math.min(ARCADE_MAX_COMBO, combo + 1);
+        comboT = 2.2;
+        const gain = 25 * combo;
+        score += gain;
+        charge = Math.min(100, charge + 4);
+        float(pet.x + 24, screenY - 10, `PAD +${gain}`, "#7CFF9A");
+      }
+    }
+
+    function feetHit(pad: Pad) {
+      const footY = pet.y + PET_H;
+      if (pet.vy <= 0) return false;
+      if (footY < pad.y - 2 || footY > pad.y + pad.h + 10) return false;
+      const xs = [pet.x, pet.x - W, pet.x + W];
+      return xs.some((x) =>
+        aabb(x + 10, footY - 8, PET_W - 20, 10, pad.x, pad.y, pad.w, pad.h),
+      );
+    }
+
     function loop(now: number) {
-      if (ended) return;
+      if (ended || cancelled) return;
       const dt = Math.min(0.033, (now - last) / 1000);
       last = now;
       const elapsed = now - started;
       const remain = Math.max(0, ARCADE_ROUND_MS - elapsed);
       const heat = Math.min(1, elapsed / 36_000);
-      const speed = 210 + heat * 140;
 
       hitIFrames = Math.max(0, hitIFrames - dt);
       shake = Math.max(0, shake - dt * 8);
       flash = Math.max(0, flash - dt * 3);
       comboT = Math.max(0, comboT - dt);
       if (comboT <= 0 && combo > 1) combo = 1;
-      coyote = Math.max(0, coyote - dt);
-      jumpBuf = Math.max(0, jumpBuf - dt);
-      scrollX += speed * dt;
+      squash += (1 - squash) * Math.min(1, dt * 12);
 
-      const grav = holding && pet.vy < 0 ? HOLD_GRAVITY : GRAVITY;
-      pet.vy = Math.min(820, pet.vy + grav * dt);
+      if (pointerX !== null) {
+        const target = pointerX - PET_W / 2;
+        pet.vx += (target - pet.x) * 14 * dt;
+      } else {
+        if (left) pet.vx -= 2200 * dt;
+        if (right) pet.vx += 2200 * dt;
+        if (!left && !right) pet.vx *= Math.pow(0.12, dt);
+      }
+      pet.vx = Math.max(-MAX_VX, Math.min(MAX_VX, pet.vx));
+      if (Math.abs(pet.vx) > 12) face = pet.vx < 0 ? -1 : 1;
+
+      pet.vy = Math.min(920, pet.vy + GRAVITY * dt);
+      pet.x = wrapX(pet.x + pet.vx * dt);
       pet.y += pet.vy * dt;
 
-      if (pet.y + PET_H >= GROUND) {
-        pet.y = GROUND - PET_H;
-        pet.vy = 0;
-        if (!pet.grounded) pet.jumps = 1;
-        pet.grounded = true;
-        coyote = 0.09;
-        if (jumpBuf > 0) jump();
-      } else {
-        if (pet.grounded) coyote = 0.09;
-        pet.grounded = false;
-      }
-      if (pet.y < 50) {
-        pet.y = 50;
-        if (pet.vy < 0) pet.vy = 0;
-      }
+      const follow = pet.y - H * 0.4;
+      if (follow < camY) camY = follow;
+      fillPads(heat);
 
-      spawnAcc += dt;
-      const every = Math.max(0.78, 1.28 - heat * 0.5);
-      if (spawnAcc >= every) {
-        spawnAcc = 0;
-        spawn(elapsed);
-      }
-
-      for (const panel of panels) panel.x -= speed * dt;
-      for (const pickup of pickups) pickup.x -= speed * dt;
-
-      charge -= (2.6 + heat * 1.4) * dt;
-
-      const hitbox = {
-        x: pet.x + 10,
-        y: pet.y + 10,
-        w: PET_W - 20,
-        h: PET_H - 16,
-      };
-
-      for (let i = panels.length - 1; i >= 0; i -= 1) {
-        const panel = panels[i];
-        if (
-          !panel.hit &&
-          hitIFrames <= 0 &&
-          aabb(hitbox.x, hitbox.y, hitbox.w, hitbox.h, panel.x, panel.y, panel.w, panel.h)
-        ) {
-          panel.hit = true;
-          glitchesHit += 1;
-          combo = 1;
-          comboT = 0;
-          charge -= 24;
-          hitIFrames = 0.7;
-          shake = 0.32;
-          flash = 0.55;
-          pet.vy = -220;
-          float(pet.x + 20, pet.y, "PENALTY", "#ff6b8a");
+      for (const pad of pads) {
+        if (pad.vx !== 0) {
+          pad.x += pad.vx * dt;
+          if (pad.x < 12 || pad.x + pad.w > W - 12) pad.vx *= -1;
         }
-        if (!panel.scored && !panel.hit && panel.x + panel.w < pet.x) {
-          panel.scored = true;
-          combo = Math.min(ARCADE_MAX_COMBO, combo + 1);
-          comboT = 2.2;
-          const gain = 40 * combo;
-          score += gain;
-          charge = Math.min(100, charge + 6);
-          float(pet.x + 24, pet.y - 8, `CLEAR +${gain}`, "#7CFF9A");
-        }
-        if (panel.x + panel.w < -40) panels.splice(i, 1);
+        if (feetHit(pad)) bounceOn(pad);
+      }
+      for (let i = pads.length - 1; i >= 0; i -= 1) {
+        if (pads[i].y > camY + H + 70) pads.splice(i, 1);
       }
 
       for (let i = pickups.length - 1; i >= 0; i -= 1) {
         const pickup = pickups[i];
-        const dx = pet.x + PET_W / 2 - pickup.x;
-        const dy = pet.y + PET_H / 2 - pickup.y;
-        if (Math.hypot(dx, dy) < pickup.r + 16) {
+        const sx = [pet.x, pet.x - W, pet.x + W];
+        const hit = sx.some(
+          (x) =>
+            Math.hypot(x + PET_W / 2 - pickup.x, pet.y + PET_H / 2 - pickup.y) <
+            pickup.r + 16,
+        );
+        if (hit) {
           combo = Math.min(ARCADE_MAX_COMBO, combo + 1);
           comboT = 2.4;
           const gain = pickup.points * combo;
           score += gain;
           ticksCaught += 1;
           charge = Math.min(100, charge + 10);
-          float(pickup.x, pickup.y - 8, `+${gain} ${pickup.symbol}`, "#F0B429");
+          float(pickup.x, pickup.y - camY - 8, `+${gain} ${pickup.symbol}`, "#F0B429");
           pickups.splice(i, 1);
           continue;
         }
-        if (pickup.x < -30) pickups.splice(i, 1);
+        if (pickup.y > camY + H + 40) pickups.splice(i, 1);
       }
 
       for (let i = floaters.length - 1; i >= 0; i -= 1) {
@@ -376,14 +402,16 @@ export function IgniteDialCanvas({
         if (floaters[i].life <= 0) floaters.splice(i, 1);
       }
 
-      if (sprite) {
-        const rot = Math.max(-18, Math.min(22, pet.vy * 0.028));
-        sprite.style.opacity =
-          hitIFrames > 0 && Math.floor(now / 80) % 2 === 0 ? "0.45" : "1";
-        placePet(rot);
+      const height = Math.max(0, Math.floor(H - 98 - pet.y));
+      if (height > bestHeight) {
+        score += height - bestHeight;
+        bestHeight = height;
       }
 
-      if (charge <= 0 || remain <= 0) {
+      charge -= (1.15 + heat * 1.1) * dt;
+
+      const fallen = pet.y - camY > H - 6;
+      if (charge <= 0 || remain <= 0 || fallen) {
         charge = Math.max(0, charge);
         draw(remain);
         endRun(now);
@@ -402,74 +430,63 @@ export function IgniteDialCanvas({
       g.fillStyle = "#07110c";
       g.fillRect(-16, -16, W + 32, H + 32);
 
-      g.strokeStyle = "rgba(124,255,154,0.06)";
-      for (let x = -((scrollX * 0.4) % 28); x < W; x += 28) {
+      g.strokeStyle = "rgba(124,255,154,0.05)";
+      const grid = 28;
+      const gy = -((camY * 0.45) % grid);
+      for (let x = 0; x < W; x += grid) {
         g.beginPath();
         g.moveTo(x, 0);
         g.lineTo(x, H);
         g.stroke();
       }
-      for (let y = 0; y < H; y += 28) {
+      for (let y = gy; y < H; y += grid) {
         g.beginPath();
         g.moveTo(0, y);
         g.lineTo(W, y);
         g.stroke();
       }
 
-      g.fillStyle = "#0b1810";
-      g.fillRect(0, GROUND, W, H - GROUND);
-      g.strokeStyle = "rgba(124,255,154,0.45)";
-      g.beginPath();
-      g.moveTo(0, GROUND + 0.5);
-      g.lineTo(W, GROUND + 0.5);
-      g.stroke();
-      g.fillStyle = "rgba(124,255,154,0.12)";
-      for (let x = -((scrollX) % 26); x < W; x += 26) {
-        g.fillRect(x, GROUND + 6, 14, 3);
-      }
-
-      for (const panel of panels) {
-        g.fillStyle = panel.hit ? "rgba(120,30,50,0.55)" : "rgba(180,40,70,0.38)";
-        g.strokeStyle = "#ff6b8a";
-        g.lineWidth = 1.6;
-        g.fillRect(panel.x, panel.y, panel.w, panel.h);
-        g.strokeRect(panel.x + 0.5, panel.y + 0.5, panel.w - 1, panel.h - 1);
-        g.fillStyle = "rgba(255,255,255,0.08)";
-        for (let n = 0; n < 7; n += 1) {
-          g.fillRect(
-            panel.x + 3,
-            panel.y + 4 + n * 7,
-            panel.w - 6,
-            2,
-          );
-        }
-        if (panel.h > 28) {
-          g.fillStyle = "#ffd0da";
-          g.font = "9px ui-monospace, SFMono-Regular, Menlo, monospace";
-          g.textAlign = "center";
-          g.textBaseline = "middle";
-          g.save();
-          g.translate(panel.x + panel.w / 2, panel.y + panel.h / 2);
-          g.rotate(-Math.PI / 2);
-          g.fillText("GLITCH", 0, 0);
-          g.restore();
+      for (const pad of pads) {
+        const y = pad.y - camY;
+        if (y < -20 || y > H + 20) continue;
+        if (pad.kind === "glitch") {
+          g.fillStyle = "rgba(180,40,70,0.42)";
+          g.strokeStyle = "#ff6b8a";
+          g.fillRect(pad.x, y, pad.w, pad.h);
+          g.strokeRect(pad.x + 0.5, y + 0.5, pad.w - 1, pad.h - 1);
+          g.fillStyle = "rgba(255,255,255,0.12)";
+          for (let n = 0; n < 4; n += 1) {
+            g.fillRect(pad.x + 4 + n * 9, y + 3, pad.w * 0.18, 2);
+          }
+        } else {
+          g.fillStyle = "rgba(124,255,154,0.22)";
+          g.strokeStyle = "#7CFF9A";
+          g.fillRect(pad.x, y, pad.w, pad.h);
+          g.strokeRect(pad.x + 0.5, y + 0.5, pad.w - 1, pad.h - 1);
+          g.fillStyle = "rgba(124,255,154,0.55)";
+          g.fillRect(pad.x + 6, y + 3, pad.w - 12, 3);
         }
       }
 
       for (const pickup of pickups) {
+        const y = pickup.y - camY;
+        if (y < -24 || y > H + 24) continue;
         const omega = pickup.symbol === "OMEGA";
         g.fillStyle = omega ? "rgba(240,180,41,0.22)" : "rgba(124,255,154,0.16)";
         g.strokeStyle = omega ? "#F0B429" : "#7CFF9A";
         g.beginPath();
-        g.arc(pickup.x, pickup.y, pickup.r, 0, Math.PI * 2);
+        g.arc(pickup.x, y, pickup.r, 0, Math.PI * 2);
         g.fill();
         g.stroke();
         g.fillStyle = omega ? "#F0B429" : "#c8ffd4";
         g.font = "9px ui-monospace, SFMono-Regular, Menlo, monospace";
         g.textAlign = "center";
         g.textBaseline = "middle";
-        g.fillText(pickup.symbol, pickup.x, pickup.y);
+        g.fillText(pickup.symbol, pickup.x, y);
       }
+
+      const ghost = hitIFrames > 0 && Math.floor(remain / 80) % 2 === 0;
+      drawBolt(pet.x, pet.y - camY, face, squash, ghost);
 
       for (const floater of floaters) {
         g.globalAlpha = Math.min(1, floater.life * 2);
@@ -510,22 +527,24 @@ export function IgniteDialCanvas({
       g.restore();
     }
 
-    if (sprite) {
-      sprite.style.opacity = "1";
-      placePet(0);
-    }
-
-    frame = requestAnimationFrame(loop);
+    const start = () => {
+      if (cancelled) return;
+      frame = requestAnimationFrame(loop);
+    };
+    if (sprite.complete && sprite.naturalWidth > 0) start();
+    else sprite.onload = start;
 
     return () => {
+      cancelled = true;
       ended = true;
       cancelAnimationFrame(frame);
       window.removeEventListener("keydown", onKey);
       window.removeEventListener("keyup", onKey);
       view.removeEventListener("pointerdown", onPointer);
+      view.removeEventListener("pointermove", onPointer);
       view.removeEventListener("pointerup", onPointer);
+      view.removeEventListener("pointerleave", onPointer);
       view.removeEventListener("pointercancel", onPointer);
-      if (sprite) sprite.style.opacity = "0";
     };
   }, [active]);
 
@@ -536,24 +555,8 @@ export function IgniteDialCanvas({
         width={W}
         height={H}
         tabIndex={0}
-        aria-label={`${ARCADE_PET.name} jumper. Tap or space to jump. Avoid glitch panels. Collect Dial ticks.`}
+        aria-label={`${ARCADE_PET.name} climber. Steer left and right. Bounce up. Avoid glitch pads. Collect Dial ticks.`}
         className="block h-auto w-full cursor-pointer touch-none outline-none focus-visible:ring-3 focus-visible:ring-primary/40"
-      />
-      {/* Native img so the example SNAG GIF animates as an overlay. */}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        ref={petRef}
-        src={ARCADE_PET.src}
-        alt={`${ARCADE_PET.name} example pet, not mint supply`}
-        width={PET_W}
-        height={PET_H}
-        draggable={false}
-        className="pointer-events-none absolute top-0 left-0 origin-center object-contain opacity-0"
-        style={{
-          width: `${(PET_W / W) * 100}%`,
-          height: "auto",
-          aspectRatio: "1 / 1",
-        }}
       />
     </div>
   );

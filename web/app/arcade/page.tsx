@@ -9,7 +9,7 @@ import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Arcade",
-  description: `Ignite the Dial — jump SNAG, dodge glitch panels, catch Dial ticks. Top ${ARCADE_GTD_CAP} wallets lock GTD (and FCFS via GTD) for the ${mintSchedule.date} mint. Hub preview only.`,
+  description: `Ignite the Dial — bounce BOLT up the Dial, dodge glitch pads, catch ticks. Top ${ARCADE_GTD_CAP} wallets lock GTD (and FCFS via GTD) for the ${mintSchedule.date} mint. Hub preview only.`,
   alternates: { canonical: ARCADE_PATH },
   openGraph: {
     title: `Arcade · ${SITE.name}`,
@@ -36,10 +36,11 @@ export default function ArcadePage() {
               {ARCADE_COPY.title}
             </h1>
             <p className="text-muted-foreground">
-              Jump example SNAG. Glitch panels are penalties. Catch Dial ticks
-              in the gaps, chain combos, and stay lit. Best score per wallet.
-              The top {ARCADE_GTD_CAP} lock GTD (and FCFS via GTD) on the hub
-              checker after the Friday 7:00 AM PT redeploy. Hub preview only —
+              Bounce example BOLT (the robot pet, not the handheld token) up
+              the Dial. Glitch pads are penalties. Catch Dial ticks, chain
+              combos, and don&apos;t fall. Best score per wallet. The top{" "}
+              {ARCADE_GTD_CAP} lock GTD (and FCFS via GTD) on the hub checker
+              after the Friday 7:00 AM PT redeploy. Hub preview only —
               CollectionNFT still gates mint on{" "}
               <span className="font-mono">mintOpen</span>.
             </p>

@@ -221,10 +221,10 @@ export function ArcadeCabinet() {
                       {ARCADE_COPY.play}
                     </p>
                     <p className="max-w-md text-sm text-muted-foreground">
-                      {Math.round(ARCADE_ROUND_MS / 1000)}s rounds. Jump example{" "}
-                      {ARCADE_PET.name} over glitch panels — hits are penalties
-                      (combo drop, charge drain). Catch Dial ticks in the gaps.
-                      Chain combos. Keep {ARCADE_PET.name} lit. Top{" "}
+                      {Math.round(ARCADE_ROUND_MS / 1000)}s rounds. Bounce{" "}
+                      {ARCADE_PET.name} up the Dial — the robot pet, not the
+                      full handheld token. Glitch pads are penalties (combo drop,
+                      charge drain). Catch Dial ticks. Don&apos;t fall. Top{" "}
                       {ARCADE_GTD_CAP} wallets lock GTD (and FCFS via GTD).{" "}
                       {sealedCopy.carousel}
                     </p>
@@ -236,7 +236,7 @@ export function ArcadeCabinet() {
                         {closed ? "Contest closed" : "Play"}
                       </Button>
                       <p className="self-center font-mono text-[11px] text-muted-foreground">
-                        TAP / SPACE / ↑ JUMP
+                        ← → / A D / DRAG
                       </p>
                     </div>
                   </div>
