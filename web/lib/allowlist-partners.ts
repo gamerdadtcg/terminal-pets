@@ -12,8 +12,9 @@ import { getAddress, parseAbi, type Address } from "viem";
  * 2. Use the Robinhood Chain (4663) contract address.
  * 3. Redeploy the hub. No UI code changes needed.
  *
- * Manual GTD thread wallets (not FCFS, not on-chain mint allowlist) live in
- * `web/lib/manual-gtd-wallets.ts`.
+ * Manual GTD thread wallets live in `web/lib/manual-gtd-wallets.ts`.
+ * GTD-eligible wallets (partner NFT or thread list) also unlock FCFS on the
+ * hub preview. CollectionNFT still gates mint on `mintOpen` only.
  */
 export type PartnerPhase = "GTD" | "FCFS";
 
@@ -36,7 +37,10 @@ export const GTD_PARTNERS: PartnerCollection[] = [
   partner("WIF Outlaws", "0x12a4c7659a4b7c4a2870b5167c4f8b014c7fa690", "GTD"),
 ];
 
-/** Eligible for FCFS if `balanceOf` > 0 on ANY of these (Robinhood Chain). */
+/**
+ * Eligible for FCFS if `balanceOf` > 0 on ANY of these (Robinhood Chain),
+ * or if the wallet is GTD-eligible (partner NFT or manual thread list).
+ */
 export const FCFS_PARTNERS: PartnerCollection[] = [
   partner("RH MACHINES", "0x8c71d170fbd94bcba93bb08fc2cfd0e8620cd9ce", "FCFS"),
   partner("Opencatz AI", "0xf0474980e09c3023655a9ca3e71a763358214efb", "FCFS"),

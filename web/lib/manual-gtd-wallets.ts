@@ -4,8 +4,9 @@ import { getAddress, type Address } from "viem";
  * Manual GTD wallets from the Terminal Pets X thread.
  *
  * Hub eligibility preview only. These addresses are **not** on-chain mint
- * allowlisted — CollectionNFT still gates mint on `mintOpen`. Do **not** treat
- * this list as FCFS. Travis still has to lock mint phase before it is mint-live.
+ * allowlisted — CollectionNFT still gates mint on `mintOpen`. GTD-eligible
+ * wallets also unlock FCFS on the hub preview. Travis still has to lock mint
+ * phase before it is mint-live.
  *
  * To append wallets later:
  * 1. Add a 0x address to `MANUAL_GTD_WALLET_ADDRESSES` (any casing).

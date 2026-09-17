@@ -5,7 +5,11 @@ import { Button } from "@/components/ui/button";
 import { FCFS_PARTNERS, GTD_PARTNERS } from "@/lib/allowlist-partners";
 import { ROBINHOOD_CHAIN_ID } from "@/lib/chain";
 import type { EligibilityResult } from "@/lib/eligibility";
-import { ELIGIBILITY_COPY, parseWalletAddress } from "@/lib/eligibility";
+import {
+  ELIGIBILITY_COPY,
+  FCFS_VIA_GTD_REASON,
+  parseWalletAddress,
+} from "@/lib/eligibility";
 import { explorerAddress, shortAddress } from "@/lib/format";
 import {
   MANUAL_GTD_REASON,
@@ -103,23 +107,24 @@ export function EligibilityChecker({
     if (state.status !== "ok") return null;
     const { gtd, fcfs, manualGtd } = state.result;
     const gtdNft = gtdHoldings.length > 0;
-    if (gtd && fcfs) {
-      return "This wallet can mint in GTD and FCFS (and Public). Hub preview — mint still needs mintOpen.";
-    }
+    const fcfsNft = fcfsHoldings.length > 0;
     if (gtd) {
+      if (fcfsNft) {
+        return "This wallet can mint in GTD and FCFS (and Public). FCFS is yes from FCFS partner NFTs and GTD eligibility. Hub preview — mint still needs mintOpen.";
+      }
       if (manualGtd && gtdNft) {
-        return "This wallet can mint in GTD via partner NFT and the GTD thread list (and Public). FCFS needs an FCFS partner NFT.";
+        return "This wallet can mint in GTD via partner NFT and the GTD thread list (and Public). FCFS is included via GTD eligibility.";
       }
       if (manualGtd) {
-        return "This wallet can mint in GTD as a GTD thread wallet (and Public). FCFS needs an FCFS partner NFT.";
+        return "This wallet can mint in GTD as a GTD thread wallet (and Public). FCFS is included via GTD eligibility.";
       }
-      return "This wallet can mint in GTD (and Public). FCFS needs an FCFS partner NFT.";
+      return "This wallet can mint in GTD (and Public). FCFS is included via GTD eligibility.";
     }
     if (fcfs) {
       return "This wallet can mint in FCFS (and Public). GTD needs a GTD partner NFT or a GTD thread wallet.";
     }
     return "No GTD or FCFS partner NFTs, and not on the GTD thread list. Public phase is still open to everyone.";
-  }, [state, gtdHoldings.length]);
+  }, [state, gtdHoldings.length, fcfsHoldings.length]);
 
   return (
     <section
@@ -147,8 +152,9 @@ export function EligibilityChecker({
         >
           GTD X thread
         </a>
-        . Hub preview only — not a Merkle / on-chain mint allowlist. GTD is
-        still unlocked; last-minute adds may land before mint.
+        . GTD-eligible wallets also unlock FCFS phase eligibility. Hub preview
+        only — not a Merkle / on-chain mint allowlist. GTD is still unlocked;
+        last-minute adds may land before mint.
       </p>
 
       <form onSubmit={onSubmit} className="mt-4 space-y-3">
@@ -228,9 +234,8 @@ export function EligibilityChecker({
               holdings={gtdHoldings}
               explorer={explorer}
             />
-            <HoldingsList
-              title="FCFS holdings"
-              empty="No FCFS partner NFTs"
+            <FcfsReasons
+              fcfsViaGtd={state.result.fcfsViaGtd}
               holdings={fcfsHoldings}
               explorer={explorer}
             />
@@ -262,7 +267,10 @@ export function EligibilityChecker({
             GTD: {GTD_PARTNERS.map((item) => item.name).join(" · ")} · GTD
             thread wallets
           </p>
-          <p>FCFS: {FCFS_PARTNERS.map((item) => item.name).join(" · ")}</p>
+          <p>
+            FCFS: {FCFS_PARTNERS.map((item) => item.name).join(" · ")} · GTD
+            carryover
+          </p>
         </div>
       )}
 
@@ -363,24 +371,33 @@ function GtdReasons({
   );
 }
 
-function HoldingsList({
-  title,
-  empty,
+function FcfsReasons({
+  fcfsViaGtd,
   holdings,
   explorer,
 }: {
-  title: string;
-  empty: string;
+  fcfsViaGtd: boolean;
   holdings: EligibilityResult["holdings"];
   explorer: string;
 }) {
+  const empty = !fcfsViaGtd && holdings.length === 0;
   return (
     <div>
-      <p className="font-mono text-[11px] text-muted-foreground">{title}</p>
-      {holdings.length === 0 ? (
-        <p className="mt-1 text-sm text-muted-foreground">{empty}</p>
+      <p className="font-mono text-[11px] text-muted-foreground">FCFS reasons</p>
+      {empty ? (
+        <p className="mt-1 text-sm text-muted-foreground">
+          No FCFS partner NFTs and not GTD-eligible
+        </p>
       ) : (
         <ul className="mt-1 space-y-1">
+          {fcfsViaGtd ? (
+            <li className="text-sm">
+              {FCFS_VIA_GTD_REASON}
+              <span className="ml-1 font-mono text-xs text-muted-foreground">
+                (GTD carryover)
+              </span>
+            </li>
+          ) : null}
           {holdings.map((holding) => (
             <li key={holding.address} className="text-sm">
               <a
@@ -445,9 +462,14 @@ function PartnerList({
           >
             GTD thread wallets
           </a>{" "}
-          (manual list — hub preview, not on-chain mint allowlist).
+          (manual list — hub preview, not on-chain mint allowlist). GTD also
+          unlocks FCFS.
         </p>
-      ) : null}
+      ) : (
+        <p className="mt-2 text-xs text-muted-foreground">
+          GTD-eligible wallets also unlock FCFS phase eligibility (hub preview).
+        </p>
+      )}
     </div>
   );
 }
