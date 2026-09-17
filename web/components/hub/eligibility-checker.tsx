@@ -17,6 +17,7 @@ import {
 } from "@/lib/manual-gtd-wallets";
 import { ELIGIBLE_SHARE, mintSchedule, SITE } from "@/lib/site";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 import { useMemo, useState, type FormEvent } from "react";
 import { useAccount } from "wagmi";
 
@@ -142,12 +143,12 @@ export function EligibilityChecker({
       </h2>
       {!compact ? (
         <p className="mt-1">
-          <a
-            href={`${SITE.url}${ELIGIBLE_SHARE.path}`}
+          <Link
+            href={ELIGIBLE_SHARE.path}
             className="font-mono text-[11px] text-muted-foreground underline-offset-2 hover:text-foreground hover:underline"
           >
             Share eligibility check
-          </a>
+          </Link>
         </p>
       ) : null}
       <p className="mt-2 text-sm text-muted-foreground">
