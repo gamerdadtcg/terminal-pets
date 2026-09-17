@@ -1,6 +1,7 @@
 import { ComingSoon } from "@/components/coming-soon";
 import { ArtGallery } from "@/components/hub/art-gallery";
 import { EligibilityChecker } from "@/components/hub/eligibility-checker";
+import { HashSectionScroller } from "@/components/hub/hash-section-scroller";
 import { HopperExplainer } from "@/components/hub/hopper-explainer";
 import { MintScheduleCard } from "@/components/hub/mint-schedule";
 import {
@@ -157,6 +158,7 @@ export function HubLanding() {
 
   return (
     <div className="relative">
+      <HashSectionScroller />
       <div className="hub-grid pointer-events-none absolute inset-0 opacity-70" />
 
       <section className="relative overflow-hidden border-b border-border/60">

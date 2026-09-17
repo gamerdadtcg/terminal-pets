@@ -15,7 +15,7 @@ import {
   MANUAL_GTD_REASON,
   MANUAL_GTD_THREAD_URL,
 } from "@/lib/manual-gtd-wallets";
-import { mintSchedule, SITE } from "@/lib/site";
+import { ELIGIBLE_SHARE, mintSchedule, SITE } from "@/lib/site";
 import { cn } from "@/lib/utils";
 import { useMemo, useState, type FormEvent } from "react";
 import { useAccount } from "wagmi";
@@ -140,6 +140,16 @@ export function EligibilityChecker({
       <h2 className={cn("mt-3 font-medium", compact ? "text-lg" : "text-xl")}>
         Check GTD / FCFS eligibility
       </h2>
+      {!compact ? (
+        <p className="mt-1">
+          <a
+            href={`${SITE.url}${ELIGIBLE_SHARE.path}`}
+            className="font-mono text-[11px] text-muted-foreground underline-offset-2 hover:text-foreground hover:underline"
+          >
+            Share eligibility check
+          </a>
+        </p>
+      ) : null}
       <p className="mt-2 text-sm text-muted-foreground">
         Paste a wallet (or use the connected one). We read live ERC-721{" "}
         <span className="font-mono text-foreground">balanceOf</span> on{" "}
