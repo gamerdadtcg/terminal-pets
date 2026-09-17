@@ -17,11 +17,18 @@ export const ARCADE_CLOSE_ISO =
 
 export const ARCADE_PATH = "/arcade";
 
+/** Hub example SNAG (P02) — not mint supply. */
+export const ARCADE_PET = {
+  name: "SNAG",
+  petId: "P02",
+  src: "/art/examples/awake/2.gif",
+} as const;
+
 export const ARCADE_COPY = {
   title: "Ignite the Dial",
   badge: "ARCADE · TOP 150 GTD",
   prompt: "> IGNITE THE DIAL",
-  play: "> HUNT TICKS · DASH-IGNITE GLITCHES · CHAIN COMBOS",
+  play: "> JUMP SNAG · DODGE GLITCH PANELS · CATCH TICKS",
   locked: "> SCORE LOCKED",
   accepted: "> WALLET ACCEPTED",
   gtd: "> TOP 150 GTD",

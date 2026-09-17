@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import {
   ARCADE_COPY,
   ARCADE_GTD_CAP,
+  ARCADE_PET,
   ARCADE_ROUND_MS,
   arcadeClosesAt,
   arcadeIsClosed,
@@ -220,11 +221,12 @@ export function ArcadeCabinet() {
                       {ARCADE_COPY.play}
                     </p>
                     <p className="max-w-md text-sm text-muted-foreground">
-                      {Math.round(ARCADE_ROUND_MS / 1000)}s rounds. Hunt Dial
-                      ticks. Dash through glitches to Ignite them (that is the
-                      high-skill play). Graze for CLOSE bonus. Chain combos.
-                      Keep the sealed pet lit. Top {ARCADE_GTD_CAP} wallets lock
-                      GTD (and FCFS via GTD). {sealedCopy.carousel}
+                      {Math.round(ARCADE_ROUND_MS / 1000)}s rounds. Jump example{" "}
+                      {ARCADE_PET.name} over glitch panels — hits are penalties
+                      (combo drop, charge drain). Catch Dial ticks in the gaps.
+                      Chain combos. Keep {ARCADE_PET.name} lit. Top{" "}
+                      {ARCADE_GTD_CAP} wallets lock GTD (and FCFS via GTD).{" "}
+                      {sealedCopy.carousel}
                     </p>
                     {startError ? (
                       <p className="text-sm text-destructive">{startError}</p>
@@ -234,7 +236,7 @@ export function ArcadeCabinet() {
                         {closed ? "Contest closed" : "Play"}
                       </Button>
                       <p className="self-center font-mono text-[11px] text-muted-foreground">
-                        WASD / drag · SPACE / DASH
+                        TAP / SPACE / ↑ JUMP
                       </p>
                     </div>
                   </div>
@@ -249,8 +251,8 @@ export function ArcadeCabinet() {
                       {result.score}
                     </p>
                     <p className="font-mono text-xs text-[#c8ffd4]/80">
-                      {result.ticksCaught} ticks · {result.glitchesHit} glitches
-                      · {(result.durationMs / 1000).toFixed(1)}s
+                      {result.ticksCaught} ticks · {result.glitchesHit} glitch
+                      hits · {(result.durationMs / 1000).toFixed(1)}s
                     </p>
                     <form onSubmit={(event) => void submitScore(event)} className="space-y-2">
                       <label className="block space-y-1">

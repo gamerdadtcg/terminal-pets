@@ -45,7 +45,7 @@ Scaffold `/arcade` shell (CRT UI + placeholder game + wallet form + fake leaderb
 
 ## Implementation (this repo)
 
-- Playable canvas at `/arcade`: **Ignite the Dial** — catch Dial ticks, dodge glitches, keep the sealed pet lit (45s).
+- Playable canvas at `/arcade`: **Ignite the Dial** — jump example SNAG, dodge glitch panels (penalties), catch Dial ticks, keep SNAG lit (45s).
 - Score API: `POST /api/arcade/start`, `POST /api/arcade/score`, `GET /api/arcade/board`. HMAC run tokens, rate limits, one best score per wallet.
 - Storage: Upstash Redis REST when `KV_REST_API_*` or `UPSTASH_REDIS_REST_*` are set; otherwise `web/data/arcade-scores.json` locally; in-memory on Vercel without Redis.
 - Live top 150 count as GTD on `/eligible` (and FCFS via GTD). After close, export into `web/lib/arcade-gtd-wallets.ts` and merge to `main` before Fri 7:00 AM PT.
