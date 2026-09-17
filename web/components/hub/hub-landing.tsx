@@ -1,5 +1,6 @@
 import { ComingSoon } from "@/components/coming-soon";
 import { ArtGallery } from "@/components/hub/art-gallery";
+import { EligibilityChecker } from "@/components/hub/eligibility-checker";
 import { HopperExplainer } from "@/components/hub/hopper-explainer";
 import { MintScheduleCard } from "@/components/hub/mint-schedule";
 import {
@@ -312,6 +313,12 @@ export function HubLanding() {
               </div>
             </div>
           </div>
+        </div>
+      </section>
+
+      <section className="relative border-b border-border/60 bg-card/25">
+        <div className="mx-auto max-w-6xl scroll-mt-28 px-4 py-12 sm:px-6">
+          <EligibilityChecker />
         </div>
       </section>
 

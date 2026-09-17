@@ -1,6 +1,7 @@
 "use client";
 
 import { ConnectButton } from "@/components/connect-button";
+import { EligibilityChecker } from "@/components/hub/eligibility-checker";
 import { MintScheduleCard } from "@/components/hub/mint-schedule";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -381,6 +382,7 @@ export function MintPanel() {
 
         <div className="grid gap-3">
           <MintScheduleCard />
+          <EligibilityChecker compact />
           <Card>
             <CardHeader>
               <p className="font-mono text-[11px] text-primary">SEALED STATE</p>
