@@ -7,6 +7,10 @@ import { ROBINHOOD_CHAIN_ID } from "@/lib/chain";
 import type { EligibilityResult } from "@/lib/eligibility";
 import { ELIGIBILITY_COPY, parseWalletAddress } from "@/lib/eligibility";
 import { explorerAddress, shortAddress } from "@/lib/format";
+import {
+  MANUAL_GTD_REASON,
+  MANUAL_GTD_THREAD_URL,
+} from "@/lib/manual-gtd-wallets";
 import { mintSchedule, SITE } from "@/lib/site";
 import { cn } from "@/lib/utils";
 import { useMemo, useState, type FormEvent } from "react";
@@ -97,17 +101,25 @@ export function EligibilityChecker({
 
   const resultSummary = useMemo(() => {
     if (state.status !== "ok") return null;
-    if (state.result.gtd && state.result.fcfs) {
-      return "This wallet can mint in GTD and FCFS (and Public).";
+    const { gtd, fcfs, manualGtd } = state.result;
+    const gtdNft = gtdHoldings.length > 0;
+    if (gtd && fcfs) {
+      return "This wallet can mint in GTD and FCFS (and Public). Hub preview — mint still needs mintOpen.";
     }
-    if (state.result.gtd) {
+    if (gtd) {
+      if (manualGtd && gtdNft) {
+        return "This wallet can mint in GTD via partner NFT and the GTD thread list (and Public). FCFS needs an FCFS partner NFT.";
+      }
+      if (manualGtd) {
+        return "This wallet can mint in GTD as a GTD thread wallet (and Public). FCFS needs an FCFS partner NFT.";
+      }
       return "This wallet can mint in GTD (and Public). FCFS needs an FCFS partner NFT.";
     }
-    if (state.result.fcfs) {
-      return "This wallet can mint in FCFS (and Public). GTD needs a GTD partner NFT.";
+    if (fcfs) {
+      return "This wallet can mint in FCFS (and Public). GTD needs a GTD partner NFT or a GTD thread wallet.";
     }
-    return "No GTD or FCFS partner NFTs on this wallet. Public phase is still open to everyone.";
-  }, [state]);
+    return "No GTD or FCFS partner NFTs, and not on the GTD thread list. Public phase is still open to everyone.";
+  }, [state, gtdHoldings.length]);
 
   return (
     <section
@@ -118,16 +130,25 @@ export function EligibilityChecker({
       )}
     >
       <p className="font-mono text-[11px] tracking-[0.28em] text-primary">
-        PHASE ELIGIBILITY · LIVE HOLDINGS
+        PHASE ELIGIBILITY · LIVE HOLDINGS + THREAD LIST
       </p>
       <h2 className={cn("mt-3 font-medium", compact ? "text-lg" : "text-xl")}>
-        Check GTD / FCFS by partner NFTs
+        Check GTD / FCFS eligibility
       </h2>
       <p className="mt-2 text-sm text-muted-foreground">
         Paste a wallet (or use the connected one). We read live ERC-721{" "}
         <span className="font-mono text-foreground">balanceOf</span> on{" "}
-        {SITE.chain} (chain {ROBINHOOD_CHAIN_ID}) — not a Merkle list. GTD is
-        still unlocked; last-minute partner adds may land before mint.
+        {SITE.chain} (chain {ROBINHOOD_CHAIN_ID}) plus wallets from the{" "}
+        <a
+          href={MANUAL_GTD_THREAD_URL}
+          target="_blank"
+          rel="noreferrer"
+          className="text-foreground underline-offset-2 hover:underline"
+        >
+          GTD X thread
+        </a>
+        . Hub preview only — not a Merkle / on-chain mint allowlist. GTD is
+        still unlocked; last-minute adds may land before mint.
       </p>
 
       <form onSubmit={onSubmit} className="mt-4 space-y-3">
@@ -202,9 +223,8 @@ export function EligibilityChecker({
             {resultSummary ? (
               <p className="text-sm text-foreground">{resultSummary}</p>
             ) : null}
-            <HoldingsList
-              title="GTD holdings"
-              empty="No GTD partner NFTs"
+            <GtdReasons
+              manualGtd={state.result.manualGtd}
               holdings={gtdHoldings}
               explorer={explorer}
             />
@@ -238,7 +258,10 @@ export function EligibilityChecker({
       )}
       {compact && (
         <div className="mt-4 space-y-1 font-mono text-[11px] text-muted-foreground">
-          <p>GTD: {GTD_PARTNERS.map((item) => item.name).join(" · ")}</p>
+          <p>
+            GTD: {GTD_PARTNERS.map((item) => item.name).join(" · ")} · GTD
+            thread wallets
+          </p>
           <p>FCFS: {FCFS_PARTNERS.map((item) => item.name).join(" · ")}</p>
         </div>
       )}
@@ -288,6 +311,54 @@ function PhaseResult({
           </span>
         ) : null}
       </p>
+    </div>
+  );
+}
+
+function GtdReasons({
+  manualGtd,
+  holdings,
+  explorer,
+}: {
+  manualGtd: boolean;
+  holdings: EligibilityResult["holdings"];
+  explorer: string;
+}) {
+  const empty = !manualGtd && holdings.length === 0;
+  return (
+    <div>
+      <p className="font-mono text-[11px] text-muted-foreground">GTD reasons</p>
+      {empty ? (
+        <p className="mt-1 text-sm text-muted-foreground">
+          No GTD partner NFTs and not on the GTD thread list
+        </p>
+      ) : (
+        <ul className="mt-1 space-y-1">
+          {manualGtd ? (
+            <li className="text-sm">
+              {MANUAL_GTD_REASON}
+              <span className="ml-1 font-mono text-xs text-muted-foreground">
+                (manual list)
+              </span>
+            </li>
+          ) : null}
+          {holdings.map((holding) => (
+            <li key={holding.address} className="text-sm">
+              <a
+                href={explorerAddress(explorer, holding.address)}
+                target="_blank"
+                rel="noreferrer"
+                className="text-foreground underline-offset-2 hover:underline"
+              >
+                {holding.name}
+              </a>
+              <span className="ml-1 font-mono text-xs text-muted-foreground">
+                × {holding.balance}
+              </span>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
@@ -363,6 +434,20 @@ function PartnerList({
           </li>
         ))}
       </ul>
+      {phase === "GTD" ? (
+        <p className="mt-2 text-xs text-muted-foreground">
+          Plus{" "}
+          <a
+            href={MANUAL_GTD_THREAD_URL}
+            target="_blank"
+            rel="noreferrer"
+            className="underline-offset-2 hover:underline"
+          >
+            GTD thread wallets
+          </a>{" "}
+          (manual list — hub preview, not on-chain mint allowlist).
+        </p>
+      ) : null}
     </div>
   );
 }
