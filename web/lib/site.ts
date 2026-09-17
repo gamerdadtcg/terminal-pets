@@ -164,7 +164,7 @@ export function publicLinks() {
 export const FAQ = [
   {
     q: "When can I mint?",
-    a: `${mintScheduleCopy.sentence} ${mintAllocation.sentence} Mint on this hub at /mint. The button calls CollectionNFT.mint (or mintTo) when on-chain mintOpen is true; if mintOpen is false the hub shows mint closed. Do not mint through OpenSea Studio’s deploy-Drop wizard — Studio currently has no BYO import and no Base Sepolia in Drop create. Each pet mints Sealed: every tokenURI is the same hidden.json until CollectionNFT.reveal(), so collectors cannot see traits. Dormant egg art, Ignite, and $TERM trading unlock at reveal.`,
+    a: `${mintScheduleCopy.sentence} ${mintAllocation.sentence} Mint on this hub at /mint. The button calls CollectionNFT.mint (or mintTo) when on-chain mintOpen is true; if mintOpen is false the hub shows mint closed. Each pet mints Sealed: every tokenURI is the same hidden.json until CollectionNFT.reveal(), so collectors cannot see traits. Dormant egg art, Ignite, and $TERM trading unlock at reveal.`,
   },
   {
     q: "Am I eligible for GTD or FCFS?",
