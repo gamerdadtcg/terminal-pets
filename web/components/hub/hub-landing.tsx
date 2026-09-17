@@ -144,11 +144,6 @@ const ROADMAP = [
     title: "$TERM market skim",
     body: "TermMarket ships in the repo (not fee-on-transfer). Inactive until TERM_POOL and TERM_SWAP_ROUTER are set. Then 3% of canonical swap input → 1.5% Hopper / 1% burn / 0.5% treasury. Trading itself is also off until reveal.",
   },
-  {
-    state: "next" as const,
-    title: "OpenSea Studio (not the mint path)",
-    body: `Studio Drop create currently has no BYO import and no Base Sepolia. Hub mint is primary. Do not use Studio’s deploy-Drop wizard. OpenSea can still show the collection after import. ${SITE.publicSupply} public / ${SITE.teamReserve} team. Public mintOpen stays closed until Friday GTD / FCFS / Public. Thursday teamMint is owner-only.`,
-  },
 ] as const;
 
 export function HubLanding() {
@@ -542,8 +537,7 @@ export function HubLanding() {
             </Link>{" "}
             when mintOpen is true; the hub shows mint closed otherwise.{" "}
             {sealedCopy.sentence} Robinhood mainnet (4663) is live — mintOpen
-            stays on-chain. Base Sepolia dry-run is for testing only. Do not
-            use OpenSea Studio’s deploy-Drop wizard.
+            stays on-chain.
           </p>
         </div>
         <ol className="space-y-3">
@@ -638,10 +632,8 @@ export function HubLanding() {
             </CardHeader>
             <CardContent className="space-y-3 text-sm text-muted-foreground">
               <p>
-                Collection page after import — not the mint wizard. Studio Drop
-                create currently has no BYO import / no Base Sepolia.{" "}
-                {SITE.publicSupply} public of {SITE.supply}. Collection name{" "}
-                {SITE.name}.
+                OpenSea can list {SITE.name} after mint. {SITE.publicSupply}{" "}
+                public of {SITE.supply}. Mint on this hub.
               </p>
               {links.opensea ? (
                 <Button size="sm" asChild>

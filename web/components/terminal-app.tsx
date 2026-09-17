@@ -460,7 +460,7 @@ NEXT_PUBLIC_TERM_MARKET_ADDRESS=0x78f2c0577321053722Daa1f5eE31E5071a7D9F30`}
           {configured && mintOpen === false && (
             <Empty
               title="Mint is closed"
-              body={`${mintScheduleCopy.when} CollectionNFT.mintOpen is false, so mint/mintTo revert. Use the mint page when the owner opens the hub path. Do not mint through OpenSea Studio’s deploy wizard.`}
+              body={`${mintScheduleCopy.when} CollectionNFT.mintOpen is false, so mint/mintTo revert. Use the mint page when the owner opens the hub path.`}
             />
           )}
 
@@ -581,11 +581,10 @@ NEXT_PUBLIC_TERM_MARKET_ADDRESS=0x78f2c0577321053722Daa1f5eE31E5071a7D9F30`}
           <div>
             <p className="mb-2 font-medium text-foreground">OpenSea</p>
             <p>
-              Collection import is separate from mint. Hub mint is the primary
-              path. If a collection page exists, point creator earnings to 7.5%
-              at the RoyaltySplitter. Pre-reveal that stream is 100% TermFund.
+              If a collection page exists, point creator earnings to 7.5% at
+              the RoyaltySplitter. Pre-reveal that stream is 100% TermFund.
               After reveal it pays 5% of sale to the Hopper and 2.5% to
-              treasury. Do not use Studio’s deploy-Drop wizard.
+              treasury.
             </p>
           </div>
           <div>

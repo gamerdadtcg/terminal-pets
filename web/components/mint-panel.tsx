@@ -176,9 +176,7 @@ export function MintPanel() {
           <p className="max-w-xl text-lg text-muted-foreground">
             Free mint. 1 Terminal Pet per transaction when on-chain{" "}
             <span className="font-mono text-foreground">mintOpen</span> is
-            true. OpenSea Studio Drop create currently cannot import this
-            contract and does not list Base Sepolia — do not mint through the
-            Studio wizard.
+            true.
           </p>
           <p className="max-w-xl text-sm text-muted-foreground">
             {mintScheduleCopy.sentence} {mintAllocation.sentence} After mint
@@ -429,8 +427,7 @@ export function MintPanel() {
               <p>Dial assigns 1–4 Stock Tokens by shell class at Ignite.</p>
               <p>
                 Pets mint Sealed for {SITE.revealWindow}. Every tokenURI is{" "}
-                {sealedCopy.hiddenUri} until reveal. Do not use Studio’s
-                deploy-Drop wizard.
+                {sealedCopy.hiddenUri} until reveal.
               </p>
             </CardContent>
           </Card>
