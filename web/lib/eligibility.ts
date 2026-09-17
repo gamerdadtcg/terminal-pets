@@ -73,8 +73,10 @@ export function partnerHoldingsRpc(): string {
 
 export function parseWalletAddress(value: string): Address | null {
   const trimmed = value.trim();
-  if (!isAddress(trimmed)) return null;
-  return getAddress(trimmed);
+  // Non-strict: accept any 0x + 40 hex regardless of EIP-55 checksum so
+  // manual GTD lookup can be case-insensitive.
+  if (!isAddress(trimmed, { strict: false })) return null;
+  return getAddress(trimmed.toLowerCase());
 }
 
 let client: PublicClient | undefined;
