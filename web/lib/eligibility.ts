@@ -28,8 +28,13 @@ export type EligibilityResult = {
   gtd: boolean;
   fcfs: boolean;
   public: true;
-  /** True if this wallet is on the GTD X-thread manual list. Not FCFS. Not on-chain mint allowlist. */
+  /** True if this wallet is on the GTD X-thread manual list. Hub preview only. */
   manualGtd: boolean;
+  /**
+   * True when FCFS is yes because this wallet is GTD-eligible (partner NFT
+   * and/or thread list). Shown even if the wallet also holds FCFS NFTs.
+   */
+  fcfsViaGtd: boolean;
   holdings: PartnerHolding[];
   failed: Array<{
     name: string;
@@ -56,10 +61,14 @@ export const ELIGIBILITY_COPY = {
   publicNote: `Public phase is open to everyone (no allowlist) ${publicPhase?.time ?? "Friday 10:00 AM PT"}.`,
   schedule: `${mintSchedule.date} · ${mintSchedule.timezoneIana} (${mintSchedule.timezoneLabel}): ${gtdPhase?.time ?? "8:00 AM PT"} GTD · ${fcfsPhase?.time ?? "9:00 AM PT"} FCFS · ${publicPhase?.time ?? "10:00 AM PT"} Public. ${mintSchedule.perPhase} per phase.`,
   disclaimer:
-    "Eligibility is current on-chain holdings plus the GTD X-thread wallet list. Hub preview only — CollectionNFT still gates mint on mintOpen. Thread wallets are not FCFS and are not on-chain mint allowlisted until Travis locks mint phase. Partner lists may grow before lock.",
+    "Eligibility is current on-chain holdings plus the GTD X-thread wallet list. GTD-eligible wallets also unlock FCFS. Hub preview only — CollectionNFT still gates mint on mintOpen. Not an on-chain mint allowlist until Travis locks mint phase. Partner lists may grow before lock.",
+  fcfsViaGtd: "Included via GTD eligibility",
   invalidAddress:
     "That doesn't look like a wallet address. Paste a 0x… Ethereum address.",
 } as const;
+
+/** UI / API reason when FCFS is yes because the wallet is GTD-eligible. */
+export const FCFS_VIA_GTD_REASON = ELIGIBILITY_COPY.fcfsViaGtd;
 
 /** Always Robinhood mainnet — partner NFTs live on 4663, not the dry-run chain. */
 export function partnerHoldingsRpc(): string {
@@ -153,16 +162,21 @@ export async function checkPartnerEligibility(
     }
   }
 
+  const gtd =
+    manualGtd || holdings.some((holding) => holding.phase === "GTD");
+  const fcfsFromNft = holdings.some((holding) => holding.phase === "FCFS");
+  const fcfsViaGtd = gtd;
+
   return {
     ok: true,
     result: {
       address,
       chainId: ROBINHOOD_CHAIN_ID,
-      gtd:
-        manualGtd || holdings.some((holding) => holding.phase === "GTD"),
-      fcfs: holdings.some((holding) => holding.phase === "FCFS"),
+      gtd,
+      fcfs: fcfsFromNft || fcfsViaGtd,
       public: true,
       manualGtd,
+      fcfsViaGtd,
       holdings,
       failed,
     },
