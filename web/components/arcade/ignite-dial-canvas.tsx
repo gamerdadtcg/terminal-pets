@@ -49,7 +49,7 @@ const PET_H = 56;
 const GRAVITY = 1580;
 const BOUNCE = -790;
 const GLITCH_BOUNCE = -520;
-const MAX_VX = 360;
+const MAX_VX = 480;
 
 function pickTick(): { symbol: ArcadeTickSymbol; points: number } {
   if (Math.random() < 0.08) return { symbol: "OMEGA", points: 120 };
@@ -264,6 +264,18 @@ export function IgniteDialCanvas({
       return ((event.clientX - rect.left) / rect.width) * W;
     }
 
+    function aimFrom(event: PointerEvent) {
+      const rect = view.getBoundingClientRect();
+      const pad = 40;
+      const over =
+        event.clientX >= rect.left - pad &&
+        event.clientX <= rect.right + pad &&
+        event.clientY >= rect.top - pad &&
+        event.clientY <= rect.bottom + pad;
+      if (!over) return;
+      pointerX = Math.max(0, Math.min(W, localX(event)));
+    }
+
     const onKey = (event: KeyboardEvent) => {
       const down = event.type === "keydown";
       if (
@@ -285,21 +297,23 @@ export function IgniteDialCanvas({
     };
 
     const onPointer = (event: PointerEvent) => {
-      if (event.type === "pointerleave" || event.type === "pointercancel") {
-        pointerX = null;
-        return;
+      if (event.type === "pointercancel") return;
+      aimFrom(event);
+      if (event.type === "pointerdown") {
+        try {
+          view.setPointerCapture(event.pointerId);
+        } catch {
+          // Capture is optional; mouse already tracks on window.
+        }
+        event.preventDefault();
       }
-      pointerX = localX(event);
-      event.preventDefault();
     };
 
     window.addEventListener("keydown", onKey);
     window.addEventListener("keyup", onKey);
+    window.addEventListener("pointermove", onPointer);
     view.addEventListener("pointerdown", onPointer);
     view.addEventListener("pointermove", onPointer);
-    view.addEventListener("pointerup", onPointer);
-    view.addEventListener("pointerleave", onPointer);
-    view.addEventListener("pointercancel", onPointer);
 
     function bounceOn(pad: Pad) {
       const screenY = pad.y - camY;
@@ -359,17 +373,18 @@ export function IgniteDialCanvas({
 
       if (pointerX !== null) {
         const target = pointerX - PET_W / 2;
-        pet.vx += (target - pet.x) * 14 * dt;
+        pet.vx = (target - pet.x) / Math.max(dt, 1 / 240);
+        pet.x = wrapX(target);
       } else {
-        if (left) pet.vx -= 2200 * dt;
-        if (right) pet.vx += 2200 * dt;
-        if (!left && !right) pet.vx *= Math.pow(0.12, dt);
+        if (left) pet.vx -= 3200 * dt;
+        if (right) pet.vx += 3200 * dt;
+        if (!left && !right) pet.vx *= Math.pow(0.08, dt);
+        pet.vx = Math.max(-MAX_VX, Math.min(MAX_VX, pet.vx));
+        pet.x = wrapX(pet.x + pet.vx * dt);
       }
-      pet.vx = Math.max(-MAX_VX, Math.min(MAX_VX, pet.vx));
-      if (Math.abs(pet.vx) > 12) face = pet.vx < 0 ? -1 : 1;
+      if (Math.abs(pet.vx) > 8) face = pet.vx < 0 ? -1 : 1;
 
       pet.vy = Math.min(920, pet.vy + GRAVITY * dt);
-      pet.x = wrapX(pet.x + pet.vx * dt);
       pet.y += pet.vy * dt;
 
       const follow = pet.y - H * 0.4;
@@ -553,11 +568,9 @@ export function IgniteDialCanvas({
       cancelAnimationFrame(frame);
       window.removeEventListener("keydown", onKey);
       window.removeEventListener("keyup", onKey);
+      window.removeEventListener("pointermove", onPointer);
       view.removeEventListener("pointerdown", onPointer);
       view.removeEventListener("pointermove", onPointer);
-      view.removeEventListener("pointerup", onPointer);
-      view.removeEventListener("pointerleave", onPointer);
-      view.removeEventListener("pointercancel", onPointer);
     };
   }, [active]);
 

@@ -236,7 +236,7 @@ export function ArcadeCabinet() {
                         {closed ? "Contest closed" : "Play"}
                       </Button>
                       <p className="self-center font-mono text-[11px] text-muted-foreground">
-                        ← → / A D / DRAG
+                        MOUSE / ← → / A D
                       </p>
                     </div>
                   </div>
