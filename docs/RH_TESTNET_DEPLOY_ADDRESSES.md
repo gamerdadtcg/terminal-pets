@@ -56,9 +56,11 @@ This file is the **7-day** Hopper-lock stack (CollectionNFT `0xe1cC988CeC1C29764
 ## Verification reads
 
 - revealed: `true`
-- tokenURI(1) after reveal (dormant): `https://terminal-pets.vercel.app/metadata/dormant/1.json`
+- tokenURI(1) after reveal (dormant): `https://terminal-pets.vercel.app/metadata/dormant/1.json` (historical recorded URI — that hub tree is gone)
 - isLit(1): `true`
-- tokenURI(1) after ignite: `https://terminal-pets.vercel.app/metadata/lit/1.json`
+- tokenURI(1) after ignite: `https://terminal-pets.vercel.app/metadata/lit/1.json` (historical recorded URI — that hub tree is gone)
+
+New deploys use canonical `https://terminalpets.xyz/metadata/hidden.json` until reveal (`https://terminal-pets.vercel.app/metadata/hidden.json` still resolves as a fallback alias). Do not republish tokenId lit/dormant JSON on the hub.
 - previewDial(1): `(0x0000000000000000000000000000000000000000, 0xC9f9c86933092BbbfFF3CCb4b105A4A94bf3Bd4E, 0x0000000000000000000000000000000000000000, 0x0000000000000000000000000000000000000000, 5000, 5000, 0, 0, 0, 7, 0, 0, 2, 2)`
 - stockTokens: slot4 AMZN `0x5884aD2f920c162CFBbACc88C9C51AA75eC09E02`, slot7 TSLA `0xC9f9c86933092BbbfFF3CCb4b105A4A94bf3Bd4E` (confirmed via setStockToken event logs; Dial preview shows TSLA on token 1)
 

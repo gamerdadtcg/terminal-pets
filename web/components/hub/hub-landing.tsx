@@ -188,8 +188,9 @@ export function HubLanding() {
             </p>
             <p className="max-w-xl text-sm text-muted-foreground">
               {mintScheduleCopy.sentence} {mintAllocation.sentence} Mint on
-              this hub. Pets mint Sealed for {SITE.revealWindow}: every
-              tokenURI is the same hidden.json — collectors cannot see traits.
+              this hub ({SITE.url}; {SITE.urlAlias} remains a fallback alias).
+              Pets mint Sealed for {SITE.revealWindow}: every tokenURI is{" "}
+              {sealedCopy.hiddenUri} — collectors cannot see traits.
               Ignite and $TERM transfers stay off. {sealedCopy.carousel} Reveal
               shows a dormant egg GIF; Ignite swaps metadata to the matching
               awake pet. Secondary royalties (
@@ -243,8 +244,9 @@ export function HubLanding() {
               <p className="mt-2 text-sm text-muted-foreground">
                 Demo GIFs only — not live tokenIds. Modular Pocket Critter
                 (2048 compose, 512 export). Until reveal, minted tokenURI is
-                one sealed hidden.json. Ignite is the hatch: crack, split,
-                flash, awake pet.
+                the sealed {sealedCopy.hiddenUri} ({sealedCopy.hiddenUriAlias}{" "}
+                still resolves). Ignite is the hatch: crack, split, flash,
+                awake pet.
               </p>
               <div className="mt-4 grid grid-cols-2 gap-2">
                 <figure className="overflow-hidden rounded-xl border border-border/70 bg-black/40">
@@ -292,7 +294,8 @@ export function HubLanding() {
               <div className="rounded-2xl border border-border/70 bg-card/60 p-3">
                 <p className="font-mono text-[10px] text-primary">SEALED</p>
                 <p className="mt-1 text-xs text-muted-foreground">
-                  One hidden.json for every token. No traits until reveal.
+                  One hidden.json for every token ({sealedCopy.hiddenUri}). No
+                  traits until reveal.
                 </p>
               </div>
               <div className="rounded-2xl border border-border/70 bg-card/60 p-3">

@@ -160,13 +160,15 @@ Read-only `cast call` examples (no keys): [`script/smoke-testnet.md`](../script/
 ```bash
 cast send "$COLLECTION" \
   "setMetadataURIs(string,string,string)" \
-  "https://terminal-pets.vercel.app/metadata/hidden.json" \
+  "https://terminalpets.xyz/metadata/hidden.json" \
   "" \
   "" \
   --rpc-url testnet
 ```
 
-Do **not** point dormant/lit at hub `/metadata/dormant/` or `/metadata/lit/` — those paths no longer exist. Pin privately after reveal. The recorded 7-day 46630 stack already revealed against the old URLs (see [`RH_TESTNET_DEPLOY_ADDRESSES.md`](RH_TESTNET_DEPLOY_ADDRESSES.md)).
+Canonical sealed URI is `https://terminalpets.xyz/metadata/hidden.json`. `https://terminal-pets.vercel.app/metadata/hidden.json` still resolves as a fallback alias until DNS is fully cut over.
+
+Do **not** point dormant/lit at hub `/metadata/dormant/` or `/metadata/lit/` — those paths no longer exist. Pin privately after reveal. The recorded 7-day 46630 stack already revealed against the old vercel.app URLs (see [`RH_TESTNET_DEPLOY_ADDRESSES.md`](RH_TESTNET_DEPLOY_ADDRESSES.md)).
 
 ### 5.2 `setStockToken` — AMZN + TSLA only
 
@@ -301,7 +303,7 @@ Recorded 46630 addresses (7-day stack): [`RH_TESTNET_DEPLOY_ADDRESSES.md`](RH_TE
     "7_TSLA": "0xC9f9c86933092BbbfFF3CCb4b105A4A94bf3Bd4E"
   },
   "metadata": {
-    "hiddenURI": "https://terminal-pets.vercel.app/metadata/hidden.json",
+    "hiddenURI": "https://terminalpets.xyz/metadata/hidden.json",
     "dormantBaseURI": "(private pin after reveal — do not use hub /metadata/dormant/)",
     "litBaseURI": "(private pin after reveal — do not use hub /metadata/lit/)"
   }

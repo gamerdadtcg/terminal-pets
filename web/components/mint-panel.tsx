@@ -396,6 +396,12 @@ export function MintPanel() {
               ) : (
                 <>
                   <p>{sealedCopy.sentence}</p>
+                  <p className="break-all font-mono text-[11px]">
+                    {sealedCopy.hiddenUri}
+                  </p>
+                  <p className="break-all font-mono text-[11px] text-muted-foreground/80">
+                    Alias until DNS cutover: {sealedCopy.hiddenUriAlias}
+                  </p>
                   <p>
                     Hub GIFs at /art/examples are {sealedCopy.label}. They are
                     not the 4444 mint files and are not tokenIds.
@@ -416,9 +422,9 @@ export function MintPanel() {
               <p>Hopper payouts lock {SITE.hopperLock} after reveal.</p>
               <p>Dial assigns 1–4 Stock Tokens by shell class at Ignite.</p>
               <p>
-                Pets mint Sealed for {SITE.revealWindow}. Every tokenURI is
-                hidden.json until reveal. Do not use Studio’s deploy-Drop
-                wizard.
+                Pets mint Sealed for {SITE.revealWindow}. Every tokenURI is{" "}
+                {sealedCopy.hiddenUri} until reveal. Do not use Studio’s
+                deploy-Drop wizard.
               </p>
             </CardContent>
           </Card>

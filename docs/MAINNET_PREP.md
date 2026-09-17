@@ -78,8 +78,10 @@ RH **testnet** AMZN / TSLA samples in [`DIAL.md`](DIAL.md) are **46630-only**. D
 Until `CollectionNFT.reveal()`, **every** `tokenURI` is the same sealed JSON:
 
 ```text
-https://terminal-pets.vercel.app/metadata/hidden.json
+https://terminalpets.xyz/metadata/hidden.json
 ```
+
+`https://terminal-pets.vercel.app/metadata/hidden.json` still resolves as a fallback alias until DNS is fully cut over. Prefer `NEXT_PUBLIC_SITE_URL` / `https://terminalpets.xyz` for collector-facing copy.
 
 Collectors cannot see traits. Hub carousel GIFs (~25) at `/art/examples/` are **examples / not mint supply** — not live tokenIds, not the 4444 files.
 
@@ -118,7 +120,7 @@ python art/generator/generate_collection.py \
 
 ```text
 CollectionNFT.setMetadataURIs(
-  hiddenURI,        // https://terminal-pets.vercel.app/metadata/hidden.json
+  hiddenURI,        // https://terminalpets.xyz/metadata/hidden.json (vercel.app still resolves)
   dormantBaseURI,   // ipfs://…/egg-metadata/  (trailing slash → {id}.json) — after reveal policy
   litBaseURI        // ipfs://…/metadata/      (trailing slash → {id}.json) — after reveal policy
 )

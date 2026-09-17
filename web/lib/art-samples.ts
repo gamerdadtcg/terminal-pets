@@ -1,6 +1,5 @@
 /** Public sealed metadata only. Dormant/lit 4444 JSON is not on this hub until after reveal. */
-export const SEALED_METADATA_URI =
-  "https://terminal-pets.vercel.app/metadata/hidden.json";
+export { SEALED_METADATA_URI, SEALED_METADATA_URI_ALIAS } from "./site";
 
 export const DEMO_LABEL = "examples / not mint supply";
 

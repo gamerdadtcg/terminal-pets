@@ -59,6 +59,12 @@ export function MintScheduleCard({
         <span className="font-mono">mintOpen</span> is true Friday.{" "}
         {sealedCopy.tokenUri}
       </p>
+      <p className="mt-2 break-all font-mono text-[11px] text-muted-foreground">
+        Sealed tokenURI: {sealedCopy.hiddenUri}
+        <span className="mt-1 block text-muted-foreground/80">
+          Alias until DNS cutover: {sealedCopy.hiddenUriAlias}
+        </span>
+      </p>
     </div>
   );
 }

@@ -94,7 +94,7 @@ The Vercel hub hosts ~25 **example** GIFs at `/art/examples/` (labeled examples 
 
 | Arg | HTTPS |
 | --- | --- |
-| `hiddenURI` | `https://terminal-pets.vercel.app/metadata/hidden.json` |
+| `hiddenURI` | `https://terminalpets.xyz/metadata/hidden.json` (`https://terminal-pets.vercel.app/metadata/hidden.json` still resolves until DNS cutover) |
 | `dormantBaseURI` / `litBaseURI` | **Do not** point at this hub before reveal |
 
 Files: `web/public/art/examples/awake/{n}.gif`, `web/public/art/examples/egg/{n}.gif`. See `docs/MAIN_ART_LOCK.md`. Do not commit 4444 JSON to `web/public/metadata/{lit,dormant}`.

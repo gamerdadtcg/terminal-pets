@@ -85,7 +85,7 @@ Do **not** use Studio’s metadata-upload / reveal wizard as the source of truth
 
 ```text
 CollectionNFT.setMetadataURIs(
-  hiddenURI,        // https://terminal-pets.vercel.app/metadata/hidden.json
+  hiddenURI,        // https://terminalpets.xyz/metadata/hidden.json (vercel.app still resolves)
   dormantBaseURI,   // private 4444 pin AFTER reveal (trailing / → {id}.json)
   litBaseURI        // private 4444 pin AFTER reveal
 )

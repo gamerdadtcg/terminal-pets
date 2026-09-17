@@ -67,7 +67,7 @@ After Vercel deploy, owner-set **hiddenURI now**. Set dormant/lit bases from a *
 
 ```text
 CollectionNFT.setMetadataURIs(
-  hiddenURI,       // https://terminal-pets.vercel.app/metadata/hidden.json
+  hiddenURI,       // https://terminalpets.xyz/metadata/hidden.json (vercel.app still resolves)
   dormantBaseURI,  // private pin after reveal (trailing slash → {id}.json)
   litBaseURI       // private pin after reveal (trailing slash → {id}.json)
 )
@@ -75,7 +75,7 @@ CollectionNFT.setMetadataURIs(
 
 | Arg | Friday mint |
 | --- | --- |
-| `hiddenURI` | `https://terminal-pets.vercel.app/metadata/hidden.json` |
+| `hiddenURI` | `https://terminalpets.xyz/metadata/hidden.json` (`https://terminal-pets.vercel.app/metadata/hidden.json` still resolves until DNS cutover) |
 | `dormantBaseURI` | unset / private pin — **not** hub `/metadata/dormant/` |
 | `litBaseURI` | unset / private pin — **not** hub `/metadata/lit/` |
 

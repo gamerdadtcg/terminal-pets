@@ -7,6 +7,7 @@ import {
   HATCH_OTHERS,
   HATCH_PRIMARY,
   SEALED_METADATA_URI,
+  SEALED_METADATA_URI_ALIAS,
 } from "@/lib/art-samples";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -152,6 +153,9 @@ export function ArtGallery() {
             <div className="rounded-xl border border-border/70 bg-background/40 px-3 py-2">
               <dt className="text-muted-foreground">hiddenURI (sealed, all tokens)</dt>
               <dd className="break-all text-foreground">{SEALED_METADATA_URI}</dd>
+              <dd className="mt-1 break-all text-muted-foreground">
+                Alias until DNS cutover: {SEALED_METADATA_URI_ALIAS}
+              </dd>
             </div>
             <div className="rounded-xl border border-dashed border-border/70 bg-background/20 px-3 py-2">
               <dt className="text-muted-foreground">dormant / lit JSON</dt>
