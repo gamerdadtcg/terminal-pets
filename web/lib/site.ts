@@ -154,6 +154,10 @@ export const FAQ = [
     a: `${mintScheduleCopy.sentence} ${mintAllocation.sentence} Mint on this hub at /mint. The button calls CollectionNFT.mint (or mintTo) when on-chain mintOpen is true; if mintOpen is false the hub shows mint closed. Do not mint through OpenSea Studio’s deploy-Drop wizard — Studio currently has no BYO import and no Base Sepolia in Drop create. Each pet mints Sealed: every tokenURI is the same hidden.json until CollectionNFT.reveal(), so collectors cannot see traits. Dormant egg art, Ignite, and $TERM trading unlock at reveal.`,
   },
   {
+    q: "Am I eligible for GTD or FCFS?",
+    a: "The hub checker reads live Robinhood Chain ERC-721 balanceOf against announced partner collections — not a Merkle / address list. GTD if you hold any GTD partner NFT; FCFS if you hold any FCFS partner NFT. Public (Friday 10:00 AM PT) is open to everyone, no allowlist. Eligibility is current holdings; mint still requires mintOpen and the phase window on Friday. Partner lists may grow before lock.",
+  },
+  {
     q: "How many can I mint?",
     a: `${mintSchedule.rule} Public phases on ${mintSchedule.date}: ${mintScheduleCopy.phasesLong}. Thursday team allocation is owner-only teamMint, not a collector mint. ${mintAllocation.sentence} Free mint — no mint price.`,
   },
