@@ -110,6 +110,19 @@ export const mintScheduleCopy = {
   sentence: `${mintSchedule.teamAllocation.date}, ${mintSchedule.teamAllocation.time} — Team allocation only (teamMint 200 to the team wallet). Not a public mint. Public mintOpen stays closed until Friday. Free mint on ${mintSchedule.date}. Times are ${mintSchedule.timezoneIana} (${mintSchedule.timezoneLabel}): ${mintSchedule.phases.map(mintPhaseLine).join("; ")}. ${mintSchedule.rule}`,
 } as const;
 
+/** Shareable /eligible route. Hash-only #eligible cannot set distinct OG tags. */
+export const ELIGIBLE_SHARE = {
+  path: "/eligible",
+  hash: "/#eligible",
+  title: "Check your wallet",
+  description: `Check GTD / FCFS partner eligibility for Terminal Pets. Free mint ${mintSchedule.date} ${mintSchedule.timezoneLabel}.`,
+  image: "/og-eligible.png",
+  imageWidth: 1200,
+  imageHeight: 630,
+  imageAlt:
+    "Terminal Pets wallet checker — GTD / FCFS partner eligibility. Branding and partner logos only.",
+} as const;
+
 /** Anti-snipe copy. tokenURI is one hidden.json until CollectionNFT.reveal(). */
 export const sealedCopy = {
   badge: "Sealed until reveal",
