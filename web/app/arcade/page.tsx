@@ -37,9 +37,10 @@ export default function ArcadePage() {
             </h1>
             <p className="text-muted-foreground">
               Bounce example BOLT (the robot pet, not the handheld token) up
-              the Dial. No timer — it keeps getting harder until you fall.
-              Glitch pads are penalties. Catch Dial ticks and chain combos.
-              Best score per wallet. The top {ARCADE_GTD_CAP} lock GTD (and FCFS via GTD) on the hub checker
+              the Dial. No timer. After you start climbing, every hop has a
+              safe pad and a glitch pad — pick the right jump. It keeps getting
+              harder until you fall. Best score per wallet. The top{" "}
+              {ARCADE_GTD_CAP} lock GTD (and FCFS via GTD) on the hub checker
               after the Friday 7:00 AM PT redeploy. Hub preview only —
               CollectionNFT still gates mint on{" "}
               <span className="font-mono">mintOpen</span>.

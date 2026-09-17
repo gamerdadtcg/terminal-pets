@@ -46,9 +46,9 @@ const W = 720;
 const H = 440;
 const PET_W = 50;
 const PET_H = 56;
-const GRAVITY = 1700;
-const BOUNCE = -760;
-const GLITCH_BOUNCE = -600;
+const GRAVITY = 1580;
+const BOUNCE = -780;
+const GLITCH_BOUNCE = -700;
 const MAX_VX = 480;
 
 function pickTick(): { symbol: ArcadeTickSymbol; points: number } {
@@ -189,7 +189,7 @@ export function IgniteDialCanvas({
     let topY = H - 36;
     let last = performance.now();
     const started = last;
-    let lastPadX = W / 2;
+    let lastSafeX = W / 2;
     let ended = false;
 
     function float(x: number, y: number, text: string, color: string) {
@@ -207,79 +207,71 @@ export function IgniteDialCanvas({
       });
     }
 
-    function addPad(
+    function pushPad(
+      x: number,
       y: number,
-      heat: number,
-      forcePad = false,
-      placed?: { x: number; w: number },
+      w: number,
+      kind: Pad["kind"],
+      vx: number,
     ) {
-      let kind: Pad["kind"] = "pad";
-      if (!forcePad) {
-        const threat = Math.min(3, heat);
-        const roll = Math.random();
-        const glitchOdds = Math.min(0.56, 0.16 + threat * 0.18);
-        const crumbleOdds = Math.min(0.42, 0.08 + threat * 0.14);
-        if (roll < glitchOdds) kind = "glitch";
-        else if (heat > 0.1 && roll < glitchOdds + crumbleOdds) kind = "crumble";
-      }
-      const threat = Math.min(3, heat);
-      const w =
-        placed?.w ?? Math.max(26, 70 - threat * 14 + Math.random() * 8);
-      let x: number;
-      if (placed) {
-        x = placed.x;
-      } else {
-        const minShift = 80 + Math.min(2.2, heat) * 90;
-        const dir = Math.random() < 0.5 ? -1 : 1;
-        x =
-          lastPadX +
-          dir * (minShift + Math.random() * (60 + Math.min(2, heat) * 70)) -
-          w / 2;
-        if (x < 10) x = 10;
-        if (x + w > W - 10) x = W - 10 - w;
-      }
-      lastPadX = x + w / 2;
-      const moving =
-        !placed && heat > 0.08 && Math.random() < Math.min(0.6, 0.16 + threat * 0.2);
-      const pad: Pad = {
+      pads.push({
         x,
         y,
         w,
-        h: kind === "crumble" ? 10 : 12,
+        h: 12,
         kind,
-        vx: moving
-          ? (Math.random() < 0.5 ? -1 : 1) * (110 + threat * 90)
-          : 0,
+        vx,
         scored: false,
         dead: false,
-      };
-      pads.push(pad);
-      if (!placed && kind === "pad" && Math.random() < 0.28) {
-        const tick = pickTick();
-        pickups.push({
-          x: pad.x + pad.w / 2,
-          y: pad.y - 22,
-          r: tick.symbol === "OMEGA" ? 16 : 13,
-          symbol: tick.symbol,
-          points: tick.points,
-        });
+      });
+    }
+
+    function spawnTick(padX: number, padW: number, padY: number) {
+      const tick = pickTick();
+      pickups.push({
+        x: padX + padW / 2,
+        y: padY - 22,
+        r: tick.symbol === "OMEGA" ? 16 : 13,
+        symbol: tick.symbol,
+        points: tick.points,
+      });
+    }
+
+    function addChoice(y: number, heat: number) {
+      const threat = Math.min(2.2, heat);
+      const w = Math.round(Math.max(64, 100 - threat * 18));
+      const split = 44 + Math.min(1, threat) * 20;
+      const pairW = w * 2 + split;
+      const margin = 20;
+      const maxLeft = W - margin - pairW;
+      const prefer = lastSafeX - pairW / 2;
+      const jitter = (Math.random() - 0.5) * (50 + Math.min(1, threat) * 40);
+      const left = Math.max(margin, Math.min(maxLeft, prefer + jitter));
+      const safeOnLeft = Math.random() < 0.5;
+      const leftKind: Pad["kind"] = safeOnLeft ? "pad" : "glitch";
+      const rightKind: Pad["kind"] = safeOnLeft ? "glitch" : "pad";
+      const rightX = left + w + split;
+      pushPad(left, y, w, leftKind, 0);
+      pushPad(rightX, y, w, rightKind, 0);
+      lastSafeX = (safeOnLeft ? left : rightX) + w / 2;
+      if (Math.random() < 0.34) {
+        spawnTick(safeOnLeft ? left : rightX, w, y);
       }
     }
 
     function fillPads(heat: number) {
       while (topY > camY - 180) {
-        const gap = 84 + Math.min(1.05, heat) * 48 + Math.random() * 16;
+        const gap = 70 + Math.min(0.9, heat) * 28 + Math.random() * 10;
         topY -= gap;
-        addPad(topY, heat, pads.length < 4);
+        addChoice(topY, heat);
       }
     }
 
-    const startW = 108;
+    const startW = 128;
     const startX = (W - startW) / 2;
-    addPad(H - 36, 0, true, { x: startX, w: startW });
-    addPad(H - 136, 0, true, { x: startX - 110, w: 78 });
-    addPad(H - 236, 0, true, { x: startX + 130, w: 78 });
-    topY = H - 236;
+    pushPad(startX, H - 36, startW, "pad", 0);
+    lastSafeX = startX + startW / 2;
+    topY = H - 36;
     fillPads(0);
 
     function localX(event: PointerEvent) {
@@ -348,8 +340,8 @@ export function IgniteDialCanvas({
           glitchesHit += 1;
           combo = 1;
           comboT = 0;
-          charge -= 30;
-          hitIFrames = 0.35;
+          charge -= 18;
+          hitIFrames = 0.4;
           shake = 0.28;
           flash = 0.5;
           float(pet.x + 20, screenY - 8, "PENALTY", "#ff6b8a");
@@ -379,10 +371,10 @@ export function IgniteDialCanvas({
       if (pad.dead) return false;
       const footY = pet.y + PET_H;
       if (pet.vy <= 0) return false;
-      if (footY < pad.y - 1 || footY > pad.y + pad.h + 6) return false;
+      if (footY < pad.y - 2 || footY > pad.y + pad.h + 10) return false;
       const xs = [pet.x, pet.x - W, pet.x + W];
       return xs.some((x) =>
-        aabb(x + 14, footY - 6, PET_W - 28, 8, pad.x, pad.y, pad.w, pad.h),
+        aabb(x + 10, footY - 8, PET_W - 20, 10, pad.x, pad.y, pad.w, pad.h),
       );
     }
 
@@ -396,7 +388,7 @@ export function IgniteDialCanvas({
         score += height - bestHeight;
         bestHeight = height;
       }
-      const heat = elapsed / 16_000 + bestHeight / 2200;
+      const heat = elapsed / 28_000 + bestHeight / 4000;
 
       hitIFrames = Math.max(0, hitIFrames - dt);
       shake = Math.max(0, shake - dt * 8);
