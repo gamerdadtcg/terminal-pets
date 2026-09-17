@@ -35,6 +35,8 @@ export const GTD_PARTNERS: PartnerCollection[] = [
   partner("Chain Mancers", "0x797a2e030B7e49107C8F07bF0300Ea9caE88cA57", "GTD"),
   partner("Hashcats", "0xCA75DF55Cc9C476DB27a7375D1fc8E794cf80721", "GTD"),
   partner("WIF Outlaws", "0x12a4c7659a4b7c4a2870b5167c4f8b014c7fa690", "GTD"),
+  // Temporary name — no OpenSea / Blockscout / on-chain collection name on 4663 yet.
+  partner("GTD partner 0xfc46…257e", "0xfc46d61fee808dbaf30e164b6bdeadc26155257e", "GTD"),
 ];
 
 /**
