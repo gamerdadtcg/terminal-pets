@@ -9,9 +9,17 @@ import {
 import {
   ALL_PARTNERS,
   ERC721_BALANCE_ABI,
+  type PartnerCollection,
   type PartnerPhase,
 } from "@/lib/allowlist-partners";
-import { ROBINHOOD_CHAIN_ID, ROBINHOOD_RPC, robinhoodChain } from "@/lib/chain";
+import {
+  ETHEREUM_CHAIN_ID,
+  ETHEREUM_RPC,
+  ROBINHOOD_CHAIN_ID,
+  ROBINHOOD_RPC,
+  mainnet,
+  robinhoodChain,
+} from "@/lib/chain";
 import { isManualGtdWallet } from "@/lib/manual-gtd-wallets";
 import { mintSchedule, SITE } from "@/lib/site";
 
@@ -20,6 +28,7 @@ export type PartnerHolding = {
   address: Address;
   phase: PartnerPhase;
   balance: string;
+  chainId: number;
 };
 
 export type EligibilityResult = {
@@ -40,6 +49,7 @@ export type EligibilityResult = {
     name: string;
     address: Address;
     phase: PartnerPhase;
+    chainId: number;
   }>;
 };
 
@@ -70,13 +80,26 @@ export const ELIGIBILITY_COPY = {
 /** UI / API reason when FCFS is yes because the wallet is GTD-eligible. */
 export const FCFS_VIA_GTD_REASON = ELIGIBILITY_COPY.fcfsViaGtd;
 
-/** Always Robinhood mainnet — partner NFTs live on 4663, not the dry-run chain. */
+function partnerChainId(partner: PartnerCollection): number {
+  return partner.chainId ?? ROBINHOOD_CHAIN_ID;
+}
+
+/** Robinhood mainnet — default partner NFTs live on 4663, not the dry-run chain. */
 export function partnerHoldingsRpc(): string {
   return (
     process.env.ROBINHOOD_RPC_URL?.trim() ||
     process.env.NEXT_PUBLIC_ROBINHOOD_RPC_URL?.trim() ||
     SITE.rpc ||
     ROBINHOOD_RPC
+  );
+}
+
+/** Ethereum mainnet — School of NFTs and other chainId 1 exceptions. */
+export function ethereumHoldingsRpc(): string {
+  return (
+    process.env.ETHEREUM_RPC_URL?.trim() ||
+    process.env.NEXT_PUBLIC_ETHEREUM_RPC_URL?.trim() ||
+    ETHEREUM_RPC
   );
 }
 
@@ -88,16 +111,33 @@ export function parseWalletAddress(value: string): Address | null {
   return getAddress(trimmed.toLowerCase());
 }
 
-let client: PublicClient | undefined;
+let robinhoodClient: PublicClient | undefined;
+let ethereumClient: PublicClient | undefined;
 
 function robinhoodPublicClient(): PublicClient {
-  if (!client) {
-    client = createPublicClient({
+  if (!robinhoodClient) {
+    robinhoodClient = createPublicClient({
       chain: robinhoodChain,
       transport: http(partnerHoldingsRpc(), { timeout: 20_000 }),
     });
   }
-  return client;
+  return robinhoodClient;
+}
+
+function ethereumPublicClient(): PublicClient {
+  if (!ethereumClient) {
+    ethereumClient = createPublicClient({
+      chain: mainnet,
+      transport: http(ethereumHoldingsRpc(), { timeout: 20_000 }),
+    });
+  }
+  return ethereumClient;
+}
+
+function publicClientForPartner(partner: PartnerCollection): PublicClient {
+  return partnerChainId(partner) === ETHEREUM_CHAIN_ID
+    ? ethereumPublicClient()
+    : robinhoodPublicClient();
 }
 
 export async function checkPartnerEligibility(
@@ -112,14 +152,12 @@ export async function checkPartnerEligibility(
     };
   }
 
-  const rpc = partnerHoldingsRpc();
-  const publicClient = robinhoodPublicClient();
   const manualGtd = isManualGtdWallet(address);
 
   const reads = await Promise.all(
     ALL_PARTNERS.map(async (partner) => {
       try {
-        const balance = await publicClient.readContract({
+        const balance = await publicClientForPartner(partner).readContract({
           address: partner.address,
           abi: ERC721_BALANCE_ABI,
           functionName: "balanceOf",
@@ -136,7 +174,8 @@ export async function checkPartnerEligibility(
     return {
       ok: false,
       error: "rpc_failed",
-      message: `Could not reach Robinhood Chain RPC (${rpc}). Try again in a moment.`,
+      message:
+        "Could not reach partner NFT RPCs (Robinhood Chain and/or Ethereum). Try again in a moment.",
     };
   }
 
@@ -149,6 +188,7 @@ export async function checkPartnerEligibility(
         name: read.partner.name,
         address: read.partner.address,
         phase: read.partner.phase,
+        chainId: partnerChainId(read.partner),
       });
       continue;
     }
@@ -158,6 +198,7 @@ export async function checkPartnerEligibility(
         address: read.partner.address,
         phase: read.partner.phase,
         balance: read.balance.toString(),
+        chainId: partnerChainId(read.partner),
       });
     }
   }

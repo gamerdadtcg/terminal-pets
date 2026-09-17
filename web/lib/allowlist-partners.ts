@@ -1,4 +1,5 @@
 import { getAddress, parseAbi, type Address } from "viem";
+import { ETHEREUM_CHAIN_ID, ROBINHOOD_CHAIN_ID } from "@/lib/chain";
 
 /**
  * Partner NFT collections that count toward GTD / FCFS phase eligibility.
@@ -9,7 +10,8 @@ import { getAddress, parseAbi, type Address } from "viem";
  *
  * To add a collection later:
  * 1. Append a `{ name, address }` row to `GTD_PARTNERS` or `FCFS_PARTNERS`.
- * 2. Use the Robinhood Chain (4663) contract address.
+ * 2. Use the Robinhood Chain (4663) contract address, unless this is a
+ *    documented cross-chain exception (pass `chainId`, e.g. 1 for Ethereum).
  * 3. Redeploy the hub. No UI code changes needed.
  *
  * Manual GTD thread wallets live in `web/lib/manual-gtd-wallets.ts`.
@@ -22,19 +24,38 @@ export type PartnerCollection = {
   name: string;
   address: Address;
   phase: PartnerPhase;
+  /** Defaults to Robinhood Chain (4663). Set `1` for Ethereum mainnet holdings. */
+  chainId?: number;
 };
 
-function partner(name: string, address: string, phase: PartnerPhase): PartnerCollection {
-  return { name, address: getAddress(address.toLowerCase()), phase };
+function partner(
+  name: string,
+  address: string,
+  phase: PartnerPhase,
+  chainId: number = ROBINHOOD_CHAIN_ID,
+): PartnerCollection {
+  return {
+    name,
+    address: getAddress(address.toLowerCase()),
+    phase,
+    chainId,
+  };
 }
 
-/** Eligible for GTD if `balanceOf` > 0 on ANY of these (Robinhood Chain). */
+/** Eligible for GTD if `balanceOf` > 0 on ANY of these. */
 export const GTD_PARTNERS: PartnerCollection[] = [
   partner("StonkBrokers", "0x539CdD042c2f3d93EbC5BE7DfFf0c79F3B4fAbF0", "GTD"),
   partner("QUOTRONS", "0x027ACa2794E44f24950D81227DcD516FfBB49d6e", "GTD"),
   partner("Chain Mancers", "0x797a2e030B7e49107C8F07bF0300Ea9caE88cA57", "GTD"),
   partner("Hashcats", "0xCA75DF55Cc9C476DB27a7375D1fc8E794cf80721", "GTD"),
   partner("WIF Outlaws", "0x12a4c7659a4b7c4a2870b5167c4f8b014c7fa690", "GTD"),
+  // Genesis collection on Ethereum mainnet. Same wallet addresses on RH.
+  partner(
+    "School of NFTs",
+    "0xfc46d61fee808dbaf30e164b6bdeadc26155257e",
+    "GTD",
+    ETHEREUM_CHAIN_ID,
+  ),
 ];
 
 /**

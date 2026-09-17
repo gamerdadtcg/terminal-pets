@@ -3,7 +3,7 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { FCFS_PARTNERS, GTD_PARTNERS } from "@/lib/allowlist-partners";
-import { ROBINHOOD_CHAIN_ID } from "@/lib/chain";
+import { ETHEREUM_CHAIN_ID, explorerForPartnerChain, ROBINHOOD_CHAIN_ID } from "@/lib/chain";
 import type { EligibilityResult } from "@/lib/eligibility";
 import {
   ELIGIBILITY_COPY,
@@ -38,7 +38,6 @@ export function EligibilityChecker({
   const { address: connected, isConnected } = useAccount();
   const [input, setInput] = useState("");
   const [state, setState] = useState<CheckState>({ status: "idle" });
-  const explorer = SITE.explorer;
 
   const connectedOk = Boolean(connected && parseWalletAddress(connected));
 
@@ -154,7 +153,8 @@ export function EligibilityChecker({
       <p className="mt-2 text-sm text-muted-foreground">
         Paste a wallet (or use the connected one). We read live ERC-721{" "}
         <span className="font-mono text-foreground">balanceOf</span> on{" "}
-        {SITE.chain} (chain {ROBINHOOD_CHAIN_ID}) plus wallets from the{" "}
+        {SITE.chain} (chain {ROBINHOOD_CHAIN_ID}), School of NFTs on Ethereum
+        (chain {ETHEREUM_CHAIN_ID}), plus wallets from the{" "}
         <a
           href={MANUAL_GTD_THREAD_URL}
           target="_blank"
@@ -204,7 +204,7 @@ export function EligibilityChecker({
       <div className="mt-4" aria-live="polite">
         {state.status === "loading" && (
           <p className="text-sm text-muted-foreground">
-            Reading partner balances on {SITE.chain}…
+            Reading partner balances…
           </p>
         )}
         {state.status === "invalid" && (
@@ -243,12 +243,10 @@ export function EligibilityChecker({
             <GtdReasons
               manualGtd={state.result.manualGtd}
               holdings={gtdHoldings}
-              explorer={explorer}
             />
             <FcfsReasons
               fcfsViaGtd={state.result.fcfsViaGtd}
               holdings={fcfsHoldings}
-              explorer={explorer}
             />
             {state.result.failed.length > 0 ? (
               <p className="text-xs text-muted-foreground">
@@ -264,12 +262,8 @@ export function EligibilityChecker({
 
       {!compact && (
         <div className="mt-5 grid gap-3 sm:grid-cols-2">
-          <PartnerList phase="GTD" collections={GTD_PARTNERS} explorer={explorer} />
-          <PartnerList
-            phase="FCFS"
-            collections={FCFS_PARTNERS}
-            explorer={explorer}
-          />
+          <PartnerList phase="GTD" collections={GTD_PARTNERS} />
+          <PartnerList phase="FCFS" collections={FCFS_PARTNERS} />
         </div>
       )}
       {compact && (
@@ -337,11 +331,9 @@ function PhaseResult({
 function GtdReasons({
   manualGtd,
   holdings,
-  explorer,
 }: {
   manualGtd: boolean;
   holdings: EligibilityResult["holdings"];
-  explorer: string;
 }) {
   const empty = !manualGtd && holdings.length === 0;
   return (
@@ -364,7 +356,10 @@ function GtdReasons({
           {holdings.map((holding) => (
             <li key={holding.address} className="text-sm">
               <a
-                href={explorerAddress(explorer, holding.address)}
+                href={explorerAddress(
+                  explorerForPartnerChain(holding.chainId),
+                  holding.address,
+                )}
                 target="_blank"
                 rel="noreferrer"
                 className="text-foreground underline-offset-2 hover:underline"
@@ -385,11 +380,9 @@ function GtdReasons({
 function FcfsReasons({
   fcfsViaGtd,
   holdings,
-  explorer,
 }: {
   fcfsViaGtd: boolean;
   holdings: EligibilityResult["holdings"];
-  explorer: string;
 }) {
   const empty = !fcfsViaGtd && holdings.length === 0;
   return (
@@ -412,7 +405,10 @@ function FcfsReasons({
           {holdings.map((holding) => (
             <li key={holding.address} className="text-sm">
               <a
-                href={explorerAddress(explorer, holding.address)}
+                href={explorerAddress(
+                  explorerForPartnerChain(holding.chainId),
+                  holding.address,
+                )}
                 target="_blank"
                 rel="noreferrer"
                 className="text-foreground underline-offset-2 hover:underline"
@@ -433,11 +429,9 @@ function FcfsReasons({
 function PartnerList({
   phase,
   collections,
-  explorer,
 }: {
   phase: "GTD" | "FCFS";
   collections: typeof GTD_PARTNERS;
-  explorer: string;
 }) {
   return (
     <div className="rounded-xl border border-border/70 bg-background/40 px-3 py-3">
@@ -449,7 +443,10 @@ function PartnerList({
             className="flex items-baseline justify-between gap-2 text-sm"
           >
             <a
-              href={explorerAddress(explorer, collection.address)}
+              href={explorerAddress(
+                explorerForPartnerChain(collection.chainId),
+                collection.address,
+              )}
               target="_blank"
               rel="noreferrer"
               className="truncate underline-offset-2 hover:underline"
