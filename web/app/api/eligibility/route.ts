@@ -1,3 +1,4 @@
+import { isLiveArcadeGtdWallet } from "@/lib/arcade-store";
 import { checkPartnerEligibility } from "@/lib/eligibility";
 import { NextResponse } from "next/server";
 
@@ -12,9 +13,25 @@ async function respond(address: string) {
       { status },
     );
   }
-  return NextResponse.json(checked.result, {
-    headers: { "Cache-Control": "no-store" },
-  });
+  let arcadeGtd = checked.result.arcadeGtd;
+  try {
+    arcadeGtd = arcadeGtd || (await isLiveArcadeGtdWallet(checked.result.address));
+  } catch {
+    // Exported arcade list still applies if the live board is down.
+  }
+  const gtd = checked.result.gtd || arcadeGtd;
+  return NextResponse.json(
+    {
+      ...checked.result,
+      arcadeGtd,
+      gtd,
+      fcfs: checked.result.fcfs || gtd,
+      fcfsViaGtd: gtd,
+    },
+    {
+      headers: { "Cache-Control": "no-store" },
+    },
+  );
 }
 
 export async function GET(request: Request) {

@@ -154,3 +154,26 @@
     rgba(0, 0, 0, 0.14) 3px
   );
 }
+
+.arcade-scan {
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.18) 2px,
+    rgba(0, 0, 0, 0.18) 3px
+  );
+}
+
+.arcade-cursor {
+  display: inline-block;
+  margin-left: 1px;
+  animation: arcade-blink 1s steps(1) infinite;
+}
+
+@keyframes arcade-blink {
+  50% {
+    opacity: 0;
+  }
+}

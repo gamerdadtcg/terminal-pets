@@ -20,6 +20,12 @@ export function EligibleRedirect() {
         Opening the GTD / FCFS eligibility checker…
       </p>
       <Link
+        href="/arcade"
+        className="mt-3 text-sm text-muted-foreground underline-offset-2 hover:underline"
+      >
+        Or play the arcade for GTD
+      </Link>
+      <Link
         href={ELIGIBLE_SHARE.hash}
         className="mt-4 text-sm text-primary underline-offset-2 hover:underline"
       >

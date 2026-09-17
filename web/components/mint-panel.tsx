@@ -364,6 +364,9 @@ export function MintPanel() {
 
           <div className="flex flex-wrap gap-2">
             <Button variant="outline" asChild>
+              <Link href="/arcade">Arcade · lock GTD</Link>
+            </Button>
+            <Button variant="outline" asChild>
               <Link href="/app">Ignite / Pulse after mint</Link>
             </Button>
             {configured && (

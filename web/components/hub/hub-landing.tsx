@@ -213,6 +213,9 @@ export function HubLanding() {
                 <Link href="/mint">Mint</Link>
               </Button>
               <Button variant="outline" asChild>
+                <Link href="/arcade">Arcade · GTD</Link>
+              </Button>
+              <Button variant="outline" asChild>
                 <Link href="/app">Ignite / Pulse app</Link>
               </Button>
               <Button variant="ghost" asChild>

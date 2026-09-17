@@ -20,6 +20,7 @@ import {
   mainnet,
   robinhoodChain,
 } from "@/lib/chain";
+import { isExportedArcadeGtdWallet } from "@/lib/arcade-gtd-wallets";
 import { isManualGtdWallet } from "@/lib/manual-gtd-wallets";
 import { mintSchedule, SITE } from "@/lib/site";
 
@@ -39,6 +40,8 @@ export type EligibilityResult = {
   public: true;
   /** True if this wallet is on the GTD X-thread manual list. Hub preview only. */
   manualGtd: boolean;
+  /** True if this wallet is arcade top 150 (exported list and/or live board). */
+  arcadeGtd: boolean;
   /**
    * True when FCFS is yes because this wallet is GTD-eligible (partner NFT
    * and/or thread list). Shown even if the wallet also holds FCFS NFTs.
@@ -71,7 +74,7 @@ export const ELIGIBILITY_COPY = {
   publicNote: `Public phase is open to everyone (no allowlist) ${publicPhase?.time ?? "Friday 10:00 AM PT"}.`,
   schedule: `${mintSchedule.date} · ${mintSchedule.timezoneIana} (${mintSchedule.timezoneLabel}): ${gtdPhase?.time ?? "8:00 AM PT"} GTD · ${fcfsPhase?.time ?? "9:00 AM PT"} FCFS · ${publicPhase?.time ?? "10:00 AM PT"} Public. ${mintSchedule.perPhase} per phase.`,
   disclaimer:
-    "Eligibility is current on-chain holdings plus the GTD X-thread wallet list. GTD-eligible wallets also unlock FCFS. Hub preview only — CollectionNFT still gates mint on mintOpen. Not an on-chain mint allowlist until Travis locks mint phase. Partner lists may grow before lock.",
+    "Eligibility is current on-chain holdings plus the GTD X-thread wallet list and arcade top 150. GTD-eligible wallets also unlock FCFS. Hub preview only — CollectionNFT still gates mint on mintOpen. Not an on-chain mint allowlist until Travis locks mint phase. Partner and arcade lists may grow before lock.",
   fcfsViaGtd: "Included via GTD eligibility",
   invalidAddress:
     "That doesn't look like a wallet address. Paste a 0x… Ethereum address.",
@@ -153,6 +156,7 @@ export async function checkPartnerEligibility(
   }
 
   const manualGtd = isManualGtdWallet(address);
+  const arcadeGtd = isExportedArcadeGtdWallet(address);
 
   const reads = await Promise.all(
     ALL_PARTNERS.map(async (partner) => {
@@ -170,7 +174,7 @@ export async function checkPartnerEligibility(
     }),
   );
 
-  if (reads.every((read) => !read.ok) && !manualGtd) {
+  if (reads.every((read) => !read.ok) && !manualGtd && !arcadeGtd) {
     return {
       ok: false,
       error: "rpc_failed",
@@ -204,7 +208,9 @@ export async function checkPartnerEligibility(
   }
 
   const gtd =
-    manualGtd || holdings.some((holding) => holding.phase === "GTD");
+    manualGtd ||
+    arcadeGtd ||
+    holdings.some((holding) => holding.phase === "GTD");
   const fcfsFromNft = holdings.some((holding) => holding.phase === "FCFS");
   const fcfsViaGtd = gtd;
 
@@ -217,6 +223,7 @@ export async function checkPartnerEligibility(
       fcfs: fcfsFromNft || fcfsViaGtd,
       public: true,
       manualGtd,
+      arcadeGtd,
       fcfsViaGtd,
       holdings,
       failed,
