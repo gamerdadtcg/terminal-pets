@@ -223,8 +223,9 @@ export function ArcadeCabinet() {
                     <p className="max-w-md text-sm text-muted-foreground">
                       {Math.round(ARCADE_ROUND_MS / 1000)}s rounds. Bounce{" "}
                       {ARCADE_PET.name} up the Dial — the robot pet, not the
-                      full handheld token. Glitch pads are penalties (combo drop,
-                      charge drain). Catch Dial ticks. Don&apos;t fall. Top{" "}
+                      full handheld token. Pads get narrower and farther. Glitch
+                      pads dump your bounce. Amber pads snap once. Catch Dial
+                      ticks. Don&apos;t fall. Top{" "}
                       {ARCADE_GTD_CAP} wallets lock GTD (and FCFS via GTD).{" "}
                       {sealedCopy.carousel}
                     </p>
