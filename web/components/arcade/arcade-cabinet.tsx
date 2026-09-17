@@ -220,8 +220,9 @@ export function ArcadeCabinet() {
                       {ARCADE_COPY.play}
                     </p>
                     <p className="max-w-md text-sm text-muted-foreground">
-                      {Math.round(ARCADE_ROUND_MS / 1000)}s rounds. Catch Dial
-                      ticks ({"AAPL"}–{"TSLA"}, rare OMEGA). Dodge glitches.
+                      {Math.round(ARCADE_ROUND_MS / 1000)}s rounds. Hunt Dial
+                      ticks. Dash through glitches to Ignite them (that is the
+                      high-skill play). Graze for CLOSE bonus. Chain combos.
                       Keep the sealed pet lit. Top {ARCADE_GTD_CAP} wallets lock
                       GTD (and FCFS via GTD). {sealedCopy.carousel}
                     </p>
@@ -233,7 +234,7 @@ export function ArcadeCabinet() {
                         {closed ? "Contest closed" : "Play"}
                       </Button>
                       <p className="self-center font-mono text-[11px] text-muted-foreground">
-                        Arrows / A D / drag
+                        WASD / drag · SPACE / DASH
                       </p>
                     </div>
                   </div>

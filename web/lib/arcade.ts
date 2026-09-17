@@ -5,10 +5,10 @@ export const ARCADE_ROUND_MS = 45_000;
 export const ARCADE_TOKEN_TTL_MS = 90_000;
 export const ARCADE_MIN_DURATION_MS = 2_500;
 export const ARCADE_MAX_DURATION_MS = ARCADE_ROUND_MS + 4_000;
-export const ARCADE_MIN_SPAWN_MS = 420;
+export const ARCADE_MIN_SPAWN_MS = 380;
 export const ARCADE_MAX_TICK_POINTS = 120;
 export const ARCADE_MAX_COMBO = 8;
-export const ARCADE_ABSURD_SCORE = 100_000;
+export const ARCADE_ABSURD_SCORE = 150_000;
 
 /** Contest closes 2h before the Fri 7:00 AM PT hub redeploy. */
 export const ARCADE_CLOSE_ISO =
@@ -21,7 +21,7 @@ export const ARCADE_COPY = {
   title: "Ignite the Dial",
   badge: "ARCADE · TOP 150 GTD",
   prompt: "> IGNITE THE DIAL",
-  play: "> CATCH TICKS · DODGE GLITCHES · KEEP THE PET LIT",
+  play: "> HUNT TICKS · DASH-IGNITE GLITCHES · CHAIN COMBOS",
   locked: "> SCORE LOCKED",
   accepted: "> WALLET ACCEPTED",
   gtd: "> TOP 150 GTD",
@@ -67,8 +67,10 @@ export function maxPlausibleTicks(durationMs: number): number {
   return Math.ceil(duration / ARCADE_MIN_SPAWN_MS) + 10;
 }
 
-export function maxPlausibleScore(ticksCaught: number): number {
-  return ticksCaught * ARCADE_MAX_TICK_POINTS * ARCADE_MAX_COMBO;
+export function maxPlausibleScore(ticksCaught: number, durationMs = ARCADE_ROUND_MS): number {
+  const ticks = ticksCaught * ARCADE_MAX_TICK_POINTS * ARCADE_MAX_COMBO;
+  const extras = Math.ceil(Math.max(0, durationMs) / 280) * 90 * ARCADE_MAX_COMBO;
+  return ticks + extras;
 }
 
 export type ArcadeRunProof = {
@@ -101,10 +103,7 @@ export function validateArcadeProof(
   if (ticksCaught > maxPlausibleTicks(durationMs)) {
     return "Run proof rejected.";
   }
-  if (score > maxPlausibleScore(ticksCaught)) {
-    return "Score rejected.";
-  }
-  if (ticksCaught === 0 && score > 0) {
+  if (score > maxPlausibleScore(ticksCaught, durationMs)) {
     return "Score rejected.";
   }
   if (ticksCaught > 0 && score < ticksCaught * 10) {
