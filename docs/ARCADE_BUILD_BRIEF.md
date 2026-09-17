@@ -45,7 +45,7 @@ Scaffold `/arcade` shell (CRT UI + placeholder game + wallet form + fake leaderb
 
 ## Implementation (this repo)
 
-- Playable canvas at `/arcade`: **Ignite the Dial** — endless Doodle Jump climber with example BOLT (robot pet only, not handheld token art). Bounce up until you fall; difficulty keeps ramping. Glitch pads are penalties. Catch Dial ticks.
+- Playable canvas at `/arcade`: **Ignite the Dial** — endless Doodle Jump climber with example BOLT (robot pet only, not handheld token art). Bounce up until you fall (no round timer). Scattered pads, some moving / snapping / glitch. Catch Dial ticks.
 - Score API: `POST /api/arcade/start`, `POST /api/arcade/score`, `GET /api/arcade/board`. HMAC run tokens, rate limits, one best score per wallet.
 - Storage: Upstash Redis REST when `KV_REST_API_*` or `UPSTASH_REDIS_REST_*` are set; otherwise `web/data/arcade-scores.json` locally; in-memory on Vercel without Redis.
 - Live top 150 count as GTD on `/eligible` (and FCFS via GTD). After close, export into `web/lib/arcade-gtd-wallets.ts` and merge to `main` before Fri 7:00 AM PT.

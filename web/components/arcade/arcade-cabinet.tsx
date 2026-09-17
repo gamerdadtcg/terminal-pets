@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import {
   ARCADE_COPY,
   ARCADE_GTD_CAP,
+  ARCADE_PET,
   arcadeClosesAt,
   arcadeIsClosed,
 } from "@/lib/arcade";
@@ -219,11 +220,11 @@ export function ArcadeCabinet() {
                       {ARCADE_COPY.play}
                     </p>
                     <p className="max-w-md text-sm text-muted-foreground">
-                      No timer — climb until you fall. After the first pad,
-                      every hop is a choice: green is safe, pink glitch is the
-                      wrong jump. It gets meaner the higher you go. Catch Dial
-                      ticks. Top {ARCADE_GTD_CAP} wallets lock GTD (and FCFS via
-                      GTD). {sealedCopy.carousel}
+                      Classic climb — no timer. Bounce {ARCADE_PET.name} up
+                      pads, steer with the mouse, wrap the edges. Some pads
+                      move, some snap, pink glitch pads sting. Fall off the
+                      bottom and the run ends. Top {ARCADE_GTD_CAP} wallets lock
+                      GTD (and FCFS via GTD). {sealedCopy.carousel}
                     </p>
                     {startError ? (
                       <p className="text-sm text-destructive">{startError}</p>

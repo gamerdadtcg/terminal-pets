@@ -28,7 +28,7 @@ export const ARCADE_COPY = {
   title: "Ignite the Dial",
   badge: "ARCADE · TOP 150 GTD",
   prompt: "> IGNITE THE DIAL",
-  play: "> GREEN SAFE · PINK GLITCH · CLIMB UNTIL YOU FALL",
+  play: "> BOUNCE · STEER · CLIMB UNTIL YOU FALL",
   locked: "> SCORE LOCKED",
   accepted: "> WALLET ACCEPTED",
   gtd: "> TOP 150 GTD",

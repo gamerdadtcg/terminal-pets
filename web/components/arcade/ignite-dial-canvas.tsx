@@ -189,7 +189,7 @@ export function IgniteDialCanvas({
     let topY = H - 36;
     let last = performance.now();
     const started = last;
-    let lastSafeX = W / 2;
+    let lastX = W / 2;
     let ended = false;
 
     function float(x: number, y: number, text: string, color: string) {
@@ -237,41 +237,52 @@ export function IgniteDialCanvas({
       });
     }
 
-    function addChoice(y: number, heat: number) {
-      const threat = Math.min(2.2, heat);
-      const w = Math.round(Math.max(64, 100 - threat * 18));
-      const split = 44 + Math.min(1, threat) * 20;
-      const pairW = w * 2 + split;
-      const margin = 20;
-      const maxLeft = W - margin - pairW;
-      const prefer = lastSafeX - pairW / 2;
-      const jitter = (Math.random() - 0.5) * (50 + Math.min(1, threat) * 40);
-      const left = Math.max(margin, Math.min(maxLeft, prefer + jitter));
-      const safeOnLeft = Math.random() < 0.5;
-      const leftKind: Pad["kind"] = safeOnLeft ? "pad" : "glitch";
-      const rightKind: Pad["kind"] = safeOnLeft ? "glitch" : "pad";
-      const rightX = left + w + split;
-      pushPad(left, y, w, leftKind, 0);
-      pushPad(rightX, y, w, rightKind, 0);
-      lastSafeX = (safeOnLeft ? left : rightX) + w / 2;
-      if (Math.random() < 0.34) {
-        spawnTick(safeOnLeft ? left : rightX, w, y);
+    function addPad(y: number, heat: number, starter = false) {
+      const threat = Math.min(1.4, heat);
+      const w = Math.round(Math.max(62, 92 - threat * 16));
+      const roll = Math.random();
+      let kind: Pad["kind"] = "pad";
+      let vx = 0;
+      if (!starter) {
+        if (roll < 0.06 + threat * 0.08) kind = "glitch";
+        else if (roll < 0.14 + threat * 0.16) kind = "crumble";
+        else if (roll < 0.22 + threat * 0.28) {
+          vx = (Math.random() < 0.5 ? -1 : 1) * (55 + threat * 50);
+        }
       }
+      const reach = 210 - threat * 40;
+      const jitter = (Math.random() - 0.5) * 2 * reach;
+      let x = lastX + jitter - w / 2;
+      if (Math.random() < 0.35) {
+        x = 16 + Math.random() * (W - w - 32);
+      }
+      if (x < 12) x = 12;
+      if (x + w > W - 12) x = W - 12 - w;
+      lastX = x + w / 2;
+      pushPad(x, y, w, kind, vx);
+      if (kind === "pad" && Math.random() < 0.28) spawnTick(x, w, y);
     }
 
     function fillPads(heat: number) {
-      while (topY > camY - 180) {
-        const gap = 70 + Math.min(0.9, heat) * 28 + Math.random() * 10;
+      while (topY > camY - 200) {
+        const gap = 48 + Math.min(1, heat) * 36 + Math.random() * 18;
         topY -= gap;
-        addChoice(topY, heat);
+        addPad(topY, heat);
       }
     }
 
-    const startW = 128;
-    const startX = (W - startW) / 2;
-    pushPad(startX, H - 36, startW, "pad", 0);
-    lastSafeX = startX + startW / 2;
-    topY = H - 36;
+    const startW = 110;
+    for (let i = 0; i < 7; i += 1) {
+      const y = H - 36 - i * 52;
+      const w = i === 0 ? 140 : startW;
+      const x =
+        i === 0
+          ? (W - w) / 2
+          : 24 + Math.random() * (W - w - 48);
+      pushPad(x, y, w, "pad", 0);
+      lastX = x + w / 2;
+      topY = y;
+    }
     fillPads(0);
 
     function localX(event: PointerEvent) {
@@ -388,7 +399,7 @@ export function IgniteDialCanvas({
         score += height - bestHeight;
         bestHeight = height;
       }
-      const heat = elapsed / 28_000 + bestHeight / 4000;
+      const heat = elapsed / 40_000 + bestHeight / 5500;
 
       hitIFrames = Math.max(0, hitIFrames - dt);
       shake = Math.max(0, shake - dt * 8);
@@ -457,11 +468,10 @@ export function IgniteDialCanvas({
         if (floaters[i].life <= 0) floaters.splice(i, 1);
       }
 
-      charge -= (0.4 + Math.min(1.8, heat) * 0.45) * dt;
+      if (charge < 8) charge = 8;
 
       const fallen = pet.y - camY > H - 6;
-      if (charge <= 0 || fallen) {
-        charge = Math.max(0, charge);
+      if (fallen) {
         draw(now);
         endRun(now);
         return;
@@ -609,7 +619,7 @@ export function IgniteDialCanvas({
         width={W}
         height={H}
         tabIndex={0}
-        aria-label={`${ARCADE_PET.name} climber. Steer left and right. Bounce up. Avoid glitch pads. Collect Dial ticks.`}
+        aria-label={`${ARCADE_PET.name} Doodle Jump climber. Steer left and right. Bounce on pads. Fall ends the run.`}
         className="block h-auto w-full cursor-pointer touch-none outline-none focus-visible:ring-3 focus-visible:ring-primary/40"
       />
     </div>
