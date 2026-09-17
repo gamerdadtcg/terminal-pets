@@ -58,8 +58,9 @@ Hub demo: featured **examples / not mint supply** (~25 GIFs under `web/public/ar
 | --- | --- |
 | `web/public/art/examples/awake/{n}.gif` | Example awake / lit pet GIF |
 | `web/public/art/examples/egg/{n}.gif` | Example dormant egg-rock GIF |
-| `web/public/art/sealed.png` | Generic sealed image (no traits) |
-| `web/public/metadata/hidden.json` | **Only** public collection metadata until after reveal |
+| `web/public/art/sealed.gif` | Live pre-reveal placeholder (H01 Classic; cream egg rocks → cracks → green `?`; no pet / no traits) |
+| `web/public/art/sealed.png` | Static fallback still (not used by `hidden.json`) |
+| `web/public/metadata/hidden.json` | **Only** public collection metadata until after reveal (`image` → `https://terminalpets.xyz/art/sealed.gif`) |
 
 Until `CollectionNFT.reveal()`, every `tokenURI` is `hidden.json`. Collectors cannot see traits. Do **not** restore `web/public/metadata/lit/` or `web/public/metadata/dormant/` (gitignored) before reveal policy — enumerable `{id}.json` is a snipe vector even while on-chain URI is sealed.
 

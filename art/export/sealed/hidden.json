@@ -1,7 +1,7 @@
 {
   "name": "Terminal Pet (Sealed)",
   "description": "Sealed Terminal Pet. Until CollectionNFT.reveal(), every tokenURI is this single hidden.json. Collectors cannot see traits, species, rarity, or token-specific art.",
-  "image": "sealed.png",
+  "image": "https://terminalpets.xyz/art/sealed.gif",
   "attributes": [
     {
       "trait_type": "State",
