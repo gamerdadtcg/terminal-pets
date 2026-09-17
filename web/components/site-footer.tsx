@@ -29,16 +29,16 @@ export function SiteFooter() {
             href={NFT_CALENDAR_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 pt-2 text-xs text-muted-foreground transition-colors hover:text-foreground"
+            className="inline-flex items-center gap-2.5 pt-3 text-xs text-muted-foreground transition-colors hover:text-foreground"
           >
             <span>Verified on</span>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={NFT_CALENDAR_BADGE_SRC}
               alt="NFT Calendar"
-              width={28}
-              height={28}
-              className="h-7 w-7 rounded-sm object-contain"
+              width={40}
+              height={40}
+              className="h-10 w-10 rounded-md object-contain"
             />
           </a>
         </div>
