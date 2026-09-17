@@ -1,5 +1,6 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
+import { getCache } from "@vercel/functions";
 import {
   arcadeRankOf,
   compareArcadeRows,
@@ -11,8 +12,14 @@ import { isExportedArcadeGtdWallet } from "@/lib/arcade-gtd-wallets";
 
 const HASH_KEY = "arcade:scores";
 const FILE_NAME = "arcade-scores.json";
+const CACHE_SCORES_KEY = "scores";
+const CACHE_RUN_PREFIX = "run:";
+const CACHE_SCORES_TTL_SECONDS = 60 * 60 * 24 * 14;
+const RUN_TTL_SECONDS = 180;
 
-type StoreKind = "redis" | "file" | "memory";
+type StoreKind = "redis" | "cache" | "file" | "memory";
+type ArcadeCache = ReturnType<typeof getCache>;
+type CachePayload = { rows: ArcadeScoreRow[] };
 
 type MemoryState = {
   rows: Map<string, ArcadeScoreRow>;
@@ -47,8 +54,22 @@ function canWriteFile(): boolean {
   return process.env.VERCEL !== "1";
 }
 
+function onVercel(): boolean {
+  return process.env.VERCEL === "1";
+}
+
+function arcadeCache(): ArcadeCache | null {
+  if (!onVercel() || redisConfig()) return null;
+  try {
+    return getCache({ namespace: "arcade" });
+  } catch {
+    return null;
+  }
+}
+
 export function arcadeStoreKind(): StoreKind {
   if (redisConfig()) return "redis";
+  if (onVercel()) return "cache";
   if (canWriteFile()) return "file";
   return "memory";
 }
@@ -76,18 +97,23 @@ async function redisCommand(
 
 function parseRow(value: string): ArcadeScoreRow | null {
   try {
-    const row = JSON.parse(value) as ArcadeScoreRow;
-    if (
-      typeof row.wallet !== "string" ||
-      !Number.isInteger(row.score) ||
-      !Number.isInteger(row.submittedAt)
-    ) {
-      return null;
-    }
-    return row;
+    return coerceRow(JSON.parse(value));
   } catch {
     return null;
   }
+}
+
+function coerceRow(value: unknown): ArcadeScoreRow | null {
+  if (!value || typeof value !== "object") return null;
+  const row = value as ArcadeScoreRow;
+  if (
+    typeof row.wallet !== "string" ||
+    !Number.isInteger(row.score) ||
+    !Number.isInteger(row.submittedAt)
+  ) {
+    return null;
+  }
+  return row;
 }
 
 async function readFileRows(): Promise<Map<string, ArcadeScoreRow>> {
@@ -96,7 +122,8 @@ async function readFileRows(): Promise<Map<string, ArcadeScoreRow>> {
     const parsed = JSON.parse(raw) as { rows?: ArcadeScoreRow[] };
     const map = new Map<string, ArcadeScoreRow>();
     for (const row of parsed.rows ?? []) {
-      map.set(row.wallet.toLowerCase(), row);
+      const parsedRow = coerceRow(row);
+      if (parsedRow) map.set(parsedRow.wallet.toLowerCase(), parsedRow);
     }
     return map;
   } catch {
@@ -112,6 +139,37 @@ async function writeFileRows(rows: Map<string, ArcadeScoreRow>): Promise<void> {
     rows: rankArcadeRows([...rows.values()]),
   };
   await writeFile(file, `${JSON.stringify(payload, null, 2)}\n`, "utf8");
+}
+
+async function readCacheRows(
+  cache: ArcadeCache,
+): Promise<Map<string, ArcadeScoreRow>> {
+  const raw = await cache.get(CACHE_SCORES_KEY);
+  const map = new Map<string, ArcadeScoreRow>();
+  const rows = Array.isArray(raw)
+    ? raw
+    : raw && typeof raw === "object" && Array.isArray((raw as CachePayload).rows)
+      ? (raw as CachePayload).rows
+      : [];
+  for (const value of rows) {
+    const row = coerceRow(value);
+    if (row) map.set(row.wallet.toLowerCase(), row);
+  }
+  return map;
+}
+
+async function writeCacheRows(
+  cache: ArcadeCache,
+  rows: Map<string, ArcadeScoreRow>,
+): Promise<void> {
+  const payload: CachePayload = {
+    rows: rankArcadeRows([...rows.values()]),
+  };
+  await cache.set(CACHE_SCORES_KEY, payload, {
+    ttl: CACHE_SCORES_TTL_SECONDS,
+    tags: ["arcade-scores"],
+    name: "arcade-scores",
+  });
 }
 
 async function allRows(): Promise<ArcadeScoreRow[]> {
@@ -136,6 +194,12 @@ async function allRows(): Promise<ArcadeScoreRow[]> {
     return rankArcadeRows(rows);
   }
 
+  const cache = arcadeCache();
+  if (cache) {
+    const map = await readCacheRows(cache);
+    return rankArcadeRows([...map.values()]);
+  }
+
   if (canWriteFile()) {
     const map = await readFileRows();
     return rankArcadeRows([...map.values()]);
@@ -158,6 +222,11 @@ export async function getArcadeScore(
     const result = await redisCommand(redis, ["HGET", HASH_KEY, key]);
     return typeof result === "string" ? parseRow(result) : null;
   }
+  const cache = arcadeCache();
+  if (cache) {
+    const map = await readCacheRows(cache);
+    return map.get(key) ?? null;
+  }
   if (canWriteFile()) {
     const map = await readFileRows();
     return map.get(key) ?? null;
@@ -173,14 +242,26 @@ export async function consumeArcadeRun(runId: string): Promise<boolean> {
       `arcade:run:${runId}`,
       "1",
       "EX",
-      180,
+      RUN_TTL_SECONDS,
       "NX",
     ]);
     return result === "OK";
   }
+  const cache = arcadeCache();
+  if (cache) {
+    const usedKey = `${CACHE_RUN_PREFIX}${runId}`;
+    const existing = await cache.get(usedKey);
+    if (existing) return false;
+    await cache.set(usedKey, 1, {
+      ttl: RUN_TTL_SECONDS,
+      tags: ["arcade-runs"],
+      name: "arcade-run",
+    });
+    return true;
+  }
   pruneUsedRuns();
   if (memory.usedRuns.has(runId)) return false;
-  memory.usedRuns.set(runId, Date.now() + 180_000);
+  memory.usedRuns.set(runId, Date.now() + RUN_TTL_SECONDS * 1000);
   return true;
 }
 
@@ -212,6 +293,18 @@ export async function upsertArcadeScore(
     }
     const ranked = await allRows();
     const rank = arcadeRankOf(ranked, next.wallet) ?? ranked.length;
+    return { saved: next, improved, rank, gtd: isArcadeGtdRank(rank) };
+  }
+
+  const cache = arcadeCache();
+  if (cache) {
+    const map = await readCacheRows(cache);
+    const existing = map.get(key) ?? null;
+    const next = pickBest(existing, incoming);
+    const improved = !existing || compareArcadeRows(next, existing) < 0;
+    map.set(key, next);
+    await writeCacheRows(cache, map);
+    const rank = arcadeRankOf([...map.values()], next.wallet) ?? map.size;
     return { saved: next, improved, rank, gtd: isArcadeGtdRank(rank) };
   }
 
