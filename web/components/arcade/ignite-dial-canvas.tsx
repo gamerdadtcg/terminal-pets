@@ -206,21 +206,31 @@ export function IgniteDialCanvas({
       });
     }
 
-    function addPad(y: number, heat: number, forcePad = false) {
+    function addPad(
+      y: number,
+      heat: number,
+      forcePad = false,
+      placed?: { x: number; w: number },
+    ) {
       const glitchChance = forcePad ? 0 : 0.08 + heat * 0.3;
       const kind: Pad["kind"] = Math.random() < glitchChance ? "glitch" : "pad";
-      const w = Math.max(54, 102 - heat * 34 + Math.random() * 18);
+      const w = placed?.w ?? Math.max(54, 102 - heat * 34 + Math.random() * 18);
       const pad: Pad = {
-        x: 18 + Math.random() * (W - w - 36),
+        x: placed?.x ?? 18 + Math.random() * (W - w - 36),
         y,
         w,
         h: 12,
         kind,
-        vx: heat > 0.28 && Math.random() < 0.28 ? (Math.random() < 0.5 ? -70 : 70) : 0,
+        vx:
+          placed || heat <= 0.28 || Math.random() >= 0.28
+            ? 0
+            : Math.random() < 0.5
+              ? -70
+              : 70,
         scored: false,
       };
       pads.push(pad);
-      if (kind === "pad" && Math.random() < 0.34) {
+      if (!placed && kind === "pad" && Math.random() < 0.34) {
         const tick = pickTick();
         pickups.push({
           x: pad.x + pad.w / 2,
@@ -236,14 +246,17 @@ export function IgniteDialCanvas({
       while (topY > camY - 180) {
         const gap = 62 + heat * 46 + Math.random() * 22;
         topY -= gap;
-        addPad(topY, heat, pads.length < 4);
+        addPad(topY, heat, pads.length < 8);
       }
     }
 
-    addPad(H - 36, 0, true);
-    addPad(H - 108, 0, true);
-    addPad(H - 178, 0, true);
-    topY = H - 178;
+    const startW = 150;
+    const startX = (W - startW) / 2;
+    addPad(H - 36, 0, true, { x: startX, w: startW });
+    addPad(H - 118, 0, true, { x: startX - 40, w: 130 });
+    addPad(H - 200, 0, true, { x: startX + 50, w: 130 });
+    addPad(H - 282, 0, true, { x: startX - 20, w: 120 });
+    topY = H - 282;
     fillPads(0);
 
     function localX(event: PointerEvent) {
