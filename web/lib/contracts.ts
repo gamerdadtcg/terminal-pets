@@ -1,6 +1,6 @@
 import { type Address, parseAbi, zeroAddress } from "viem";
 import { configuredChainId } from "@/lib/chain";
-import { BASE_SEPOLIA_DRYRUN } from "@/lib/deployments";
+import { BASE_SEPOLIA_DRYRUN, ROBINHOOD_MAINNET } from "@/lib/deployments";
 
 export { zeroAddress };
 
@@ -77,34 +77,35 @@ function withFallback(value: Address, fallback?: Address): Address {
   return value !== zeroAddress ? value : (fallback ?? zeroAddress);
 }
 
-function sepoliaFallback() {
-  return configuredChainId() === BASE_SEPOLIA_DRYRUN.chainId
-    ? BASE_SEPOLIA_DRYRUN
-    : undefined;
+function chainFallback() {
+  const id = configuredChainId();
+  if (id === ROBINHOOD_MAINNET.chainId) return ROBINHOOD_MAINNET;
+  if (id === BASE_SEPOLIA_DRYRUN.chainId) return BASE_SEPOLIA_DRYRUN;
+  return undefined;
 }
 
-const dryrun = sepoliaFallback();
+const stack = chainFallback();
 
 export const addresses = {
   collection: withFallback(
     envAddr("NEXT_PUBLIC_COLLECTION_NFT", "NEXT_PUBLIC_COLLECTION_ADDRESS"),
-    dryrun?.collection,
+    stack?.collection,
   ),
-  ignite: withFallback(envAddr("NEXT_PUBLIC_IGNITE_ADDRESS"), dryrun?.ignite),
-  hopper: withFallback(envAddr("NEXT_PUBLIC_HOPPER_ADDRESS"), dryrun?.hopper),
-  pulse: withFallback(envAddr("NEXT_PUBLIC_PULSE_ADDRESS"), dryrun?.pulse),
+  ignite: withFallback(envAddr("NEXT_PUBLIC_IGNITE_ADDRESS"), stack?.ignite),
+  hopper: withFallback(envAddr("NEXT_PUBLIC_HOPPER_ADDRESS"), stack?.hopper),
+  pulse: withFallback(envAddr("NEXT_PUBLIC_PULSE_ADDRESS"), stack?.pulse),
   splitter: withFallback(
     envAddr("NEXT_PUBLIC_SPLITTER_ADDRESS"),
-    dryrun?.splitter,
+    stack?.splitter,
   ),
-  term: withFallback(envAddr("NEXT_PUBLIC_TERM_ADDRESS"), dryrun?.term),
+  term: withFallback(envAddr("NEXT_PUBLIC_TERM_ADDRESS"), stack?.term),
   termFund: withFallback(
     envAddr("NEXT_PUBLIC_TERM_FUND_ADDRESS"),
-    dryrun?.termFund,
+    stack?.termFund,
   ),
   termMarket: withFallback(
     envAddr("NEXT_PUBLIC_TERM_MARKET_ADDRESS"),
-    dryrun?.termMarket,
+    stack?.termMarket,
   ),
 };
 

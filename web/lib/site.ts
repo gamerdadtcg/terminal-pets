@@ -219,7 +219,7 @@ export const FAQ = [
   },
   {
     q: "Are contract addresses live?",
-    a: "Robinhood mainnet (4663) is not broadcast. Hub addresses are env-driven (NEXT_PUBLIC_CHAIN_ID, NEXT_PUBLIC_COLLECTION_NFT, …). Base Sepolia dry-run CollectionNFT 0xe1cC988CeC1C29764ba18523635De82d0C9B518F is the testing stack. Hybrid Ignite 0.002 ETH, Hopper 7 days, Dial 1–4 by shell class are product defaults.",
+    a: "Robinhood mainnet (4663) is live. CollectionNFT 0x85e3f98b76b0a6c9166BA7aaB05BEc4ef17B7166. On-chain mintOpen is still false until Friday — the hub reads that flag and does not fake it open. Production defaults are web/.env.production. Base Sepolia dry-run CollectionNFT 0xe1cC988CeC1C29764ba18523635De82d0C9B518F is the testing stack when NEXT_PUBLIC_CHAIN_ID=84532. Hybrid Ignite 0.002 ETH, Hopper 7 days, Dial 1–4 by shell class are product defaults.",
   },
   {
     q: "How does the 24h reveal work?",

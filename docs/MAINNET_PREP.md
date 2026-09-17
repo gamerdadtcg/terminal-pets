@@ -1,18 +1,37 @@
-# Robinhood mainnet prep (chain `4663`)
+# Robinhood mainnet (chain `4663`)
 
-Checklist **before** any broadcast to Robinhood Chain mainnet. This file does **not** authorize a deploy.
+Live stack recorded in [`deployments/robinhood-mainnet.json`](../deployments/robinhood-mainnet.json) (2026-09-16, git `23ba2397d304`). Hub production defaults (`web/.env.production` + `web/lib/deployments.ts`) point at these addresses.
 
-**Do not broadcast to `4663` until the owner explicitly says go.** `script/Deploy.s.sol` does not check chain id. A `--rpc-url robinhood` (or the mainnet RPC URL) with `--broadcast` is a live launch. No one should run those commands from this document.
+**Do not re-broadcast** `forge script` to `4663` from this repo. `mintOpen` is still **false**. `teamMint` and `reveal()` have not run. Hub mint UX reads on-chain `mintOpen` — do not fake it open.
 
-Studio Drop rehearsal (Base Sepolia / Sepolia): [`STUDIO_DROP_DRYRUN.md`](STUDIO_DROP_DRYRUN.md). Token + Studio rules: [`OPENSEA_STUDIO_SEADROP.md`](OPENSEA_STUDIO_SEADROP.md). RH testnet mechanics (`46630`) are **not** a mainnet dress rehearsal for SeaDrop.
+Studio Drop rehearsal (Base Sepolia / Sepolia): [`STUDIO_DROP_DRYRUN.md`](STUDIO_DROP_DRYRUN.md). Token + Studio rules: [`OPENSEA_STUDIO_SEADROP.md`](OPENSEA_STUDIO_SEADROP.md). RH testnet mechanics (`46630`) are **not** this stack.
 
-## 0. Hard stops
+## Live addresses (4663)
 
-- Owner has **not** said go → do not `--broadcast` to `robinhood` / `4663`.
-- Studio Drop dry-run on a SeaDrop chain is incomplete (no import-existing + 1 mint) → do not treat RH MICRO smoke as a substitute.
-- Any MICRO env still in the shell (`HOPPER_LOCK_SECONDS`, tiny `IGNITE_FEE_ETH`, `PULSE_*_WEI`) → **unset**. Those values must never reach mainnet.
-- Canonical (or Studio-documented) SeaDrop **not confirmed** on `4663` → do not deploy.
-- Dial: fewer than **7 real** Robinhood Chain Stock Token addresses (slots 1–7) → leave those slots `address(0)`; **do not invent**. Slot 0 is unused (no HOOD token).
+| Role | Address |
+| --- | --- |
+| CollectionNFT | `0x85e3f98b76b0a6c9166BA7aaB05BEc4ef17B7166` |
+| Hopper | `0x8Cd9A113dc8147D5163486e81D3bA64E2137dBf2` |
+| RoyaltySplitter | `0xe1cC988CeC1C29764ba18523635De82d0C9B518F` |
+| TermToken | `0xCa75Bc5eD48Bd9B8D1a939253e40e7AE3e61DAA6` |
+| TermFund | `0x0C25076F1bF9f6187ed3b7D890F480a92837636F` |
+| IgniteModule | `0x29e8dB2073583720C3CBf741d278d942B65cb92B` |
+| TermMarket | `0x78f2c0577321053722Daa1f5eE31E5071a7D9F30` |
+| PulseDistributor | `0x7326F7D277610288FBeA373712c89E47AF9AC61E` |
+| ERC6551Registry | `0x3992160500FB69e88227436020B6600be1CeF023` |
+| ReceivableAccount | `0xb8d8d9363a64dfD433E006bE43c2B150370Fc274` |
+| SeaDrop | `0x00005EA00Ac477B1030CE78506496e8C2dE24bf5` |
+| Owner / Deployer | `0xA71c8cAC3bc8bc1085f87885fD2898f970edDc37` |
+| Treasury | `0x0c821a853711bF03C4C6b776CfD657f2ee97733e` |
+
+RPC `https://rpc.mainnet.chain.robinhood.com`. Explorer [Blockscout](https://robinhoodchain.blockscout.com). Economics: Hopper lock 7 days, Ignite 0.002 ETH + 1,000 `$TERM`, Pulse 0.1 / 0.5 / 0.1 ETH, `maxSupply` 4444 / team 200. Dial slots 1–7 are the seven live RH stock tokens; slot 0 is `address(0)`. `hiddenURI` is `https://terminalpets.xyz/metadata/hidden.json`. Dormant/lit bases empty until reveal.
+
+## 0. Remaining hard stops
+
+- Do **not** re-run `forge script … --broadcast` to `robinhood` / `4663`.
+- Do **not** `setMintOpen(true)` until Friday GTD / FCFS / Public.
+- Do **not** `reveal()` until mint-window policy says so.
+- Any MICRO env still in the shell (`HOPPER_LOCK_SECONDS`, tiny `IGNITE_FEE_ETH`, `PULSE_*_WEI`) → **unset**. Those values must never reach a new stack.
 - Metadata: hub public tree is **only** `hidden.json` until after reveal. Demo GIFs at `/art/examples/` are **examples / not mint supply**. Do **not** commit or deploy 4444 GIF/JSON to `web/public/metadata/{lit,dormant}` or git before reveal policy.
 
 ## 1. Production price lock (do not retune at deploy)
@@ -48,7 +67,7 @@ Before any mainnet Drop:
 3. Confirm the SeaDrop address Studio will call:
    - If it is canonical CREATE2 → `SEADROP_ADDRESS=0x00005EA00Ac477B1030CE78506496e8C2dE24bf5` (Deploy.s.sol default).
    - If Studio shows a **different** address → set `SEADROP_ADDRESS` to **that** value (or `updateAllowedSeaDrop` after deploy). **Do not invent.**
-   - If Studio has no Robinhood / no SeaDrop on `4663` → **do not broadcast**. Hub `mintOpen` is a separate product decision, not a silent substitute for a Drop you cannot configure.
+   - If Studio has no Robinhood / no SeaDrop on `4663` → skip Studio Drop. Hub `mintOpen` is a separate product decision, not a silent substitute for a Drop you cannot configure.
 
 Do **not** deploy SeaDrop ourselves as part of this launch.
 
@@ -137,40 +156,22 @@ Leaving dormant/lit unset until reveal is the anti-snipe default. Sealed stub un
 | --- | --- | --- |
 | Treasury | `0x0c821a853711bF03C4C6b776CfD657f2ee97733e` | `TREASURY_ADDRESS`. 2.5% post-reveal royalties + TermFund `$TERM` / LP recipient. Must accept ETH. |
 | Team allocation | `0xD1A80572b04fe5Df429dFdAc26b5Aa412a5fBE31` | Owner `teamMint(this, 200)` **Thursday, September 17, 2026, 8:00 PM PT**. **Not** a public mint. **Not** a Studio Team stage. |
-| RH testnet deployer | `0xA71c8cAC3bc8bc1085f87885fD2898f970edDc37` | Recorded on `46630` only. **Not** mainnet team. **Not** a default `OWNER`. Do not send the 200 reserve here. |
+| Owner / Deployer | `0xA71c8cAC3bc8bc1085f87885fD2898f970edDc37` | Live `4663` owner and deployer (same EOA as the recorded 46630 stacks). **Not** the team allocation wallet. Do not send the 200 reserve here. |
 
-`OWNER` = the production owner EOA that will sign Studio Drop `update*` txs, `reveal()`, `setMetadataURIs`, `setStockToken`, and `teamMint`. Set it explicitly. Do **not** default to the testnet deployer. Deployer `PRIVATE_KEY` may be a dedicated deploy key; if `OWNER !=` deployer, the script transfers TermToken ownership to `OWNER`.
+`OWNER` signs `teamMint`, Friday `setMintOpen(true)`, `reveal()`, `setMetadataURIs`, and any Studio `update*` txs. The live stack already transferred TermToken ownership to this owner.
 
-## 6. Deploy env (when owner has said go — commands not run from this PR)
+## 6. Remaining owner ops (no forge broadcast)
 
-Defaults only. Canonical SeaDrop unless §2 recorded a different Studio address. **Hub mint is primary** → `MINT_OPEN=true` when Friday opens (or owner `setMintOpen(true)` after deploy). Studio BYO is currently blocked.
+The stack is live. **Hub mint is primary** → owner `setMintOpen(true)` when Friday opens. Studio BYO is currently blocked. Do **not** re-run `Deploy.s.sol`.
 
 ```bash
-# DO NOT RUN until the owner says go.
-# cp .env.example .env
-
-export TREASURY_ADDRESS=0x0c821a853711bF03C4C6b776CfD657f2ee97733e
-export OWNER=<production-owner-EOA>   # not 0xA71c… testnet deployer
-export SEADROP_ADDRESS=0x00005EA00Ac477B1030CE78506496e8C2dE24bf5
-# If Studio's 4663 SeaDrop differs, use that address instead — do not guess.
-# Leave false at deploy; owner setMintOpen(true) when Friday hub mint opens.
-export MINT_OPEN=false
-
-unset HOPPER_LOCK_SECONDS
-unset PULSE_BOOTSTRAP_START_WEI
-unset PULSE_CYCLE_START_WEI
-unset PULSE_LADDER_STEP_WEI
-# IGNITE_FEE_ETH must remain 0.002 ETH (2000000000000000). Do not export MICRO 5e13.
-
-# Then, only after explicit go:
-# source .env
-# cast chain-id --rpc-url robinhood   # expect 4663 — abort otherwise
-# forge script script/Deploy.s.sol:Deploy --rpc-url robinhood --broadcast
+# DO NOT re-broadcast Deploy.s.sol.
+export COLLECTION=0x85e3f98b76b0a6c9166BA7aaB05BEc4ef17B7166
 ```
 
-Leave `TERM_LP_ROUTER`, `TERM_POOL`, `TERM_SWAP_ROUTER`, `PULSE_ROUTER` blank until real adapters exist. Leave Dial slots unset at deploy.
+Leave `TERM_LP_ROUTER`, `TERM_POOL`, `TERM_SWAP_ROUTER`, `PULSE_ROUTER` blank until real adapters exist. Dial slots 1–7 are already wired.
 
-After a future broadcast (not now): confirm console `HopperPayoutLock=604800`, `IgniteFeeETH=2000000000000000`, Pulse production wei, `SeaDrop` = the address from §2, `Treasury` = `0x0c821a…773e`. Then:
+Then:
 
 ```bash
 # Thursday Sep 17 2026, 8:00 PM PT — owner-only. Not a public mint. Not now:
@@ -188,27 +189,28 @@ Do **not** `setMintOpen(true)` until Friday phases. Do **not** `reveal()` until 
 3. Creator earnings **7.5% (750 bps)** → **RoyaltySplitter**. Enable ERC-2981 if offered.
 4. Drop stages: free, **1 per wallet** per stage, Public last. Limited edition 4444 on-chain; SeaDrop public 4244. Creator payout for primary ETH → Hopper if that fuel should Pulse.
 5. Confirm `isAllowedSeaDrop` for the Studio SeaDrop address.
-6. `setMetadataURIs` **hidden.json now**; dormant/lit **private pin at reveal** — never the hub `/metadata/{lit,dormant}` trees (those paths are gone).
-7. Wire Dial only with the seven live `4663` stock addresses in slots 1–7 (§3). Leave slot 0 `address(0)`.
-8. Copy addresses into hub `NEXT_PUBLIC_*`. Leave `mintOpen` false until **Friday** GTD / FCFS / Public (8:00 / 9:00 / 10:00 AM PT, September 18, 2026). Thursday `teamMint` is owner-only. Do not send collectors to Studio’s wizard.
+6. `setMetadataURIs` already set **hidden.json**; dormant/lit **private pin at reveal** — never the hub `/metadata/{lit,dormant}` trees (those paths are gone).
+7. Dial slots 1–7 are already the seven live `4663` stock addresses (§3). Leave slot 0 `address(0)`.
+8. Hub production already has these `NEXT_PUBLIC_*` defaults (`web/.env.production`). Leave `mintOpen` false until **Friday** GTD / FCFS / Public (8:00 / 9:00 / 10:00 AM PT, September 18, 2026). Thursday `teamMint` is owner-only. Do not send collectors to Studio’s wizard.
 
-## 8. Explicit: no broadcast until owner says go
+## 8. Explicit: no forge re-broadcast
 
-This PR / checklist is prep only.
+The 4663 stack is recorded. This repo still must not send deploy transactions.
 
 - No `forge script … --rpc-url robinhood --broadcast`
-- No `--chain 4663` verify-on-deploy
+- No `--chain 4663` verify-on-deploy from CI
 - No CI job that sends mainnet txs
-- No “helpfully” running the §6 block
+- No “helpfully” re-running Deploy.s.sol
 
-When the owner says go, re-read §0–§7 on that day (SeaDrop address, stock tokens, pin CIDs, env unset of MICRO vars) and broadcast from a human-held `.env`.
+Owner ops that remain (`teamMint`, Friday `setMintOpen`, later `reveal`) are human-signed `cast send`s, not a new deploy.
 
 ## Explicit do-nots
 
-- **Do not broadcast to `4663` from this document.**
+- **Do not re-broadcast** `forge script` to `4663` from this document.
+- **Do not** fake hub `mintOpen` — read the on-chain flag.
 - **Do not** reuse RH testnet MICRO economics (`HOPPER_LOCK_SECONDS=900`, tiny Ignite / Pulse).
 - **Do not** invent Dial mainnet stock addresses (including a HOOD ERC-20) or a Robinhood SeaDrop address.
-- **Do not** `teamMint` the 200 reserve to `0xA71c…` (testnet deployer).
+- **Do not** `teamMint` the 200 reserve to `0xA71c…` (owner / deployer). Send it to the team wallet.
 - **Do not** point production metadata at hub `/art/examples/` or resurrect `/metadata/{lit,dormant}/{id}.json` before reveal.
 - **Do not** use Studio’s deploy wizard on mainnet.
 
@@ -221,4 +223,5 @@ When the owner says go, re-read §0–§7 on that day (SeaDrop address, stock to
 - [`DIAL.md`](DIAL.md) — slots; testnet samples are not mainnet
 - [`MAIN_ART_LOCK.md`](MAIN_ART_LOCK.md) / `art/generator/README-generate.md` — full export + pin
 - [`TESTNET_DEPLOY.md`](TESTNET_DEPLOY.md) — `46630` only
-- [`deployments/robinhood-testnet.json`](../deployments/robinhood-testnet.json) / [`deployments/robinhood-testnet-micro.json`](../deployments/robinhood-testnet-micro.json) — recorded testnet stacks, not mainnet templates
+- [`deployments/robinhood-mainnet.json`](../deployments/robinhood-mainnet.json) — live `4663` record
+- [`deployments/robinhood-testnet.json`](../deployments/robinhood-testnet.json) / [`deployments/robinhood-testnet-micro.json`](../deployments/robinhood-testnet-micro.json) — recorded testnet stacks, not this mainnet

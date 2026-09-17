@@ -26,7 +26,7 @@ export function DialExplainer() {
   return (
     <div className="space-y-8">
       <div className="max-w-2xl space-y-3">
-        <ComingSoon>In contracts · not deployed</ComingSoon>
+        <ComingSoon>Live on 4663 · Dial at Ignite</ComingSoon>
         <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
           Dial aims a Lit Pulse at Stock Tokens.
         </h2>
