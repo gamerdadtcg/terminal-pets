@@ -12,6 +12,7 @@ import {
   type PartnerPhase,
 } from "@/lib/allowlist-partners";
 import { ROBINHOOD_CHAIN_ID, ROBINHOOD_RPC, robinhoodChain } from "@/lib/chain";
+import { isManualGtdWallet } from "@/lib/manual-gtd-wallets";
 import { mintSchedule, SITE } from "@/lib/site";
 
 export type PartnerHolding = {
@@ -27,6 +28,8 @@ export type EligibilityResult = {
   gtd: boolean;
   fcfs: boolean;
   public: true;
+  /** True if this wallet is on the GTD X-thread manual list. Not FCFS. Not on-chain mint allowlist. */
+  manualGtd: boolean;
   holdings: PartnerHolding[];
   failed: Array<{
     name: string;
@@ -53,7 +56,7 @@ export const ELIGIBILITY_COPY = {
   publicNote: `Public phase is open to everyone (no allowlist) ${publicPhase?.time ?? "Friday 10:00 AM PT"}.`,
   schedule: `${mintSchedule.date} · ${mintSchedule.timezoneIana} (${mintSchedule.timezoneLabel}): ${gtdPhase?.time ?? "8:00 AM PT"} GTD · ${fcfsPhase?.time ?? "9:00 AM PT"} FCFS · ${publicPhase?.time ?? "10:00 AM PT"} Public. ${mintSchedule.perPhase} per phase.`,
   disclaimer:
-    "Eligibility is current on-chain holdings. Final mint gating may also require mintOpen and the phase window on mint day. Partner lists may grow before lock. This is not a Merkle allowlist — CollectionNFT currently gates on mintOpen only.",
+    "Eligibility is current on-chain holdings plus the GTD X-thread wallet list. Hub preview only — CollectionNFT still gates mint on mintOpen. Thread wallets are not FCFS and are not on-chain mint allowlisted until Travis locks mint phase. Partner lists may grow before lock.",
   invalidAddress:
     "That doesn't look like a wallet address. Paste a 0x… Ethereum address.",
 } as const;
@@ -100,6 +103,7 @@ export async function checkPartnerEligibility(
 
   const rpc = partnerHoldingsRpc();
   const publicClient = robinhoodPublicClient();
+  const manualGtd = isManualGtdWallet(address);
 
   const reads = await Promise.all(
     ALL_PARTNERS.map(async (partner) => {
@@ -117,7 +121,7 @@ export async function checkPartnerEligibility(
     }),
   );
 
-  if (reads.every((read) => !read.ok)) {
+  if (reads.every((read) => !read.ok) && !manualGtd) {
     return {
       ok: false,
       error: "rpc_failed",
@@ -152,9 +156,11 @@ export async function checkPartnerEligibility(
     result: {
       address,
       chainId: ROBINHOOD_CHAIN_ID,
-      gtd: holdings.some((holding) => holding.phase === "GTD"),
+      gtd:
+        manualGtd || holdings.some((holding) => holding.phase === "GTD"),
       fcfs: holdings.some((holding) => holding.phase === "FCFS"),
       public: true,
+      manualGtd,
       holdings,
       failed,
     },

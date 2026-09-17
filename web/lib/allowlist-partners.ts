@@ -11,6 +11,9 @@ import { getAddress, parseAbi, type Address } from "viem";
  * 1. Append a `{ name, address }` row to `GTD_PARTNERS` or `FCFS_PARTNERS`.
  * 2. Use the Robinhood Chain (4663) contract address.
  * 3. Redeploy the hub. No UI code changes needed.
+ *
+ * Manual GTD thread wallets (not FCFS, not on-chain mint allowlist) live in
+ * `web/lib/manual-gtd-wallets.ts`.
  */
 export type PartnerPhase = "GTD" | "FCFS";
 
