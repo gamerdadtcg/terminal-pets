@@ -333,6 +333,11 @@ export function ArcadeCabinet() {
             </p>
           )}
           <ol className="mt-4 max-h-[28rem] space-y-1 overflow-auto pr-1">
+            {!board ? (
+              <li className="px-2 py-6 text-center text-sm text-muted-foreground">
+                Loading board…
+              </li>
+            ) : null}
             {(board?.board ?? []).map((row) => (
               <li
                 key={row.wallet}
@@ -359,7 +364,7 @@ export function ArcadeCabinet() {
                 </span>
               </li>
             ))}
-            {!board?.board.length ? (
+            {!board?.board.length && board ? (
               <li className="px-2 py-6 text-center text-sm text-muted-foreground">
                 No scores yet. First ticks lock the board.
               </li>
