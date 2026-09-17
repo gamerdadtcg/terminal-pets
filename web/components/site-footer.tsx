@@ -1,5 +1,8 @@
 import { publicLinks, sealedCopy, SITE } from "@/lib/site";
+import { NFT_CALENDAR_BADGE_SRC } from "@/lib/nft-calendar-badge";
 import Link from "next/link";
+
+const NFT_CALENDAR_URL = "https://nftcalendar.io/";
 
 export function SiteFooter() {
   const links = publicLinks();
@@ -22,6 +25,22 @@ export function SiteFooter() {
           <p className="max-w-lg text-xs leading-relaxed text-muted-foreground/80">
             {SITE.disclaimer}
           </p>
+          <a
+            href={NFT_CALENDAR_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 pt-2 text-xs text-muted-foreground transition-colors hover:text-foreground"
+          >
+            <span>Verified on</span>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={NFT_CALENDAR_BADGE_SRC}
+              alt="NFT Calendar"
+              width={28}
+              height={28}
+              className="h-7 w-7 rounded-sm object-contain"
+            />
+          </a>
         </div>
         <div className="grid grid-cols-2 gap-x-10 gap-y-2 font-mono text-xs text-muted-foreground sm:text-right">
           <Link className="hover:text-foreground" href="/#art">
