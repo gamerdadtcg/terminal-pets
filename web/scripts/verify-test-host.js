@@ -71,11 +71,14 @@ for (const dir of [examplesAwake, examplesEgg]) {
   }
 }
 
+const sealedGifPath = path.join(publicDir, "art", "sealed.gif");
+mustGif(sealedGifPath);
+
 const hiddenPath = path.join(metadataDir, "hidden.json");
 const hidden = JSON.parse(fs.readFileSync(hiddenPath, "utf8"));
-if (hidden.image !== `${ORIGIN}/art/sealed.png`) {
+if (hidden.image !== `${ORIGIN}/art/sealed.gif`) {
   throw new Error(
-    `${hiddenPath} image expected ${ORIGIN}/art/sealed.png, got ${hidden.image}`,
+    `${hiddenPath} image expected ${ORIGIN}/art/sealed.gif, got ${hidden.image}`,
   );
 }
 if (hidden.attributes?.some((a) => a.trait_type !== "State")) {
@@ -106,5 +109,5 @@ for (const name of hatchFiles) {
 }
 
 console.log(
-  "examples ok: 25 demo GIFs (not mint supply) + sealed hidden.json only + 6 hatch GIFs",
+  "examples ok: 25 demo GIFs (not mint supply) + sealed.gif hidden.json only + 6 hatch GIFs",
 );
