@@ -21,6 +21,7 @@ docs/*
 !docs/RH_TESTNET_MICRO_SMOKE.md
 !docs/STUDIO_DROP_DRYRUN.md
 !docs/MAINNET_PREP.md
+!docs/ARCADE_BUILD_BRIEF.md
 
 # Dotenv file
 .env
