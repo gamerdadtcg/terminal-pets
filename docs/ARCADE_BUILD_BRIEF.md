@@ -42,3 +42,19 @@ Ship a short CRT-terminal mini-game on the hub where players chase a high score,
 
 ## Suggested first PR
 Scaffold `/arcade` shell (CRT UI + placeholder game + wallet form + fake leaderboard), wire score API stub, document export → `manual-gtd-wallets` path.
+
+## Implementation (this repo)
+
+- Playable canvas at `/arcade`: **Ignite the Dial** — endless Doodle Jump climber with example BOLT (robot pet only, not handheld token art). Bounce up until you fall (no round timer). Scattered pads, some moving / snapping / glitch. Catch Dial ticks.
+- Score API: `POST /api/arcade/start`, `POST /api/arcade/score`, `GET /api/arcade/board`. HMAC run tokens, rate limits, one best score per wallet.
+- Storage: Upstash Redis REST when `KV_REST_API_*` or `UPSTASH_REDIS_REST_*` are set; otherwise `web/data/arcade-scores.json` locally; in-memory on Vercel without Redis.
+- Live top 150 count as GTD on `/eligible` (and FCFS via GTD). After close, export into `web/lib/arcade-gtd-wallets.ts` and merge to `main` before Fri 7:00 AM PT.
+
+```bash
+cd web
+# local file:
+node scripts/export-arcade-gtd.mjs
+# or production board:
+ARCADE_BOARD_URL=https://terminalpets.xyz/api/arcade/board \
+  ARCADE_EXPORT_SECRET=… node scripts/export-arcade-gtd.mjs
+```

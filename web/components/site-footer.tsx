@@ -36,6 +36,9 @@ export function SiteFooter() {
           <Link className="hover:text-foreground" href="/dial">
             Dial
           </Link>
+          <Link className="hover:text-foreground" href="/arcade">
+            Arcade
+          </Link>
           <Link className="hover:text-foreground" href="/mint">
             Mint
           </Link>

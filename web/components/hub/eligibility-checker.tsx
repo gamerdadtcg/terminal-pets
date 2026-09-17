@@ -11,6 +11,8 @@ import {
   parseWalletAddress,
 } from "@/lib/eligibility";
 import { explorerAddress, shortAddress } from "@/lib/format";
+import { ARCADE_GTD_REASON } from "@/lib/arcade-gtd-wallets";
+import { ARCADE_PATH } from "@/lib/arcade";
 import {
   MANUAL_GTD_REASON,
   MANUAL_GTD_THREAD_URL,
@@ -105,12 +107,18 @@ export function EligibilityChecker({
 
   const resultSummary = useMemo(() => {
     if (state.status !== "ok") return null;
-    const { gtd, fcfs, manualGtd } = state.result;
+    const { gtd, fcfs, manualGtd, arcadeGtd } = state.result;
     const gtdNft = gtdHoldings.length > 0;
     const fcfsNft = fcfsHoldings.length > 0;
     if (gtd) {
       if (fcfsNft) {
         return "This wallet can mint in GTD and FCFS (and Public). FCFS is yes from FCFS partner NFTs and GTD eligibility. Hub preview — mint still needs mintOpen.";
+      }
+      if (arcadeGtd && (manualGtd || gtdNft)) {
+        return "This wallet can mint in GTD via arcade top 150 plus another GTD path (and Public). FCFS is included via GTD eligibility.";
+      }
+      if (arcadeGtd) {
+        return "This wallet can mint in GTD as arcade top 150 (and Public). FCFS is included via GTD eligibility.";
       }
       if (manualGtd && gtdNft) {
         return "This wallet can mint in GTD via partner NFT and the GTD thread list (and Public). FCFS is included via GTD eligibility.";
@@ -121,9 +129,9 @@ export function EligibilityChecker({
       return "This wallet can mint in GTD (and Public). FCFS is included via GTD eligibility.";
     }
     if (fcfs) {
-      return "This wallet can mint in FCFS (and Public). GTD needs a GTD partner NFT or a GTD thread wallet.";
+      return "This wallet can mint in FCFS (and Public). GTD needs a GTD partner NFT, a GTD thread wallet, or arcade top 150.";
     }
-    return "No GTD or FCFS partner NFTs, and not on the GTD thread list. Public phase is still open to everyone.";
+    return "No GTD or FCFS partner NFTs, not on the GTD thread list, and not arcade top 150. Public phase is still open to everyone.";
   }, [state, gtdHoldings.length, fcfsHoldings.length]);
 
   return (
@@ -135,7 +143,7 @@ export function EligibilityChecker({
       )}
     >
       <p className="font-mono text-[11px] tracking-[0.28em] text-primary">
-        PHASE ELIGIBILITY · LIVE HOLDINGS + THREAD LIST
+        PHASE ELIGIBILITY · LIVE HOLDINGS + THREAD + ARCADE
       </p>
       <h2 className={cn("mt-3 font-medium", compact ? "text-lg" : "text-xl")}>
         Check GTD / FCFS eligibility
@@ -162,7 +170,14 @@ export function EligibilityChecker({
           className="text-foreground underline-offset-2 hover:underline"
         >
           GTD X thread
-        </a>
+        </a>{" "}
+        and{" "}
+        <Link
+          href={ARCADE_PATH}
+          className="text-foreground underline-offset-2 hover:underline"
+        >
+          arcade top 150
+        </Link>
         . GTD-eligible wallets also unlock FCFS phase eligibility. Hub preview
         only — not a Merkle / on-chain mint allowlist. GTD is still unlocked;
         last-minute adds may land before mint.
@@ -242,6 +257,7 @@ export function EligibilityChecker({
             ) : null}
             <GtdReasons
               manualGtd={state.result.manualGtd}
+              arcadeGtd={state.result.arcadeGtd}
               holdings={gtdHoldings}
             />
             <FcfsReasons
@@ -270,7 +286,7 @@ export function EligibilityChecker({
         <div className="mt-4 space-y-1 font-mono text-[11px] text-muted-foreground">
           <p>
             GTD: {GTD_PARTNERS.map((item) => item.name).join(" · ")} · GTD
-            thread wallets
+            thread wallets · arcade top 150
           </p>
           <p>
             FCFS: {FCFS_PARTNERS.map((item) => item.name).join(" · ")} · GTD
@@ -330,21 +346,36 @@ function PhaseResult({
 
 function GtdReasons({
   manualGtd,
+  arcadeGtd,
   holdings,
 }: {
   manualGtd: boolean;
+  arcadeGtd: boolean;
   holdings: EligibilityResult["holdings"];
 }) {
-  const empty = !manualGtd && holdings.length === 0;
+  const empty = !manualGtd && !arcadeGtd && holdings.length === 0;
   return (
     <div>
       <p className="font-mono text-[11px] text-muted-foreground">GTD reasons</p>
       {empty ? (
         <p className="mt-1 text-sm text-muted-foreground">
-          No GTD partner NFTs and not on the GTD thread list
+          No GTD partner NFTs, not on the GTD thread list, and not arcade top
+          150
         </p>
       ) : (
         <ul className="mt-1 space-y-1">
+          {arcadeGtd ? (
+            <li className="text-sm">
+              {ARCADE_GTD_REASON}
+              <span className="ml-1 font-mono text-xs text-muted-foreground">
+                (
+                <Link href={ARCADE_PATH} className="underline-offset-2 hover:underline">
+                  /arcade
+                </Link>
+                )
+              </span>
+            </li>
+          ) : null}
           {manualGtd ? (
             <li className="text-sm">
               {MANUAL_GTD_REASON}
@@ -470,8 +501,11 @@ function PartnerList({
           >
             GTD thread wallets
           </a>{" "}
-          (manual list — hub preview, not on-chain mint allowlist). GTD also
-          unlocks FCFS.
+          and{" "}
+          <Link href={ARCADE_PATH} className="underline-offset-2 hover:underline">
+            arcade top 150
+          </Link>{" "}
+          (hub preview, not on-chain mint allowlist). GTD also unlocks FCFS.
         </p>
       ) : (
         <p className="mt-2 text-xs text-muted-foreground">

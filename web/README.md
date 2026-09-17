@@ -1,6 +1,6 @@
 # Terminal Pets dapp
 
-Next.js + wagmi + viem UI. Primary mint is `/mint` (`CollectionNFT.mint` / `mintTo` while `mintOpen`). Ignite, Hopper, Pulse, and TBA live on `/app`.
+Next.js + wagmi + viem UI. Primary mint is `/mint` (`CollectionNFT.mint` / `mintTo` while `mintOpen`). Ignite, Hopper, Pulse, and TBA live on `/app`. Arcade GTD contest is `/arcade`.
 
 ```bash
 cp .env.example .env.local

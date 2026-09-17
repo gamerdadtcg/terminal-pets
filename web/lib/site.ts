@@ -168,7 +168,11 @@ export const FAQ = [
   },
   {
     q: "Am I eligible for GTD or FCFS?",
-    a: "The hub checker reads live ERC-721 balanceOf against announced partner collections on Robinhood Chain, plus School of NFTs holdings on Ethereum mainnet (same wallet addresses), plus wallets dropped on the GTD X thread. GTD if you hold any GTD partner NFT or your wallet is on that thread list. FCFS if you hold any FCFS partner NFT or you are GTD-eligible (GTD wallets also unlock FCFS). Public (Friday 10:00 AM PT) is open to everyone, no allowlist. This is a hub preview, not an on-chain mint allowlist — CollectionNFT still gates on mintOpen. Partner and thread lists may grow before Travis locks mint phase.",
+    a: "The hub checker reads live ERC-721 balanceOf against announced partner collections on Robinhood Chain, plus School of NFTs holdings on Ethereum mainnet (same wallet addresses), plus wallets dropped on the GTD X thread, plus arcade top 150 from Ignite the Dial (/arcade). GTD if you hold any GTD partner NFT, your wallet is on that thread list, or you are arcade top 150. FCFS if you hold any FCFS partner NFT or you are GTD-eligible (GTD wallets also unlock FCFS). Public (Friday 10:00 AM PT) is open to everyone, no allowlist. This is a hub preview, not an on-chain mint allowlist — CollectionNFT still gates on mintOpen. Partner, thread, and arcade lists may grow before Travis locks mint phase.",
+  },
+  {
+    q: "What is the arcade?",
+    a: "Ignite the Dial is an endless CRT climber at /arcade, in the Doodle Jump style. Bounce example BOLT (the robot pet, not the handheld token art) up pads until you fall — there is no round timer. Steer left and right, wrap the edges, and watch for moving, snapping, and glitch pads. Catch Dial ticks and chain combos. One best score per wallet. Top 150 wallets lock GTD (and FCFS via GTD) on the hub checker. Play before Friday, September 18, 2026 5:00 AM PT so winners can merge before the 7:00 AM PT hub redeploy. Hub preview only — not an on-chain mint allowlist.",
   },
   {
     q: "How many can I mint?",
