@@ -8,7 +8,7 @@ export const ETHEREUM_CHAIN_ID = 1;
 
 export const ROBINHOOD_RPC = "https://rpc.mainnet.chain.robinhood.com";
 export const ROBINHOOD_EXPLORER = "https://robinhoodchain.blockscout.com";
-export const ETHEREUM_RPC = "https://eth.llamarpc.com";
+export const ETHEREUM_RPC = "https://ethereum.publicnode.com";
 export const ETHEREUM_EXPLORER = "https://etherscan.io";
 export const ROBINHOOD_TESTNET_RPC = "https://rpc.testnet.chain.robinhood.com";
 export const ROBINHOOD_TESTNET_EXPLORER =
