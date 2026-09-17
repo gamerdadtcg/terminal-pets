@@ -3,7 +3,6 @@
 import {
   ARCADE_MAX_COMBO,
   ARCADE_PET,
-  ARCADE_ROUND_MS,
   ARCADE_TICKS,
   type ArcadeTickSymbol,
 } from "@/lib/arcade";
@@ -216,34 +215,41 @@ export function IgniteDialCanvas({
     ) {
       let kind: Pad["kind"] = "pad";
       if (!forcePad) {
+        const threat = Math.min(3, heat);
         const roll = Math.random();
-        if (roll < 0.2 + heat * 0.34) kind = "glitch";
-        else if (heat > 0.12 && roll < 0.2 + heat * 0.34 + 0.1 + heat * 0.22) {
-          kind = "crumble";
-        }
+        const glitchOdds = Math.min(0.56, 0.16 + threat * 0.18);
+        const crumbleOdds = Math.min(0.42, 0.08 + threat * 0.14);
+        if (roll < glitchOdds) kind = "glitch";
+        else if (heat > 0.1 && roll < glitchOdds + crumbleOdds) kind = "crumble";
       }
+      const threat = Math.min(3, heat);
       const w =
-        placed?.w ?? Math.max(36, 68 - heat * 30 + Math.random() * 10);
+        placed?.w ?? Math.max(26, 70 - threat * 14 + Math.random() * 8);
       let x: number;
       if (placed) {
         x = placed.x;
       } else {
-        const minShift = 86 + heat * 120;
+        const minShift = 80 + Math.min(2.2, heat) * 90;
         const dir = Math.random() < 0.5 ? -1 : 1;
-        x = lastPadX + dir * (minShift + Math.random() * (70 + heat * 80)) - w / 2;
+        x =
+          lastPadX +
+          dir * (minShift + Math.random() * (60 + Math.min(2, heat) * 70)) -
+          w / 2;
         if (x < 10) x = 10;
         if (x + w > W - 10) x = W - 10 - w;
       }
       lastPadX = x + w / 2;
       const moving =
-        !placed && heat > 0.08 && Math.random() < 0.2 + heat * 0.34;
+        !placed && heat > 0.08 && Math.random() < Math.min(0.6, 0.16 + threat * 0.2);
       const pad: Pad = {
         x,
         y,
         w,
         h: kind === "crumble" ? 10 : 12,
         kind,
-        vx: moving ? (Math.random() < 0.5 ? -1 : 1) * (120 + heat * 110) : 0,
+        vx: moving
+          ? (Math.random() < 0.5 ? -1 : 1) * (110 + threat * 90)
+          : 0,
         scored: false,
         dead: false,
       };
@@ -262,7 +268,7 @@ export function IgniteDialCanvas({
 
     function fillPads(heat: number) {
       while (topY > camY - 180) {
-        const gap = 86 + heat * 52 + Math.random() * 18;
+        const gap = 84 + Math.min(1.05, heat) * 48 + Math.random() * 16;
         topY -= gap;
         addPad(topY, heat, pads.length < 4);
       }
@@ -385,8 +391,12 @@ export function IgniteDialCanvas({
       const dt = Math.min(0.033, (now - last) / 1000);
       last = now;
       const elapsed = now - started;
-      const remain = Math.max(0, ARCADE_ROUND_MS - elapsed);
-      const heat = Math.min(1, elapsed / 20_000);
+      const height = Math.max(0, Math.floor(H - 98 - pet.y));
+      if (height > bestHeight) {
+        score += height - bestHeight;
+        bestHeight = height;
+      }
+      const heat = elapsed / 16_000 + bestHeight / 2200;
 
       hitIFrames = Math.max(0, hitIFrames - dt);
       shake = Math.max(0, shake - dt * 8);
@@ -455,27 +465,21 @@ export function IgniteDialCanvas({
         if (floaters[i].life <= 0) floaters.splice(i, 1);
       }
 
-      const height = Math.max(0, Math.floor(H - 98 - pet.y));
-      if (height > bestHeight) {
-        score += height - bestHeight;
-        bestHeight = height;
-      }
-
-      charge -= (2.6 + heat * 2.3) * dt;
+      charge -= (0.4 + Math.min(1.8, heat) * 0.45) * dt;
 
       const fallen = pet.y - camY > H - 6;
-      if (charge <= 0 || remain <= 0 || fallen) {
+      if (charge <= 0 || fallen) {
         charge = Math.max(0, charge);
-        draw(remain);
+        draw(now);
         endRun(now);
         return;
       }
 
-      draw(remain);
+      draw(now);
       frame = requestAnimationFrame(loop);
     }
 
-    function draw(remain: number) {
+    function draw(now: number) {
       const ox = (Math.random() - 0.5) * shake * 10;
       const oy = (Math.random() - 0.5) * shake * 6;
       g.save();
@@ -545,7 +549,7 @@ export function IgniteDialCanvas({
         g.fillText(pickup.symbol, pickup.x, y);
       }
 
-      const ghost = hitIFrames > 0 && Math.floor(remain / 80) % 2 === 0;
+      const ghost = hitIFrames > 0 && Math.floor(now / 80) % 2 === 0;
       drawBolt(pet.x, pet.y - camY, face, squash, ghost);
 
       for (const floater of floaters) {
@@ -569,7 +573,7 @@ export function IgniteDialCanvas({
       g.fillStyle = "#F0B429";
       g.fillText(`COMBO x${combo}`, 168, 26);
       g.fillStyle = "#9ad7aa";
-      g.fillText(`T ${Math.ceil(remain / 1000)}s`, W - 92, 26);
+      g.fillText(`HGT ${bestHeight}`, W - 118, 26);
       g.fillStyle = "rgba(124,255,154,0.15)";
       g.fillRect(22, 32, 210, 8);
       g.fillStyle = charge > 28 ? "#7CFF9A" : "#F0B429";

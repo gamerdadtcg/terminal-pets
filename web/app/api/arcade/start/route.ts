@@ -2,7 +2,7 @@ import {
   arcadeIsClosed,
   ARCADE_COPY,
   ARCADE_GTD_CAP,
-  ARCADE_ROUND_MS,
+  ARCADE_MAX_DURATION_MS,
   ARCADE_TOKEN_TTL_MS,
   arcadeClosesAt,
 } from "@/lib/arcade";
@@ -49,7 +49,7 @@ export async function POST(request: Request) {
     {
       runToken: token,
       runId: claims.runId,
-      durationMs: ARCADE_ROUND_MS,
+      durationMs: ARCADE_MAX_DURATION_MS,
       gtdCap: ARCADE_GTD_CAP,
       closesAt: arcadeClosesAt().toISOString(),
       store: arcadeStoreKind(),

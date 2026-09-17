@@ -1,14 +1,14 @@
 /** Ignite the Dial — hub arcade contest. Hub preview only (not an on-chain allowlist). */
 
 export const ARCADE_GTD_CAP = 150;
-export const ARCADE_ROUND_MS = 45_000;
-export const ARCADE_TOKEN_TTL_MS = 90_000;
+/** Contest-side cap only — runs are endless until you fall. */
+export const ARCADE_TOKEN_TTL_MS = 20 * 60_000;
 export const ARCADE_MIN_DURATION_MS = 2_500;
-export const ARCADE_MAX_DURATION_MS = ARCADE_ROUND_MS + 4_000;
+export const ARCADE_MAX_DURATION_MS = 15 * 60_000;
 export const ARCADE_MIN_SPAWN_MS = 380;
 export const ARCADE_MAX_TICK_POINTS = 120;
 export const ARCADE_MAX_COMBO = 8;
-export const ARCADE_ABSURD_SCORE = 150_000;
+export const ARCADE_ABSURD_SCORE = 800_000;
 
 /** Contest closes 2h before the Fri 7:00 AM PT hub redeploy. */
 export const ARCADE_CLOSE_ISO =
@@ -28,7 +28,7 @@ export const ARCADE_COPY = {
   title: "Ignite the Dial",
   badge: "ARCADE · TOP 150 GTD",
   prompt: "> IGNITE THE DIAL",
-  play: "> CLIMB BOLT · STEER · DODGE GLITCH PADS",
+  play: "> CLIMB BOLT · NO TIMER · IT KEEPS GETTING HARDER",
   locked: "> SCORE LOCKED",
   accepted: "> WALLET ACCEPTED",
   gtd: "> TOP 150 GTD",
@@ -74,7 +74,10 @@ export function maxPlausibleTicks(durationMs: number): number {
   return Math.ceil(duration / ARCADE_MIN_SPAWN_MS) + 10;
 }
 
-export function maxPlausibleScore(ticksCaught: number, durationMs = ARCADE_ROUND_MS): number {
+export function maxPlausibleScore(
+  ticksCaught: number,
+  durationMs = 60_000,
+): number {
   const ticks = ticksCaught * ARCADE_MAX_TICK_POINTS * ARCADE_MAX_COMBO;
   const extras = Math.ceil(Math.max(0, durationMs) / 280) * 90 * ARCADE_MAX_COMBO;
   return ticks + extras;
@@ -97,7 +100,11 @@ export function validateArcadeProof(
   if (!Number.isInteger(ticksCaught) || ticksCaught < 0) {
     return "Run proof rejected.";
   }
-  if (!Number.isInteger(glitchesHit) || glitchesHit < 0 || glitchesHit > 80) {
+  if (
+    !Number.isInteger(glitchesHit) ||
+    glitchesHit < 0 ||
+    glitchesHit > Math.ceil(durationMs / 160) + 40
+  ) {
     return "Run proof rejected.";
   }
   if (

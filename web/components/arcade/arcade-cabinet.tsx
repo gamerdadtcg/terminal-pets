@@ -10,7 +10,6 @@ import {
   ARCADE_COPY,
   ARCADE_GTD_CAP,
   ARCADE_PET,
-  ARCADE_ROUND_MS,
   arcadeClosesAt,
   arcadeIsClosed,
 } from "@/lib/arcade";
@@ -221,13 +220,12 @@ export function ArcadeCabinet() {
                       {ARCADE_COPY.play}
                     </p>
                     <p className="max-w-md text-sm text-muted-foreground">
-                      {Math.round(ARCADE_ROUND_MS / 1000)}s rounds. Bounce{" "}
-                      {ARCADE_PET.name} up the Dial — the robot pet, not the
-                      full handheld token. Pads get narrower and farther. Glitch
-                      pads dump your bounce. Amber pads snap once. Catch Dial
-                      ticks. Don&apos;t fall. Top{" "}
-                      {ARCADE_GTD_CAP} wallets lock GTD (and FCFS via GTD).{" "}
-                      {sealedCopy.carousel}
+                      No timer — climb until you fall. Bounce{" "}
+                      {ARCADE_PET.name} up the Dial (robot pet, not the
+                      handheld token). Pads get narrower, farther, and meaner
+                      the higher you go. Glitch pads dump your bounce. Amber
+                      pads snap once. Catch Dial ticks. Top {ARCADE_GTD_CAP}{" "}
+                      wallets lock GTD (and FCFS via GTD). {sealedCopy.carousel}
                     </p>
                     {startError ? (
                       <p className="text-sm text-destructive">{startError}</p>
