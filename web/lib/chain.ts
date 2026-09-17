@@ -1,12 +1,15 @@
 import { defineChain, type Chain } from "viem";
-import { baseSepolia, foundry } from "viem/chains";
+import { baseSepolia, foundry, mainnet } from "viem/chains";
 
 export const ROBINHOOD_CHAIN_ID = 4663;
 export const ROBINHOOD_TESTNET_CHAIN_ID = 46630;
 export const BASE_SEPOLIA_CHAIN_ID = 84532;
+export const ETHEREUM_CHAIN_ID = 1;
 
 export const ROBINHOOD_RPC = "https://rpc.mainnet.chain.robinhood.com";
 export const ROBINHOOD_EXPLORER = "https://robinhoodchain.blockscout.com";
+export const ETHEREUM_RPC = "https://eth.llamarpc.com";
+export const ETHEREUM_EXPLORER = "https://etherscan.io";
 export const ROBINHOOD_TESTNET_RPC = "https://rpc.testnet.chain.robinhood.com";
 export const ROBINHOOD_TESTNET_EXPLORER =
   "https://explorer.testnet.chain.robinhood.com";
@@ -37,7 +40,13 @@ export const robinhoodTestnet = defineChain({
   },
 });
 
-export { baseSepolia, foundry };
+export { baseSepolia, foundry, mainnet };
+
+/** Block explorer origin for a partner collection chain. Defaults to Robinhood. */
+export function explorerForPartnerChain(chainId?: number) {
+  if (chainId === ETHEREUM_CHAIN_ID) return ETHEREUM_EXPLORER;
+  return ROBINHOOD_EXPLORER;
+}
 
 export function configuredChainId() {
   const raw = process.env.NEXT_PUBLIC_CHAIN_ID?.trim();

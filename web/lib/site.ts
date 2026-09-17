@@ -168,7 +168,7 @@ export const FAQ = [
   },
   {
     q: "Am I eligible for GTD or FCFS?",
-    a: "The hub checker reads live Robinhood Chain ERC-721 balanceOf against announced partner collections, plus wallets dropped on the GTD X thread. GTD if you hold any GTD partner NFT or your wallet is on that thread list. FCFS if you hold any FCFS partner NFT or you are GTD-eligible (GTD wallets also unlock FCFS). Public (Friday 10:00 AM PT) is open to everyone, no allowlist. This is a hub preview, not an on-chain mint allowlist — CollectionNFT still gates on mintOpen. Partner and thread lists may grow before Travis locks mint phase.",
+    a: "The hub checker reads live ERC-721 balanceOf against announced partner collections on Robinhood Chain, plus School of NFTs holdings on Ethereum mainnet (same wallet addresses), plus wallets dropped on the GTD X thread. GTD if you hold any GTD partner NFT or your wallet is on that thread list. FCFS if you hold any FCFS partner NFT or you are GTD-eligible (GTD wallets also unlock FCFS). Public (Friday 10:00 AM PT) is open to everyone, no allowlist. This is a hub preview, not an on-chain mint allowlist — CollectionNFT still gates on mintOpen. Partner and thread lists may grow before Travis locks mint phase.",
   },
   {
     q: "How many can I mint?",
