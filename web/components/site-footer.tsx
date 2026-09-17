@@ -25,11 +25,61 @@ export function SiteFooter() {
           <p className="max-w-lg text-xs leading-relaxed text-muted-foreground/80">
             {SITE.disclaimer}
           </p>
+        </div>
+        <div className="flex flex-col gap-4 sm:items-end">
+          <div className="grid grid-cols-2 gap-x-10 gap-y-2 font-mono text-xs text-muted-foreground sm:text-right">
+            <Link className="hover:text-foreground" href="/#art">
+              Art
+            </Link>
+            <Link className="hover:text-foreground" href="/#how">
+              How it works
+            </Link>
+            <Link className="hover:text-foreground" href="/hopper">
+              Hopper
+            </Link>
+            <Link className="hover:text-foreground" href="/dial">
+              Dial
+            </Link>
+            <Link className="hover:text-foreground" href="/arcade">
+              Arcade
+            </Link>
+            <Link className="hover:text-foreground" href="/mint">
+              Mint
+            </Link>
+            <Link className="hover:text-foreground" href="/app">
+              Terminal
+            </Link>
+            {links.opensea ? (
+              <a className="hover:text-foreground" href={links.opensea}>
+                OpenSea
+              </a>
+            ) : (
+              <span>OpenSea · collection later</span>
+            )}
+            {links.x ? (
+              <a className="hover:text-foreground" href={links.x}>
+                X
+              </a>
+            ) : (
+              <span>X · soon</span>
+            )}
+            <a
+              className="hover:text-foreground"
+              href={links.explorer}
+              rel="noreferrer"
+              target="_blank"
+            >
+              Explorer
+            </a>
+            <Link className="hover:text-foreground" href="/#faq">
+              FAQ
+            </Link>
+          </div>
           <a
             href={NFT_CALENDAR_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2.5 pt-3 text-xs text-muted-foreground transition-colors hover:text-foreground"
+            className="inline-flex items-center gap-2.5 text-xs text-muted-foreground transition-colors hover:text-foreground"
           >
             <span>Verified on</span>
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -41,54 +91,6 @@ export function SiteFooter() {
               className="h-10 w-10 rounded-md object-contain"
             />
           </a>
-        </div>
-        <div className="grid grid-cols-2 gap-x-10 gap-y-2 font-mono text-xs text-muted-foreground sm:text-right">
-          <Link className="hover:text-foreground" href="/#art">
-            Art
-          </Link>
-          <Link className="hover:text-foreground" href="/#how">
-            How it works
-          </Link>
-          <Link className="hover:text-foreground" href="/hopper">
-            Hopper
-          </Link>
-          <Link className="hover:text-foreground" href="/dial">
-            Dial
-          </Link>
-          <Link className="hover:text-foreground" href="/arcade">
-            Arcade
-          </Link>
-          <Link className="hover:text-foreground" href="/mint">
-            Mint
-          </Link>
-          <Link className="hover:text-foreground" href="/app">
-            Terminal
-          </Link>
-          {links.opensea ? (
-            <a className="hover:text-foreground" href={links.opensea}>
-              OpenSea
-            </a>
-          ) : (
-            <span>OpenSea · collection later</span>
-          )}
-          {links.x ? (
-            <a className="hover:text-foreground" href={links.x}>
-              X
-            </a>
-          ) : (
-            <span>X · soon</span>
-          )}
-          <a
-            className="hover:text-foreground"
-            href={links.explorer}
-            rel="noreferrer"
-            target="_blank"
-          >
-            Explorer
-          </a>
-          <Link className="hover:text-foreground" href="/#faq">
-            FAQ
-          </Link>
         </div>
       </div>
     </footer>
