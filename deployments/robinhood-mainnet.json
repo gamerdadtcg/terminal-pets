@@ -1,0 +1,114 @@
+{
+  "network": "robinhood-mainnet",
+  "chainId": 4663,
+  "rpc": "https://rpc.mainnet.chain.robinhood.com",
+  "explorer": "https://robinhoodchain.blockscout.com",
+  "gitSha": "23ba2397d304",
+  "pr": 18,
+  "deployedAt": "2026-09-16T23:41:00Z",
+  "deployer": "0xA71c8cAC3bc8bc1085f87885fD2898f970edDc37",
+  "owner": "0xA71c8cAC3bc8bc1085f87885fD2898f970edDc37",
+  "treasury": "0x0c821a853711bF03C4C6b776CfD657f2ee97733e",
+  "seaDrop": "0x00005EA00Ac477B1030CE78506496e8C2dE24bf5",
+  "collectionName": "Terminal Pets",
+  "collectionSymbol": "TERM",
+  "economics": {
+    "hopperPayoutLockSeconds": 604800,
+    "igniteFeeEthWei": "2000000000000000",
+    "igniteFeeTermWei": "1000000000000000000000",
+    "pulseBootstrapStartWei": "100000000000000000",
+    "pulseCycleStartWei": "500000000000000000",
+    "pulseLadderStepWei": "100000000000000000",
+    "mintOpen": false,
+    "teamMintDone": false,
+    "revealDone": false,
+    "maxSupply": 4444,
+    "teamReserve": 200
+  },
+  "contracts": {
+    "Hopper": "0x8Cd9A113dc8147D5163486e81D3bA64E2137dBf2",
+    "RoyaltySplitter": "0xe1cC988CeC1C29764ba18523635De82d0C9B518F",
+    "CollectionNFT": "0x85e3f98b76b0a6c9166BA7aaB05BEc4ef17B7166",
+    "TermToken": "0xCa75Bc5eD48Bd9B8D1a939253e40e7AE3e61DAA6",
+    "TermFund": "0x0C25076F1bF9f6187ed3b7D890F480a92837636F",
+    "IgniteModule": "0x29e8dB2073583720C3CBf741d278d942B65cb92B",
+    "TermMarket": "0x78f2c0577321053722Daa1f5eE31E5071a7D9F30",
+    "ERC6551Registry": "0x3992160500FB69e88227436020B6600be1CeF023",
+    "ReceivableAccount": "0xb8d8d9363a64dfD433E006bE43c2B150370Fc274",
+    "PulseDistributor": "0x7326F7D277610288FBeA373712c89E47AF9AC61E"
+  },
+  "createTxs": {
+    "Hopper": {
+      "address": "0x8Cd9A113dc8147D5163486e81D3bA64E2137dBf2",
+      "tx": "0xef046a4361ce9b02617ba8219ba59d2f8d294e17c200248cf424cfa00d9a498f"
+    },
+    "RoyaltySplitter": {
+      "address": "0xe1cC988CeC1C29764ba18523635De82d0C9B518F",
+      "tx": "0x7275424483d4a70491cb9ee5facc65196738edf67ec5f138f45bb5fb10d7cc11"
+    },
+    "CollectionNFT": {
+      "address": "0x85e3f98b76b0a6c9166BA7aaB05BEc4ef17B7166",
+      "tx": "0x8031b51e429001c04f56d5b1377a00317bdc95cece9795f80c226e90d619e4f5"
+    },
+    "TermToken": {
+      "address": "0xCa75Bc5eD48Bd9B8D1a939253e40e7AE3e61DAA6",
+      "tx": "0x622d52c476212d44c38781bc174c0273a095c1b9334fb54247cc220c443fb437"
+    },
+    "TermFund": {
+      "address": "0x0C25076F1bF9f6187ed3b7D890F480a92837636F",
+      "tx": "0x9d4d38a08f454357fe637f61155b3deadcf50bc071661845617711138d3662df"
+    },
+    "IgniteModule": {
+      "address": "0x29e8dB2073583720C3CBf741d278d942B65cb92B",
+      "tx": "0x0f5a1bb91fe2769f9ce7409580170e2c848f8f48f3ed0a6f68a9d2e4f11a2318"
+    },
+    "TermMarket": {
+      "address": "0x78f2c0577321053722Daa1f5eE31E5071a7D9F30",
+      "tx": "0x8213f3849470e4f428da6e5e0200b9150b76645a0068944e134d28cd13be4ba6"
+    },
+    "ERC6551Registry": {
+      "address": "0x3992160500FB69e88227436020B6600be1CeF023",
+      "tx": "0x136ab27160351a7fe257fe70ca644882bfa3bb05569d539fa81ab7ebbd3fd522"
+    },
+    "ReceivableAccount": {
+      "address": "0xb8d8d9363a64dfD433E006bE43c2B150370Fc274",
+      "tx": "0x7c0cfad1d07ca9f959a46a3a075af30b08d3790ba2a3c12ddb1caf5fccbf7f05"
+    },
+    "PulseDistributor": {
+      "address": "0x7326F7D277610288FBeA373712c89E47AF9AC61E",
+      "tx": "0xcf99f163901c6b00ae401b8c4f490169f360609f542e70376c9ed22f54bed674"
+    }
+  },
+  "postDeployTxs": {
+    "setMetadataURIs": "0xbfec5e897b68b4230929ce9cf99a5cfbc8d97836ddeaf267bdad5ead7ef7696d",
+    "setStockTokens": "0x4d4d2bea56f8cddb8625ba3ea8df912ff72c26ae384bd543303a16a8af0125c7",
+    "setTerm": "0x01d388923ef2de6da291745ffd182525d9c3c1b33bf8ec52e14db1431dcb40e1",
+    "setPulseDistributor": "0x02a2a32d3a72aef6d03f71abf214d19656a029c5799130eb95f5bad590e59fcf",
+    "lockDistributor": "0x2e5bc2f44ce0bd1fb76a341fd2a5fe86fa722357ab5a8dbb6d009988e4c41833",
+    "setTbaConfig": "0xf38bad0842d6ff0fdfe44427a2ea518b9a1f089fc79f8a3f000c02839ea93f25"
+  },
+  "dial": {
+    "slot0_HOOD": "0x0000000000000000000000000000000000000000",
+    "slot1_AAPL": "0xaF3D76f1834A1d425780943C99Ea8A608f8a93f9",
+    "slot2_MSFT": "0xe93237C50D904957Cf27E7B1133b510C669c2e74",
+    "slot3_GOOGL": "0x2e0847E8910a9732eB3fb1bb4b70a580ADAD4FE3",
+    "slot4_AMZN": "0x12f190a9F9d7D37a250758b26824B97CE941bF54",
+    "slot5_META": "0xc0D6457C16Cc70d6790Dd43521C899C87ce02f35",
+    "slot6_NVDA": "0xd0601CE157Db5bdC3162BbaC2a2C8aF5320D9EEC",
+    "slot7_TSLA": "0x322F0929c4625eD5bAd873c95208D54E1c003b2d"
+  },
+  "metadata": {
+    "hiddenURI": "https://terminal-pets.vercel.app/metadata/hidden.json",
+    "dormantBaseURI": "",
+    "litBaseURI": ""
+  },
+  "notes": [
+    "forge script broadcast partial (8/25) then cast resume due to RPC 429",
+    "MICRO env vars unset; production CollectionConfig defaults",
+    "No teamMint; no reveal; mintOpen=false",
+    "TerminalRenderer deployed nested inside CollectionNFT create"
+  ],
+  "balanceAfterEth": "0.003167569805435563",
+  "deployerNonceAfter": 28,
+  "balanceBeforeEth": "0.004036644080277563"
+}

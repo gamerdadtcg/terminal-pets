@@ -10,7 +10,7 @@ npm install
 npm run dev    # http://127.0.0.1:43147
 ```
 
-`NEXT_PUBLIC_COLLECTION_NFT` aliases `NEXT_PUBLIC_COLLECTION_ADDRESS`. Robinhood mainnet is chain `4663` (addresses empty until deploy). Base Sepolia `84532` falls back to dry-run CollectionNFT `0xe1cC988CeC1C29764ba18523635De82d0C9B518F` when collection env is blank.
+`NEXT_PUBLIC_COLLECTION_NFT` aliases `NEXT_PUBLIC_COLLECTION_ADDRESS`. Robinhood mainnet is chain `4663` (CollectionNFT `0x85e3f98b76b0a6c9166BA7aaB05BEc4ef17B7166`). Production loads `web/.env.production`. Base Sepolia `84532` (or chain env blank in local `next dev`) falls back to dry-run CollectionNFT `0xe1cC988CeC1C29764ba18523635De82d0C9B518F`.
 
 Canonical public origin is `https://terminalpets.xyz` (`NEXT_PUBLIC_SITE_URL`, default in `lib/site.ts`). `https://terminal-pets.vercel.app` remains a fallback alias until DNS is fully cut over. Sealed metadata: `https://terminalpets.xyz/metadata/hidden.json`.
 

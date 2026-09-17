@@ -40,8 +40,12 @@ export const robinhoodTestnet = defineChain({
 export { baseSepolia, foundry };
 
 export function configuredChainId() {
-  const raw = process.env.NEXT_PUBLIC_CHAIN_ID;
-  return raw ? Number(raw) : ROBINHOOD_CHAIN_ID;
+  const raw = process.env.NEXT_PUBLIC_CHAIN_ID?.trim();
+  if (raw) return Number(raw);
+  // Production / `next build` → 4663. Local `next dev` with env blank → 84532 dry-run.
+  return process.env.NODE_ENV === "production"
+    ? ROBINHOOD_CHAIN_ID
+    : BASE_SEPOLIA_CHAIN_ID;
 }
 
 export function configuredRpc() {

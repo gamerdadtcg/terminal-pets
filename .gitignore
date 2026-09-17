@@ -26,6 +26,8 @@ docs/*
 .env
 .env.*
 !.env.example
+!.env.production
+!web/.env.production
 
 # Next.js dapp
 web/node_modules/
@@ -40,6 +42,7 @@ deployments/*
 !deployments/.gitkeep
 !deployments/robinhood-testnet.json
 !deployments/robinhood-testnet-micro.json
+!deployments/robinhood-mainnet.json
 
 # Generated artifacts
 artifacts/*

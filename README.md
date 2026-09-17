@@ -8,9 +8,9 @@ Public site: **https://terminalpets.xyz**. `https://terminal-pets.vercel.app` re
 
 Collectors mint on **this hub** (`/mint` → `CollectionNFT.mint` / `mintTo` while `mintOpen`). OpenSea Studio BYO import is currently blocked — do **not** send collectors to the Studio deploy-wizard. After mint, each token is a unique handheld **pet** that starts **Sealed**: every `tokenURI` is the same `hidden.json` until `CollectionNFT.reveal()`, so collectors **cannot see traits**. Hub carousel GIFs are **examples / not mint supply**. After `CollectionNFT.reveal()` it shows as **Dormant** until Ignite. Each token also gets a one-time **`$TERM` Ignite allotment** (placeholder **1,000 `$TERM`**) from token supply so the token half of the first wake does not need a live chart. **Ignite** is off until reveal. Then it is hybrid: that `$TERM` (**37.5% burn / 25% Hopper-as-ETH / 37.5% allotment escrow refill**) **plus exactly 0.002 ETH**. The ETH splits **50% buy `$TERM` and burn / 50% Hopper**. Team earns **0** from that ETH fee (not TermFund, not treasury). The 37.5% token cut returns to the per-pet allotment **pool** (that tokenId stays consumed). One-way **Dormant → Lit**. Lit stays with the NFT on transfer. **Royalties** (7.5% via **RoyaltySplitter**): **pre-reveal 100% → TermFund** (nothing to Hopper, nothing to treasury from that stream). **Post-reveal 5% Hopper / 2.5% treasury**. **Hopper** is ETH only after that: post-reveal NFT royalties, **50% of each Ignite ETH fee**, 25% of each Ignite `$TERM` fee (swapped to ETH when a router is set), plus, once the canonical TERM/ETH pool is live, a **1.5% TermMarket skim** of that pool’s volume. `$TERM` is **not** fee-on-transfer; public transfers are also **off until reveal**. **Dial**: Ignite assigns **1–4** Robinhood Chain Stock Tokens from a fixed 7-token pool (**AAPL, MSFT, GOOGL, AMZN, META, NVDA, TSLA**) by shell class (**ALPHA 1 / BETA 2 / DELTA 3 / OMEGA 4**). The on-chain array still has 8 slots; slot 0 is unused (no HOOD token — leave `address(0)`). Holders do not pick. Equal weights (bps = 10_000). See [`docs/DIAL.md`](docs/DIAL.md). **Pulse** uses an escalating Hopper ETH **ladder** (not a fixed 0.5 ETH): bootstrap `0.1 → 1.0`, then cycle `0.5 → 1.0` forever (never back to 0.1). Snapshot Lit, read Dial. **Dialed Lit** swap their ETH share to those Stock Tokens (ETH fallback if no router). **Undialed Lit** (no assignment, or slots still `address(0)`) buy `$TERM` with that share and credit the TBA (or owner) — not raw ETH; claim reverts without router + `$TERM`. Hopper stays ETH. Dormant earn nothing. TermMarket ships in this repo but stays **inactive** until `TERM_POOL` and `TERM_SWAP_ROUTER` are set.
 
-This repo is a complete MVP: Foundry contracts, tests, a Robinhood Chain deploy script, a Next.js hub + wallet dapp (wagmi / viem), and the Pocket Critter generative PFP art system under `art/`. The public homepage is a marketing hub. Contract addresses can stay empty until Robinhood Chain deploy.
+This repo is a complete MVP: Foundry contracts, tests, a Robinhood Chain deploy script, a Next.js hub + wallet dapp (wagmi / viem), and the Pocket Critter generative PFP art system under `art/`. The public homepage is a marketing hub.
 
-**Ready to deploy — not deployed. Do not broadcast to chain `4663` until explicitly asked.** Robinhood testnet (`46630`) deploy prep: [`docs/TESTNET_DEPLOY.md`](docs/TESTNET_DEPLOY.md). OpenSea Studio Drop dry-run (Base Sepolia / Sepolia, production economics): [`docs/STUDIO_DROP_DRYRUN.md`](docs/STUDIO_DROP_DRYRUN.md). Mainnet prep checklist (no `4663` broadcast): [`docs/MAINNET_PREP.md`](docs/MAINNET_PREP.md).
+**Robinhood mainnet (`4663`) is live.** Record: [`deployments/robinhood-mainnet.json`](deployments/robinhood-mainnet.json). Hub production defaults (`web/.env.production`) point at CollectionNFT `0x85e3f98b76b0a6c9166BA7aaB05BEc4ef17B7166`. On-chain `mintOpen` is still **false** — the hub reads that flag and does not fake it open. Do **not** re-broadcast `forge script` to `4663` from this repo. Remaining owner ops (`teamMint`, Friday `setMintOpen`, later `reveal`): [`docs/MAINNET_PREP.md`](docs/MAINNET_PREP.md). Robinhood testnet (`46630`): [`docs/TESTNET_DEPLOY.md`](docs/TESTNET_DEPLOY.md). OpenSea Studio Drop dry-run (Base Sepolia / Sepolia): [`docs/STUDIO_DROP_DRYRUN.md`](docs/STUDIO_DROP_DRYRUN.md).
 
 ## Configure name, symbol, max supply
 
@@ -33,7 +33,7 @@ COLLECTION_SYMBOL="TERM" \
 MAX_SUPPLY=4444 \
 TREASURY_ADDRESS=0xYourTreasury \
 forge script script/Deploy.s.sol:Deploy --rpc-url robinhood --broadcast
-# ↑ do not run on 4663 until the user says go
+# ↑ do not re-run on 4663 — stack is live (deployments/robinhood-mainnet.json)
 ```
 
 Other defaults in the same library: mint price `0`, **24h reveal delay**, Ignite **1,000 `$TERM`** (placeholder; **37.5% burn / 25% Hopper / 37.5% allotment refill**) **plus 0.002 ETH** (**50% buy/burn `$TERM` / 50% Hopper**), Ignite allotment escrow `4444 × 1,000 $TERM`, canonical swap skim **3%** (`150` / `100` / `50` bps → Hopper / burn / treasury), Pulse **ladder** (see below), royalty `750` bps (7.5%) to the RoyaltySplitter — **pre-reveal 100% TermFund**, **post-reveal `500` bps / 5% Hopper + `250` bps / 2.5% treasury**.
@@ -105,11 +105,11 @@ Always point OpenSea creator earnings at the **RoyaltySplitter**. The splitter h
 - **Pre-reveal (`live = false`):** every ETH payment (the full 7.5% creator royalty) is forwarded to **TermFund**. Preview returns `(0, 0)`. Nothing to Hopper. Nothing to treasury from this stream.
 - **Post-reveal (`live = true`):** split 2/3 Hopper / 1/3 treasury (5% and 2.5% of sale), as before.
 
-### Launch checklist (not deployed)
+### Launch checklist (4663 live — mint still closed)
 
-Do **not** broadcast to chain `4663` until explicitly asked.
+Contracts are on Robinhood mainnet. Do **not** re-broadcast `Deploy.s.sol`. Confirm `revealed = false`, `igniteEnabled = false`, `tradingEnabled = false`, splitter `live = false`, `mintOpen = false`. `hiddenURI` is `https://terminalpets.xyz/metadata/hidden.json` (`https://terminal-pets.vercel.app/metadata/hidden.json` still resolves until DNS is fully cut over). Do **not** publish 4444 lit/dormant JSON to `web/public/metadata/{lit,dormant}` or git.
 
-1. Deploy contracts. Confirm `revealed = false`, `igniteEnabled = false`, `tradingEnabled = false`, splitter `live = false`. Set `hiddenURI` only (`https://terminalpets.xyz/metadata/hidden.json`; `https://terminal-pets.vercel.app/metadata/hidden.json` still resolves until DNS is fully cut over). Do **not** publish 4444 lit/dormant JSON to `web/public/metadata/{lit,dormant}` or git.
+1. Addresses: [`deployments/robinhood-mainnet.json`](deployments/robinhood-mainnet.json) / [`docs/MAINNET_PREP.md`](docs/MAINNET_PREP.md).
 2. `teamMint` the 200 reserve to the mainnet team wallet **Thursday, September 17, 2026, 8:00 PM PT** (see [`docs/MAINNET_PREP.md`](docs/MAINNET_PREP.md)). That is owner-only — not a public mint. **Hub mint is primary** (`setMintOpen(true)` Friday). OpenSea Studio currently has **no BYO import** and **no Base Sepolia** in Drop create — do not send collectors to the wizard. Point **7.5%** earnings at the RoyaltySplitter if a collection page exists. Rehearse on Base Sepolia first: [`docs/STUDIO_DROP_DRYRUN.md`](docs/STUDIO_DROP_DRYRUN.md).
 3. Mint window (up to 24h): every `tokenURI` is the same sealed `hidden.json` (collectors cannot see traits). Secondary royalties fund TermFund. Hopper is untouched by that stream. **Thursday Sep 17 2026, 8:00 PM PT:** owner `teamMint` 200 to the team wallet (not a public mint). **Friday Sep 18:** GTD 8:00 AM / FCFS 9:00 AM / Public 10:00 AM PT, 1 per phase, free, 4444 total / 200 team / 4244 public. `mintOpen` stays closed until Friday phases.
 4. `CollectionNFT.reveal()` — owner anytime, or anyone after 24h. Then (and only then) point `dormantBaseURI` / `litBaseURI` at the **private 4444 pin**. Art + Ignite + `$TERM` trading + 5/2.5 royalties in one tx. Hopper payouts then lock 7 days from that timestamp.
@@ -182,7 +182,24 @@ Until a real DEX exists, tests use `MockTermPool` + `MockTermSwapRouter`. **Do n
 | Faucet | — | `https://faucet.testnet.chain.robinhood.com` |
 | Foundry `--rpc-url` | `robinhood` | `testnet` / `robinhood_testnet` |
 
-Add the network to any EVM wallet with those values. **Do not broadcast to `4663` until explicitly asked.** Testnet mechanics smoke (not Studio Drop): [`docs/TESTNET_DEPLOY.md`](docs/TESTNET_DEPLOY.md). Studio Drop dry-run uses Foundry aliases `base_sepolia` / `sepolia` ([`docs/STUDIO_DROP_DRYRUN.md`](docs/STUDIO_DROP_DRYRUN.md)) — never `robinhood` until the owner says go ([`docs/MAINNET_PREP.md`](docs/MAINNET_PREP.md)).
+Add the network to any EVM wallet with those values. Live `4663` record: [`deployments/robinhood-mainnet.json`](deployments/robinhood-mainnet.json). Do **not** re-broadcast `forge script` to mainnet. Testnet mechanics smoke (not Studio Drop): [`docs/TESTNET_DEPLOY.md`](docs/TESTNET_DEPLOY.md). Studio Drop dry-run uses Foundry aliases `base_sepolia` / `sepolia` ([`docs/STUDIO_DROP_DRYRUN.md`](docs/STUDIO_DROP_DRYRUN.md)).
+
+### Live mainnet addresses (`4663`)
+
+| Contract | Address |
+| --- | --- |
+| CollectionNFT | `0x85e3f98b76b0a6c9166BA7aaB05BEc4ef17B7166` |
+| Hopper | `0x8Cd9A113dc8147D5163486e81D3bA64E2137dBf2` |
+| RoyaltySplitter | `0xe1cC988CeC1C29764ba18523635De82d0C9B518F` |
+| TermToken | `0xCa75Bc5eD48Bd9B8D1a939253e40e7AE3e61DAA6` |
+| TermFund | `0x0C25076F1bF9f6187ed3b7D890F480a92837636F` |
+| IgniteModule | `0x29e8dB2073583720C3CBf741d278d942B65cb92B` |
+| TermMarket | `0x78f2c0577321053722Daa1f5eE31E5071a7D9F30` |
+| PulseDistributor | `0x7326F7D277610288FBeA373712c89E47AF9AC61E` |
+| ERC6551Registry | `0x3992160500FB69e88227436020B6600be1CeF023` |
+| ReceivableAccount | `0xb8d8d9363a64dfD433E006bE43c2B150370Fc274` |
+| Owner / Deployer | `0xA71c8cAC3bc8bc1085f87885fD2898f970edDc37` |
+| Treasury | `0x0c821a853711bF03C4C6b776CfD657f2ee97733e` |
 
 ## Contracts
 
@@ -318,30 +335,30 @@ Public marketing site and wallet tools share one Next.js app.
 
 ```bash
 cd web
-cp .env.example .env.local   # addresses optional until chain deploy
+cp .env.example .env.local   # 4663 production defaults; set CHAIN_ID=84532 for dry-run
 npm install
 npm run dev                  # http://127.0.0.1:43147
 npm run build
 ```
 
-Without contract addresses the hub shows **Deploying soon**. The Terminal route still renders empty states and the Hopper explainer.
+Production builds load `web/.env.production` (4663 addresses). Local `next dev` with chain env blank falls back to the Base Sepolia dry-run. The mint button stays disabled until on-chain `mintOpen` is true.
 
 Environment (`web/.env.local` or Vercel project env):
 
 ```
-# Robinhood mainnet (fill after 4663 deploy — no broadcast from this PR)
+# Robinhood mainnet (4663). Production also loads web/.env.production.
 NEXT_PUBLIC_CHAIN_ID=4663
 NEXT_PUBLIC_RPC_URL=https://rpc.mainnet.chain.robinhood.com
 NEXT_PUBLIC_EXPLORER_URL=https://robinhoodchain.blockscout.com
-NEXT_PUBLIC_COLLECTION_NFT=
-NEXT_PUBLIC_COLLECTION_ADDRESS=
-NEXT_PUBLIC_IGNITE_ADDRESS=
-NEXT_PUBLIC_HOPPER_ADDRESS=
-NEXT_PUBLIC_PULSE_ADDRESS=
-NEXT_PUBLIC_SPLITTER_ADDRESS=
-NEXT_PUBLIC_TERM_ADDRESS=
-NEXT_PUBLIC_TERM_FUND_ADDRESS=
-NEXT_PUBLIC_TERM_MARKET_ADDRESS=
+NEXT_PUBLIC_COLLECTION_NFT=0x85e3f98b76b0a6c9166BA7aaB05BEc4ef17B7166
+NEXT_PUBLIC_COLLECTION_ADDRESS=0x85e3f98b76b0a6c9166BA7aaB05BEc4ef17B7166
+NEXT_PUBLIC_IGNITE_ADDRESS=0x29e8dB2073583720C3CBf741d278d942B65cb92B
+NEXT_PUBLIC_HOPPER_ADDRESS=0x8Cd9A113dc8147D5163486e81D3bA64E2137dBf2
+NEXT_PUBLIC_PULSE_ADDRESS=0x7326F7D277610288FBeA373712c89E47AF9AC61E
+NEXT_PUBLIC_SPLITTER_ADDRESS=0xe1cC988CeC1C29764ba18523635De82d0C9B518F
+NEXT_PUBLIC_TERM_ADDRESS=0xCa75Bc5eD48Bd9B8D1a939253e40e7AE3e61DAA6
+NEXT_PUBLIC_TERM_FUND_ADDRESS=0x0C25076F1bF9f6187ed3b7D890F480a92837636F
+NEXT_PUBLIC_TERM_MARKET_ADDRESS=0x78f2c0577321053722Daa1f5eE31E5071a7D9F30
 NEXT_PUBLIC_SITE_URL=https://terminalpets.xyz
 # terminal-pets.vercel.app still resolves as a fallback alias until DNS cutover.
 NEXT_PUBLIC_OPENSEA_URL=
@@ -372,14 +389,14 @@ npx vercel --prod --yes
 1. Import the Origin (or GitHub) repository in [Vercel](https://vercel.com/new).
 2. Set **Root Directory** to `web`.
 3. Framework: Next.js (auto).
-4. Add the `NEXT_PUBLIC_*` env vars from `.env.example` (leave addresses blank until deploy).
+4. Production defaults live in `web/.env.production` (chain `4663` + contract addresses). Override on Vercel only if you need a preview on another chain.
 5. Deploy. Hobby is enough — no paid add-ons.
 
-`web/vercel.json` pins the framework. After chain deploy, set the address env vars and redeploy; OpenSea / X links unlock the hero CTAs.
+`web/vercel.json` pins the framework. OpenSea / X links still unlock the hero CTAs when those env vars are set. Hub mint stays closed until on-chain `mintOpen` is true.
 
-## Ready to deploy — not deployed
+## Live on 4663 — remaining placeholders
 
-**Do not broadcast until the user says go.** Contracts and tests are green. No live addresses. This repo must not send transactions to Robinhood Chain `4663` until explicitly asked. Robinhood testnet (`46630`) checklist: [`docs/TESTNET_DEPLOY.md`](docs/TESTNET_DEPLOY.md) (do not use that plan to hit `4663`). Studio Drop dry-run: [`docs/STUDIO_DROP_DRYRUN.md`](docs/STUDIO_DROP_DRYRUN.md). Mainnet prep (still no broadcast): [`docs/MAINNET_PREP.md`](docs/MAINNET_PREP.md).
+**Do not re-broadcast `forge script` to `4663`.** Recorded addresses are in [`deployments/robinhood-mainnet.json`](deployments/robinhood-mainnet.json). Public `mintOpen` is false until Friday. Robinhood testnet (`46630`) checklist: [`docs/TESTNET_DEPLOY.md`](docs/TESTNET_DEPLOY.md). Studio Drop dry-run: [`docs/STUDIO_DROP_DRYRUN.md`](docs/STUDIO_DROP_DRYRUN.md). Remaining owner ops: [`docs/MAINNET_PREP.md`](docs/MAINNET_PREP.md).
 
 Placeholders still open:
 
@@ -397,11 +414,11 @@ Placeholders still open:
 | Canonical swap fee | 3% = 1.5% Hopper / 1% burn / 0.5% treasury | `TRADE_*_BPS` in `CollectionConfig` |
 | Pulse stock allowlist | 8 slots; slot 0 unused; live pool AAPL…TSLA (1–7) | `PulseDistributor.setStockToken` — see [`docs/DIAL.md`](docs/DIAL.md) |
 | Pulse DEX router | required for undialed `$TERM` and Dialed stocks | `PULSE_ROUTER` / `setRouter` + `setTerm` |
-| Chain contract addresses | empty | `web/.env.local` |
+| Chain contract addresses | live on `4663` | `deployments/robinhood-mainnet.json` / `web/.env.production` |
 | Mint price | `0` / TBD | `MINT_PRICE_WEI` |
-| Metadata URIs | unset → fallback stub | `CollectionNFT.setMetadataURIs` after pinning `art/` GIFs |
+| Metadata URIs | hiddenURI set; dormant/lit empty until reveal | `CollectionNFT.setMetadataURIs` after pinning `art/` GIFs |
 
-Later, when someone says go (commands only — do not run them now):
+Do **not** re-run the mainnet `forge script --broadcast` block. Local Anvil is the only safe broadcast in this repo:
 
 ```bash
 cp .env.example .env
@@ -415,15 +432,11 @@ cp .env.example .env
 # MINT_OPEN=true \
 # forge script script/Deploy.s.sol:Deploy --rpc-url http://127.0.0.1:8545 --broadcast
 
-# Live Robinhood Chain — only after explicit go:
-# source .env
-# forge script script/Deploy.s.sol:Deploy \
-#   --rpc-url https://rpc.mainnet.chain.robinhood.com \
-#   --broadcast --verify --verifier blockscout \
-#   --verifier-url https://robinhoodchain.blockscout.com/api/
+# Do not re-broadcast Deploy.s.sol to Robinhood mainnet 4663.
+# Live record: deployments/robinhood-mainnet.json
 ```
 
-After a future broadcast, copy TermToken, TermFund, TermMarket, Hopper, RoyaltySplitter, CollectionNFT, IgniteModule, PulseDistributor, TBA into `web/.env.local`, then `teamMint`. Configure Studio Drop against CollectionNFT (not `setMintOpen`, unless the hub should also mint).
+Owner `teamMint` (Thursday) and Friday `setMintOpen(true)` are human-signed `cast send`s against the live CollectionNFT. Configure Studio Drop against CollectionNFT if BYO import exists later (not `setMintOpen`, unless the hub should also mint).
 
 ## Tests
 

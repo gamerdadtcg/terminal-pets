@@ -1,5 +1,18 @@
 import type { Address } from "viem";
 
+/** Robinhood Chain mainnet (4663). Record: deployments/robinhood-mainnet.json */
+export const ROBINHOOD_MAINNET = {
+  chainId: 4663,
+  collection: "0x85e3f98b76b0a6c9166BA7aaB05BEc4ef17B7166" as Address,
+  hopper: "0x8Cd9A113dc8147D5163486e81D3bA64E2137dBf2" as Address,
+  splitter: "0xe1cC988CeC1C29764ba18523635De82d0C9B518F" as Address,
+  ignite: "0x29e8dB2073583720C3CBf741d278d942B65cb92B" as Address,
+  term: "0xCa75Bc5eD48Bd9B8D1a939253e40e7AE3e61DAA6" as Address,
+  termFund: "0x0C25076F1bF9f6187ed3b7D890F480a92837636F" as Address,
+  termMarket: "0x78f2c0577321053722Daa1f5eE31E5071a7D9F30" as Address,
+  pulse: "0x7326F7D277610288FBeA373712c89E47AF9AC61E" as Address,
+} as const;
+
 /** Base Sepolia dry-run stack (chain 84532). Same CREATE sequence as the RH testnet 7-day stack. */
 export const BASE_SEPOLIA_DRYRUN = {
   chainId: 84532,

@@ -135,7 +135,7 @@ const ROADMAP = [
   {
     state: "next" as const,
     title: "Robinhood Chain deploy",
-    body: "Not done. Do not broadcast until someone says go. Deploy stays sealed. Do not auto-reveal.",
+    body: "Live on 4663. CollectionNFT 0x85e3f98b76b0a6c9166BA7aaB05BEc4ef17B7166. mintOpen is false until Friday. Deploy stays sealed. Do not auto-reveal. Do not re-broadcast.",
   },
   {
     state: "done" as const,
@@ -529,9 +529,9 @@ export function HubLanding() {
               /mint
             </Link>{" "}
             when mintOpen is true; the hub shows mint closed otherwise.{" "}
-            {sealedCopy.sentence} Robinhood mainnet (4663) addresses are
-            env-driven. Base Sepolia dry-run is for testing. Do not use OpenSea
-            Studio’s deploy-Drop wizard.
+            {sealedCopy.sentence} Robinhood mainnet (4663) is live — mintOpen
+            stays on-chain. Base Sepolia dry-run is for testing only. Do not
+            use OpenSea Studio’s deploy-Drop wizard.
           </p>
         </div>
         <ol className="space-y-3">
@@ -695,7 +695,8 @@ export function HubLanding() {
             </CardHeader>
             <CardContent className="space-y-3 text-sm text-muted-foreground">
               <p>
-                Contracts ready, not broadcast to 4663. Hub mint is primary.
+                Live on Robinhood mainnet (4663). mintOpen is false until
+                Friday. Hub mint is primary.
                 Carousel GIFs are examples / not mint supply. Sealed until
                 reveal — collectors cannot see traits.
               </p>

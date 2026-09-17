@@ -239,8 +239,9 @@ export function MintPanel() {
                   Set <span className="font-mono">NEXT_PUBLIC_CHAIN_ID</span>{" "}
                   and{" "}
                   <span className="font-mono">NEXT_PUBLIC_COLLECTION_NFT</span>{" "}
-                  (Robinhood mainnet 4663 after deploy, or Base Sepolia 84532
-                  for the dry-run). No mainnet broadcast from this hub PR.
+                  (Robinhood mainnet 4663 is the production default, or Base
+                  Sepolia 84532 for the dry-run). Mint stays closed until
+                  on-chain mintOpen is true.
                 </p>
               )}
               {status === "error" && (
