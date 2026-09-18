@@ -16,7 +16,7 @@ export function SiteFooter() {
           </p>
           <p className="text-sm font-medium">{SITE.name}</p>
           <p className="max-w-sm text-sm text-muted-foreground">
-            Collection on {SITE.chain}. Mint on this hub ({SITE.url}). Until
+            Collection on {SITE.chain}. Public mint sold out. Until
             reveal, every tokenURI is {sealedCopy.hiddenUri} — collectors
             cannot see traits. Hub GIFs are examples / not mint supply.{" "}
             {SITE.urlAlias} remains a fallback alias until DNS is fully cut

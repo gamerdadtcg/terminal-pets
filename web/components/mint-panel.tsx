@@ -171,19 +171,20 @@ export function MintPanel() {
             </Badge>
           </div>
           <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">
-            Mint on this hub
+            Mint status
           </h1>
           <p className="max-w-xl text-lg text-muted-foreground">
-            Free mint. 1 Terminal Pet per transaction when on-chain{" "}
-            <span className="font-mono text-foreground">mintOpen</span> is
-            true.
+            Public mint sold out. Tokens stay sealed until a future reveal.
+            This panel reads on-chain{" "}
+            <span className="font-mono text-foreground">mintOpen</span> and
+            publicMinted.
           </p>
           <p className="max-w-xl text-sm text-muted-foreground">
-            {mintScheduleCopy.sentence} {mintAllocation.sentence} After mint
-            the pet is Sealed: {sealedCopy.tokenUri} {sealedCopy.carousel}{" "}
-            Ignite is {SITE.igniteFeeEth} (plus the $TERM allotment) after
-            reveal. Hopper claims lock {SITE.hopperLock}. Dial assigns 1–4
-            Stock Tokens by shell class at Ignite.
+            {mintScheduleCopy.sentence} {mintAllocation.sentence} Pets minted
+            Sealed: {sealedCopy.tokenUri} {sealedCopy.carousel} Ignite is{" "}
+            {SITE.igniteFeeEth} (plus the $TERM allotment) after reveal. Hopper
+            claims lock {SITE.hopperLock}. Dial assigns 1–4 Stock Tokens by
+            shell class at Ignite.
           </p>
 
           <Card

@@ -24,7 +24,7 @@ export const SITE = {
   urlAlias: SITE_URL_ALIAS,
   tagline: "Handheld pets that sleep until you Ignite them.",
     description:
-    "Generative Pocket Critter PFPs on Robinhood Chain. Free mint Friday, September 18, 2026, America/Los_Angeles (PT). Mint on this hub (CollectionNFT.mint / mintTo while mintOpen). Pets mint Sealed for 24 hours: every tokenURI is the same hidden.json — collectors cannot see traits until CollectionNFT.reveal(). Hub carousel GIFs are examples / not mint supply. Ignite off, $TERM trading off, and 7.5% secondary royalties all to TermFund until reveal. Reveal shows a dormant egg GIF, turns on Ignite and trading, and switches royalties to 5% Hopper / 2.5% treasury. Hopper claims stay locked 7 days after reveal while ETH accrues. Each pet comes with a $TERM Ignite allotment. Ignite splits that 1,000 $TERM 37.5% burn / 25% Hopper (as ETH) / 37.5% allotment refill, plus 0.002 ETH split 50% buy-and-burn $TERM / 50% Hopper. Team earns 0 from that ETH fee. Dial assigns 1–4 Stock Tokens by shell class at Ignite. Pulse pays Dialed Lit in Stock Tokens and undialed Lit in $TERM — typically to the TBA. Hopper stays ETH.",
+    "Generative Pocket Critter PFPs on Robinhood Chain. Public mint sold out (4244/4244 of 4444). Collection stays Sealed until a future reveal: every tokenURI is the same hidden.json — collectors cannot see traits. Hub carousel GIFs are examples / not mint supply. Ignite off, $TERM trading off, and 7.5% secondary royalties all to TermFund until reveal. Reveal shows a dormant egg GIF, turns on Ignite and trading, and switches royalties to 5% Hopper / 2.5% treasury. Hopper claims stay locked 7 days after reveal while ETH accrues. Each pet comes with a $TERM Ignite allotment. Ignite splits that 1,000 $TERM 37.5% burn / 25% Hopper (as ETH) / 37.5% allotment refill, plus 0.002 ETH split 50% buy-and-burn $TERM / 50% Hopper. Team earns 0 from that ETH fee. Dial assigns 1–4 Stock Tokens by shell class at Ignite. Pulse pays Dialed Lit in Stock Tokens and undialed Lit in $TERM — typically to the TBA. Hopper stays ETH.",
   disclaimer:
     "Dial and Pulse Stock Token rewards are promotional on-chain rewards. They are not dividends, equity, shareholder rights, or ownership of any underlying company. Holding a pet or receiving Stock Tokens confers no legal interest in those companies. Not financial or investment advice.",
   chain: "Robinhood Chain",
@@ -66,8 +66,8 @@ export const SITE = {
 
 /** Hub / app mint-split line. Matches CollectionConfig MAX_SUPPLY / TEAM_RESERVE / PUBLIC_SUPPLY. */
 export const mintAllocation = {
-  sentence: `Total supply is ${SITE.supply}. ${SITE.teamReserve} are reserved for the team for ${SITE.teamReserveUse}. Public mint is the remaining ${SITE.publicSupply}.`,
-  appHint: `Free mint · ${SITE.publicSupply} public / ${SITE.teamReserve} team (${SITE.teamReserveUse})`,
+  sentence: `Total supply is ${SITE.supply}. ${SITE.teamReserve} are reserved for the team for ${SITE.teamReserveUse}. Public mint was the remaining ${SITE.publicSupply} and is sold out.`,
+  appHint: `Sold out · sealed · ${SITE.publicSupply} public / ${SITE.teamReserve} team (${SITE.teamReserveUse})`,
 } as const;
 
 /** Hub mint drop schedule. Copy only — CollectionNFT has mintOpen + mintPrice (default 0), not phase contracts. */
@@ -78,7 +78,7 @@ export const mintSchedule = {
   price: "Free",
   perPhase: 1,
   rule:
-    "1 per public phase window (GTD / FCFS / Public). On-chain the hub calls CollectionNFT.mint / mintTo while mintOpen — there are no separate phase contracts. Public mintOpen stays closed until Friday phases.",
+    "1 per public phase window (GTD / FCFS / Public) was the hub schedule. On-chain the hub called CollectionNFT.mint / mintTo while mintOpen — there are no separate phase contracts. Public mint is sold out (4244/4244). Tokens stay sealed until a future reveal.",
   teamAllocation: {
     date: "Thursday, September 17, 2026",
     shortDate: "Thu Sep 17",
@@ -102,12 +102,14 @@ export function mintPhaseLine(
 }
 
 export const mintScheduleCopy = {
-  headline: `Free mint · ${mintSchedule.date} · ${mintSchedule.timezoneIana} (${mintSchedule.timezoneLabel})`,
-  when: `Free mint on ${mintSchedule.date}. Times are ${mintSchedule.timezoneIana} (${mintSchedule.timezoneLabel}).`,
+  headline: "Mint sold out · sealed until reveal",
+  badge: "Sold out · sealed",
+  when: `Public mint sold out. Free mint was ${mintSchedule.date}. Times were ${mintSchedule.timezoneIana} (${mintSchedule.timezoneLabel}).`,
   phases: mintSchedule.phases.map(mintPhaseLine).join(" · "),
   phasesLong: mintSchedule.phases.map(mintPhaseLine).join("; "),
   teamLine: `${mintSchedule.teamAllocation.date}, ${mintSchedule.teamAllocation.time} — ${mintSchedule.teamAllocation.name} only (${mintSchedule.teamAllocation.note})`,
-  sentence: `${mintSchedule.teamAllocation.date}, ${mintSchedule.teamAllocation.time} — Team allocation only (teamMint 200 to the team wallet). Not a public mint. Public mintOpen stays closed until Friday. Free mint on ${mintSchedule.date}. Times are ${mintSchedule.timezoneIana} (${mintSchedule.timezoneLabel}): ${mintSchedule.phases.map(mintPhaseLine).join("; ")}. ${mintSchedule.rule}`,
+  historical: `${mintSchedule.teamAllocation.date}, ${mintSchedule.teamAllocation.time} — Team allocation only (teamMint 200 to the team wallet). Not a public mint. Free mint was ${mintSchedule.date}. Times were ${mintSchedule.timezoneIana} (${mintSchedule.timezoneLabel}): ${mintSchedule.phases.map(mintPhaseLine).join("; ")}.`,
+  sentence: `Public mint is sold out (${SITE.publicSupply}/${SITE.publicSupply}). Collection stays sealed until a future reveal — Ignite and $TERM trading stay off. Historical schedule: ${mintSchedule.teamAllocation.date}, ${mintSchedule.teamAllocation.time} — Team allocation only (teamMint 200 to the team wallet). Not a public mint. Free mint was ${mintSchedule.date}. Times were ${mintSchedule.timezoneIana} (${mintSchedule.timezoneLabel}): ${mintSchedule.phases.map(mintPhaseLine).join("; ")}. ${mintSchedule.rule}`,
 } as const;
 
 /** Shareable /eligible route. Hash-only #eligible cannot set distinct OG tags. */
@@ -115,7 +117,7 @@ export const ELIGIBLE_SHARE = {
   path: "/eligible",
   hash: "/#eligible",
   title: "Check your wallet",
-  description: `Check GTD / FCFS partner eligibility for Terminal Pets. Free mint ${mintSchedule.date} ${mintSchedule.timezoneLabel}.`,
+  description: `Check GTD / FCFS partner eligibility for Terminal Pets. Public mint sold out; collection stays sealed until reveal.`,
   image: "/og-eligible.png",
   imageWidth: 1200,
   imageHeight: 630,
@@ -164,19 +166,19 @@ export function publicLinks() {
 export const FAQ = [
   {
     q: "When can I mint?",
-    a: `${mintScheduleCopy.sentence} ${mintAllocation.sentence} Mint on this hub at /mint. The button calls CollectionNFT.mint (or mintTo) when on-chain mintOpen is true; if mintOpen is false the hub shows mint closed. Each pet mints Sealed: every tokenURI is the same hidden.json until CollectionNFT.reveal(), so collectors cannot see traits. Dormant egg art, Ignite, and $TERM trading unlock at reveal.`,
+    a: `Public mint is complete and sold out. The hub /mint panel reads on-chain mintOpen and publicMinted and shows sold out — it does not fake remaining supply. ${mintAllocation.sentence} ${mintScheduleCopy.historical} Each pet minted Sealed: every tokenURI is the same hidden.json until a future CollectionNFT.reveal(), so collectors cannot see traits. Dormant egg art, Ignite, and $TERM trading unlock at reveal.`,
   },
   {
     q: "Am I eligible for GTD or FCFS?",
-    a: "The hub checker reads live ERC-721 balanceOf against announced partner collections on Robinhood Chain, plus School of NFTs holdings on Ethereum mainnet (same wallet addresses), plus wallets dropped on the GTD X thread, plus arcade top 150 from Ignite the Dial (/arcade). GTD if you hold any GTD partner NFT, your wallet is on that thread list, or you are arcade top 150. FCFS if you hold any FCFS partner NFT or you are GTD-eligible (GTD wallets also unlock FCFS). Public (Friday 10:00 AM PT) is open to everyone, no allowlist. This is a hub preview, not an on-chain mint allowlist — CollectionNFT still gates on mintOpen. Partner, thread, and arcade lists may grow before Travis locks mint phase.",
+    a: "The hub checker reads live ERC-721 balanceOf against announced partner collections on Robinhood Chain, plus School of NFTs holdings on Ethereum mainnet (same wallet addresses), plus wallets dropped on the GTD X thread, plus arcade top 150 from Ignite the Dial (/arcade). GTD if you hold any GTD partner NFT, your wallet is on that thread list, or you are arcade top 150. FCFS if you hold any FCFS partner NFT or you are GTD-eligible (GTD wallets also unlock FCFS). Public (Friday 10:00 AM PT) was open to everyone, no allowlist. Public mint is now sold out. This checker is a hub preview, not an on-chain mint allowlist.",
   },
   {
     q: "What is the arcade?",
-    a: "Ignite the Dial is an endless CRT climber at /arcade, in the Doodle Jump style. Bounce example BOLT (the robot pet, not the handheld token art) up pads until you fall — there is no round timer. Steer left and right, wrap the edges, and watch for moving, snapping, and glitch pads. Catch Dial ticks and chain combos. One best score per wallet. Top 150 wallets lock GTD (and FCFS via GTD) on the hub checker. Play before Friday, September 18, 2026 5:00 AM PT so winners can merge before the 7:00 AM PT hub redeploy. Hub preview only — not an on-chain mint allowlist.",
+    a: "Ignite the Dial is an endless CRT climber at /arcade, in the Doodle Jump style. Bounce example BOLT (the robot pet, not the handheld token art) up pads until you fall — there is no round timer. Steer left and right, wrap the edges, and watch for moving, snapping, and glitch pads. Catch Dial ticks and chain combos. One best score per wallet. Top 150 wallets locked GTD (and FCFS via GTD) on the hub checker before the Friday mint. Public mint is sold out; the arcade stays playable. Hub preview only — not an on-chain mint allowlist.",
   },
   {
     q: "How many can I mint?",
-    a: `${mintSchedule.rule} Public phases on ${mintSchedule.date}: ${mintScheduleCopy.phasesLong}. Thursday team allocation is owner-only teamMint, not a collector mint. ${mintAllocation.sentence} Free mint — no mint price.`,
+    a: `None remaining — public mint is sold out (${SITE.publicSupply}/${SITE.publicSupply}). During the drop it was 1 per public phase window. Historical phases on ${mintSchedule.date}: ${mintScheduleCopy.phasesLong}. Thursday team allocation was owner-only teamMint, not a collector mint. ${mintAllocation.sentence} Free mint — no mint price.`,
   },
   {
     q: "What is $TERM?",
@@ -240,7 +242,7 @@ export const FAQ = [
   },
   {
     q: "Are contract addresses live?",
-    a: "Robinhood mainnet (4663) is live. CollectionNFT 0x85e3f98b76b0a6c9166BA7aaB05BEc4ef17B7166. On-chain mintOpen is still false until Friday — the hub reads that flag and does not fake it open. Production defaults are web/.env.production. Base Sepolia dry-run CollectionNFT 0xe1cC988CeC1C29764ba18523635De82d0C9B518F is the testing stack when NEXT_PUBLIC_CHAIN_ID=84532. Hybrid Ignite 0.002 ETH, Hopper 7 days, Dial 1–4 by shell class are product defaults.",
+    a: "Robinhood mainnet (4663) is live. CollectionNFT 0x85e3f98b76b0a6c9166BA7aaB05BEc4ef17B7166. Public mint is sold out (4244/4244; totalSupply 4444). Collection stays sealed (revealed = false) until a future reveal — the hub does not auto-reveal. The /mint panel reads on-chain mintOpen / publicMinted and shows sold out. Production defaults are web/.env.production. Base Sepolia dry-run CollectionNFT 0xe1cC988CeC1C29764ba18523635De82d0C9B518F is the testing stack when NEXT_PUBLIC_CHAIN_ID=84532. Hybrid Ignite 0.002 ETH, Hopper 7 days, Dial 1–4 by shell class are product defaults.",
   },
   {
     q: "How does the 24h reveal work?",

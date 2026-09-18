@@ -31,7 +31,7 @@ const STEPS = [
   {
     n: "01",
     title: "Free mint",
-    body: `${mintScheduleCopy.sentence} ${mintAllocation.sentence} Mint on this hub when mintOpen is true. Each token mints Sealed — every tokenURI is the same hidden.json, so collectors cannot see traits. TBA and a $TERM allotment still attach. Name is Terminal Pet #{id}. Ignite and $TERM trading stay off.`,
+    body: `${mintScheduleCopy.sentence} ${mintAllocation.sentence} Each token minted Sealed — every tokenURI is the same hidden.json, so collectors cannot see traits. TBA and a $TERM allotment still attach. Name is Terminal Pet #{id}. Ignite and $TERM trading stay off until reveal.`,
   },
   {
     n: "02",
@@ -130,14 +130,19 @@ const ROADMAP = [
     body: "Mint → every tokenURI is hidden.json (no traits), Ignite off, $TERM trading off, 7.5% royalties → TermFund. CollectionNFT.reveal() flips metadata, Ignite, trading, and 5/2.5 royalties in one tx. Owner early; anyone after 24h.",
   },
   {
-    state: "now" as const,
+    state: "done" as const,
     title: "Public hub mint",
-    body: "This site. /mint calls CollectionNFT.mint / mintTo while mintOpen. Sealed-state copy until reveal. Ignite / Pulse / Hopper / Dial pages. Carousel is examples / not mint supply.",
+    body: "Sold out. /mint reads on-chain mintOpen / publicMinted and shows public supply filled. Collection stays sealed until a future reveal. Ignite / Pulse / Hopper / Dial pages. Carousel is examples / not mint supply.",
   },
   {
-    state: "next" as const,
+    state: "done" as const,
     title: "Robinhood Chain deploy",
-    body: "Live on 4663. CollectionNFT 0x85e3f98b76b0a6c9166BA7aaB05BEc4ef17B7166. mintOpen is false until Friday. Deploy stays sealed. Do not auto-reveal. Do not re-broadcast.",
+    body: "Live on 4663. CollectionNFT 0x85e3f98b76b0a6c9166BA7aaB05BEc4ef17B7166. Public mint sold out (4244/4244). Collection stays sealed until a future reveal.",
+  },
+  {
+    state: "now" as const,
+    title: "Sealed until reveal",
+    body: "Public mint sold out. Every tokenURI is hidden.json. Ignite and $TERM trading stay off until a future reveal. Hub does not auto-reveal. Carousel GIFs are examples / not mint supply.",
   },
   {
     state: "done" as const,
@@ -165,13 +170,13 @@ export function HubLanding() {
                 {SITE.chain} · {chainId}
               </Badge>
               <Badge variant="outline" className="font-mono">
-                Free mint · {mintSchedule.date} · {mintSchedule.timezoneLabel}
+                {mintScheduleCopy.badge}
               </Badge>
               <Badge variant="outline" className="font-mono">
                 {sealedCopy.badge}
               </Badge>
               {live ? (
-                <ComingSoon>Hub mint</ComingSoon>
+                <ComingSoon>Sold out</ComingSoon>
               ) : (
                 <ComingSoon />
               )}
@@ -185,19 +190,18 @@ export function HubLanding() {
               {SITE.symbol}). Memecoin is $TERM.
             </p>
             <p className="max-w-xl text-sm text-muted-foreground">
-              {mintScheduleCopy.sentence} {mintAllocation.sentence} Mint on
-              this hub ({SITE.url}; {SITE.urlAlias} remains a fallback alias).
-              Pets mint Sealed for {SITE.revealWindow}: every tokenURI is{" "}
-              {sealedCopy.hiddenUri} — collectors cannot see traits.
-              Ignite and $TERM transfers stay off. {sealedCopy.carousel} Reveal
-              shows a dormant egg GIF; Ignite swaps metadata to the matching
-              awake pet. Secondary royalties (
-              {SITE.royalty}) go 100% to TermFund — nothing to Hopper, nothing
-              to treasury from that stream. Reveal flips metadata live, turns
-              on Ignite and $TERM trading, and switches royalties to{" "}
-              {SITE.royaltyHopper} Hopper / {SITE.royaltyTreasury} treasury.
-              Each pet includes a $TERM allotment for the token half of Ignite.
-              That 1,000 $TERM splits {SITE.igniteBurn} burn /{" "}
+              {mintScheduleCopy.sentence} {mintAllocation.sentence} Hub:{" "}
+              {SITE.url} ({SITE.urlAlias} remains a fallback alias). Pets
+              minted Sealed: every tokenURI is {sealedCopy.hiddenUri} —
+              collectors cannot see traits. Ignite and $TERM transfers stay off
+              until reveal. {sealedCopy.carousel} Reveal shows a dormant egg
+              GIF; Ignite swaps metadata to the matching awake pet. Secondary
+              royalties ({SITE.royalty}) go 100% to TermFund — nothing to
+              Hopper, nothing to treasury from that stream. Reveal flips
+              metadata live, turns on Ignite and $TERM trading, and switches
+              royalties to {SITE.royaltyHopper} Hopper / {SITE.royaltyTreasury}{" "}
+              treasury. Each pet includes a $TERM allotment for the token half
+              of Ignite. That 1,000 $TERM splits {SITE.igniteBurn} burn /{" "}
               {SITE.igniteHopper} Hopper (as ETH) / {SITE.igniteAllotmentRefill}{" "}
               allotment refill, plus {SITE.igniteFeeEth} split{" "}
               {SITE.igniteEthSplit}. Team earns 0 from that ETH. Dial assigns
@@ -205,7 +209,7 @@ export function HubLanding() {
             </p>
             <div className="flex flex-wrap gap-2">
               <Button asChild>
-                <Link href="/mint">Mint</Link>
+                <Link href="/mint">Mint status</Link>
               </Button>
               <Button variant="outline" asChild>
                 <Link href="/arcade">Arcade · GTD</Link>
@@ -226,10 +230,10 @@ export function HubLanding() {
             </div>
             <p className="font-mono text-[11px] text-muted-foreground">
               {SITE.supply} total · {SITE.publicSupply} public /{" "}
-              {SITE.teamReserve} team · Free mint · {mintSchedule.date} ·{" "}
-              {mintScheduleCopy.phases} · 1 / phase · Sealed{" "}
-              {SITE.revealWindow} · {sealedCopy.label} · Ignite {SITE.igniteFee}{" "}
-              · Royalty {SITE.royalty}
+              {SITE.teamReserve} team · Sold out · sealed until reveal ·{" "}
+              {mintSchedule.date} · {mintScheduleCopy.phases} · 1 / phase ·{" "}
+              {sealedCopy.label} · Ignite {SITE.igniteFee} · Royalty{" "}
+              {SITE.royalty}
             </p>
           </div>
 
@@ -334,7 +338,7 @@ export function HubLanding() {
             Mint. Reveal. Ignite. Dial. Hopper. Pulse. TBA.
           </h2>
           <p className="text-muted-foreground">
-            {mintScheduleCopy.sentence} {mintAllocation.sentence} Pets mint
+            {mintScheduleCopy.sentence} {mintAllocation.sentence} Pets minted
             Sealed — {sealedCopy.tokenUri} After {SITE.revealWindow} (or
             sooner if the owner activates), reveal flips metadata, enables
             Ignite and $TERM trading, and routes royalties to
@@ -457,7 +461,7 @@ export function HubLanding() {
             NUMBERS
           </p>
           <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-            Fixed economics. Free mint.
+            Fixed economics. Mint sold out.
           </h2>
           <p className="text-muted-foreground">
             Supply is locked at {SITE.supply}: {SITE.publicSupply} public mint,{" "}
@@ -470,9 +474,9 @@ export function HubLanding() {
             {SITE.igniteFeeEth} ({SITE.igniteEthSplit}). Team earns 0 from the
             ETH fee. The {SITE.igniteAllotmentRefill} $TERM cut refills
             allotment escrow, not treasury. Live $TERM trades on the canonical
-            pool skim {SITE.tradeFee} once TERM_POOL is set. Hub mint is the
-            primary path. Do not point OpenSea earnings at a wallet — use the
-            splitter.
+            pool skim {SITE.tradeFee} once TERM_POOL is set. Public mint is
+            sold out; collection stays sealed until reveal. Do not point
+            OpenSea earnings at a wallet — use the splitter.
           </p>
         </div>
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
@@ -526,18 +530,18 @@ export function HubLanding() {
             STATUS
           </p>
           <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-            Hub mint is the public path.
+            Mint sold out. Collection stays sealed.
           </h2>
           <p className="text-muted-foreground">
             {mintScheduleCopy.sentence} {mintAllocation.sentence} CollectionNFT
             has mintOpen + mintPrice (default 0 / free) — GTD / FCFS / Public
-            times are hub copy, not phase contracts. Mint on{" "}
+            times were hub copy, not phase contracts.{" "}
             <Link href="/mint" className="text-primary underline-offset-2 hover:underline">
               /mint
             </Link>{" "}
-            when mintOpen is true; the hub shows mint closed otherwise.{" "}
-            {sealedCopy.sentence} Robinhood mainnet (4663) is live — mintOpen
-            stays on-chain.
+            reads on-chain mintOpen and publicMinted and shows sold out.{" "}
+            {sealedCopy.sentence} Robinhood mainnet (4663) is live. Ignite and
+            $TERM trading stay off until reveal.
           </p>
         </div>
         <ol className="space-y-3">
@@ -617,12 +621,12 @@ export function HubLanding() {
             </CardHeader>
             <CardContent className="space-y-3 text-sm text-muted-foreground">
               <p>
-                Primary path: this hub. Connect a wallet, switch to the
-                configured chain, mint 1 via CollectionNFT.mint when mintOpen
-                is true. {mintScheduleCopy.sentence}
+                Public mint is sold out. The hub /mint panel reads on-chain
+                mintOpen and publicMinted. Collection stays sealed until
+                reveal. {mintScheduleCopy.historical}
               </p>
               <Button size="sm" asChild>
-                <Link href="/mint">Open mint</Link>
+                <Link href="/mint">Mint status</Link>
               </Button>
             </CardContent>
           </Card>
@@ -632,8 +636,9 @@ export function HubLanding() {
             </CardHeader>
             <CardContent className="space-y-3 text-sm text-muted-foreground">
               <p>
-                OpenSea can list {SITE.name} after mint. {SITE.publicSupply}{" "}
-                public of {SITE.supply}. Mint on this hub.
+                OpenSea can list {SITE.name}. {SITE.publicSupply} public of{" "}
+                {SITE.supply} — public mint sold out. Collection stays sealed
+                until reveal.
               </p>
               {links.opensea ? (
                 <Button size="sm" asChild>
@@ -669,7 +674,7 @@ export function HubLanding() {
             </CardHeader>
             <CardContent className="space-y-3 text-sm text-muted-foreground">
               <p>
-                {SITE.chain} Blockscout. Contract pages appear after broadcast.
+                {SITE.chain} Blockscout. CollectionNFT is live on 4663.
               </p>
               <Button size="sm" variant="outline" asChild>
                 <a href={links.explorer} rel="noreferrer" target="_blank">
@@ -699,10 +704,10 @@ export function HubLanding() {
             </CardHeader>
             <CardContent className="space-y-3 text-sm text-muted-foreground">
               <p>
-                Live on Robinhood mainnet (4663). mintOpen is false until
-                Friday. Hub mint is primary.
-                Carousel GIFs are examples / not mint supply. Sealed until
-                reveal — collectors cannot see traits.
+                Live on Robinhood mainnet (4663). Public mint sold out.
+                Collection stays sealed until reveal — collectors cannot see
+                traits. Carousel GIFs are examples / not mint supply. Ignite
+                and $TERM trading stay off until reveal.
               </p>
               <Button size="sm" variant="outline" asChild>
                 <Link href="/#status">See status</Link>

@@ -270,8 +270,8 @@ export function TerminalApp() {
             TermMarket skim.
             Pulse follows an escalating ETH ladder. Lit earn pro-rata. Dormant
             earn nothing. Dial is assigned at Ignite (1–4 stocks by shell class);
-            this screen does not let holders pick. Mint on this hub when{" "}
-            <span className="font-mono">mintOpen</span> is true.
+            this screen does not let holders pick. Public mint is sold out;
+            collection stays sealed until reveal.
           </p>
         </section>
 
@@ -460,7 +460,7 @@ NEXT_PUBLIC_TERM_MARKET_ADDRESS=0x78f2c0577321053722Daa1f5eE31E5071a7D9F30`}
           {configured && mintOpen === false && (
             <Empty
               title="Mint is closed"
-              body={`${mintScheduleCopy.when} CollectionNFT.mintOpen is false, so mint/mintTo revert. Use the mint page when the owner opens the hub path.`}
+              body={`${mintScheduleCopy.when} Collection stays sealed until reveal. Ignite and $TERM trading stay off until then.`}
             />
           )}
 
@@ -492,7 +492,7 @@ NEXT_PUBLIC_TERM_MARKET_ADDRESS=0x78f2c0577321053722Daa1f5eE31E5071a7D9F30`}
           {isConnected && onTarget && configured && !tokensQuery.isLoading && tokenIds.length === 0 && (
             <Empty
               title="No terminals in this wallet"
-              body="Mint on this hub (/mint) when mintOpen is true, then Ignite from here."
+              body="Public mint is sold out. Collection stays sealed until reveal. Ignite from here after reveal if this wallet holds a pet."
             />
           )}
 
