@@ -140,6 +140,11 @@ const ROADMAP = [
     body: "Live on 4663. CollectionNFT 0x85e3f98b76b0a6c9166BA7aaB05BEc4ef17B7166. Public mint sold out (4244/4244). Collection stays sealed until a future reveal.",
   },
   {
+    state: "now" as const,
+    title: "Sealed until reveal",
+    body: "Public mint sold out. Every tokenURI is hidden.json. Ignite and $TERM trading stay off until a future reveal. Hub does not auto-reveal. Carousel GIFs are examples / not mint supply.",
+  },
+  {
     state: "done" as const,
     title: "$TERM market skim",
     body: "TermMarket ships in the repo (not fee-on-transfer). Inactive until TERM_POOL and TERM_SWAP_ROUTER are set. Then 3% of canonical swap input → 1.5% Hopper / 1% burn / 0.5% treasury. Trading itself is also off until reveal.",
