@@ -32,7 +32,7 @@ export default function DialPage() {
               </p>
             </div>
             <Button className="w-full" asChild>
-              <Link href="/mint">Mint on this hub</Link>
+              <Link href="/mint">Mint status</Link>
             </Button>
             <Button className="w-full" variant="outline" asChild>
               <Link href="/arcade">Arcade · GTD</Link>

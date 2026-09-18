@@ -42,7 +42,7 @@ export function SiteHeader({ trailing }: { trailing?: ReactNode }) {
           </Link>
           <div className="flex items-center gap-2">
             {live ? (
-              <ComingSoon className="hidden sm:inline-flex">Hub mint</ComingSoon>
+              <ComingSoon className="hidden sm:inline-flex">Sold out</ComingSoon>
             ) : (
               <ComingSoon className="hidden sm:inline-flex" />
             )}

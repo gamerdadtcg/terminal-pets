@@ -16,10 +16,11 @@ export function MintScheduleCard({
       )}
     >
       <p className="font-mono text-[11px] tracking-[0.28em] text-primary">
-        FREE MINT · FRI SEP 18 2026
+        SOLD OUT · SEALED
       </p>
-      <p className="mt-3 text-lg font-medium">{mintSchedule.date}</p>
+      <p className="mt-3 text-lg font-medium">{mintScheduleCopy.headline}</p>
       <p className="mt-1 text-sm text-muted-foreground">
+        Historical drop {mintSchedule.date} ·{" "}
         {mintSchedule.timezoneIana} ({mintSchedule.timezoneLabel}) · 1 per
         public phase
       </p>
@@ -55,9 +56,7 @@ export function MintScheduleCard({
       </ol>
       <p className="mt-4 text-sm text-muted-foreground">
         {compact ? mintSchedule.rule : mintScheduleCopy.sentence}{" "}
-        {mintAllocation.sentence} Mint 1 on this hub when on-chain{" "}
-        <span className="font-mono">mintOpen</span> is true Friday.{" "}
-        {sealedCopy.tokenUri}
+        {mintAllocation.sentence} {sealedCopy.tokenUri}
       </p>
       <p className="mt-2 break-all font-mono text-[11px] text-muted-foreground">
         Sealed tokenURI: {sealedCopy.hiddenUri}
