@@ -30,6 +30,7 @@ const MANUAL_GTD_WALLET_ADDRESSES = [
   "0x1fb9a1f2b917b68e1a058593f48a44f3fa5cd2ab",
   "0xe07b570d95b0f07c16efcb2990fa3007df535bf6",
   "0x5d9d9e08dff6d856e6ca6d31a25e8f65eb8e9564",
+  "0x22dfaca0f13d668f3656d949ce27722166503d2d",
 ] as const;
 
 function checksum(address: string): Address {
