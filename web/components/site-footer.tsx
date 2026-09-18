@@ -1,5 +1,4 @@
 import { publicLinks, sealedCopy, SITE } from "@/lib/site";
-import { NFT_CALENDAR_BADGE_SRC } from "@/lib/nft-calendar-badge";
 import Link from "next/link";
 
 const NFT_CALENDAR_URL = "https://nftcalendar.io/";
@@ -84,10 +83,10 @@ export function SiteFooter() {
             <span>Verified on</span>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src={NFT_CALENDAR_BADGE_SRC}
+              src="/branding/nft-calendar.png"
               alt="NFT Calendar"
-              width={40}
-              height={40}
+              width={120}
+              height={120}
               className="h-10 w-10 rounded-md object-contain"
             />
           </a>
