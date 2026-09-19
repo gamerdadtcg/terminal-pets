@@ -29,8 +29,8 @@ RPC `https://rpc.mainnet.chain.robinhood.com`. Explorer [Blockscout](https://rob
 ## 0. Remaining hard stops
 
 - Do **not** re-run `forge script … --broadcast` to `robinhood` / `4663`.
-- Do **not** `setMintOpen(true)` until Friday GTD / FCFS / Public.
-- Do **not** `reveal()` until mint-window policy says so.
+- Do **not** `setMintOpen(true)` — public mint is already sold out (4244/4244).
+- Do **not** `reveal()` until dormant/lit bases are set on-chain (hosted URIs in §4). After that, owner `reveal()` shows eggs; pets stay Ignite-gated.
 - Any MICRO env still in the shell (`HOPPER_LOCK_SECONDS`, tiny `IGNITE_FEE_ETH`, `PULSE_*_WEI`) → **unset**. Those values must never reach a new stack.
 - Metadata: hub public tree is **only** `hidden.json` until after reveal. Demo GIFs at `/art/examples/` are **examples / not mint supply**. Do **not** commit or deploy 4444 GIF/JSON to `web/public/metadata/{lit,dormant}` or git before reveal policy.
 
@@ -135,20 +135,38 @@ python art/generator/generate_collection.py \
    - Dormant JSON (`egg-metadata/`)
    - Plus sealed `hidden.json` (see `art/export/sealed/hidden.json` / hub `web/public/metadata/hidden.json`)
 3. Rewrite `image` fields to the pinned GIF bases (`--art-image-base` / `--egg-image-base` or `art/generator/rewrite_image_uris.py`).
-4. After CollectionNFT is live (and **after** owner says go), owner may set **hiddenURI now**. Set dormant/lit bases **at reveal** (or immediately before, from a pin that is not publicly enumerable as tokenIds on this hub):
+4. Full 4444 GIF + JSON is hosted on Vercel Blob (not this hub, not Pinata — no JWT was available). `image` fields already point at the GIF bases. Owner must `setMetadataURIs` **before** `reveal()` (`revealAfter` has already passed, so anyone can reveal; empty dormant/lit would fall back to the on-chain SVG stub):
 
 ```text
-CollectionNFT.setMetadataURIs(
-  hiddenURI,        // https://terminalpets.xyz/metadata/hidden.json (vercel.app still resolves)
-  dormantBaseURI,   // ipfs://…/egg-metadata/  (trailing slash → {id}.json) — after reveal policy
-  litBaseURI        // ipfs://…/metadata/      (trailing slash → {id}.json) — after reveal policy
-)
+hiddenURI        = https://terminalpets.xyz/metadata/hidden.json
+dormantBaseURI   = https://aeslbpvh4kdzd9lk.public.blob.vercel-storage.com/egg-metadata/
+litBaseURI       = https://aeslbpvh4kdzd9lk.public.blob.vercel-storage.com/metadata/
+egg GIFs         = https://aeslbpvh4kdzd9lk.public.blob.vercel-storage.com/egg/{id}.gif
+awake GIFs       = https://aeslbpvh4kdzd9lk.public.blob.vercel-storage.com/art/{id}.gif
+```
+
+Trailing `/` on the bases appends `{tokenId}.json`. After `reveal()`, un-Ignited tokens serve egg JSON (`State: Dormant`). Ignite still flips `tokenURI` to lit pet JSON (`State: Lit`).
+
+```bash
+export COLLECTION=0x85e3f98b76b0a6c9166BA7aaB05BEc4ef17B7166
+export RPC=https://rpc.mainnet.chain.robinhood.com
+
+# 1) URIs first — do not skip
+cast send "$COLLECTION" \
+  "setMetadataURIs(string,string,string)" \
+  "https://terminalpets.xyz/metadata/hidden.json" \
+  "https://aeslbpvh4kdzd9lk.public.blob.vercel-storage.com/egg-metadata/" \
+  "https://aeslbpvh4kdzd9lk.public.blob.vercel-storage.com/metadata/" \
+  --rpc-url "$RPC"
+
+# 2) only after the tx above confirms
+cast send "$COLLECTION" "reveal()" --rpc-url "$RPC"
 ```
 
 5. Optional: `setShellClassOverride` from generative `Shell Class` **before Ignite** so Dial counts match PFPs ([`DIAL.md`](DIAL.md)).
 6. Do **not** use Studio’s metadata-upload / reveal wizard as source of truth ([`MAIN_ART_LOCK.md`](MAIN_ART_LOCK.md), [`OPENSEA_STUDIO_SEADROP.md`](OPENSEA_STUDIO_SEADROP.md)).
 
-Leaving dormant/lit unset until reveal is the anti-snipe default. Sealed stub until pin is the launch art plan for Friday.
+On-chain `tokenURI` stays sealed `hidden.json` until owner `reveal()`. Hosted Blob JSON is enumerable by URL once the host is known; Ignite still gates which `tokenURI` marketplaces serve.
 
 ## 5. Wallets (mainnet ≠ testnet deployer)
 
@@ -180,7 +198,7 @@ cast send "$COLLECTION" "teamMint(address,uint256)" \
   --rpc-url robinhood
 ```
 
-Do **not** `setMintOpen(true)` until Friday phases. Do **not** `reveal()` until mint-window policy says so.
+Do **not** `setMintOpen(true)` (public mint is already 4244/4244). Do **not** `reveal()` until `setMetadataURIs` with the Blob bases in §4 confirms.
 
 ## 7. Post-deploy Studio + royalties
 
@@ -189,7 +207,7 @@ Do **not** `setMintOpen(true)` until Friday phases. Do **not** `reveal()` until 
 3. Creator earnings **7.5% (750 bps)** → **RoyaltySplitter**. Enable ERC-2981 if offered.
 4. Drop stages: free, **1 per wallet** per stage, Public last. Limited edition 4444 on-chain; SeaDrop public 4244. Creator payout for primary ETH → Hopper if that fuel should Pulse.
 5. Confirm `isAllowedSeaDrop` for the Studio SeaDrop address.
-6. `setMetadataURIs` already set **hidden.json**; dormant/lit **private pin at reveal** — never the hub `/metadata/{lit,dormant}` trees (those paths are gone).
+6. `setMetadataURIs` already set **hidden.json**. Dormant/lit HTTP bases are hosted on Vercel Blob (§4) — still never the hub `/metadata/{lit,dormant}` trees. Owner must write those bases on-chain, then `reveal()`.
 7. Dial slots 1–7 are already the seven live `4663` stock addresses (§3). Leave slot 0 `address(0)`.
 8. Hub production already has these `NEXT_PUBLIC_*` defaults (`web/.env.production`). Leave `mintOpen` false until **Friday** GTD / FCFS / Public (8:00 / 9:00 / 10:00 AM PT, September 18, 2026). Thursday `teamMint` is owner-only. Do not send collectors to Studio’s wizard.
 
@@ -202,7 +220,7 @@ The 4663 stack is recorded. This repo still must not send deploy transactions.
 - No CI job that sends mainnet txs
 - No “helpfully” re-running Deploy.s.sol
 
-Owner ops that remain (`teamMint`, Friday `setMintOpen`, later `reveal`) are human-signed `cast send`s, not a new deploy.
+Owner ops that remain (`setMetadataURIs` dormant/lit + `reveal()`) are human-signed `cast send`s from `0xA71c8cAC3bc8bc1085f87885fD2898f970edDc37`, not a new deploy.
 
 ## Explicit do-nots
 
