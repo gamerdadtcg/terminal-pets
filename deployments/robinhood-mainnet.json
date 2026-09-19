@@ -98,14 +98,26 @@
     "slot7_TSLA": "0x322F0929c4625eD5bAd873c95208D54E1c003b2d"
   },
   "metadata": {
-    "hiddenURI": "https://terminal-pets.vercel.app/metadata/hidden.json",
-    "dormantBaseURI": "",
-    "litBaseURI": ""
+    "hiddenURI": "https://terminalpets.xyz/metadata/hidden.json",
+    "dormantBaseURI": "https://aeslbpvh4kdzd9lk.public.blob.vercel-storage.com/egg-metadata/",
+    "litBaseURI": "https://aeslbpvh4kdzd9lk.public.blob.vercel-storage.com/metadata/",
+    "eggImageBase": "https://aeslbpvh4kdzd9lk.public.blob.vercel-storage.com/egg/",
+    "artImageBase": "https://aeslbpvh4kdzd9lk.public.blob.vercel-storage.com/art/",
+    "host": "vercel-blob",
+    "storeId": "store_AeSLBpVh4KDzd9LK",
+    "blobCount": 17776,
+    "onChain": {
+      "hiddenURI": "https://terminalpets.xyz/metadata/hidden.json",
+      "dormantBaseURI": "",
+      "litBaseURI": "",
+      "revealed": false
+    }
   },
   "notes": [
     "forge script broadcast partial (8/25) then cast resume due to RPC 429",
     "MICRO env vars unset; production CollectionConfig defaults",
-    "No teamMint; no reveal; mintOpen=false",
+    "Supply 4444/4444 minted; mintOpen=false; revealed=false until owner setMetadataURIs + reveal()",
+    "Full 4444 GIF/JSON hosted on Vercel Blob (not the hub git tree). Ignite still gates lit pet art.",
     "TerminalRenderer deployed nested inside CollectionNFT create"
   ],
   "balanceAfterEth": "0.003167569805435563",
