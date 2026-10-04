@@ -12,132 +12,30 @@ export const SITE_URL = (
   process.env.NEXT_PUBLIC_SITE_URL?.trim() || DEFAULT_SITE_URL
 ).replace(/\/$/, "");
 
-export const SEALED_METADATA_PATH = "/metadata/hidden.json";
-export const SEALED_METADATA_URI = `${SITE_URL}${SEALED_METADATA_PATH}`;
-export const SEALED_METADATA_URI_ALIAS = `${SITE_URL_ALIAS}${SEALED_METADATA_PATH}`;
-
 export const SITE = {
   name: "Terminal Pets",
   symbol: "TERM",
   petName: "Terminal Pets",
   url: SITE_URL,
   urlAlias: SITE_URL_ALIAS,
-  tagline: "Handheld pets that sleep until you Ignite them.",
-    description:
-    "Generative Pocket Critter PFPs on Robinhood Chain. Public mint sold out (4244/4244 of 4444). Collection stays Sealed until a future reveal: every tokenURI is the same hidden.json — collectors cannot see traits. Hub carousel GIFs are examples / not mint supply. Ignite off, $TERM trading off, and 7.5% secondary royalties all to TermFund until reveal. Reveal shows a dormant egg GIF, turns on Ignite and trading, and switches royalties to 5% Hopper / 2.5% treasury. Hopper claims stay locked 7 days after reveal while ETH accrues. Each pet comes with a $TERM Ignite allotment. Ignite splits that 1,000 $TERM 37.5% burn / 25% Hopper (as ETH) / 37.5% allotment refill, plus 0.002 ETH split 50% buy-and-burn $TERM / 50% Hopper. Team earns 0 from that ETH fee. Dial assigns 1–4 Stock Tokens by shell class at Ignite. Pulse pays Dialed Lit in Stock Tokens and undialed Lit in $TERM — typically to the TBA. Hopper stays ETH.",
+  tagline: "Your eggs are ready. Wake them up.",
+  description:
+    "Minted out. Wake your Terminal Pet on Robinhood Chain: connect the wallet that holds your egg and Ignite it for 0.002 ETH. The $TERM is already in the egg. Awake pets earn payouts from the Hopper.",
   disclaimer:
-    "Dial and Pulse Stock Token rewards are promotional on-chain rewards. They are not dividends, equity, shareholder rights, or ownership of any underlying company. Holding a pet or receiving Stock Tokens confers no legal interest in those companies. Not financial or investment advice.",
+    "Dial and Pulse stock rewards are promotional on-chain rewards. They are not dividends, equity, shareholder rights, or ownership of any underlying company. Holding a pet or receiving stock tokens confers no legal interest in those companies. Not financial or investment advice.",
   chain: "Robinhood Chain",
   chainId: 4663,
   gas: "ETH",
   supply: 4444,
-  teamReserve: 200,
-  publicSupply: 4244,
-  teamReserveUse: "airdrops, burns, giveaways, and similar",
-  mintPrice: "Free",
-  igniteFee: "1,000 $TERM + 0.002 ETH",
+  igniteFee: "0.002 ETH",
   igniteFeeTerm: "1,000 $TERM",
   igniteFeeEth: "0.002 ETH",
-  igniteEthSplit: "50% buy/burn $TERM / 50% Hopper",
-  igniteEthHopper: "50%",
-  igniteEthBurn: "50%",
-  igniteSplit: "37.5% burn / 25% Hopper / 37.5% allotment refill",
-  igniteHopper: "25%",
-  igniteBurn: "37.5%",
-  igniteAllotmentRefill: "37.5%",
-  termFund: "TermFund",
-  revealWindow: "24 hours",
   hopperLock: "7 days",
-  tradeFee: "3%",
-  tradeHopper: "1.5%",
-  tradeBurn: "1.0%",
-  tradeTreasury: "0.5%",
-  pulseThreshold: "ladder",
   pulseLadderBootstrap: "0.1 → 0.2 → … → 1.0 ETH",
   pulseLadderCycle: "0.5 → 0.6 → … → 1.0 ETH, then back to 0.5",
-  royalty: "7.5%",
-  royaltyHopper: "5%",
-  royaltyTreasury: "2.5%",
-  artSystem: "Pocket Critter",
-  artCompose: "2048 PNG compose / 512 GIF export",
   explorer: "https://robinhoodchain.blockscout.com",
   rpc: "https://rpc.mainnet.chain.robinhood.com",
-} as const;
-
-/** Hub / app mint-split line. Matches CollectionConfig MAX_SUPPLY / TEAM_RESERVE / PUBLIC_SUPPLY. */
-export const mintAllocation = {
-  sentence: `Total supply is ${SITE.supply}. ${SITE.teamReserve} are reserved for the team for ${SITE.teamReserveUse}. Public mint was the remaining ${SITE.publicSupply} and is sold out.`,
-  appHint: `Sold out · sealed · ${SITE.publicSupply} public / ${SITE.teamReserve} team (${SITE.teamReserveUse})`,
-} as const;
-
-/** Hub mint drop schedule. Copy only — CollectionNFT has mintOpen + mintPrice (default 0), not phase contracts. */
-export const mintSchedule = {
-  date: "Friday, September 18, 2026",
-  timezoneLabel: "PT",
-  timezoneIana: "America/Los_Angeles",
-  price: "Free",
-  perPhase: 1,
-  rule:
-    "1 per public phase window (GTD / FCFS / Public) was the hub schedule. On-chain the hub called CollectionNFT.mint / mintTo while mintOpen — there are no separate phase contracts. Public mint is sold out (4244/4244). Tokens stay sealed until a future reveal.",
-  teamAllocation: {
-    date: "Thursday, September 17, 2026",
-    shortDate: "Thu Sep 17",
-    time: "8:00 PM PT",
-    name: "Team allocation",
-    note: "teamMint 200 to the team wallet. Owner-only. Not a public mint.",
-  },
-  phases: [
-    { time: "8:00 AM PT", name: "GTD", note: "guaranteed" },
-    { time: "9:00 AM PT", name: "FCFS" },
-    { time: "10:00 AM PT", name: "Public" },
-  ],
-} as const;
-
-export function mintPhaseLine(
-  phase: (typeof mintSchedule.phases)[number],
-): string {
-  return "note" in phase && phase.note
-    ? `${phase.time} — ${phase.name} (${phase.note})`
-    : `${phase.time} — ${phase.name}`;
-}
-
-export const mintScheduleCopy = {
-  headline: "Mint sold out · sealed until reveal",
-  badge: "Sold out · sealed",
-  when: `Public mint sold out. Free mint was ${mintSchedule.date}. Times were ${mintSchedule.timezoneIana} (${mintSchedule.timezoneLabel}).`,
-  phases: mintSchedule.phases.map(mintPhaseLine).join(" · "),
-  phasesLong: mintSchedule.phases.map(mintPhaseLine).join("; "),
-  teamLine: `${mintSchedule.teamAllocation.date}, ${mintSchedule.teamAllocation.time} — ${mintSchedule.teamAllocation.name} only (${mintSchedule.teamAllocation.note})`,
-  historical: `${mintSchedule.teamAllocation.date}, ${mintSchedule.teamAllocation.time} — Team allocation only (teamMint 200 to the team wallet). Not a public mint. Free mint was ${mintSchedule.date}. Times were ${mintSchedule.timezoneIana} (${mintSchedule.timezoneLabel}): ${mintSchedule.phases.map(mintPhaseLine).join("; ")}.`,
-  sentence: `Public mint is sold out (${SITE.publicSupply}/${SITE.publicSupply}). Collection stays sealed until a future reveal — Ignite and $TERM trading stay off. Historical schedule: ${mintSchedule.teamAllocation.date}, ${mintSchedule.teamAllocation.time} — Team allocation only (teamMint 200 to the team wallet). Not a public mint. Free mint was ${mintSchedule.date}. Times were ${mintSchedule.timezoneIana} (${mintSchedule.timezoneLabel}): ${mintSchedule.phases.map(mintPhaseLine).join("; ")}. ${mintSchedule.rule}`,
-} as const;
-
-/** Shareable /eligible route. Hash-only #eligible cannot set distinct OG tags. */
-export const ELIGIBLE_SHARE = {
-  path: "/eligible",
-  hash: "/#eligible",
-  title: "Check your wallet",
-  description: `Check GTD / FCFS partner eligibility for Terminal Pets. Public mint sold out; collection stays sealed until reveal.`,
-  image: "/og-eligible.png",
-  imageWidth: 1200,
-  imageHeight: 630,
-  imageAlt:
-    "Terminal Pets wallet checker — GTD / FCFS partner eligibility. Branding and partner logos only.",
-} as const;
-
-/** Anti-snipe copy. tokenURI is one hidden.json until CollectionNFT.reveal(). */
-export const sealedCopy = {
-  badge: "Sealed until reveal",
-  label: "examples / not mint supply",
-  hiddenUri: SEALED_METADATA_URI,
-  hiddenUriAlias: SEALED_METADATA_URI_ALIAS,
-  tokenUri:
-    "Until CollectionNFT.reveal(), every tokenURI is the same sealed hidden.json. Collectors cannot see traits.",
-  tokenUriLine: `Until CollectionNFT.reveal(), every tokenURI is ${SEALED_METADATA_URI}. Collectors cannot see traits. ${SEALED_METADATA_URI_ALIAS} still resolves until DNS is fully cut over.`,
-  carousel:
-    "Hub GIFs are examples / not mint supply. They are not live collection tokenIds.",
-  sentence:
-    "Until CollectionNFT.reveal(), every tokenURI is the same sealed hidden.json. Collectors cannot see traits, species, or rarity. Hub carousel GIFs are examples / not mint supply — not the 4444 mint files.",
+  stocks: DIAL_COPY.poolLine,
 } as const;
 
 export const PULSE_BOOTSTRAP = [
@@ -165,91 +63,43 @@ export function publicLinks() {
 
 export const FAQ = [
   {
-    q: "When can I mint?",
-    a: `Public mint is complete and sold out. The hub /mint panel reads on-chain mintOpen and publicMinted and shows sold out — it does not fake remaining supply. ${mintAllocation.sentence} ${mintScheduleCopy.historical} Each pet minted Sealed: every tokenURI is the same hidden.json until a future CollectionNFT.reveal(), so collectors cannot see traits. Dormant egg art, Ignite, and $TERM trading unlock at reveal.`,
+    q: "How do I wake my egg?",
+    a: "Connect the wallet that holds it, switch to Robinhood Chain, and press Ignite. It costs 0.002 ETH. The 1,000 $TERM is already inside the egg, so you do not buy that first.",
   },
   {
-    q: "Am I eligible for GTD or FCFS?",
-    a: "The hub checker reads live ERC-721 balanceOf against announced partner collections on Robinhood Chain, plus School of NFTs holdings on Ethereum mainnet (same wallet addresses), plus wallets dropped on the GTD X thread, plus arcade top 150 from Ignite the Dial (/arcade). GTD if you hold any GTD partner NFT, your wallet is on that thread list, or you are arcade top 150. FCFS if you hold any FCFS partner NFT or you are GTD-eligible (GTD wallets also unlock FCFS). Public (Friday 10:00 AM PT) was open to everyone, no allowlist. Public mint is now sold out. This checker is a hub preview, not an on-chain mint allowlist.",
+    q: "What do I need in my wallet?",
+    a: "A little ETH on Robinhood Chain (chain id 4663): 0.002 for the Ignite fee, plus a bit more for gas. If you already moved the $TERM out of the egg, approve that $TERM and then Ignite.",
   },
   {
-    q: "What is the arcade?",
-    a: "Ignite the Dial is an endless CRT climber at /arcade, in the Doodle Jump style. Bounce example BOLT (the robot pet, not the handheld token art) up pads until you fall — there is no round timer. Steer left and right, wrap the edges, and watch for moving, snapping, and glitch pads. Catch Dial ticks and chain combos. One best score per wallet. Top 150 wallets locked GTD (and FCFS via GTD) on the hub checker before the Friday mint. Public mint is sold out; the arcade stays playable. Hub preview only — not an on-chain mint allowlist.",
+    q: "I don't see my egg.",
+    a: "The mint is over. This page only lists eggs in the wallet you connected. If yours is in a different wallet, connect that one.",
   },
   {
-    q: "How many can I mint?",
-    a: `None remaining — public mint is sold out (${SITE.publicSupply}/${SITE.publicSupply}). During the drop it was 1 per public phase window. Historical phases on ${mintSchedule.date}: ${mintScheduleCopy.phasesLong}. Thursday team allocation was owner-only teamMint, not a collector mint. ${mintAllocation.sentence} Free mint — no mint price.`,
+    q: "What happens after Ignite?",
+    a: `Your pet wakes up and Dial assigns its stock rewards (1 to 4, from ${SITE.stocks}). Awake pets can earn from Hopper payouts. Sleeping eggs earn nothing. You cannot put a pet back to sleep.`,
   },
   {
-    q: "What is $TERM?",
-    a: "Terminal Pets’ own ERC-20 memecoin on Robinhood Chain. Symbol $TERM. Not AGENT / freights.one. Collection NFT symbol stays TERM. Each pet’s allotment covers the $TERM half of one Ignite from token supply. Ignite splits the 1,000 $TERM fee 37.5% burn / 25% to Hopper as ETH / 37.5% back into the allotment escrow (pool refill — that tokenId stays consumed). Plus 0.002 ETH: 50% buys $TERM and burns, 50% to Hopper. Team earns 0 from that ETH fee. $TERM is not fee-on-transfer. When the canonical TERM/ETH pool is live, TermMarket skims 3% of that pool’s swap volume: 1.5% to Hopper (as ETH), 1% buy/burn, 0.5% treasury.",
+    q: "When do payouts start?",
+    a: `The Hopper is an ETH pot. Pulse pays awake pets from that pot. Payouts stay locked for ${SITE.hopperLock} after the collection was revealed. Your pet shows the date when the contract has one. If it says payouts are open, the lock is over.`,
   },
   {
-    q: "Do I need to buy $TERM to Ignite?",
-    a: "Not for the $TERM half of the first wake. Minting a pet reserves 1,000 $TERM (placeholder) in the IgniteModule escrow for that tokenId. Ignite spends the allotment directly — no DEX buy. You can instead claimIgniteAllotment while Dormant, then approve and Ignite from your wallet. You still send 0.002 ETH with Ignite: 50% buys $TERM and burns, 50% goes to Hopper. Team earns 0 from that ETH fee. 25% of the $TERM fee becomes Hopper ETH once a swap router is set (otherwise it parks until flush). 37.5% of the fee returns to the allotment pool for other pets. After this token’s allotment is used, that id cannot claim again. v1 Lit stays Lit on transfer.",
-  },
-  {
-    q: "What is Ignite?",
-    a: "A one-way wake, off until reveal. Hybrid fee: 1,000 $TERM (allotment or wallet) split 37.5% burned, 25% converted to ETH for the Hopper, 37.5% returned to the Ignite allotment escrow — not treasury — plus exactly 0.002 ETH, half buy-and-burn $TERM, half Hopper. Team earns 0 from the ETH fee. The pet turns Lit and stays Lit on transfer. You cannot un-Ignite.",
+    q: "Why can't I collect yet?",
+    a: "Collect stays off until a payout is waiting. Pulse has to run first, which needs the Hopper pot to be large enough and the lock to be over. Sleeping eggs never have a payout.",
   },
   {
     q: "What is Dial?",
-    a: `Ignite assigns 1–4 Robinhood Chain Stock Tokens from a fixed pool (${DIAL_COPY.poolLine}) by shell class: ALPHA Common → 1, BETA Rare → 2, DELTA Epic → 3, OMEGA Legendary → 4. Holders do not pick. Equal weights. Pulse swaps that Lit share into those tokens (to the TBA, or the owner if TBA delivery is off). If a Dial has no filled token addresses, that share buys $TERM — not ETH.`,
+    a: `The stock rewards assigned when you Ignite. You do not pick them. Rarer pets get more stocks. If a stock token is not set, that share is paid in $TERM instead. The pool is ${SITE.stocks}. These rewards are not ownership of the companies.`,
   },
   {
-    q: "What are Stock Tokens here?",
-    a: `Robinhood Chain Stock Tokens Pulse may buy with Hopper ETH according to each Lit pet’s assigned Dial (${DIAL_COPY.poolLine}). They credit the pet’s TBA (or the owner wallet if TBA delivery is off). They travel with the NFT; the owner can withdraw. They are not shares of those companies.`,
+    q: "What are the Hopper and Pulse?",
+    a: "The Hopper is the ETH pot. Pulse is the payout that splits it among awake pets and turns each share into that pet's stocks (or $TERM). The pot itself stays ETH until then. Nobody can withdraw it for themselves.",
   },
   {
-    q: "Do I own the stock company?",
-    a: "No. Dial and Pulse Stock Token rewards are promotional on-chain rewards. They are not dividends, equity, shareholder rights, or ownership of any underlying company. Holding a pet or receiving Stock Tokens confers no legal interest in those companies. Not financial or investment advice.",
+    q: "I already took the $TERM out of my egg.",
+    a: "Ignite then needs an approval so the pet can spend 1,000 $TERM from your wallet, plus the 0.002 ETH fee. The egg shows Approve first, then Ignite.",
   },
   {
-    q: "What if a pet has no Dial?",
-    a: "Every Lit pet is assigned Dial at Ignite. If those stock addresses are still unset, or assignment was skipped, that Lit pet’s Pulse share buys $TERM via the market router and credits the TBA (or the owner wallet if TBA delivery is off). Not ETH. Dormant pets are not assigned Dial and earn nothing on Pulse.",
-  },
-  {
-    q: "What is the Hopper?",
-    a: "A locked ETH pot with no admin withdraw. After reveal it fills from 5% of each secondary NFT sale via the RoyaltySplitter, from 50% of each Ignite 0.002 ETH fee, from 25% of each Ignite $TERM fee (swapped to ETH when a router is set), and — once the canonical $TERM market is live — from a 1.5% TermMarket swap skim. During the 24h sealed window, secondary royalties do not enter the Hopper — they go 100% to TermFund. After reveal, Hopper claims and Pulse payouts stay locked for 7 days (timer from reveal, not from first Ignite) while ETH still accrues. Then claims open. The other 50% of Ignite ETH buys $TERM and burns. Hopper stays ETH until Pulse.",
-  },
-  {
-    q: "What is TermFund?",
-    a: "The $TERM liquidity pot. Pre-reveal, 100% of the 7.5% secondary royalty stream lands here to seed LP. Ignite’s 0.002 ETH does not. Ignite’s 37.5% $TERM refill stays on IgniteModule as allotment escrow, not here. Team can later seedLiquidity with fund ETH plus treasury $TERM — manual ops, not an automatic Hopper divert. No owner withdraw.",
-  },
-  {
-    q: "How does the Pulse ladder work?",
-    a: "Not a fixed 0.5 ETH line. Bootstrap (once): Hopper available() must hit 0.1 ETH, then 0.2, 0.3 … up to 1.0 ETH, stepping 0.1 each successful Pulse. After the Pulse at 1.0 during bootstrap, the next threshold is 0.5 ETH — never 0.1 again. Then it cycles 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, back to 0.5, forever.",
-  },
-  {
-    q: "Who earns from Pulse?",
-    a: "Lit terminals only, pro-rata at the snapshot. Pulse reads each Dial, swaps Hopper ETH into the assigned Stock Tokens, and credits TBAs (or owner wallets). Lit pets with no filled Dial addresses get $TERM the same way. Dormant earn nothing. The Hopper pot itself stays ETH.",
-  },
-  {
-    q: "What is a TBA?",
-    a: "A token-bound account (ERC-6551) attached at mint. Pulse typically delivers Stock Tokens or $TERM there. Those assets travel with the NFT. The owner can withdraw. Delivery to the owner wallet is used if TBA delivery is off.",
-  },
-  {
-    q: "Can I see traits at mint?",
-    a: `No. Until CollectionNFT.reveal(), every tokenURI is ${SEALED_METADATA_URI}. Collectors cannot see traits, species, or rarity. ${SEALED_METADATA_URI_ALIAS} still resolves as a fallback alias until DNS is fully cut over. Hub carousel GIFs are examples / not mint supply and are not the live 4444 files.`,
-  },
-  {
-    q: "Where is the pet art?",
-    a: "Generative Pocket Critter PFPs — off-chain composed PNG/GIF, not on-chain SVG. Tokens mint Sealed: every tokenURI is the same hidden.json until CollectionNFT.reveal(), so collectors cannot see traits. After reveal, dormant egg GIFs go live; Ignite swaps to the matching awake pet GIF. Hub carousel GIFs (~25) are examples / not mint supply — not live collection tokenIds, and not hosted as /metadata/{lit,dormant}/{id}.json. The 4444 pin stays private until after reveal. The old Track A TerminalRenderer SVG pets are not product art.",
-  },
-  {
-    q: "Where do royalties go?",
-    a: "Depends when you sell. Pre-reveal (mint → activation): the full 7.5% creator royalty goes to TermFund for $TERM LP — nothing to Hopper, nothing to treasury from that stream. After CollectionNFT.reveal(): 5% Hopper / 2.5% team treasury. Always point OpenSea earnings at the RoyaltySplitter.",
-  },
-  {
-    q: "Are contract addresses live?",
-    a: "Robinhood mainnet (4663) is live. CollectionNFT 0x85e3f98b76b0a6c9166BA7aaB05BEc4ef17B7166. Public mint is sold out (4244/4244; totalSupply 4444). Collection stays sealed (revealed = false) until a future reveal — the hub does not auto-reveal. The /mint panel reads on-chain mintOpen / publicMinted and shows sold out. Production defaults are web/.env.production. Base Sepolia dry-run CollectionNFT 0xe1cC988CeC1C29764ba18523635De82d0C9B518F is the testing stack when NEXT_PUBLIC_CHAIN_ID=84532. Hybrid Ignite 0.002 ETH, Hopper 7 days, Dial 1–4 by shell class are product defaults.",
-  },
-  {
-    q: "How does the 24h reveal work?",
-    a: "Tokens mint Sealed — every tokenURI is the same hidden.json, so collectors cannot see traits. Ignite is off and $TERM public transfers are off. Secondary royalties (7.5%) go entirely to TermFund. After 24 hours anyone can call reveal(); the owner can call it earlier. Reveal serves dormant egg metadata, turns on Ignite and $TERM trading, and switches royalties to 5% Hopper / 2.5% treasury. Hopper payouts then stay locked 7 days from that reveal timestamp so people can Ignite before claims open. ETH from Ignite and post-reveal royalties still accrues in the pot. LP is seeded later from TermFund (pre-reveal royalties + optional treasury $TERM), not by draining the Hopper or taking Ignite ETH.",
-  },
-  {
-    q: "How do $TERM trading fees work?",
-    a: "Not a transfer tax — $TERM stays a normal ERC-20 so Uniswap-style routers keep working. Public transfers are off until reveal. After that, the canonical TERM/ETH pool calls TermMarket.onSwap. Default skim is 3% of input: 1.5% converted to ETH for the Hopper (Pulse fuel), 1.0% bought as $TERM and burned (or burned directly on sells), 0.5% treasury. Inactive until owner sets TERM_POOL and TERM_SWAP_ROUTER. Other pools are untaxed unless they opt in.",
+    q: "The wallet showed an error.",
+    a: "Usual causes: Ignite is not open, the ETH amount did not match the fee, this pet is not in the connected wallet, it is already awake, or the wallet needs more ETH on Robinhood Chain. The page turns those into a short message.",
   },
 ] as const;

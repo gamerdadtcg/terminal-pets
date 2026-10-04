@@ -25,6 +25,7 @@ export const collectionAbi = parseAbi([
   "function tokensOfOwner(address owner) view returns (uint256[])",
   "function isLit(uint256 tokenId) view returns (bool)",
   "function ownerOf(uint256 tokenId) view returns (address)",
+  "function tokenURI(uint256 tokenId) view returns (string)",
   "function royaltyInfo(uint256 tokenId, uint256 salePrice) view returns (address, uint256)",
 ]);
 
@@ -34,6 +35,7 @@ export const igniteAbi = parseAbi([
   "function litCount() view returns (uint256)",
   "function igniteFee() view returns (uint256)",
   "function igniteFeeEth() view returns (uint256)",
+  "function igniteEnabled() view returns (bool)",
   "function term() view returns (address)",
   "function termFund() view returns (address)",
   "function allotmentConsumed(uint256 tokenId) view returns (bool)",
@@ -63,6 +65,15 @@ export const pulseAbi = parseAbi([
   "function epochCount() view returns (uint256)",
   "function deliverToTba() view returns (bool)",
   "function tbaAddress(uint256 tokenId) view returns (address)",
+  "function previewDial(uint256 tokenId) view returns ((address token0, address token1, address token2, address token3, uint16 weight0, uint16 weight1, uint16 weight2, uint16 weight3, uint8 slot0, uint8 slot1, uint8 slot2, uint8 slot3, uint8 nLegs, uint8 shellClass))",
+  "function getDial(uint256 tokenId) view returns ((address token0, address token1, address token2, address token3, uint16 weight0, uint16 weight1, uint16 weight2, uint16 weight3, uint8 slot0, uint8 slot1, uint8 slot2, uint8 slot3, uint8 nLegs, uint8 shellClass))",
+]);
+
+export const erc20Abi = parseAbi([
+  "function allowance(address owner, address spender) view returns (uint256)",
+  "function approve(address spender, uint256 amount) returns (bool)",
+  "function balanceOf(address account) view returns (uint256)",
+  "function symbol() view returns (string)",
 ]);
 
 function envAddr(...keys: string[]): Address {

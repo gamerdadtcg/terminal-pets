@@ -1,3 +1,5 @@
+import { zeroAddress, type Address } from "viem";
+
 /** Robinhood Chain Stock Token Dial pool. Addresses live on PulseDistributor. */
 
 /**
@@ -91,3 +93,56 @@ export const DIAL_COPY = {
     (row) => `${row.className} ${row.rarity} → ${row.stocks}`,
   ).join(" · "),
 } as const;
+
+export type DialView = {
+  token0: Address;
+  token1: Address;
+  token2: Address;
+  token3: Address;
+  nLegs: number;
+  shellClass: number;
+};
+
+export function asDial(result: unknown): DialView | null {
+  if (!result || typeof result !== "object") return null;
+  const row = result as Record<string, unknown>;
+  const list = result as unknown[];
+  const token0 = (row.token0 ?? list[0]) as Address | undefined;
+  if (typeof token0 !== "string") return null;
+  const addressAt = (key: string, index: number) =>
+    (row[key] ?? list[index]) as Address;
+  return {
+    token0,
+    token1: addressAt("token1", 1),
+    token2: addressAt("token2", 2),
+    token3: addressAt("token3", 3),
+    nLegs: Number(row.nLegs ?? list[12] ?? 0),
+    shellClass: Number(row.shellClass ?? list[13] ?? 0),
+  };
+}
+
+export function stockLabel(address: string) {
+  if (!address || address.toLowerCase() === zeroAddress) return "$TERM";
+  const hit = STOCK_POOL.find(
+    (stock) => stock.address.toLowerCase() === address.toLowerCase(),
+  );
+  return hit ? hit.name : "Stock token";
+}
+
+export function dialRewardLabels(dial: DialView) {
+  const count = Number.isFinite(dial.nLegs) ? Math.max(0, dial.nLegs) : 0;
+  return [dial.token0, dial.token1, dial.token2, dial.token3]
+    .slice(0, count)
+    .map((address) => stockLabel(address));
+}
+
+export function joinLabels(labels: string[]) {
+  if (labels.length === 0) return "";
+  if (labels.length === 1) return labels[0];
+  if (labels.length === 2) return `${labels[0]} and ${labels[1]}`;
+  return `${labels.slice(0, -1).join(", ")}, and ${labels[labels.length - 1]}`;
+}
+
+export function shellRarity(shellClass: number) {
+  return SHELL_DIAL[shellClass - 1]?.rarity ?? null;
+}
