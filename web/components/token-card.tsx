@@ -1,6 +1,7 @@
 "use client";
 
 import { PetImage } from "@/components/pet-image";
+import { RevealPostButton } from "@/components/reveal-post-button";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -221,6 +222,11 @@ export function TokenCard({
         )}
         {lit && (
           <div className="space-y-2">
+            <RevealPostButton
+              tokenId={tokenId}
+              rewards={rewardLine}
+              prominent={justAwoke}
+            />
             <Button
               className="h-11 w-full"
               variant={canCollect ? "default" : "outline"}

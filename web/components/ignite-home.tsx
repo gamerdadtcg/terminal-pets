@@ -3,6 +3,7 @@
 import { ConnectButton } from "@/components/connect-button";
 import { FaqList } from "@/components/faq-list";
 import { NetworkHelp } from "@/components/network-help";
+import { RevealPostButton } from "@/components/reveal-post-button";
 import { TokenCard } from "@/components/token-card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -377,6 +378,11 @@ export function IgniteHome() {
                     Next: it earns from Pulse payouts out of the Hopper ETH pot.{" "}
                     {payoutCopy}
                   </p>
+                  <RevealPostButton
+                    tokenId={awakenedId}
+                    rewards={awakeRewards}
+                    prominent
+                  />
                   <Button variant="outline" size="sm" asChild>
                     <Link href="/hopper">See Hopper & Pulse</Link>
                   </Button>
