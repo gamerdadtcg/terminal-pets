@@ -15,7 +15,7 @@ export function revealGifUrls(tokenUri: string, tokenId: string) {
   };
 }
 
-export function revealPostText(input: {
+export function revealPost(input: {
   tokenId: string;
   name: string | null;
   rewards?: string;
@@ -24,9 +24,13 @@ export function revealPostText(input: {
     ? `${input.name} #${input.tokenId}`
     : `Terminal Pet #${input.tokenId}`;
   const dial = input.rewards?.trim()
-    ? ` Dial assigned ${input.rewards.trim()}.`
+    ? ` Dial gave me ${input.rewards.trim()}.`
     : "";
-  return `I ignited ${who} on ${SITE.chain}.${dial} The egg opened and the pet is awake. ${SITE.url}`;
+  return {
+    title: "I just woke up",
+    subtitle: who,
+    text: `I just woke up. I'm ${who} on ${SITE.chain}.${dial} ${SITE.url}`,
+  };
 }
 
 export function revealFileName(tokenId: string) {

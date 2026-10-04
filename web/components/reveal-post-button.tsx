@@ -6,7 +6,7 @@ import { resolvePetMeta } from "@/lib/pet-image";
 import {
   revealFileName,
   revealGifUrls,
-  revealPostText,
+  revealPost,
 } from "@/lib/reveal-post";
 import { useState } from "react";
 import { useReadContract } from "wagmi";
@@ -61,20 +61,20 @@ export function RevealPostButton({
         artRes.arrayBuffer(),
       ]);
       const { composeRevealGif } = await import("@/lib/reveal-gif");
-      const text = revealPostText({ tokenId: id, name: meta.title, rewards });
+      const post = revealPost({ tokenId: id, name: meta.title, rewards });
       const gif = await composeRevealGif(egg, art, {
-        title: meta.title ? `${meta.title}  #${id}` : `Terminal Pet #${id}`,
-        subtitle: "Egg opened  ·  pet awake",
+        title: post.title,
+        subtitle: post.subtitle,
       });
       downloadGif(gif, revealFileName(id));
       let copied = false;
       try {
-        await navigator.clipboard.writeText(text);
+        await navigator.clipboard.writeText(post.text);
         copied = true;
       } catch {
         copied = false;
       }
-      setCaption(copied ? null : text);
+      setCaption(copied ? null : post.text);
       setNote(
         copied
           ? "Saved the GIF. The caption is copied — paste it with the GIF."
@@ -98,7 +98,7 @@ export function RevealPostButton({
         {working ? "Building your GIF…" : "Save reveal post"}
       </Button>
       <p className="text-xs text-muted-foreground">
-        Plays your egg, opens into your pet, then saves the GIF.
+        Saves a GIF of your egg opening into your pet, and copies “I just woke up…”.
       </p>
       {note && <p className="text-xs text-muted-foreground">{note}</p>}
       {caption && (
