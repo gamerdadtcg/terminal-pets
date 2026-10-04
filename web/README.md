@@ -1,6 +1,8 @@
 # Terminal Pets dapp
 
-Next.js + wagmi + viem UI. Primary mint is `/mint` (`CollectionNFT.mint` / `mintTo` while `mintOpen`). Ignite, Hopper, Pulse, and TBA live on `/app`. Arcade GTD contest is `/arcade`.
+Next.js + wagmi + viem UI. The homepage is Ignite. How it works is `/how`. Hopper and Pulse are `/hopper`.
+
+`/mint`, `/app`, `/arcade`, and `/eligible` redirect to `/`. `/dial` redirects to `/how`.
 
 ```bash
 cp .env.example .env.local
@@ -10,8 +12,10 @@ npm install
 npm run dev    # http://127.0.0.1:43147
 ```
 
-`NEXT_PUBLIC_COLLECTION_NFT` aliases `NEXT_PUBLIC_COLLECTION_ADDRESS`. Robinhood mainnet is chain `4663` (CollectionNFT `0x85e3f98b76b0a6c9166BA7aaB05BEc4ef17B7166`). Production loads `web/.env.production`. Base Sepolia `84532` (or chain env blank in local `next dev`) falls back to dry-run CollectionNFT `0xe1cC988CeC1C29764ba18523635De82d0C9B518F`.
+`NEXT_PUBLIC_COLLECTION_NFT` aliases `NEXT_PUBLIC_COLLECTION_ADDRESS`. Robinhood mainnet is chain `4663` (CollectionNFT `0x85e3f98b76b0a6c9166BA7aaB05BEc4ef17B7166`). Production loads `web/.env.production`. Base Sepolia `84532` (or a blank chain env in local `next dev`) falls back to the dry-run stack.
 
-Canonical public origin is `https://terminalpets.xyz` (`NEXT_PUBLIC_SITE_URL`, default in `lib/site.ts`). `https://terminal-pets.vercel.app` remains a fallback alias until DNS is fully cut over. Sealed metadata: `https://terminalpets.xyz/metadata/hidden.json`.
+Canonical public origin is `https://terminalpets.xyz` (`NEXT_PUBLIC_SITE_URL`, default in `lib/site.ts`). `https://terminal-pets.vercel.app` remains a fallback alias until DNS is fully cut over.
 
-See the repository root README for deploy, 24h sealed reveal (every tokenURI is hidden.json until CollectionNFT.reveal()), generative Pocket Critter examples (not mint supply), OpenSea royalty → RoyaltySplitter (pre-reveal 100% TermFund; post-reveal 5/2.5), Pulse ladder, `$TERM` allotment, and contract addresses. Studio BYO is blocked — hub mint is primary.
+Ignite sends the on-chain `igniteFeeEth()` value. That fee is 0.002 ETH on the deployed Robinhood Chain module. The UI does not substitute a hardcoded fee if the read has not loaded.
+
+Wallet connection uses the browser's injected wallet (MetaMask, Rabby, Coinbase extension, and other EIP-1193 wallets). Phones without an injected provider get links to open the site in MetaMask or Coinbase Wallet. WalletConnect is not bundled.

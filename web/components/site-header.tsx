@@ -1,31 +1,19 @@
 "use client";
 
-import { ComingSoon } from "@/components/coming-soon";
 import { ConnectButton } from "@/components/connect-button";
-import { Button } from "@/components/ui/button";
 import { configuredChainId } from "@/lib/chain";
-import { collectionConfigured } from "@/lib/contracts";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import type { ReactNode } from "react";
 
 const NAV = [
-  { href: "/mint", label: "Mint" },
-  { href: "/arcade", label: "Arcade" },
-  { href: "/#eligible", label: "Eligible" },
-  { href: "/#how", label: "How" },
-  { href: "/#art", label: "Art" },
-  { href: "/hopper", label: "Hopper" },
-  { href: "/dial", label: "Dial" },
-  { href: "/#economics", label: "Econ" },
-  { href: "/#status", label: "Status" },
-  { href: "/#faq", label: "FAQ" },
+  { href: "/", label: "Ignite" },
+  { href: "/how", label: "How it works" },
+  { href: "/hopper", label: "Hopper & Pulse" },
 ] as const;
 
-export function SiteHeader({ trailing }: { trailing?: ReactNode }) {
+export function SiteHeader() {
   const pathname = usePathname();
-  const live = collectionConfigured();
   const chainId = configuredChainId();
 
   return (
@@ -40,27 +28,17 @@ export function SiteHeader({ trailing }: { trailing?: ReactNode }) {
               Terminal Pets
             </p>
           </Link>
-          <div className="flex items-center gap-2">
-            {live ? (
-              <ComingSoon className="hidden sm:inline-flex">Sold out</ComingSoon>
-            ) : (
-              <ComingSoon className="hidden sm:inline-flex" />
-            )}
-            <Button size="sm" asChild>
-              <Link href="/mint">Mint</Link>
-            </Button>
-            <Button size="sm" variant="outline" asChild>
-              <Link href="/app">Terminal</Link>
-            </Button>
-            {trailing ?? <ConnectButton />}
-          </div>
+          <ConnectButton />
         </div>
         <nav
           aria-label="Site"
           className="-mx-1 flex gap-1 overflow-x-auto pb-0.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         >
           {NAV.map((item) => {
-            const active = !item.href.includes("#") && pathname === item.href;
+            const active =
+              item.href === "/"
+                ? pathname === "/"
+                : pathname === item.href || pathname.startsWith(`${item.href}/`);
             return (
               <Link
                 key={item.href}
