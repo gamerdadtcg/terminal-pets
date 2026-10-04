@@ -24,8 +24,8 @@ export function SiteFooter() {
           </p>
           <p className="text-sm font-medium">{SITE.name}</p>
           <p className="max-w-sm text-sm text-muted-foreground">
-            Minted out. Wake a sleeping egg on {SITE.chain}. Awake pets earn
-            from the Hopper.
+            Minted out. Wake a sleeping egg on {SITE.chain}. Awake pets can
+            earn from the Hopper.
           </p>
           <p className="max-w-lg text-xs leading-relaxed text-muted-foreground/80">
             {SITE.disclaimer}

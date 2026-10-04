@@ -11,7 +11,7 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "How it works",
   description:
-    "Sleeping eggs wake with Ignite. Dial assigns stock rewards. The Hopper holds ETH, and Pulse pays awake pets after a 7-day lock.",
+    "Sleeping eggs wake with Ignite. Dial assigns stock rewards. The Hopper holds ETH. Pulse can run after a 7-day lock, and awake pets can claim if it does.",
 };
 
 export default function HowPage() {
@@ -26,7 +26,7 @@ export default function HowPage() {
               HOW IT WORKS
             </p>
             <h1 className="text-4xl font-semibold tracking-tight">
-              Egg, wake up, get paid.
+              Egg, wake up, claim.
             </h1>
             <p className="text-lg text-muted-foreground">
               The mint is over. If you hold an egg, connect that wallet on the
@@ -44,7 +44,7 @@ export default function HowPage() {
               Every pet starts as a sleeping egg. Ignite is the one-time
               wake-up. After that the pet stays awake, even if you sell it.
               You cannot put it back to sleep. Sleeping eggs do not earn.
-              Awake pets do.
+              Awake pets can, if Pulse runs.
             </p>
           </section>
 
@@ -64,12 +64,12 @@ export default function HowPage() {
             <p className="text-muted-foreground">
               When the pet wakes, Dial assigns its stock rewards. You do not
               pick them. A common pet gets one stock. Rarer pets get more, up
-              to four. If a stock token is not set, that share is paid in $TERM
+              to four. If a stock token is not set, that share can be $TERM
               instead.
             </p>
             <Card>
               <CardHeader>
-                <CardTitle className="text-base">Stocks pets can earn</CardTitle>
+                <CardTitle className="text-base">Stocks Dial can assign</CardTitle>
               </CardHeader>
               <CardContent>
                 <ul className="grid grid-cols-2 gap-2 sm:grid-cols-4">
@@ -109,18 +109,18 @@ export default function HowPage() {
             <p className="text-muted-foreground">
               The Hopper is a pot of ETH. It fills when people Ignite and when
               pets are sold. Nobody can take the pot for themselves. It sits
-              there until a payout.
+              there until someone runs Pulse.
             </p>
           </section>
 
           <section className="space-y-2">
             <h2 className="text-2xl font-semibold">Pulse</h2>
             <p className="text-muted-foreground">
-              Pulse is the payout. Once the pot is big enough, and {SITE.hopperLock}{" "}
-              have passed since the collection was revealed, anyone can run
-              Pulse. Awake pets split what is paid out. Each share is turned
-              into that pet&apos;s stocks (or $TERM) and sent to the pet. Come
-              back to Ignite and press Collect when something is waiting.
+              Pulse can share the pot with awake pets once the pot is big
+              enough, and {SITE.hopperLock} have passed since the collection
+              was revealed. Anyone can run it. Each share can be turned into
+              that pet&apos;s stocks, or $TERM. If something is waiting, come
+              back to Ignite and press Claim.
             </p>
             <Button variant="outline" asChild>
               <Link href="/hopper">Hopper & Pulse</Link>

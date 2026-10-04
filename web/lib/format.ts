@@ -42,11 +42,11 @@ export function formatUnixUtc(seconds?: bigint) {
 }
 
 export function payoutLockCopy(unlocked?: boolean, unlockTime?: bigint) {
-  if (unlocked) return "Payouts are open.";
+  if (unlocked) return "Pulse can run.";
   const when = formatUnixUtc(unlockTime);
-  if (when) return `Payouts open ${when}.`;
-  if (unlocked === undefined) return "Checking when payouts open…";
-  return "Payouts open 7 days after the collection was revealed.";
+  if (when) return `Pulse can run ${when}.`;
+  if (unlocked === undefined) return "Checking when Pulse can run…";
+  return "Pulse can run 7 days after the collection was revealed.";
 }
 
 export function explorerAddress(base: string, address: string) {

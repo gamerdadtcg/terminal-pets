@@ -53,8 +53,8 @@ const STEPS = [
   },
   {
     n: "3",
-    title: "Collect",
-    body: "Awake pets earn from the Hopper after the lock.",
+    title: "Claim",
+    body: "Awake pets can earn from the Hopper if Pulse runs.",
   },
 ] as const;
 
@@ -375,7 +375,7 @@ export function IgniteHome() {
                     {awakeRewards ? ` and Dial assigned ${awakeRewards}` : ""}.
                   </p>
                   <p>
-                    Next: it earns from Pulse payouts out of the Hopper ETH pot.{" "}
+                    Next: it can earn from the Hopper if Pulse runs.{" "}
                     {payoutCopy}
                   </p>
                   <RevealPostButton
@@ -433,7 +433,7 @@ export function IgniteHome() {
                       );
                     }}
                     onClaim={() =>
-                      run(`Collect #${id}`, () =>
+                      run(`Claim #${id}`, () =>
                         writeContract({
                           address: addresses.pulse,
                           abi: pulseAbi,
@@ -478,7 +478,7 @@ export function IgniteHome() {
           <Stat
             label="Awake pets"
             value={litCount !== undefined ? litCount.toString() : stats.isLoading ? "…" : "—"}
-            hint="Only awake pets earn payouts"
+            hint="Only awake pets can earn"
           />
           <Stat
             label="Hopper pot"
@@ -486,7 +486,7 @@ export function IgniteHome() {
             hint={payoutCopy}
           />
           <Stat
-            label="Next payout needs"
+            label="Pulse needs"
             value={formatEthTrim(threshold)}
             hint={
               <span>
@@ -503,7 +503,7 @@ export function IgniteHome() {
           <CardContent className="space-y-3 pt-5">
             <div className="flex items-end justify-between font-mono text-xs text-muted-foreground">
               <span>{formatEthTrim(available)} in the pot</span>
-              <span>{formatEthTrim(threshold)} to the next payout</span>
+              <span>{formatEthTrim(threshold)} before Pulse can run</span>
             </div>
             <Progress value={hopperFill(available, threshold)} />
           </CardContent>

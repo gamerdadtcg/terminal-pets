@@ -20,7 +20,7 @@ export const SITE = {
   urlAlias: SITE_URL_ALIAS,
   tagline: "Your eggs are ready. Wake them up.",
   description:
-    "Minted out. Wake your Terminal Pet on Robinhood Chain: connect the wallet that holds your egg and Ignite it for 0.002 ETH. The $TERM is already in the egg. Awake pets earn payouts from the Hopper.",
+    "Minted out. Wake your Terminal Pet on Robinhood Chain: connect the wallet that holds your egg and Ignite it for 0.002 ETH. The $TERM is already in the egg. Awake pets can earn from the Hopper.",
   disclaimer:
     "Dial and Pulse stock rewards are promotional on-chain rewards. They are not dividends, equity, shareholder rights, or ownership of any underlying company. Holding a pet or receiving stock tokens confers no legal interest in those companies. Not financial or investment advice.",
   chain: "Robinhood Chain",
@@ -76,23 +76,23 @@ export const FAQ = [
   },
   {
     q: "What happens after Ignite?",
-    a: `Your pet wakes up and Dial assigns its stock rewards (1 to 4, from ${SITE.stocks}). Awake pets can earn from Hopper payouts. Sleeping eggs earn nothing. You cannot put a pet back to sleep.`,
+    a: `Your pet wakes up and Dial assigns its stock rewards (1 to 4, from ${SITE.stocks}). Awake pets can earn from the Hopper if Pulse runs. Sleeping eggs do not. You cannot put a pet back to sleep.`,
   },
   {
-    q: "When do payouts start?",
-    a: `The Hopper is an ETH pot. Pulse pays awake pets from that pot. Payouts stay locked for ${SITE.hopperLock} after the collection was revealed. Your pet shows the date when the contract has one. If it says payouts are open, the lock is over.`,
+    q: "When can pets earn?",
+    a: `The Hopper holds ETH. Pulse can run ${SITE.hopperLock} after the collection was revealed, and only if the pot is large enough. Your pet shows the date when the contract has one. If Pulse runs, an awake pet can have something to claim. Nothing is sent on a schedule.`,
   },
   {
-    q: "Why can't I collect yet?",
-    a: "Collect stays off until a payout is waiting. Pulse has to run first, which needs the Hopper pot to be large enough and the lock to be over. Sleeping eggs never have a payout.",
+    q: "Why can't I claim yet?",
+    a: "Claim stays off until something is waiting. Pulse has to run first, which needs the Hopper pot to be large enough and the lock to be over. Sleeping eggs do not earn.",
   },
   {
     q: "What is Dial?",
-    a: `The stock rewards assigned when you Ignite. You do not pick them. Rarer pets get more stocks. If a stock token is not set, that share is paid in $TERM instead. The pool is ${SITE.stocks}. These rewards are not ownership of the companies.`,
+    a: `The stock rewards assigned when you Ignite. You do not pick them. Rarer pets get more stocks. If a stock token is not set, that share can be $TERM instead. The pool is ${SITE.stocks}. These rewards are not ownership of the companies.`,
   },
   {
     q: "What are the Hopper and Pulse?",
-    a: "The Hopper is the ETH pot. Pulse is the payout that splits it among awake pets and turns each share into that pet's stocks (or $TERM). The pot itself stays ETH until then. Nobody can withdraw it for themselves.",
+    a: "The Hopper is the ETH pot. Pulse can split it among awake pets and turn each share into that pet's stocks (or $TERM), which you claim on the pet. The pot itself stays ETH until then. Nobody can withdraw it for themselves.",
   },
   {
     q: "I already took the $TERM out of my egg.",

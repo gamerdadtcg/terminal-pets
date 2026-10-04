@@ -123,11 +123,11 @@ export function TokenCard({
 
   let collectHint: string | null = null;
   if (!lit) {
-    collectHint = "Wake this pet first. Sleeping eggs don't earn payouts.";
+    collectHint = "Wake this pet first. Sleeping eggs do not earn.";
   } else if (hopperUnlocked === false) {
     collectHint = payoutCopy;
   } else if (!canCollect) {
-    collectHint = "Nothing is waiting yet. Payouts show up after Pulse runs.";
+    collectHint = "Nothing is waiting to claim. A claim can show up after Pulse runs.";
   }
 
   let igniteHint = "The 1,000 $TERM is already in this egg. You only send the ETH fee.";
@@ -185,8 +185,8 @@ export function TokenCard({
                 : ""}
             </p>
             <p className="text-sm text-muted-foreground">
-              Next: this pet earns from Pulse payouts, paid out of the Hopper
-              ETH pot. {payoutCopy} Sleeping eggs do not earn.
+              Next: this pet can earn from the Hopper if Pulse runs. {payoutCopy}{" "}
+              Sleeping eggs do not.
             </p>
           </div>
         )}
@@ -201,7 +201,7 @@ export function TokenCard({
             <p className="font-mono text-sm">{lit ? "Paid" : feeLabel ?? "Reading…"}</p>
           </div>
           <div className="rounded-md border border-border/70 bg-background/40 p-2">
-            <p className="text-muted-foreground">Waiting payout</p>
+            <p className="text-muted-foreground">Waiting to claim</p>
             <p className="font-mono text-sm">{formatEthTrim(pending)}</p>
           </div>
         </div>
@@ -233,7 +233,7 @@ export function TokenCard({
               onClick={onClaim}
               disabled={busy || !canCollect}
             >
-              {busy && canCollect ? "Collecting…" : "Collect payout"}
+              {busy && canCollect ? "Claiming…" : "Claim"}
             </Button>
             {collectHint && (
               <p className="text-xs text-muted-foreground">{collectHint}</p>

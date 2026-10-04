@@ -9,13 +9,13 @@ export function HopperExplainer() {
           HOPPER & PULSE
         </p>
         <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-          The pot, then the payout.
+          The pot, then a claim.
         </h1>
         <p className="text-muted-foreground">
           The Hopper is an ETH pot. It fills when eggs are Ignited and when
-          pets are sold. Pulse is the payout: it splits the pot among awake
-          pets and turns each share into that pet&apos;s stocks. Sleeping eggs
-          earn nothing. Nobody can withdraw the pot for themselves.
+          pets are sold. Pulse can split the pot among awake pets and turn
+          each share into that pet&apos;s stocks. Sleeping eggs do not earn.
+          Nobody can withdraw the pot for themselves.
         </p>
       </div>
 
@@ -25,7 +25,7 @@ export function HopperExplainer() {
             <CardTitle className="text-lg">Hopper</CardTitle>
           </CardHeader>
           <CardContent className="text-sm text-muted-foreground">
-            ETH only. Payouts stayed locked for {SITE.hopperLock} after the
+            ETH only. Pulse stayed locked for {SITE.hopperLock} after the
             collection was revealed, while the pot could still grow. The date
             on the right comes from the contract when it has one.
           </CardContent>
@@ -35,9 +35,10 @@ export function HopperExplainer() {
             <CardTitle className="text-lg">Pulse</CardTitle>
           </CardHeader>
           <CardContent className="text-sm text-muted-foreground">
-            Anyone can run a payout once the pot reaches the current rung and
-            the lock is over. Awake pets split it. Dial decides which stocks
-            they receive. If a stock token is not set, that share is $TERM.
+            Anyone can run Pulse once the pot reaches the current rung and
+            the lock is over. Awake pets can split it, then claim on the pet.
+            Dial picks which stocks. If a stock token is not set, that share
+            can be $TERM.
           </CardContent>
         </Card>
       </div>
@@ -48,9 +49,9 @@ export function HopperExplainer() {
         </CardHeader>
         <CardContent className="space-y-4 text-sm text-muted-foreground">
           <p>
-            The first payouts step up from 0.1 ETH to 1.0 ETH. After that they
-            cycle from 0.5 ETH to 1.0 ETH and never go back to 0.1. Below the
-            current rung, the ETH just stays in the pot.
+            Pulse steps up from 0.1 ETH to 1.0 ETH the first time. After that
+            it cycles from 0.5 ETH to 1.0 ETH and does not go back to 0.1.
+            Below the current rung, the ETH stays in the pot.
           </p>
           <div className="grid gap-4 sm:grid-cols-2">
             <div>

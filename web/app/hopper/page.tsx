@@ -9,7 +9,7 @@ import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Hopper & Pulse",
-  description: `The Hopper is the ETH pot. Pulse pays awake pets from it after a ${SITE.hopperLock} lock. Sleeping eggs earn nothing.`,
+  description: `The Hopper is the ETH pot. After a ${SITE.hopperLock} lock, Pulse can run and awake pets can claim. Sleeping eggs do not earn.`,
 };
 
 export default function HopperPage() {

@@ -24,7 +24,7 @@ export function revealPost(input: {
     ? `${input.name} #${input.tokenId}`
     : `Terminal Pet #${input.tokenId}`;
   const dial = input.rewards?.trim()
-    ? ` Dial gave me ${input.rewards.trim()}.`
+    ? ` Dial picked ${input.rewards.trim()} for me.`
     : "";
   return {
     title: "I just woke up",

@@ -75,25 +75,25 @@ export function HopperStatus() {
         <p className="font-mono text-2xl text-foreground">
           {formatEthTrim(available.data)}
         </p>
-        <p>In the Hopper. Next payout needs {formatEthTrim(threshold.data)}.</p>
+        <p>In the Hopper. Pulse needs {formatEthTrim(threshold.data)}.</p>
         <p>{configured ? payoutCopy : "Contracts aren't configured in this build."}</p>
         {ready ? (
-          <p>The pot is large enough for a payout.</p>
+          <p>The pot is large enough for Pulse.</p>
         ) : (
-          <p>A payout cannot run until the pot reaches the current rung and the lock is over.</p>
+          <p>Pulse cannot run until the pot reaches the current rung and the lock is over.</p>
         )}
         {!isConnected && (
           <p>
-            Connect a wallet on {chain.name} if you want to run the payout
-            yourself. You can also just wait. Collect on{" "}
+            Connect a wallet on {chain.name} if you want to run Pulse
+            yourself. You can also wait. Claim on{" "}
             <Link className="underline-offset-2 hover:underline" href="/">
               your pet
             </Link>{" "}
-            when something is waiting.
+            if something is waiting.
           </p>
         )}
         {isConnected && !onTarget && (
-          <p>Switch to {chain.name} before running a payout.</p>
+          <p>Switch to {chain.name} before running Pulse.</p>
         )}
         <Button
           className="w-full"
@@ -109,7 +109,7 @@ export function HopperStatus() {
             });
           }}
         >
-          {busy ? "Running payout…" : "Run payout"}
+          {busy ? "Running Pulse…" : "Run Pulse"}
         </Button>
         {error && (
           <div className="space-y-1">
@@ -125,12 +125,12 @@ export function HopperStatus() {
               target="_blank"
               rel="noreferrer"
             >
-              {waiting ? "Confirming payout…" : isSuccess ? "Payout confirmed" : "Payout sent"}
+              {waiting ? "Confirming…" : isSuccess ? "Pulse confirmed" : "Pulse sent"}
             </a>
           </p>
         )}
         {ran && isSuccess && (
-          <p>Payout sent. Awake pets can collect from the Ignite page.</p>
+          <p>Pulse ran. Awake pets can claim on the Ignite page if something is waiting.</p>
         )}
       </CardContent>
     </Card>
