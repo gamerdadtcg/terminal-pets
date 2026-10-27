@@ -22,6 +22,7 @@ docs/*
 !docs/STUDIO_DROP_DRYRUN.md
 !docs/MAINNET_PREP.md
 !docs/ARCADE_BUILD_BRIEF.md
+!docs/PULSE_V2_DESIGN.md
 
 # Dotenv file
 .env
