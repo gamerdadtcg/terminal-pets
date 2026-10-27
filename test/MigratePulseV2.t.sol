@@ -15,6 +15,9 @@ import {TermToken} from "../src/TermToken.sol";
 import {TermFund} from "../src/TermFund.sol";
 import {TermMarket} from "../src/TermMarket.sol";
 import {TermMarketFeeForwarder} from "../src/TermMarketFeeForwarder.sol";
+import {ISeaDropTokenContractMetadata} from "../src/interfaces/seadrop/ISeaDropTokenContractMetadata.sol";
+import {RoyaltySplitterV2} from "../src/RoyaltySplitterV2.sol";
+import {WETH9Mock} from "./RoyaltySplitterV2.t.sol";
 import {MockPulseRouter, MockStockToken} from "./mocks/MockPulseRouter.sol";
 import {MockTermSwapRouter} from "./mocks/MockTermSwapRouter.sol";
 import {PulseV2Config, PulseV2Migration} from "../script/MigratePulseV2.s.sol";
@@ -454,5 +457,110 @@ contract MigratePulseV2Test is Test {
         uint256 before = someone.balance;
         r.swapExactTokenForETH(address(term), 10 ether, someone);
         assertEq(someone.balance - before, 10 ether);
+    }
+
+    // ------------------------------------------------- royalties: steps 1c and 10
+
+    function _weth() internal returns (WETH9Mock w) {
+        w = new WETH9Mock();
+    }
+
+    function test_R_step1c_deploysSplitter_changesNoLiveState_matchesV1Treasury() public {
+        PulseV2Config memory c = _cfg();
+        vm.startPrank(owner);
+        (HopperV2 h,,) = PulseV2Migration.step1_deploy(c);
+        WETH9Mock w = _weth();
+        (address recvBefore, uint256 bpsBefore) = nft.royaltyInfo(1, 10_000);
+        RoyaltySplitterV2 rs = PulseV2Migration.step1c_deployRoyaltySplitter(c, h, address(w));
+        vm.stopPrank();
+        assertEq(rs.hopperV2(), address(h));
+        assertEq(rs.treasury(), treasury); // same treasury the live V1 splitter pays
+        assertEq(rs.weth(), address(w));
+        (address recvAfter, uint256 bpsAfter) = nft.royaltyInfo(1, 10_000);
+        assertEq(recvAfter, recvBefore);
+        assertEq(bpsAfter, bpsBefore);
+        assertEq(bpsAfter, 750);
+        PulseV2Migration.verifyRoyalty(c, h, rs, false);
+    }
+
+    function test_R_step1c_revertsIfWethHasNoCode() public {
+        PulseV2Config memory c = _cfg();
+        vm.startPrank(owner);
+        (HopperV2 h,,) = PulseV2Migration.step1_deploy(c);
+        vm.stopPrank();
+        vm.expectRevert(abi.encodeWithSelector(PulseV2Migration.Check.selector, "weth has no code"));
+        this.callStep1c(c, h, makeAddr("eoa"));
+    }
+
+    function callStep1c(PulseV2Config memory c, HopperV2 h, address w) external {
+        PulseV2Migration.step1c_deployRoyaltySplitter(c, h, w);
+    }
+
+    function callVerifyRoyalty(PulseV2Config memory c, HopperV2 h, RoyaltySplitterV2 rs, bool z) external view {
+        PulseV2Migration.verifyRoyalty(c, h, rs, z);
+    }
+
+    function test_R_step10_zeroesOnchainRoyalty_receiverStaysLocked_reversible() public {
+        PulseV2Config memory c = _cfg();
+        vm.startPrank(owner);
+        (HopperV2 h,,) = PulseV2Migration.step1_deploy(c);
+        RoyaltySplitterV2 rs = PulseV2Migration.step1c_deployRoyaltySplitter(c, h, address(_weth()));
+        vm.stopPrank();
+        vm.expectRevert(abi.encodeWithSelector(PulseV2Migration.Check.selector, "onchain royalty bps unexpected"));
+        this.callVerifyRoyalty(c, h, rs, true); // not done yet
+        vm.startPrank(owner);
+        (address recvBefore0,) = nft.royaltyInfo(1, 10_000);
+        PulseV2Migration.step10_zeroOnchainRoyalty(c);
+        vm.stopPrank();
+        (, uint256 amt) = nft.royaltyInfo(1, 10_000);
+        assertEq(amt, 0);
+        PulseV2Migration.verifyRoyalty(c, h, rs, true);
+        // receiver is still the locked V1 splitter; no lever points it anywhere else
+        assertEq(nft.royaltyReceiver(), recvBefore0);
+        vm.prank(owner);
+        vm.expectRevert(CollectionNFT.RoyaltyReceiverLocked.selector);
+        nft.setRoyaltyInfo(ISeaDropTokenContractMetadata.RoyaltyInfo(address(rs), 750));
+        // reversible
+        vm.prank(owner);
+        nft.setRoyaltyBps(750);
+        (, amt) = nft.royaltyInfo(1, 10_000);
+        assertEq(amt, 750);
+    }
+
+    function test_R_step10_onlyCollectionOwner() public {
+        PulseV2Config memory c = _cfg();
+        vm.expectRevert();
+        this.callStep10(c);
+    }
+
+    function callStep10(PulseV2Config memory c) external {
+        PulseV2Migration.step10_zeroOnchainRoyalty(c);
+    }
+
+    function test_R_royaltiesThroughSplitterV2_fundHopperV2_thenPulseAndClaim() public {
+        (HopperV2 h, PulseDistributorV2 p,) = _migrateB();
+        PulseV2Config memory c = _cfg();
+        vm.startPrank(owner);
+        WETH9Mock w = _weth();
+        RoyaltySplitterV2 rs = PulseV2Migration.step1c_deployRoyaltySplitter(c, h, address(w));
+        vm.stopPrank();
+
+        uint256 v1Before = address(hopperV1).balance;
+        // an ETH royalty (plain transfer) and a WETH royalty (accepted-offer sale), 0.15 ETH each
+        vm.deal(address(this), 0.3 ether);
+        (bool ok,) = address(rs).call{value: 0.15 ether}("");
+        assertTrue(ok);
+        w.deposit{value: 0.15 ether}();
+        w.transfer(address(rs), 0.15 ether);
+        rs.unwrapWeth();
+
+        assertEq(address(h).balance, 0.2 ether); // 2/3 of 0.3
+        assertEq(treasury.balance, 0.1 ether);
+        assertEq(address(hopperV1).balance, v1Before); // nothing reaches the V1 Hopper
+        assertEq(h.available(), 0.2 ether);
+        assertGe(h.available(), 0.1 ether); // above the 0.1 ETH first-pulse threshold
+
+        p.pulse();
+        assertEq(p.epochCount(), 1);
     }
 }
