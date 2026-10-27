@@ -58,7 +58,7 @@ Where each fee goes **after** this migration:
 | Ignite ETH fee (`igniteFeeEth`, 0.002 ETH) | 0.001 ETH to V1 Hopper (hardwired), 0.001 ETH buy-and-burn | **Set to 0.** Nothing is charged in ETH, so nothing more lands in V1 Hopper from Ignite |
 | Ignite `$TERM` fee (`igniteFee`, 1000 TERM = 1e21) | 25% to ETH to V1 Hopper, 37.5% burn, 37.5% allotment-escrow refill | Unchanged amounts and bps. The 25% swap's ETH is redirected to **HopperV2** |
 | TermMarket fees (3% total: 1.5% hopper / 1% burn / 0.5% treasury) | Hopper cut hardwired to the V1 Hopper (ETH side: `hopper.deposit`; `$TERM` side: swapped to the V1 Hopper address) | **Fixed.** `setFeeBps(0, 100, 200)` + `setTreasury(TermMarketFeeForwarder)`. Same 3% total, same 1% burn. The forwarder sends 75% of the treasury stream to **HopperV2** and 25% to the real treasury (ETH immediately, `$TERM` via a keeper `flushTerm`). Nothing more lands in the V1 Hopper |
-| Royalties (RoyaltySplitter) | V1 Hopper (locked) | Unchanged: still V1 Hopper |
+| Royalties (7.5%, 2/3 Hopper, 1/3 treasury) | On-chain `royaltyInfo` -> V1 RoyaltySplitter -> V1 Hopper (locked) | **Re-routed for OpenSea.** New `RoyaltySplitterV2` (2/3 HopperV2, 1/3 same treasury); the collection owner points OpenSea Studio creator earnings at it (manual). The on-chain receiver stays locked to the V1 splitter; optional step 10 sets on-chain bps to 0 so ERC-2981 marketplaces stop paying the V1 Hopper |
 | Pulse | V1 Pulse | V2 for all new Ignites; V1 Pulse can still pay the 3 pets lit before the migration, while lit stays under ~340 |
 
 Live facts used (supplied by the owner; step 1 reads the router on-chain and `verifyState` re-checks the fee values): Ignite `swapRouter` = `0xDe6dF0527608A20121ecD6aA009C198Ca1cba28F`, `igniteFee` = 1e21, `igniteFeeEth` = 2e15, `pendingHopperTerm` = 0. The redirect router wraps that same adapter; step 1 refuses to run if TermMarket's router is set to a different adapter.
@@ -82,10 +82,28 @@ If the DEX swap reverts, a swap requested by Ignite returns the 250 `$TERM` to I
 ### Royalties: confirmed not redirectable
 `RoyaltySplitter.hopper` is `immutable` and the splitter has no setter. `CollectionNFT.royaltyReceiver` is `immutable` and `setRoyaltyInfo` reverts `RoyaltyReceiverLocked`. Both confirmed on mainnet (`royaltyReceiver()` = splitter, `splitter.hopper()` = V1 Hopper, splitter owner = the deployer EOA but it has no admin setter, bytecode identical to the repo build). The only lever is `CollectionNFT.setRoyaltyBps(bps)` (owner): lowering or zeroing royalties is an economics change, not a redirect, and it does not recover anything already in the V1 Hopper. Royalty ETH therefore keeps accruing in the V1 Hopper, reachable only through V1 Pulse.
 
+### RoyaltySplitterV2 and the OpenSea payout (`src/RoyaltySplitterV2.sol`)
+The on-chain ERC-2981 receiver cannot change, but OpenSea lets the collection owner set a creator-earnings payout address in Studio (help.opensea.io, "How do I set creator earnings on OpenSea"). Seaport pays those earnings as ordinary consideration items to that address, so a new splitter can receive them. What the contract does:
+
+- **No owner, no admin.** HopperV2 and WETH are immutable. The only mutable value is `treasury`, changeable only by the current treasury (it only affects the treasury's own 1/3; nobody can redirect the Hopper's 2/3).
+- `receive()` accepts plain ETH with one LOG1 and no storage write, so it works with a 2300 gas stipend (`transfer`, `send`, WETH9 `withdraw`) and costs the payer almost nothing. Tested at exactly 2300 gas and against a real Seaport sale.
+- `distribute()` (permissionless) splits all ETH not yet owed: `hopper = amount * 2 / 3`, the rest (including the rounding wei) to the treasury. Pushes use a 100k gas cap and ignore returndata. A reverting or gas-burning recipient only strands its own share (`owedHopper` / `owedTreasury`), the other is still paid, and any later `distribute()` retries. Forced ETH is distributed too.
+- **WETH choice: unwrap.** Accepted-offer sales are paid in WETH. `unwrapWeth()` (permissionless) withdraws all WETH to ETH and then splits exactly like ETH, so HopperV2 (which holds ETH) is funded by the full 2/3 of WETH royalties too. Verified with the real WETH proxy on the fork.
+- **Other ERC20:** `sweepToken(token)` (permissionless) sends the whole balance to the treasury (HopperV2 holds only ETH and the contract must not pick swap prices). WETH cannot be swept, only unwrapped. ERC721/1155 sent here cannot be recovered.
+- Nothing is pushed from `receive()`, so someone (or a keeper, or the owner by hand) must call `distribute()` / `unwrapWeth()` now and then. Royalties accumulate safely until then.
+
+**Manual off-chain step (not scriptable, needs the collection owner's wallet):** sign in to OpenSea Studio as `0xA71c8cAC3bc8bc1085f87885fD2898f970edDc37` (the collection owner), open the Terminal Pets collection on Robinhood Chain, open **Creator Earnings**, set the percentage to **7.5%**, set the recipient/payout address to the **RoyaltySplitterV2 address** printed by step 1c, and save (sign the wallet request). Do NOT press "Enforce earnings": the contract is not ERC-721C, so OpenSea offers only optional earnings. Then verify with a small listing/sale or in the collection's earnings page that the payout address shows the new splitter.
+
+Limits to understand:
+- OpenSea creator earnings on a non-ERC-721C contract are **optional**: a seller or buyer can choose not to pay them. This was already true of the on-chain royalty. The splitter changes where royalties go, not whether they are paid.
+- Other marketplaces that read ERC-2981 keep paying the locked V1 splitter (and so the V1 Hopper) until optional **step 10** sets on-chain bps to 0. Step 10 also removes the royalty signal for those marketplaces entirely, so only do it once the OpenSea setting is confirmed. It is reversible with `setRoyaltyBps(750)`, and the receiver stays locked either way.
+- It is not documented whether OpenSea prefers the Studio setting over the contract's `royaltyInfo` after step 10. If OpenSea reads the contract at order creation, a 0 would show 0% earnings. Check on a test listing before step 10, and leave step 10 out if OpenSea needs the on-chain value.
+- Royalty ETH that lands in HopperV2 is also subject to the owner pause / 7-day emergency withdraw (see AUDIT_INTERNAL F-07).
+
 ### Risks to know before step 9
 - **The pool is very thin** (read-only, live: 0.010396 ETH / 712,452 TERM). 250 TERM sells for about 3.6e-6 ETH (fork: 3,635,866,570,269 wei, 0.07% price impact). At that size Option B's Hopper income is negligible: the 0.1 ETH pulse threshold will not be reached from Ignite or TermMarket flows. Hopper funding really depends on manual top-ups or a deeper pool.
 - Sandwiching the 250 TERM swap is unprofitable (fork: attacker lost ~840 TERM round-tripping 200k TERM to cost the victim ~1.4e-6 ETH). The adapter's slippage guard does not stop a front-run (it quotes at call time), but the exposure is the notional of 250 TERM.
-- V1 Hopper still gets royalties. That ETH is only reachable through V1 Pulse (which breaks past ~340 lit pets under the verified 32M cap) and is stranded beyond that.
+- V1 Hopper keeps getting royalties from any marketplace that pays the on-chain ERC-2981 receiver, until optional step 10 (or until nobody pays them). That ETH is only reachable through V1 Pulse (which breaks past ~340 lit pets under the verified 32M cap) and is stranded beyond that. OpenSea sales are re-routed by the Studio payout change (next section).
 - TermMarket is inactive today (no canonical pool, no router). Do steps 7 and 8 before activating it. The stock V2 pair does not call `onSwap`, so activation needs a pool or hook that does.
 - Pausing HopperV2 blocks pulse reservation and payouts.
 
@@ -112,6 +130,7 @@ Each step is its own script entrypoint and its own transaction(s), for separate 
 |---|---|---|---|---|
 | 1 | `step1Deploy()` | Ignite owner | Deploy HopperV2, PulseDistributorV2, HopperRedirectRouter (wrapping Ignite's current router; Ignite is the soft-fail caller). Copy V1 config and shell overrides, lock HopperV2's distributor to PulseV2, transfer ownership of both to `OWNER` | None |
 | 1b | `step1bDeployForwarder()` | TermMarket owner | Deploy TermMarketFeeForwarder (parts and real treasury read from the live TermMarket), transfer ownership to `OWNER` | None |
+| 1c | `step1cDeployRoyaltySplitter()` | any wallet | Deploy RoyaltySplitterV2 (HopperV2, treasury read from the live V1 RoyaltySplitter, WETH `0x0Bd7…AD73` or env `WETH`). No owner. Then do the manual OpenSea Studio step (section 4) | None |
 | 2 | `step2Register()` | any | `PulseV2.registerLit` in batches of 100 for every currently lit pet (3 today) | PulseV2 only |
 | 3 | `step3DialHook()` | Ignite owner | `Ignite.setPulseDistributor(PulseV2)` | Ignite |
 | 4 | `step4IgniteRouter()` | Ignite owner | `Ignite.setSwapRouter(redirect)` | Ignite |
@@ -121,10 +140,12 @@ Each step is its own script entrypoint and its own transaction(s), for separate 
 | 8 | `step8MarketFeeBps()` | TermMarket owner | `TermMarket.setFeeBps(0, burn, hopper + treasury)` = `(0, 100, 200)`. Total 3% and burn 1% unchanged. Refuses if the live bps differ from the forwarder's parts | TermMarket |
 | - | `verifyState(false)` | none (read-only) | Checks steps 1-8: hooks, routers, fee 0 and 1e21, `pendingHopperTerm == 0`, `registeredCount == litCount`, market treasury == forwarder, `hopperBps == 0`, total 3%, owners, Ignite still disabled | None |
 | 9 | `step9EnableIgnite()` | Ignite owner | `Ignite.setIgniteEnabled(true)`. **Separate final decision.** The script re-runs the checks and refuses if any fail | Ignite |
+| 10 | `step10ZeroOnchainRoyalty()` | collection owner | **Optional, independent of 1-9.** `CollectionNFT.setRoyaltyBps(0)` (function exists, `onlyOwner`, 0..10000 allowed, receiver unchanged). Only after the OpenSea Studio payout is switched and confirmed. Reversible with `setRoyaltyBps(750)`. The script re-runs `verifyRoyalty` first | CollectionNFT |
+| - | `verifyRoyaltyState(bool)` | none (read-only) | 1c: splitter points at HopperV2 and the V1 splitter's treasury, WETH is a contract, on-chain bps nonzero (`false`) or zero (`true`, after step 10) | None |
 
-`dryRun()` simulates steps 1-8 plus the checks with a prank and no broadcast (verified against the live chain, no broadcast). It never runs step 9. Env: `PRIVATE_KEY`, `V1_HOPPER`, `V1_PULSE`, `COLLECTION`, `IGNITE`, `TERM_MARKET`, optional `MAX_SUPPLY`, `OWNER`. Later steps also need `PULSE_V2`, `HOPPER_V2`, `REDIRECT`, `FORWARDER` (printed by steps 1 and 1b).
+`dryRun()` simulates steps 1, 1b, 1c, 2-8 plus the checks with a prank and no broadcast (verified against the live chain, no broadcast). It never runs step 9 or 10. Env: `PRIVATE_KEY`, `V1_HOPPER`, `V1_PULSE`, `COLLECTION`, `IGNITE`, `TERM_MARKET`, optional `MAX_SUPPLY`, `OWNER`. Later steps also need `PULSE_V2`, `HOPPER_V2`, `REDIRECT`, `FORWARDER`, `ROYALTY_SPLITTER_V2` (printed by steps 1, 1b, 1c).
 
-Ordering: step 1, then 1b, then 2, then 3 to 8 (all while Ignite is paused; do 7 before 8). V1 Hopper, V1 Pulse, royalties, and `igniteFee` are never modified.
+Ordering: step 1, then 1b and 1c, then 2, then 3 to 8 (all while Ignite is paused; do 7 before 8). V1 Hopper, V1 Pulse, royalties, and `igniteFee` are never modified.
 
 Rollback before step 9: set the router, hook, fee, treasury and bps back with the same owner setters. After step 9, ignited pets are one-way.
 
@@ -132,7 +153,7 @@ Keeper: once TermMarket is active, someone must call `forwarder.flushTerm(minEth
 
 ## 7. Caveats
 
-- Ignite's former ETH half is not recovered; royalties still land in V1 Hopper (section 4).
+- Ignite's former ETH half is not recovered. Royalties only reach HopperV2 for sales paid through the OpenSea payout address (section 4).
 - The per-tx gas cap is verified: 32,000,000 (`ArbGasInfo.getMaxTxGasLimit()` on the Arbitrum Orbit chain, ArbOS 116). The block `gasLimit` field shows 0x4000000000000 and is not the cap.
 - Swap price and gas were rehearsed on a mainnet fork (`test/fork/MainnetFork.t.sol`): real `ignite()` with 0 ETH ~499k gas, `pulse()` ~178k, a real claim 290k-480k gas per pet (real stock-token swaps).
 - See `docs/AUDIT_INTERNAL.md` for the internal audit. It is not a substitute for an independent audit before holding real funds.

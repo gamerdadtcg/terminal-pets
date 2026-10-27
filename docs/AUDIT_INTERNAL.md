@@ -1,6 +1,6 @@
 # Internal audit: Pulse V2 + TermMarket fee fix (PR #43)
 
-Scope: `PulseDistributorV2`, `HopperV2`, `HopperRedirectRouter`, `TermMarketFeeForwarder`, `script/MigratePulseV2.s.sol`.
+Scope: `PulseDistributorV2`, `HopperV2`, `HopperRedirectRouter`, `TermMarketFeeForwarder`, `RoyaltySplitterV2`, `script/MigratePulseV2.s.sol`.
 Not in scope: the live V1 contracts (unchanged), the external DEX adapter `0xDe6d…`, the stock tokens.
 This is an internal review by the author's tooling, **not** an independent audit. Nothing has been broadcast or deployed; all chain access was read-only (fork / `eth_call`).
 
@@ -26,7 +26,7 @@ This is an internal review by the author's tooling, **not** an independent audit
 | F-09 | Low | Third-party `claimMany` with low gas can push a pet's stock-token leg to the plain-ETH fallback | Accepted |
 | F-10 | Low | Single-step `Ownable` on HopperV2, PulseV2, forwarder | Accepted (verify `OWNER`) |
 | F-11 | High (economic, not a bug) | Pool is so thin that Option B funds the Hopper with micro-ETH | **Open, owner decision** |
-| F-12 | Medium (economic) | V1 Hopper keeps receiving royalties; unreachable beyond ~340 lit pets | Open, cannot be fixed on-chain |
+| F-12 | Medium (economic) | V1 Hopper keeps receiving royalties; unreachable beyond ~340 lit pets | **Mitigated** for OpenSea by RoyaltySplitterV2 + Studio payout (addendum); on-chain receiver still locked, optional step 10 |
 | F-13 | Info | TermMarket is inactive and the V2 pair cannot call `onSwap` | Open, needs a pool/hook |
 | F-14 | Info | Slither noise (reentrancy, arbitrary-send, unused-return, ...) | Triaged, no action |
 
@@ -104,3 +104,58 @@ Verified on mainnet and in source: `RoyaltySplitter.hopper` is immutable with no
 4. Funding is economically small with this pool (F-11), and the V1 Hopper stays stranded (F-12).
 5. TermMarket integration is simulated (F-13). The first real trade through whatever pool is chosen should be checked.
 6. Reorg and chain-specific behavior of Arbitrum Orbit are covered only by the fork run.
+
+---
+
+# Addendum: RoyaltySplitterV2 and migration steps 1c / 10
+
+Scope: `src/RoyaltySplitterV2.sol` (new, no owner), migration steps 1c (deploy) and 10 (optional `setRoyaltyBps(0)`), `verifyRoyalty`.
+Evidence: `test/RoyaltySplitterV2.t.sol` (30 tests incl. fuzz, 4 stateful invariants at 256 runs x 500 calls), `test/MigratePulseV2.t.sol` (5 new `test_R_*`), `test/fork/RoyaltyFork.t.sol` (5 fork tests with real Seaport 1.6 sales).
+
+## Findings
+
+| ID | Severity | Title | Status |
+|---|---|---|---|
+| R-01 | Info | Contract has no owner, pause, withdraw or setter for Hopper/WETH | By design, tested (selectors absent) |
+| R-02 | Low | `treasury` is mutable by the treasury itself: a compromised treasury key can redirect its own 1/3 | Accepted. It is the same key that receives that 1/3 anyway; the Hopper 2/3 is immutable |
+| R-03 | Low | Splitter does not push from `receive()`, so someone must call `distribute()` / `unwrapWeth()` | Accepted (needed for 2300-gas receive). Permissionless; funds accumulate safely |
+| R-04 | Low | Non-WETH ERC20 royalties go 100% to the treasury, NFTs sent in are unrecoverable | Accepted, documented |
+| R-05 | Info | Failure handling used assignment (`= h2`) instead of `+=` when restoring owed amounts | Hardened to `+=` (cannot differ today because `_distribute` is `nonReentrant`) |
+| R-06 | Medium (economic / process) | OpenSea creator earnings on a non-ERC-721C contract are optional; unclear if OpenSea prefers the Studio value over `royaltyInfo` after step 10 | Open. Check with a test listing; step 10 is optional and reversible |
+| R-07 | Info | Hopper royalty ETH is subject to HopperV2 owner pause / 7-day emergency withdraw | Accepted (F-07) |
+| R-08 | Info | Slither noise (arbitrary-send-eth, reentrancy-eth, return-bomb, low-level-calls) | Triaged below |
+
+No Critical or High finding. No fund-loss path found in the contract.
+
+## Manual review notes
+- **Reentrancy:** `distribute`, `unwrapWeth`, `sweepToken` are `nonReentrant`. Owed amounts are zeroed before each push and restored on failure. `receive()` is unguarded on purpose; it only emits an event, and accounting is `balance - owed`, so ETH sent back during a callback is simply counted in the next batch (tested). Re-entering `distribute` / `unwrapWeth` from the treasury callback is blocked (tested).
+- **2300 gas receive:** one LOG1, no SSTORE. Tested with `transfer`, `send`, and a `gas: 0` value call (exact stipend); also verified against the real WETH `withdraw` and a real Seaport sale on the fork.
+- **Accounting / rounding:** `hopper = floor(x * 2 / 3)`, treasury gets `x - hopper` so no wei is stranded. Fuzzed: Hopper plus treasury equals input exactly; Hopper within 1 wei per batch of 2/3. Invariants: funds conserved (Hopper + treasury + splitter ETH + unwrapped WETH == input), owed backed by balance, Hopper total within rounding of 2/3, nothing stuck once recipients are healthy.
+- **DoS:** a reverting treasury, reverting Hopper, gas-bomb (1e6-iteration loop) and 200 KB return-bomb each only strand their own share, and gas is bounded (< 350k / < 450k). A permanently rejecting treasury contract can still call `setTreasury` (tested).
+- **Forced ETH:** counted as pending and split.
+- **HopperV2 accounting:** the plain ETH push emits `Deposited(splitter, amount)`; balance-based `available()` rises by exactly the Hopper share. Not blocked by `pause`.
+- **WETH:** `withdraw` via the canonical proxy at `0x0Bd7…AD73` works into `receive()` (fork). A donor sending WETH or ETH simply adds to the split. `sweepToken(WETH)` reverts so WETH can't be diverted around the split.
+- **Seaport:** consideration items pay ETH with a plain call and WETH with `transferFrom`; both verified on the fork with real Seaport 1.6 (`0x0000…B395`) and the real token (pre-validated order, no signature).
+- **Migration:** step 1c refuses a WETH address with no code and copies the treasury from the live V1 RoyaltySplitter, so the 1/3 goes to the same address as today. Step 10 refuses to run unless `verifyRoyalty(false)` passes and is `onlyOwner` on CollectionNFT.
+
+## Slither (RoyaltySplitterV2, 5 results)
+| Detector | Verdict |
+|---|---|
+| arbitrary-send-eth (`treasury.call`) | Intended. `treasury` is the treasury's own address, changeable only by itself |
+| reentrancy-eth (2) in `_distribute` | False positive. Owed is zeroed before the call and restored on failure; every writer is `nonReentrant`; `receive()` never touches owed |
+| return-bomb | Gas-capped calls, returndata not copied; tested with 200 KB returndata |
+| low-level-calls | Intended |
+
+## Fork results (live Robinhood Chain fork, nothing broadcast)
+Full stack (steps 1, 1b, 1c, 2-8) deployed as the owner, then:
+- **Real Seaport sale, ETH-priced** (3 ETH, 7.5% creator item to the splitter): Seaport paid 0.225 ETH into the splitter; `receive()` pushed nothing; `distribute()` sent 0.15 ETH to HopperV2 and 0.075 ETH to the real treasury `0x0c82…`; V1 Hopper delta 0.
+- **Real Seaport sale, WETH-priced**: 0.225 WETH landed in the splitter; `unwrapWeth()` through the real WETH proxy split it the same way; no WETH or ETH left.
+- **Whole chain:** a 10 ETH sale gives 0.75 ETH royalties and 0.5 ETH to HopperV2 (`available()` exact), the 0.1 ETH pulse threshold is crossed, step 10 sets on-chain `royaltyInfo` to 0 without affecting the splitter, `pulse()` and real claims for all lit pets with the real routers pay out and leave only 2 wei of dust, `reserved` back to 0.
+- Real WETH `deposit` -> transfer -> `unwrapWeth` -> split: exact.
+
+## Residual risks (addendum)
+1. OpenSea behavior is partly outside the chain: optional earnings (R-06), which address OpenSea uses after step 10, and whether OpenSea accepts a contract payout address (Seaport pays it either way). Confirm with a small real listing and sale before relying on it.
+2. Splitter funds reach HopperV2 only after a `distribute()` / `unwrapWeth()` call (R-03). Suggest a keeper or a small routine.
+3. Treasury key risk (R-02), and Hopper owner pause/withdraw (R-07).
+4. Royalty volume is unknown and may be tiny; this does not replace funding the Hopper (F-11).
+5. Internal review only, not an independent audit.

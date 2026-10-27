@@ -126,7 +126,7 @@ contract RoyaltySplitterV2 is ReentrancyGuard {
             owedHopper = 0;
             (bool ok,) = hopperV2.call{value: h2, gas: PUSH_GAS}("");
             if (!ok) {
-                owedHopper = h2;
+                owedHopper += h2;
                 emit PushFailed(hopperV2, h2);
                 h2 = 0;
             }
@@ -135,7 +135,7 @@ contract RoyaltySplitterV2 is ReentrancyGuard {
             owedTreasury = 0;
             (bool ok,) = treasury.call{value: t2, gas: PUSH_GAS}("");
             if (!ok) {
-                owedTreasury = t2;
+                owedTreasury += t2;
                 emit PushFailed(treasury, t2);
                 t2 = 0;
             }
