@@ -60,3 +60,4 @@ art/export/gif-full/
 web/public/metadata/lit/
 web/public/metadata/dormant/
 web/data/arcade-scores.json
+!docs/AUDIT_INTERNAL.md

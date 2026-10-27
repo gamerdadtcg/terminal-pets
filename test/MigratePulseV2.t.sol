@@ -14,6 +14,7 @@ import {PulseDistributorV2} from "../src/PulseDistributorV2.sol";
 import {TermToken} from "../src/TermToken.sol";
 import {TermFund} from "../src/TermFund.sol";
 import {TermMarket} from "../src/TermMarket.sol";
+import {TermMarketFeeForwarder} from "../src/TermMarketFeeForwarder.sol";
 import {MockPulseRouter, MockStockToken} from "./mocks/MockPulseRouter.sol";
 import {MockTermSwapRouter} from "./mocks/MockTermSwapRouter.sol";
 import {PulseV2Config, PulseV2Migration} from "../script/MigratePulseV2.s.sol";
@@ -38,6 +39,7 @@ contract MigratePulseV2Test is Test {
     MockPulseRouter internal v1Router;
     MockTermSwapRouter internal termRouter;
     TermMarket internal market;
+    TermMarketFeeForwarder internal fwd;
     address internal dexPool = makeAddr("dexPool");
     address[8] internal pool;
 
@@ -123,6 +125,7 @@ contract MigratePulseV2Test is Test {
         PulseV2Config memory c = _cfg();
         vm.startPrank(owner);
         (h, p, r) = PulseV2Migration.step1_deploy(c);
+        fwd = PulseV2Migration.step1b_deployForwarder(c, h);
         vm.stopPrank();
         PulseV2Migration.step2_registerLit(c, p); // any wallet
         vm.startPrank(owner);
@@ -130,6 +133,8 @@ contract MigratePulseV2Test is Test {
         PulseV2Migration.step4_igniteRouter(c, r);
         PulseV2Migration.step5_marketRouter(c, r);
         PulseV2Migration.step6_zeroIgniteEthFee(c);
+        PulseV2Migration.step7_marketTreasury(c, fwd);
+        PulseV2Migration.step8_marketFeeBps(c, fwd);
         vm.stopPrank();
     }
 
@@ -193,7 +198,7 @@ contract MigratePulseV2Test is Test {
         (uint16 mh, uint16 mb, uint16 mt) = (market.hopperBps(), market.burnBps(), market.treasuryBps());
         (HopperV2 h, PulseDistributorV2 p, HopperRedirectRouter r) = _migrateB();
 
-        PulseV2Migration.verify(_cfg(), h, p, r, false);
+        PulseV2Migration.verify(_cfg(), h, p, r, fwd, false);
         assertFalse(ignite.igniteEnabled());
         assertEq(ignite.igniteFeeEth(), 0);
         assertEq(ignite.igniteFee(), 1_000 ether);
@@ -201,9 +206,12 @@ contract MigratePulseV2Test is Test {
         assertEq(ignite.hopperBps(), hb);
         assertEq(ignite.burnBps(), bb);
         assertEq(ignite.allotmentBps(), ab);
-        assertEq(market.hopperBps(), mh);
+        // TermMarket: total (3%) and burn (1%) preserved; the hopper cut moved into the treasury cut.
+        assertEq(mh, 150);
+        assertEq(market.hopperBps(), 0);
         assertEq(market.burnBps(), mb);
-        assertEq(market.treasuryBps(), mt);
+        assertEq(uint256(market.hopperBps()) + market.burnBps() + market.treasuryBps(), uint256(mh) + mb + mt);
+        assertEq(market.treasuryBps(), mh + mt);
         assertEq(address(ignite.swapRouter()), address(r));
         assertEq(address(market.swapRouter()), address(r));
         // V1 untouched.
@@ -215,6 +223,7 @@ contract MigratePulseV2Test is Test {
         PulseV2Config memory c = _cfg();
         vm.startPrank(owner);
         (HopperV2 h, PulseDistributorV2 p, HopperRedirectRouter r) = PulseV2Migration.step1_deploy(c);
+        fwd = PulseV2Migration.step1b_deployForwarder(c, h);
         vm.stopPrank();
         vm.expectRevert(abi.encodeWithSelector(PulseV2Migration.Check.selector, "ignite dial hook != PulseV2"));
         this.callVerify(c, h, p, r, false);
@@ -240,6 +249,18 @@ contract MigratePulseV2Test is Test {
         this.callVerify(c, h, p, r, false);
 
         PulseV2Migration.step2_registerLit(c, p);
+        vm.expectRevert(abi.encodeWithSelector(PulseV2Migration.Check.selector, "market treasury != forwarder"));
+        this.callVerify(c, h, p, r, false);
+
+        vm.startPrank(owner);
+        PulseV2Migration.step7_marketTreasury(c, fwd);
+        vm.stopPrank();
+        vm.expectRevert(abi.encodeWithSelector(PulseV2Migration.Check.selector, "market hopperBps != 0"));
+        this.callVerify(c, h, p, r, false);
+
+        vm.startPrank(owner);
+        PulseV2Migration.step8_marketFeeBps(c, fwd);
+        vm.stopPrank();
         this.callVerify(c, h, p, r, false); // passes
     }
 
@@ -250,7 +271,7 @@ contract MigratePulseV2Test is Test {
         HopperRedirectRouter r,
         bool en
     ) external view {
-        PulseV2Migration.verify(c, h, p, r, en);
+        PulseV2Migration.verify(c, h, p, r, fwd, en);
     }
 
     function test_B_registerAllLit_thenPulseAndClaim() public {
@@ -280,12 +301,12 @@ contract MigratePulseV2Test is Test {
 
     function test_B_step7_enable_thenIgniteWithZeroEth_termCutLandsInHopperV2() public {
         (HopperV2 h, PulseDistributorV2 p, HopperRedirectRouter r) = _migrateB();
-        PulseV2Migration.verify(_cfg(), h, p, r, false);
+        PulseV2Migration.verify(_cfg(), h, p, r, fwd, false);
 
         // Separate final step.
         vm.prank(owner);
-        PulseV2Migration.step7_enableIgnite(_cfg());
-        PulseV2Migration.verify(_cfg(), h, p, r, true);
+        PulseV2Migration.step9_enableIgnite(_cfg());
+        PulseV2Migration.verify(_cfg(), h, p, r, fwd, true);
 
         uint256 v1Before = address(hopperV1).balance;
         uint256 v2Before = address(h).balance;
@@ -346,15 +367,46 @@ contract MigratePulseV2Test is Test {
         this.callVerify(c, h, p, r, false);
     }
 
-    function test_B_marketTermSkim_landsInHopperV2() public {
-        (HopperV2 h,, ) = _migrateB();
-        uint256 amountIn = 10_000 ether;
-        (uint256 hopperCut, uint256 burnCut, uint256 treCut, uint256 totalFee) = market.quote(amountIn);
-        assertGt(hopperCut, 0);
+    function test_B_marketFees_afterSteps7and8_totalAndBurnPreserved_hopperGoesToV2() public {
+        (HopperV2 h,,) = _migrateB();
+        // Same 3% total, same 1% burn; the 1.5% hopper cut is now part of the treasury cut (2%).
+        assertEq(market.hopperBps(), 0);
+        assertEq(market.burnBps(), 100);
+        assertEq(market.treasuryBps(), 200);
+        assertEq(market.treasury(), address(fwd));
+        assertEq(fwd.hopperPart(), 150);
+        assertEq(fwd.totalPart(), 200);
+        assertEq(fwd.treasury(), treasury);
+        assertEq(fwd.hopperV2(), address(h));
+        assertEq(fwd.owner(), multisig);
 
+        // ETH-side skim, 10 ETH in: 3% = 0.3 ETH => burn 0.1, forwarder 0.2 => 0.15 V2 / 0.05 treasury.
+        uint256 amountIn = 10 ether;
+        (uint256 hopperCut, uint256 burnCut, uint256 treCut, uint256 totalFee) = market.quote(amountIn);
+        assertEq(hopperCut, 0);
+        assertEq(totalFee, 0.3 ether);
+        vm.deal(dexPool, totalFee);
         uint256 v1Before = address(hopperV1).balance;
         uint256 v2Before = address(h).balance;
-        uint256 treBefore = term.balanceOf(treasury);
+        uint256 treBefore = treasury.balance;
+        uint256 supplyBefore = term.totalSupply();
+        vm.prank(dexPool);
+        market.onSwap{value: totalFee}(address(0), amountIn);
+
+        assertEq(address(hopperV1).balance, v1Before, "V1 hopper must get nothing");
+        assertEq(address(h).balance - v2Before, 0.15 ether);
+        assertEq(treasury.balance - treBefore, 0.05 ether);
+        assertEq(treCut, 0.2 ether);
+        assertGt(supplyBefore - term.totalSupply(), 0); // burn leg still ran (ETH -> TERM -> burn)
+        assertEq(burnCut, 0.1 ether);
+        assertEq(address(fwd).balance, 0);
+    }
+
+    function test_B_marketTermSkim_toForwarder_thenKeeperFlushFundsHopperV2() public {
+        (HopperV2 h,,) = _migrateB();
+        uint256 amountIn = 10_000 ether;
+        (, uint256 burnCut, uint256 treCut, uint256 totalFee) = market.quote(amountIn);
+        uint256 v1Before = address(hopperV1).balance;
         uint256 supplyBefore = term.totalSupply();
 
         vm.startPrank(dexPool);
@@ -362,25 +414,35 @@ contract MigratePulseV2Test is Test {
         market.onSwap(address(term), amountIn);
         vm.stopPrank();
 
-        assertEq(address(h).balance - v2Before, hopperCut); // mock router swaps 1:1
-        assertEq(address(hopperV1).balance, v1Before);
-        assertEq(term.balanceOf(treasury) - treBefore, treCut);
+        // No swap inside onSwap any more (hopper cut is 0): the 2% treasury cut sits in the forwarder as $TERM.
+        assertEq(term.balanceOf(address(fwd)), treCut);
         assertEq(supplyBefore - term.totalSupply(), burnCut);
+        assertEq(address(hopperV1).balance, v1Before);
+
+        uint256 v2Before = address(h).balance;
+        uint256 treTermBefore = term.balanceOf(treasury);
+        vm.prank(multisig); // owner may flush; keeper optional
+        fwd.flushTerm(0);
+        uint256 toSwap = (treCut * 150) / 200;
+        assertEq(address(h).balance - v2Before, toSwap); // mock router swaps 1:1
+        assertEq(term.balanceOf(treasury) - treTermBefore, treCut - toSwap);
+        assertEq(term.balanceOf(address(fwd)), 0);
+        assertEq(address(fwd).balance, 0);
     }
 
-    function test_B_marketEthSkim_burnLegStillWorksThroughRedirect() public {
-        _migrateB();
-        uint256 amountIn = 10 ether;
-        (uint256 hopperCut, uint256 burnCut,, uint256 totalFee) = market.quote(amountIn);
-        assertGt(burnCut, 0);
-        vm.deal(dexPool, totalFee);
-        uint256 supplyBefore = term.totalSupply();
-        uint256 v1Before = address(hopperV1).balance;
-        vm.prank(dexPool);
-        market.onSwap{value: totalFee}(address(0), amountIn);
-        // ETH-side hopper cut is hard-wired to the V1 Hopper (documented limitation).
-        assertEq(address(hopperV1).balance - v1Before, hopperCut);
-        assertGt(supplyBefore - term.totalSupply(), 0); // ETH->TERM buy-and-burn passed through the redirect router
+    function test_B_step8_revertsIfBpsChangedUnderneath() public {
+        PulseV2Config memory c = _cfg();
+        vm.startPrank(owner);
+        (HopperV2 h,,) = PulseV2Migration.step1_deploy(c);
+        fwd = PulseV2Migration.step1b_deployForwarder(c, h);
+        market.setFeeBps(100, 100, 100);
+        vm.stopPrank();
+        vm.expectRevert(PulseV2Migration.MarketBpsMismatch.selector);
+        this.callStep8(c);
+    }
+
+    function callStep8(PulseV2Config memory c) external {
+        PulseV2Migration.step8_marketFeeBps(c, fwd);
     }
 
     function test_B_redirect_nonHopperRecipientUnchanged() public {

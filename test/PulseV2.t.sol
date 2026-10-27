@@ -19,7 +19,7 @@ import {MockSelectiveRouter, RejectEth} from "./mocks/MockV2Routers.sol";
 
 /// @notice PulseDistributorV2 + HopperV2 against the real V1 stack (Ignite, CollectionNFT, V1 Hopper
 /// as reveal clock). Models the mainnet migration: 3 pets lit under V1 before V2 is wired.
-contract PulseV2Test is Test {
+abstract contract PulseV2Base is Test {
     uint256 internal constant SUPPLY = 40;
     uint256 internal constant TEAM = 2;
     uint256 internal constant FEE = 1_000 ether;
@@ -41,7 +41,7 @@ contract PulseV2Test is Test {
     MockStockToken[8] internal stocks;
     MockSelectiveRouter internal router;
 
-    function setUp() public {
+    function setUp() public virtual {
         vm.startPrank(owner);
         hopperV1 = new Hopper(owner, 0);
         RoyaltySplitter splitter = new RoyaltySplitter(address(hopperV1), treasury, owner);
@@ -140,6 +140,9 @@ contract PulseV2Test is Test {
         pulse.setRouter(address(0));
     }
 
+}
+
+contract PulseV2Test is PulseV2Base {
     // ------------------------------------------------------------- economics
 
     function test_productionEconomicsUnchanged() public view {
@@ -670,7 +673,7 @@ contract PulseV2Test is Test {
         vm.deal(address(inner), 1_000 ether);
         vm.startPrank(owner);
         term.mint(address(inner), 100_000 ether);
-        HopperRedirectRouter redirect = new HopperRedirectRouter(address(inner), address(hopperV1), address(hopper));
+        HopperRedirectRouter redirect = new HopperRedirectRouter(address(inner), address(hopperV1), address(hopper), address(ignite));
         ignite.setSwapRouter(address(redirect));
         vm.stopPrank();
 
@@ -687,7 +690,7 @@ contract PulseV2Test is Test {
     function test_redirectRouter_passesThroughOtherDestinations() public {
         MockTermSwapRouter inner = new MockTermSwapRouter();
         vm.deal(address(inner), 1 ether);
-        HopperRedirectRouter redirect = new HopperRedirectRouter(address(inner), address(hopperV1), address(hopper));
+        HopperRedirectRouter redirect = new HopperRedirectRouter(address(inner), address(hopperV1), address(hopper), address(ignite));
         vm.prank(owner);
         term.mint(address(this), 10 ether);
         term.approve(address(redirect), 10 ether);
@@ -699,7 +702,7 @@ contract PulseV2Test is Test {
 
     function test_redirectRouter_zeroAddressReverts() public {
         vm.expectRevert(HopperRedirectRouter.ZeroAddress.selector);
-        new HopperRedirectRouter(address(0), address(1), address(2));
+        new HopperRedirectRouter(address(0), address(1), address(2), address(3));
     }
 
     // ------------------------------------------------------------- V1 keeps working
