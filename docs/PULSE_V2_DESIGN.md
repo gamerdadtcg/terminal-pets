@@ -29,7 +29,7 @@ Fixed (immutable or set-once):
 - Ignite's 50% ETH half (`quoteEth`) is a constant that sends to the V1 Hopper.
 - The TermMarket ETH-side skim goes to the V1 Hopper.
 
-So **V1 Hopper keeps receiving**: royalties, Ignite's ETH half, and the TermMarket ETH skim. These cannot be redirected. Only the `$TERM`-derived slices can (via a replaceable swap router).
+So **V1 Hopper keeps receiving**: royalties, Ignite's ETH half (until Option B zeroes `igniteFeeEth`), and the TermMarket ETH skim. These cannot be redirected. Only the `$TERM`-derived slices can (via a replaceable swap router).
 
 ## 3. V2 design
 
@@ -46,32 +46,35 @@ So **V1 Hopper keeps receiving**: royalties, Ignite's ETH half, and the TermMark
 - `pause()` / `unpause()` (owner). While paused, `reserve` and `release` revert.
 - Emergency withdraw: only while paused, owner proposes `(to, amount)`, waits **7 days**, then executes. Public event and view, cancellable, auto-cancelled by `unpause()`. Use a multisig owner. This is the only owner path to ETH.
 
-### HopperRedirectRouter (`src/HopperRedirectRouter.sol`), optional
-Wraps Ignite's existing swap router. `$TERM` -> ETH swaps whose recipient is the V1 Hopper deliver to HopperV2 instead. Everything else passes through. Enabled with `REDIRECT_TERM_SLICES=true`.
+### HopperRedirectRouter (`src/HopperRedirectRouter.sol`)
+Wraps Ignite's existing swap router. `$TERM` -> ETH swaps whose recipient is the V1 Hopper deliver to HopperV2 instead. Everything else passes through. Deployed by step 1 and installed on Ignite and TermMarket by steps 4 and 5.
 
-## 4. Funding options
+## 4. Funding: Option B (chosen by the owner)
 
-Where each fee currently goes, and what V2 can do:
+Where each fee goes **after** this migration:
 
-| Fee path | Goes to | Redirectable? | V2 action |
-|---|---|---|---|
-| Ignite ETH half (0.001 ETH of 0.002) | V1 Hopper (hardwired) | No | none possible |
-| Ignite 25% `$TERM` slice | swapped to ETH, V1 Hopper | Yes (`setSwapRouter`) | HopperRedirectRouter -> HopperV2 |
-| TermMarket ETH-side skim | V1 Hopper (hardwired) | No (can set `setFeeBps` lower) | none, or lower bps |
-| TermMarket `$TERM`-side skim | swapped, V1 Hopper | Yes (router) | redirect |
-| Royalties (RoyaltySplitter, 2/3) | V1 Hopper (locked) | No | none |
-| Old Pulse V1 | pays the 3 currently lit pets | n/a | keep as is |
+| Fee path | Before | After Option B |
+|---|---|---|
+| Ignite ETH fee (`igniteFeeEth`, 0.002 ETH) | 0.001 ETH to V1 Hopper (hardwired), 0.001 ETH buy-and-burn | **Set to 0.** Nothing is charged in ETH, so nothing more lands in V1 Hopper from Ignite |
+| Ignite `$TERM` fee (`igniteFee`, 1000 TERM = 1e21) | 25% to ETH to V1 Hopper, 37.5% burn, 37.5% allotment-escrow refill | Unchanged amounts and bps. The 25% swap's ETH is redirected to **HopperV2** |
+| TermMarket `$TERM`-side skim | swapped to ETH, V1 Hopper | Swapped to ETH, **HopperV2** (bps unchanged) |
+| TermMarket ETH-side skim | V1 Hopper (hardwired) | Unchanged: still V1 Hopper (cannot be redirected) |
+| Royalties (RoyaltySplitter) | V1 Hopper (locked) | Unchanged: still V1 Hopper |
+| Pulse | V1 Pulse | V2 for all new Ignites; V1 Pulse can still pay the 3 pets lit before the migration, while lit stays under ~340 |
 
-Options for Ignite (currently paused; 3 lit, 0 epochs, V1 Hopper ~0.00317 ETH):
+Live facts used (supplied by the owner; step 1 reads the router on-chain and `verifyState` re-checks the fee values): Ignite `swapRouter` = `0xDe6dF0527608A20121ecD6aA009C198Ca1cba28F`, `igniteFee` = 1e21, `igniteFeeEth` = 2e15, `pendingHopperTerm` = 0. The redirect router wraps that same adapter; step 1 refuses to run if TermMarket's router is set to a different adapter.
 
-- **A. Re-enable at 0.002 ETH after migration.** Each Ignite sends 0.001 ETH to the V1 Hopper. V1 Pulse can only pay out while at most ~340 pets are lit (~2,100 if the V1 stockPool is zeroed). Past that, the V1 Hopper ETH is stranded. Not recommended.
-- **B. Set `igniteFeeEth` to 0 (if the contract allows) and charge only `$TERM`.** Routes everything through redirectable paths, but it changes the Ignite economics, so it needs the owner's decision.
-- **C. Zero V1's `stockPool`.** Raises V1's ceiling to ~2,100 pets but kills the Dial. Not recommended.
-- **D. Keep Ignite paused** until the owner picks A/B/C. This is the current state and is safe.
+### What changes for holders and the hopper
+- **With allotment escrow, a holder's Ignite is free in ETH and TERM.** The module holds 1,000 TERM per token as a first-wake allotment, and Ignite is one-way, so every Ignite uses that allotment. The holder pays gas only: `ignite(tokenId)` with `msg.value == 0` and no `$TERM` approval.
+- **The Hopper gets 25% of the 1000 TERM (250 TERM) swapped to ETH** on each Ignite, delivered to HopperV2. The ETH received depends on the live pool price; the tests use a 1:1 mock.
+- 37.5% of the fee (375 TERM) is burned and 37.5% stays in the module as escrow refill, as before.
+- **Per-Ignite hopper income drops.** The hardwired 0.001 ETH half is gone, and the 0.001 ETH buy-and-burn is gone. The burn from `$TERM` remains.
+- `ignite()` now reverts with `WrongEthFee` for any non-zero `msg.value`.
 
-Fee bps: set to zero on old paths where `setFeeBps` exists (Ignite, TermMarket) only with approval. It changes economics.
-
-Old funds: the V1 Hopper keeps its ETH. V1 Pulse can still pay the 3 lit pets while lit stays under ~340. Royalties keep landing in the V1 Hopper.
+### Risks to know before step 7
+- The 250 TERM -> ETH swap runs inside every `ignite()`. If the pool is thin the swap gets a poor price, and if the swap fails `ignite()` reverts (`SwapFailed`), so Ignite blocks until the pool recovers. Check live liquidity first.
+- V1 Hopper still gets royalties and the TermMarket ETH skim. That ETH is only reachable through V1 Pulse (which breaks past ~340 lit pets) and is stranded beyond that. Not fixable on-chain: the receivers are immutable or locked.
+- Pausing HopperV2 blocks pulse reservation and payouts.
 
 ## 5. Measured gas (V2, Foundry, mock harness)
 
@@ -88,19 +91,31 @@ All batches are below 15M gas.
 
 Real DEX swaps may cost more than the mock; size live batches from a dry run and use `claimManyBounded`.
 
-## 6. Migration (`script/MigratePulseV2.s.sol`; **not executed**)
+## 6. Migration (Option B): `script/MigratePulseV2.s.sol` (**not executed**)
 
-1. `deploy` (IgniteModule owner key): deploy HopperV2 + PulseDistributorV2, copy V1 stock pool, term, router, TBA config, shell overrides, lock the HopperV2 distributor, point Ignite's Dial hook at V2, optionally install the redirect router, hand ownership to `OWNER`. Does not touch Ignite's enabled flag, fee bps, or any V1 funds.
-2. `register(pulseV2)` (any wallet): register every currently lit pet, in batches of 100.
-3. Owner decision on Ignite re-enable (section 4).
+Each step is its own script entrypoint and its own transaction(s), for separate owner approval. Ignite is paused throughout and is only enabled by step 7.
 
-`dryRun` simulates step 1 with no broadcast. Env: `PRIVATE_KEY`, `V1_HOPPER`, `V1_PULSE`, `COLLECTION`, `IGNITE`, optional `MAX_SUPPLY`, `OWNER`, `REDIRECT_TERM_SLICES`.
+| # | Entrypoint | Signer | On-chain effect | Live state touched |
+|---|---|---|---|---|
+| 1 | `step1Deploy()` | Ignite owner | Deploy HopperV2, PulseDistributorV2, HopperRedirectRouter (wrapping Ignite's current router). Copy V1 config and shell overrides, lock HopperV2's distributor to PulseV2, transfer ownership of both to `OWNER` | None |
+| 2 | `step2Register()` | any | `PulseV2.registerLit` in batches of 100 for every currently lit pet (3 today) | PulseV2 only |
+| 3 | `step3DialHook()` | Ignite owner | `Ignite.setPulseDistributor(PulseV2)` | Ignite |
+| 4 | `step4IgniteRouter()` | Ignite owner | `Ignite.setSwapRouter(redirect)` | Ignite |
+| 5 | `step5MarketRouter()` | TermMarket owner | `TermMarket.setSwapRouter(redirect)` | TermMarket |
+| 6 | `step6ZeroEthFee()` | Ignite owner | `Ignite.setIgniteFeeEth(0)`. `igniteFee` (1e21) and all bps stay | Ignite |
+| - | `verifyState(false)` | none (read-only) | Checks steps 1-6 hold: hooks, routers, fee 0 and 1e21, `pendingHopperTerm == 0`, `registeredCount == litCount`, Ignite still disabled | None |
+| 7 | `step7EnableIgnite()` | Ignite owner | `Ignite.setIgniteEnabled(true)`. **Separate final decision.** The script re-runs the checks and refuses if any fail | Ignite |
+
+`dryRun()` simulates steps 1-6 plus the checks with a prank and no broadcast. It never runs step 7. Env: `PRIVATE_KEY`, `V1_HOPPER`, `V1_PULSE`, `COLLECTION`, `IGNITE`, `TERM_MARKET`, optional `MAX_SUPPLY`, `OWNER`. Steps 2-7 also need `PULSE_V2`, `HOPPER_V2`, `REDIRECT` (printed by step 1).
+
+Ordering: step 1 first, then 2, then 3 to 6 in any order (all while Ignite is paused). Steps 3 to 6 take effect only once Ignite is enabled. V1 Hopper, V1 Pulse, royalties, and `igniteFee` are never modified.
+
+Rollback before step 7 is just setting the router, hook, and fee back with the same owner setters. After step 7, ignited pets are one-way.
 
 ## 7. Caveats
 
-- Ignite's ETH half and royalties still land in V1 Hopper (section 2).
+- Ignite's former ETH half is not recovered; the TermMarket ETH skim and royalties still land in V1 Hopper (section 4).
 - The per-tx gas cap was assumed, not verified on-chain.
-- Swap gas is mocked; a live fork run is recommended before mainnet.
+- Swap gas and price are mocked; a live fork run is recommended before mainnet.
 - Needs an independent audit before holding real funds: the contracts are new.
-- Ownership handover is single-step Ownable. Verify the `OWNER` address before running.
-- Pausing HopperV2 blocks both pulse reservation and payouts.
+- Ownership handover is single-step Ownable. Verify the `OWNER` address before running step 1.

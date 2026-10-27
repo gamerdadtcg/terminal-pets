@@ -7,32 +7,48 @@ import {HopperRedirectRouter} from "../src/HopperRedirectRouter.sol";
 import {PulseDistributor} from "../src/PulseDistributor.sol";
 import {PulseDistributorV2} from "../src/PulseDistributorV2.sol";
 import {IgniteModule} from "../src/IgniteModule.sol";
+import {TermMarket} from "../src/TermMarket.sol";
 
-/// @notice Inputs for the V1 -> V2 Pulse migration. All addresses are the LIVE contracts.
+/// @notice Inputs for the V1 -> V2 Pulse migration (Option B). All addresses are the LIVE contracts.
 struct PulseV2Config {
-    address deployer; // the account that signs (must own Ignite); transient owner of the new contracts
-    address owner; // owner of Hopper V2 + Pulse V2 (use a multisig on mainnet)
+    address deployer; // the account that signs (must own Ignite and TermMarket); transient owner of new contracts
+    address owner; // final owner of Hopper V2 + Pulse V2 (use a multisig on mainnet)
     address v1Hopper; // 0x8Cd9A113dc8147D5163486e81D3bA64E2137dBf2
     address v1Pulse; // 0x7326F7D277610288FBeA373712c89E47AF9AC61E
     address collection; // 0x85e3f98b76b0a6c9166BA7aaB05BEc4ef17B7166
     address ignite; // 0x29e8dB2073583720C3CBf741d278d942B65cb92B
+    address termMarket; // 0x78f2c0577321053722Daa1f5eE31E5071a7D9F30
     uint256 maxSupply; // 4444
-    bool redirectTermSlices; // deploy HopperRedirectRouter and point Ignite's swap router at it
 }
 
-/// @dev Migration steps as internal functions so a test can run them under `vm.prank(owner)` and the
-/// script can run them under `vm.startBroadcast`. Nothing here moves holder funds; V1 is untouched.
+/// @dev Option B migration, one internal function per on-chain step, so the script can broadcast each
+/// step on its own (owner approval per step) and a test can run them under `vm.prank(owner)`.
+/// V1 contracts and their funds are never touched. Ignite is never enabled except by `step7_enableIgnite`.
 library PulseV2Migration {
-    /// @notice Step 1 (owner key). Deploys V2, copies V1 config, wires Ignite's Dial hook to V2.
-    /// Does NOT touch Ignite's enabled flag, fee bps, or any V1 contract's funds.
-    function deployAndWire(PulseV2Config memory c)
+    uint256 internal constant IGNITE_FEE_TERM = 1_000 ether; // 1e21, unchanged by this migration
+
+    error SwapRouterUnset();
+    error MarketRouterMismatch(address igniteRouter, address marketRouter);
+    error Check(string what);
+
+    /// @notice STEP 1. Deploys HopperV2, PulseDistributorV2, HopperRedirectRouter. Copies V1 config and
+    /// shell overrides, locks the HopperV2 distributor, hands ownership to `c.owner`.
+    /// Changes NO live contract state: Ignite, TermMarket, V1 Hopper/Pulse are untouched.
+    function step1_deploy(PulseV2Config memory c)
         internal
         returns (HopperV2 hopper, PulseDistributorV2 pulse, HopperRedirectRouter redirect)
     {
+        // Fail fast. Wrap the DEX adapter Ignite and TermMarket both use today
+        // (live Ignite router: 0xDe6dF0527608A20121ecD6aA009C198Ca1cba28F).
+        address inner = address(IgniteModule(c.ignite).swapRouter());
+        if (inner == address(0)) revert SwapRouterUnset();
+        address marketRouter = address(TermMarket(payable(c.termMarket)).swapRouter());
+        if (marketRouter != address(0) && marketRouter != inner) revert MarketRouterMismatch(inner, marketRouter);
+
         PulseDistributor v1 = PulseDistributor(payable(c.v1Pulse));
 
         hopper = new HopperV2(c.deployer, 0, c.v1Hopper); // payoutLock 0 => 7 days after the existing reveal
-        // Same ladder as V1: 0 => CollectionConfig defaults (0.1 / 0.5 / 0.1). Copy V1's actual immutables.
+        // Same ladder as V1: copy V1's actual immutables (0.1 / 0.5 / 0.1).
         pulse = new PulseDistributorV2(
             address(hopper),
             c.collection,
@@ -55,24 +71,74 @@ library PulseV2Migration {
             pulse.setTbaConfig(address(v1.tbaRegistry()), v1.tbaImplementation(), v1.tbaSalt());
             if (v1.deliverToTba()) pulse.setDeliverToTba(true);
         }
-
         hopper.lockDistributor(address(pulse));
-        IgniteModule(c.ignite).setPulseDistributor(address(pulse));
-
-        if (c.redirectTermSlices) {
-            address inner = address(IgniteModule(c.ignite).swapRouter());
-            if (inner != address(0)) {
-                redirect = new HopperRedirectRouter(inner, c.v1Hopper, address(hopper));
-                IgniteModule(c.ignite).setSwapRouter(address(redirect));
-            }
-        }
-
         copyShellOverrides(c, pulse, 1, c.maxSupply); // must precede the ownership hand-over
+
+        redirect = new HopperRedirectRouter(inner, c.v1Hopper, address(hopper));
 
         if (c.owner != c.deployer) {
             pulse.transferOwnership(c.owner);
             hopper.transferOwnership(c.owner);
         }
+    }
+
+    /// @notice STEP 2 (any wallet; only touches PulseV2). Register every currently-Lit pet with V2.
+    /// Must complete before PulseV2 can pulse (`registeredCount == ignite.litCount()`).
+    function step2_registerLit(PulseV2Config memory c, PulseDistributorV2 pulse) internal returns (uint256) {
+        return registerAllLit(c, pulse);
+    }
+
+    /// @notice STEP 3 (Ignite owner). Ignite.setPulseDistributor(PulseV2): new Ignites register with V2.
+    function step3_pointDialHook(PulseV2Config memory c, PulseDistributorV2 pulse) internal {
+        IgniteModule(c.ignite).setPulseDistributor(address(pulse));
+    }
+
+    /// @notice STEP 4 (Ignite owner). Ignite.setSwapRouter(redirect): the 25% `$TERM` slice, swapped to ETH,
+    /// lands in HopperV2. The ETH->TERM buy-and-burn path passes through to the same DEX adapter.
+    function step4_igniteRouter(PulseV2Config memory c, HopperRedirectRouter redirect) internal {
+        IgniteModule(c.ignite).setSwapRouter(address(redirect));
+    }
+
+    /// @notice STEP 5 (TermMarket owner). TermMarket.setSwapRouter(redirect): the `$TERM`-side skim,
+    /// swapped to ETH, lands in HopperV2. Existing bps unchanged.
+    function step5_marketRouter(PulseV2Config memory c, HopperRedirectRouter redirect) internal {
+        TermMarket(payable(c.termMarket)).setSwapRouter(address(redirect));
+    }
+
+    /// @notice STEP 6 (Ignite owner). Ignite.setIgniteFeeEth(0). `igniteFee` stays 1000 `$TERM`, bps unchanged.
+    /// After this, `ignite()` takes msg.value == 0: the Ignite ETH half (hardwired to the V1 Hopper) is gone.
+    function step6_zeroIgniteEthFee(PulseV2Config memory c) internal {
+        IgniteModule(c.ignite).setIgniteFeeEth(0);
+    }
+
+    /// @notice STEP 7 (Ignite owner). SEPARATE FINAL DECISION. Ignite.setIgniteEnabled(true).
+    /// Run `verify` first; it must pass.
+    function step7_enableIgnite(PulseV2Config memory c) internal {
+        IgniteModule(c.ignite).setIgniteEnabled(true);
+    }
+
+    /// @notice Read-only post-condition check for steps 1-6. Reverts with `Check(what)` on the first failure.
+    /// `expectIgniteEnabled` is false before step 7 and true after.
+    function verify(
+        PulseV2Config memory c,
+        HopperV2 hopper,
+        PulseDistributorV2 pulse,
+        HopperRedirectRouter redirect,
+        bool expectIgniteEnabled
+    ) internal view {
+        IgniteModule ig = IgniteModule(c.ignite);
+        TermMarket tm = TermMarket(payable(c.termMarket));
+        if (address(ig.pulseDistributor()) != address(pulse)) revert Check("ignite dial hook != PulseV2");
+        if (address(ig.swapRouter()) != address(redirect)) revert Check("ignite swapRouter != redirect");
+        if (address(tm.swapRouter()) != address(redirect)) revert Check("market swapRouter != redirect");
+        if (redirect.hopperV2() != address(hopper) || redirect.legacyHopper() != c.v1Hopper) revert Check("redirect dests");
+        if (hopper.distributor() != address(pulse) || !hopper.distributorLocked()) revert Check("hopperV2 distributor");
+        if (ig.igniteFeeEth() != 0) revert Check("igniteFeeEth != 0");
+        if (ig.igniteFee() != IGNITE_FEE_TERM) revert Check("igniteFee != 1000 TERM");
+        if (ig.pendingHopperTerm() != 0) revert Check("pendingHopperTerm != 0");
+        if (pulse.registeredCount() != ig.litCount()) revert Check("registeredCount != litCount");
+        if (hopper.paused()) revert Check("hopperV2 paused");
+        if (ig.igniteEnabled() != expectIgniteEnabled) revert Check("igniteEnabled unexpected");
     }
 
     /// @notice Copy V1 `shellClassOverride` for ids in `[from, to]` (read-only on V1).
@@ -126,20 +192,26 @@ library PulseV2Migration {
     }
 }
 
-/// @notice Pulse V2 migration. **NOT EXECUTED. Do not broadcast until the owner says go.**
+/// @notice Pulse V2 migration, Option B. **NOT EXECUTED. Do not broadcast any step until the owner approves it.**
 ///
-/// Required env:  PRIVATE_KEY (must be the IgniteModule owner; it deploys V2 and hands ownership to OWNER),
-///                V1_HOPPER, V1_PULSE, COLLECTION, IGNITE
-/// Optional env:  MAX_SUPPLY (4444), OWNER (final owner; default deployer), REDIRECT_TERM_SLICES (false)
+/// Every step is its own entrypoint and its own transaction(s), so each can be approved on its own:
+///   1 deploy      (new contracts only; no live state changes)
+///   2 register    (new PulseV2 only)
+///   3 dialHook    Ignite.setPulseDistributor(PulseV2)
+///   4 igniteRouter Ignite.setSwapRouter(redirect)
+///   5 marketRouter TermMarket.setSwapRouter(redirect)
+///   6 zeroEthFee  Ignite.setIgniteFeeEth(0)
+///   (verify, read-only)
+///   7 enableIgnite Ignite.setIgniteEnabled(true)   <- separate final decision
 ///
-/// Dry run (no broadcast, simulates against the RPC):
+/// Env (all steps): PRIVATE_KEY, V1_HOPPER, V1_PULSE, COLLECTION, IGNITE, TERM_MARKET; optional MAX_SUPPLY (4444),
+///                  OWNER (final owner of V2 contracts; default signer). Steps 2-7 also take PULSE_V2, HOPPER_V2,
+///                  REDIRECT (addresses printed by step 1) as env vars.
+///
+/// Simulate everything with no broadcast (steps 1-6, never 7):
 ///   forge script script/MigratePulseV2.s.sol --sig "dryRun()" --rpc-url robinhood
-/// Broadcast (owner approval required):
-///   forge script script/MigratePulseV2.s.sol --sig "deploy()" --rpc-url robinhood --broadcast
-///   forge script script/MigratePulseV2.s.sol --sig "register(address)" <PULSE_V2> --rpc-url robinhood --broadcast
-///
-/// Before `deploy()`: Ignite should remain PAUSED. After `register()` and the checks in
-/// docs/PULSE_V2_DESIGN.md, a separate owner decision re-enables Ignite.
+/// Broadcast one step (owner approval required), e.g.:
+///   forge script script/MigratePulseV2.s.sol --sig "step1Deploy()" --rpc-url robinhood --broadcast
 contract MigratePulseV2 is Script {
     function _cfg(address deployer) internal view returns (PulseV2Config memory c) {
         c.deployer = deployer;
@@ -148,39 +220,103 @@ contract MigratePulseV2 is Script {
         c.v1Pulse = vm.envAddress("V1_PULSE");
         c.collection = vm.envAddress("COLLECTION");
         c.ignite = vm.envAddress("IGNITE");
+        c.termMarket = vm.envAddress("TERM_MARKET");
         c.maxSupply = vm.envOr("MAX_SUPPLY", uint256(4444));
-        c.redirectTermSlices = vm.envOr("REDIRECT_TERM_SLICES", false);
     }
 
-    /// @notice Simulation only: no broadcast, no key needed beyond `--sender`.
+    function _signerCfg() internal view returns (uint256 pk, PulseV2Config memory c) {
+        pk = vm.envUint("PRIVATE_KEY");
+        c = _cfg(vm.addr(pk));
+    }
+
+    function _v2() internal view returns (HopperV2 h, PulseDistributorV2 p, HopperRedirectRouter r) {
+        h = HopperV2(payable(vm.envAddress("HOPPER_V2")));
+        p = PulseDistributorV2(payable(vm.envAddress("PULSE_V2")));
+        r = HopperRedirectRouter(payable(vm.envAddress("REDIRECT")));
+    }
+
+    /// @notice Simulation only (prank, no broadcast): steps 1-6 then verify. Never runs step 7.
     function dryRun() external {
         address igniteOwner = IgniteModule(vm.envAddress("IGNITE")).owner();
         PulseV2Config memory c = _cfg(igniteOwner);
         vm.startPrank(igniteOwner);
-        (HopperV2 h, PulseDistributorV2 p,) = PulseV2Migration.deployAndWire(c);
+        (HopperV2 h, PulseDistributorV2 p, HopperRedirectRouter r) = PulseV2Migration.step1_deploy(c);
+        PulseV2Migration.step2_registerLit(c, p);
+        PulseV2Migration.step3_pointDialHook(c, p);
+        PulseV2Migration.step4_igniteRouter(c, r);
+        PulseV2Migration.step5_marketRouter(c, r);
+        PulseV2Migration.step6_zeroIgniteEthFee(c);
         vm.stopPrank();
-        console.log("DRY RUN HopperV2", address(h));
-        console.log("DRY RUN PulseDistributorV2", address(p));
-    }
-
-    function deploy() external {
-        uint256 pk = vm.envUint("PRIVATE_KEY");
-        PulseV2Config memory c = _cfg(vm.addr(pk));
-        vm.startBroadcast(pk);
-        (HopperV2 h, PulseDistributorV2 p, HopperRedirectRouter r) = PulseV2Migration.deployAndWire(c);
-        vm.stopBroadcast();
-        console.log("HopperV2", address(h));
+        PulseV2Migration.verify(c, h, p, r, false);
+        console.log("DRY RUN OK. HopperV2", address(h));
         console.log("PulseDistributorV2", address(p));
         console.log("HopperRedirectRouter", address(r));
-        console.log("NEXT: register(PulseV2) so registeredCount == ignite.litCount(); Ignite stays paused.");
     }
 
-    function register(address pulseV2) external {
-        uint256 pk = vm.envUint("PRIVATE_KEY");
-        PulseV2Config memory c = _cfg(vm.addr(pk));
+    function step1Deploy() external {
+        (uint256 pk, PulseV2Config memory c) = _signerCfg();
         vm.startBroadcast(pk);
-        uint256 n = PulseV2Migration.registerAllLit(c, PulseDistributorV2(payable(pulseV2)));
+        (HopperV2 h, PulseDistributorV2 p, HopperRedirectRouter r) = PulseV2Migration.step1_deploy(c);
+        vm.stopBroadcast();
+        console.log("HOPPER_V2", address(h));
+        console.log("PULSE_V2", address(p));
+        console.log("REDIRECT", address(r));
+    }
+
+    function step2Register() external {
+        (uint256 pk, PulseV2Config memory c) = _signerCfg();
+        (, PulseDistributorV2 p,) = _v2();
+        vm.startBroadcast(pk);
+        uint256 n = PulseV2Migration.step2_registerLit(c, p);
         vm.stopBroadcast();
         console.log("registered", n);
+    }
+
+    function step3DialHook() external {
+        (uint256 pk, PulseV2Config memory c) = _signerCfg();
+        (, PulseDistributorV2 p,) = _v2();
+        vm.startBroadcast(pk);
+        PulseV2Migration.step3_pointDialHook(c, p);
+        vm.stopBroadcast();
+    }
+
+    function step4IgniteRouter() external {
+        (uint256 pk, PulseV2Config memory c) = _signerCfg();
+        (,, HopperRedirectRouter r) = _v2();
+        vm.startBroadcast(pk);
+        PulseV2Migration.step4_igniteRouter(c, r);
+        vm.stopBroadcast();
+    }
+
+    function step5MarketRouter() external {
+        (uint256 pk, PulseV2Config memory c) = _signerCfg();
+        (,, HopperRedirectRouter r) = _v2();
+        vm.startBroadcast(pk);
+        PulseV2Migration.step5_marketRouter(c, r);
+        vm.stopBroadcast();
+    }
+
+    function step6ZeroEthFee() external {
+        (uint256 pk, PulseV2Config memory c) = _signerCfg();
+        vm.startBroadcast(pk);
+        PulseV2Migration.step6_zeroIgniteEthFee(c);
+        vm.stopBroadcast();
+    }
+
+    /// @notice Read-only. Pass `true` after step 7. Run before step 7 (with false); it must pass.
+    function verifyState(bool expectIgniteEnabled) external view {
+        PulseV2Config memory c = _cfg(address(0));
+        (HopperV2 h, PulseDistributorV2 p, HopperRedirectRouter r) = _v2();
+        PulseV2Migration.verify(c, h, p, r, expectIgniteEnabled);
+    }
+
+    /// @notice Final, separate decision. Not part of `dryRun`.
+    function step7EnableIgnite() external {
+        (uint256 pk, PulseV2Config memory c) = _signerCfg();
+        (HopperV2 h, PulseDistributorV2 p, HopperRedirectRouter r) = _v2();
+        PulseV2Migration.verify(c, h, p, r, false); // refuse to enable unless steps 1-6 hold
+        vm.startBroadcast(pk);
+        PulseV2Migration.step7_enableIgnite(c);
+        vm.stopBroadcast();
     }
 }

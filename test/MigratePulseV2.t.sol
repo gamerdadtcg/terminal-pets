@@ -13,6 +13,7 @@ import {PulseDistributor} from "../src/PulseDistributor.sol";
 import {PulseDistributorV2} from "../src/PulseDistributorV2.sol";
 import {TermToken} from "../src/TermToken.sol";
 import {TermFund} from "../src/TermFund.sol";
+import {TermMarket} from "../src/TermMarket.sol";
 import {MockPulseRouter, MockStockToken} from "./mocks/MockPulseRouter.sol";
 import {MockTermSwapRouter} from "./mocks/MockTermSwapRouter.sol";
 import {PulseV2Config, PulseV2Migration} from "../script/MigratePulseV2.s.sol";
@@ -36,6 +37,8 @@ contract MigratePulseV2Test is Test {
     TermToken internal term;
     MockPulseRouter internal v1Router;
     MockTermSwapRouter internal termRouter;
+    TermMarket internal market;
+    address internal dexPool = makeAddr("dexPool");
     address[8] internal pool;
 
     function setUp() public {
@@ -79,6 +82,12 @@ contract MigratePulseV2Test is Test {
         hopperV1.lockDistributor(address(pulseV1));
         termRouter = new MockTermSwapRouter();
         ignite.setSwapRouter(address(termRouter));
+        market = new TermMarket(owner, address(term), address(hopperV1), treasury);
+        market.setCanonicalPool(dexPool);
+        market.setSwapRouter(address(termRouter));
+        term.setTransferExempt(address(market), true);
+        term.setTransferExempt(dexPool, true);
+        term.mint(dexPool, 1_000_000 ether);
         term.mint(address(termRouter), 100_000 ether);
         vm.stopPrank();
         vm.deal(address(termRouter), 1_000 ether);
@@ -94,37 +103,59 @@ contract MigratePulseV2Test is Test {
         vm.startPrank(owner);
         pulseV1.setShellClassOverride(2, 4);
         pulseV1.setShellClassOverride(7, 2);
+        ignite.setIgniteEnabled(false); // live state: Ignite paused, 3 lit, 0 epochs
         vm.stopPrank();
     }
 
-    function _cfg(bool redirect) internal view returns (PulseV2Config memory c) {
+    function _cfg() internal view returns (PulseV2Config memory c) {
         c.deployer = owner;
         c.owner = multisig;
         c.v1Hopper = address(hopperV1);
         c.v1Pulse = address(pulseV1);
         c.collection = address(nft);
         c.ignite = address(ignite);
+        c.termMarket = address(market);
         c.maxSupply = SUPPLY;
-        c.redirectTermSlices = redirect;
     }
 
-    function test_migration_copiesConfigAndWiresIgnite() public {
-        PulseV2Config memory c = _cfg(true);
+    /// Runs steps 1-6 (each as the owner), leaving Ignite paused. Step 7 is separate.
+    function _migrateB() internal returns (HopperV2 h, PulseDistributorV2 p, HopperRedirectRouter r) {
+        PulseV2Config memory c = _cfg();
         vm.startPrank(owner);
-        (HopperV2 h, PulseDistributorV2 p, HopperRedirectRouter r) = PulseV2Migration.deployAndWire(c);
+        (h, p, r) = PulseV2Migration.step1_deploy(c);
+        vm.stopPrank();
+        PulseV2Migration.step2_registerLit(c, p); // any wallet
+        vm.startPrank(owner);
+        PulseV2Migration.step3_pointDialHook(c, p);
+        PulseV2Migration.step4_igniteRouter(c, r);
+        PulseV2Migration.step5_marketRouter(c, r);
+        PulseV2Migration.step6_zeroIgniteEthFee(c);
+        vm.stopPrank();
+    }
+
+    function test_B_step1_changesNoLiveState_andCopiesConfig() public {
+        PulseV2Config memory c = _cfg();
+        uint256 feeEth = ignite.igniteFeeEth();
+        vm.startPrank(owner);
+        (HopperV2 h, PulseDistributorV2 p, HopperRedirectRouter r) = PulseV2Migration.step1_deploy(c);
         vm.stopPrank();
 
-        // Ownership handed to the multisig.
+        // Live contracts untouched by step 1.
+        assertEq(address(ignite.pulseDistributor()), address(pulseV1));
+        assertEq(address(ignite.swapRouter()), address(termRouter));
+        assertEq(address(market.swapRouter()), address(termRouter));
+        assertEq(ignite.igniteFeeEth(), feeEth);
+        assertFalse(ignite.igniteEnabled());
+        assertEq(hopperV1.distributor(), address(pulseV1));
+
+        // New contracts.
         assertEq(p.owner(), multisig);
         assertEq(h.owner(), multisig);
-        // Production economics preserved.
         assertEq(h.payoutLock(), 7 days);
         assertEq(h.hopperUnlockTime(), uint256(hopperV1.revealedAt()) + 7 days);
         assertEq(p.bootstrapStart(), 0.1 ether);
         assertEq(p.cycleStart(), 0.5 ether);
         assertEq(p.ladderStep(), 0.1 ether);
-        assertEq(ignite.igniteFeeEth(), 0.002 ether);
-        // Config copied from V1.
         for (uint8 i; i < 8; ++i) {
             assertEq(p.stockPool(i), pool[i]);
         }
@@ -135,60 +166,231 @@ contract MigratePulseV2Test is Test {
         assertEq(p.shellClassOverride(2), 4);
         assertEq(p.shellClassOverride(7), 2);
         assertEq(p.shellClassOverride(3), 0);
-        // Hooks.
-        assertEq(address(ignite.pulseDistributor()), address(p));
         assertEq(h.distributor(), address(p));
         assertTrue(h.distributorLocked());
-        assertEq(address(ignite.swapRouter()), address(r));
         assertEq(address(r.inner()), address(termRouter));
+        assertEq(r.legacyHopper(), address(hopperV1));
+        assertEq(r.hopperV2(), address(h));
+    }
+
+    function test_B_step1_revertsIfMarketRouterDiffersFromIgniteRouter() public {
+        PulseV2Config memory c = _cfg();
+        address other = makeAddr("otherRouter");
+        vm.prank(owner);
+        market.setSwapRouter(other);
+        vm.expectRevert(abi.encodeWithSelector(PulseV2Migration.MarketRouterMismatch.selector, address(termRouter), other));
+        this.callStep1(c);
+    }
+
+    function callStep1(PulseV2Config memory c) external {
+        PulseV2Migration.step1_deploy(c);
+    }
+
+    function test_B_steps1to6_verifyPasses_igniteStaysPaused_economicsUnchanged() public {
+        uint16 hb = ignite.hopperBps();
+        uint16 bb = ignite.burnBps();
+        uint16 ab = ignite.allotmentBps();
+        (uint16 mh, uint16 mb, uint16 mt) = (market.hopperBps(), market.burnBps(), market.treasuryBps());
+        (HopperV2 h, PulseDistributorV2 p, HopperRedirectRouter r) = _migrateB();
+
+        PulseV2Migration.verify(_cfg(), h, p, r, false);
+        assertFalse(ignite.igniteEnabled());
+        assertEq(ignite.igniteFeeEth(), 0);
+        assertEq(ignite.igniteFee(), 1_000 ether);
+        assertEq(ignite.pendingHopperTerm(), 0);
+        assertEq(ignite.hopperBps(), hb);
+        assertEq(ignite.burnBps(), bb);
+        assertEq(ignite.allotmentBps(), ab);
+        assertEq(market.hopperBps(), mh);
+        assertEq(market.burnBps(), mb);
+        assertEq(market.treasuryBps(), mt);
+        assertEq(address(ignite.swapRouter()), address(r));
+        assertEq(address(market.swapRouter()), address(r));
         // V1 untouched.
         assertEq(hopperV1.distributor(), address(pulseV1));
         assertEq(pulseV1.epochCount(), 0);
     }
 
-    function test_migration_registerAllLit_thenPulseAndClaim() public {
-        PulseV2Config memory c = _cfg(false);
+    function test_B_verifyFailsUntilEveryStepIsDone() public {
+        PulseV2Config memory c = _cfg();
         vm.startPrank(owner);
-        (HopperV2 h, PulseDistributorV2 p,) = PulseV2Migration.deployAndWire(c);
+        (HopperV2 h, PulseDistributorV2 p, HopperRedirectRouter r) = PulseV2Migration.step1_deploy(c);
         vm.stopPrank();
+        vm.expectRevert(abi.encodeWithSelector(PulseV2Migration.Check.selector, "ignite dial hook != PulseV2"));
+        this.callVerify(c, h, p, r, false);
 
+        vm.prank(owner);
+        PulseV2Migration.step3_pointDialHook(c, p);
+        vm.expectRevert(abi.encodeWithSelector(PulseV2Migration.Check.selector, "ignite swapRouter != redirect"));
+        this.callVerify(c, h, p, r, false);
+
+        vm.prank(owner);
+        PulseV2Migration.step4_igniteRouter(c, r);
+        vm.expectRevert(abi.encodeWithSelector(PulseV2Migration.Check.selector, "market swapRouter != redirect"));
+        this.callVerify(c, h, p, r, false);
+
+        vm.prank(owner);
+        PulseV2Migration.step5_marketRouter(c, r);
+        vm.expectRevert(abi.encodeWithSelector(PulseV2Migration.Check.selector, "igniteFeeEth != 0"));
+        this.callVerify(c, h, p, r, false);
+
+        vm.prank(owner);
+        PulseV2Migration.step6_zeroIgniteEthFee(c);
+        vm.expectRevert(abi.encodeWithSelector(PulseV2Migration.Check.selector, "registeredCount != litCount"));
+        this.callVerify(c, h, p, r, false);
+
+        PulseV2Migration.step2_registerLit(c, p);
+        this.callVerify(c, h, p, r, false); // passes
+    }
+
+    function callVerify(
+        PulseV2Config memory c,
+        HopperV2 h,
+        PulseDistributorV2 p,
+        HopperRedirectRouter r,
+        bool en
+    ) external view {
+        PulseV2Migration.verify(c, h, p, r, en);
+    }
+
+    function test_B_registerAllLit_thenPulseAndClaim() public {
+        (HopperV2 h, PulseDistributorV2 p,) = _migrateB();
         assertEq(ignite.litCount(), 3);
+        assertEq(p.registeredCount(), 3);
+        vm.deal(address(this), 0.1 ether);
+        (bool ok,) = address(h).call{value: 0.1 ether}("");
+        assertTrue(ok);
+        p.pulse();
+        assertEq(p.epochCount(), 1);
+        p.claim(1);
+        assertEq(p.pending(1), 0);
+    }
+
+    function test_B_pulseBeforeRegistration_reverts() public {
+        PulseV2Config memory c = _cfg();
+        vm.startPrank(owner);
+        (HopperV2 h, PulseDistributorV2 p,) = PulseV2Migration.step1_deploy(c);
+        vm.stopPrank();
         vm.deal(address(this), 0.1 ether);
         (bool ok,) = address(h).call{value: 0.1 ether}("");
         assertTrue(ok);
         vm.expectRevert(abi.encodeWithSelector(PulseDistributorV2.UnregisteredLit.selector, 0, 3));
         p.pulse();
+    }
 
-        uint256 n = PulseV2Migration.registerAllLit(c, p);
-        assertEq(n, 3);
-        assertEq(p.registeredCount(), 3);
+    function test_B_step7_enable_thenIgniteWithZeroEth_termCutLandsInHopperV2() public {
+        (HopperV2 h, PulseDistributorV2 p, HopperRedirectRouter r) = _migrateB();
+        PulseV2Migration.verify(_cfg(), h, p, r, false);
+
+        // Separate final step.
+        vm.prank(owner);
+        PulseV2Migration.step7_enableIgnite(_cfg());
+        PulseV2Migration.verify(_cfg(), h, p, r, true);
+
+        uint256 v1Before = address(hopperV1).balance;
+        uint256 v2Before = address(h).balance;
+        uint256 igniteTermBefore = term.balanceOf(address(ignite));
+        uint256 supplyBefore = term.totalSupply();
+
+        // Holder with an unspent first-wake allotment ignites with NO ETH and NO $TERM approval.
+        vm.prank(alice);
+        ignite.ignite(4);
+
+        assertTrue(ignite.isLit(4));
+        assertEq(ignite.litCount(), 4);
+        assertEq(p.registeredCount(), 4);
+        assertEq(p.litFromEpoch(4), 0);
+
+        (uint256 hopperCut, uint256 burnCut, uint256 allotmentCut) = ignite.quote(1_000 ether);
+        assertEq(hopperCut, 250 ether);
+        // 25% of the $TERM fee, swapped to ETH (mock: 1:1), lands in HopperV2, not the V1 Hopper.
+        assertEq(address(h).balance - v2Before, hopperCut);
+        assertEq(address(hopperV1).balance, v1Before);
+        // 37.5% burned, 37.5% stays in the module (escrow refill); the 25% left via the router.
+        assertEq(supplyBefore - term.totalSupply(), burnCut);
+        assertEq(igniteTermBefore - term.balanceOf(address(ignite)), hopperCut + burnCut);
+        assertEq(allotmentCut, 375 ether);
+        // Nothing stuck in the router or on Ignite.
+        assertEq(address(r).balance, 0);
+        assertEq(address(ignite).balance, 0);
+        assertEq(term.balanceOf(address(r)), 0);
+
+        // The new dial pays out of HopperV2.
+        vm.deal(address(this), 0.1 ether);
         p.pulse();
         assertEq(p.epochCount(), 1);
-        p.claim(1);
-        assertEq(p.pending(1), 0);
-        assertEq(p.litFromEpoch(1), 0);
     }
 
-    function test_migration_redirectOff_leavesIgniteRouter() public {
-        PulseV2Config memory c = _cfg(false);
-        vm.startPrank(owner);
-        (,, HopperRedirectRouter r) = PulseV2Migration.deployAndWire(c);
-        vm.stopPrank();
-        assertEq(address(r), address(0));
-        assertEq(address(ignite.swapRouter()), address(termRouter));
-    }
-
-    function test_migration_afterwards_newIgniteLandsOnV2_andTermSliceFundsV2() public {
-        PulseV2Config memory c = _cfg(true);
-        vm.startPrank(owner);
-        (HopperV2 h, PulseDistributorV2 p,) = PulseV2Migration.deployAndWire(c);
-        vm.stopPrank();
-        PulseV2Migration.registerAllLit(c, p);
-
+    function test_B_igniteRejectsAnyEth_afterStep6() public {
+        _migrateB();
+        vm.prank(owner);
+        ignite.setIgniteEnabled(true);
         vm.prank(alice);
-        ignite.ignite{value: ETH_FEE}(4);
-        assertEq(p.registeredCount(), 4);
-        // 25% of the 1,000 $TERM fee converted 1:1 by the mock and delivered to HopperV2, not V1.
-        assertEq(address(h).balance, 250 ether);
+        vm.expectRevert(IgniteModule.WrongEthFee.selector);
+        ignite.ignite{value: 0.002 ether}(4);
+        vm.prank(alice);
+        vm.expectRevert(IgniteModule.WrongEthFee.selector);
+        ignite.ignite{value: 1}(4);
+    }
+
+    function test_B_beforeStep6_stillNeedsEth_noMigrationHalfWay() public {
+        // Without step 6 the old ETH fee applies: protects against enabling early by mistake.
+        PulseV2Config memory c = _cfg();
+        vm.startPrank(owner);
+        (HopperV2 h, PulseDistributorV2 p, HopperRedirectRouter r) = PulseV2Migration.step1_deploy(c);
+        PulseV2Migration.step3_pointDialHook(c, p);
+        PulseV2Migration.step4_igniteRouter(c, r);
+        PulseV2Migration.step5_marketRouter(c, r);
+        vm.stopPrank();
+        vm.expectRevert(abi.encodeWithSelector(PulseV2Migration.Check.selector, "igniteFeeEth != 0"));
+        this.callVerify(c, h, p, r, false);
+    }
+
+    function test_B_marketTermSkim_landsInHopperV2() public {
+        (HopperV2 h,, ) = _migrateB();
+        uint256 amountIn = 10_000 ether;
+        (uint256 hopperCut, uint256 burnCut, uint256 treCut, uint256 totalFee) = market.quote(amountIn);
+        assertGt(hopperCut, 0);
+
+        uint256 v1Before = address(hopperV1).balance;
+        uint256 v2Before = address(h).balance;
+        uint256 treBefore = term.balanceOf(treasury);
+        uint256 supplyBefore = term.totalSupply();
+
+        vm.startPrank(dexPool);
+        term.approve(address(market), totalFee);
+        market.onSwap(address(term), amountIn);
+        vm.stopPrank();
+
+        assertEq(address(h).balance - v2Before, hopperCut); // mock router swaps 1:1
+        assertEq(address(hopperV1).balance, v1Before);
+        assertEq(term.balanceOf(treasury) - treBefore, treCut);
+        assertEq(supplyBefore - term.totalSupply(), burnCut);
+    }
+
+    function test_B_marketEthSkim_burnLegStillWorksThroughRedirect() public {
+        _migrateB();
+        uint256 amountIn = 10 ether;
+        (uint256 hopperCut, uint256 burnCut,, uint256 totalFee) = market.quote(amountIn);
+        assertGt(burnCut, 0);
+        vm.deal(dexPool, totalFee);
+        uint256 supplyBefore = term.totalSupply();
+        uint256 v1Before = address(hopperV1).balance;
+        vm.prank(dexPool);
+        market.onSwap{value: totalFee}(address(0), amountIn);
+        // ETH-side hopper cut is hard-wired to the V1 Hopper (documented limitation).
+        assertEq(address(hopperV1).balance - v1Before, hopperCut);
+        assertGt(supplyBefore - term.totalSupply(), 0); // ETH->TERM buy-and-burn passed through the redirect router
+    }
+
+    function test_B_redirect_nonHopperRecipientUnchanged() public {
+        (, , HopperRedirectRouter r) = _migrateB();
+        address someone = makeAddr("someone");
+        vm.prank(owner);
+        term.mint(address(this), 10 ether);
+        term.approve(address(r), 10 ether);
+        uint256 before = someone.balance;
+        r.swapExactTokenForETH(address(term), 10 ether, someone);
+        assertEq(someone.balance - before, 10 ether);
     }
 }
