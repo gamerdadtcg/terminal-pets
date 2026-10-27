@@ -9,6 +9,9 @@ import {PulseDistributorV2} from "../src/PulseDistributorV2.sol";
 import {IgniteModule} from "../src/IgniteModule.sol";
 import {TermMarket} from "../src/TermMarket.sol";
 import {TermMarketFeeForwarder} from "../src/TermMarketFeeForwarder.sol";
+import {RoyaltySplitterV2} from "../src/RoyaltySplitterV2.sol";
+import {RoyaltySplitter} from "../src/RoyaltySplitter.sol";
+import {CollectionNFT} from "../src/CollectionNFT.sol";
 
 /// @notice Inputs for the V1 -> V2 Pulse migration (Option B). All addresses are the LIVE contracts.
 struct PulseV2Config {
@@ -33,6 +36,9 @@ library PulseV2Migration {
     error Check(string what);
     error MarketHopperBpsZero();
     error MarketBpsMismatch();
+
+    /// @dev Canonical WETH on Robinhood Chain (4663), per docs.robinhood.com/chain/contracts.
+    address internal constant ROBINHOOD_WETH = 0x0Bd7D308f8E1639FAb988df18A8011f41EAcAD73;
 
     /// @notice STEP 1. Deploys HopperV2, PulseDistributorV2, HopperRedirectRouter. Copies V1 config and
     /// shell overrides, locks the HopperV2 distributor, hands ownership to `c.owner`.
@@ -101,6 +107,44 @@ library PulseV2Migration {
             c.deployer, address(hopper), tm.treasury(), address(tm.term()), inner, hb, hb + tm.treasuryBps()
         );
         if (c.owner != c.deployer) forwarder.transferOwnership(c.owner);
+    }
+
+    function wethDefault() internal pure returns (address) {
+        return ROBINHOOD_WETH;
+    }
+
+    /// @notice STEP 1c (any wallet). Deploys RoyaltySplitterV2 (no owner). Split 2/3 HopperV2, 1/3 the treasury that the
+    /// live V1 RoyaltySplitter pays today. Changes NO live state. The collection owner then sets this address as the
+    /// OpenSea Studio creator-earnings payout (manual, off-chain). `weth` must be a contract.
+    function step1c_deployRoyaltySplitter(PulseV2Config memory c, HopperV2 hopper, address weth)
+        internal
+        returns (RoyaltySplitterV2 splitter)
+    {
+        address v1Splitter = CollectionNFT(c.collection).royaltyReceiver();
+        address treasury = RoyaltySplitter(payable(v1Splitter)).treasury();
+        if (weth.code.length == 0) revert Check("weth has no code");
+        splitter = new RoyaltySplitterV2(address(hopper), treasury, weth);
+    }
+
+    /// @notice STEP 10, OPTIONAL (collection owner key). `CollectionNFT.setRoyaltyBps(0)`: ERC-2981 `royaltyInfo` then
+    /// returns 0, so ERC-2981 marketplaces stop paying the old V1 splitter / V1 Hopper. Do this only after the OpenSea
+    /// Studio payout has been switched to RoyaltySplitterV2 and confirmed, because it also removes the on-chain royalty
+    /// signal that any other marketplace would use. Reversible: `setRoyaltyBps(750)`.
+    function step10_zeroOnchainRoyalty(PulseV2Config memory c) internal {
+        CollectionNFT(c.collection).setRoyaltyBps(0);
+    }
+
+    /// @notice Read-only check for 1c (and 10 when `expectOnchainZero`).
+    function verifyRoyalty(PulseV2Config memory c, HopperV2 hopper, RoyaltySplitterV2 splitter, bool expectOnchainZero)
+        internal
+        view
+    {
+        address v1Splitter = CollectionNFT(c.collection).royaltyReceiver();
+        if (splitter.hopperV2() != address(hopper)) revert Check("splitter hopper");
+        if (splitter.treasury() != RoyaltySplitter(payable(v1Splitter)).treasury()) revert Check("splitter treasury");
+        if (splitter.weth().code.length == 0) revert Check("splitter weth");
+        (, uint256 amt) = CollectionNFT(c.collection).royaltyInfo(1, 10_000);
+        if (expectOnchainZero ? amt != 0 : amt == 0) revert Check("onchain royalty bps unexpected");
     }
 
     /// @notice STEP 2 (any wallet; only touches PulseV2). Register every currently-Lit pet with V2.
@@ -244,6 +288,7 @@ library PulseV2Migration {
 ///
 ///   1  step1Deploy          new contracts only: HopperV2, PulseDistributorV2, HopperRedirectRouter
 ///   1b step1bDeployForwarder new contract only: TermMarketFeeForwarder
+///   1c step1cDeployRoyaltySplitter new contract only: RoyaltySplitterV2 (OpenSea payout address, no owner)
 ///   2  step2Register        PulseV2.registerLit for the currently lit pets (PulseV2 only)
 ///   3  step3DialHook        Ignite.setPulseDistributor(PulseV2)
 ///   4  step4IgniteRouter    Ignite.setSwapRouter(redirect)
@@ -253,6 +298,8 @@ library PulseV2Migration {
 ///   8  step8MarketFeeBps    TermMarket.setFeeBps(0, burn, hopper + treasury)  (total 3% and burn unchanged)
 ///      verifyState(false)   read-only
 ///   9  step9EnableIgnite    Ignite.setIgniteEnabled(true)   <- separate final decision
+///   10 step10ZeroOnchainRoyalty (OPTIONAL, independent) CollectionNFT.setRoyaltyBps(0); only after the OpenSea
+///      Studio payout points at RoyaltySplitterV2 (manual step: see docs/PULSE_V2_DESIGN.md)
 ///
 /// Env (all steps): PRIVATE_KEY, V1_HOPPER, V1_PULSE, COLLECTION, IGNITE, TERM_MARKET; optional MAX_SUPPLY (4444),
 /// OWNER (final owner of the new contracts; default signer). Later steps also take HOPPER_V2, PULSE_V2, REDIRECT,
@@ -294,6 +341,8 @@ contract MigratePulseV2 is Script {
         vm.startPrank(igniteOwner);
         (HopperV2 h, PulseDistributorV2 p, HopperRedirectRouter r) = PulseV2Migration.step1_deploy(c);
         TermMarketFeeForwarder f = PulseV2Migration.step1b_deployForwarder(c, h);
+        RoyaltySplitterV2 rs = PulseV2Migration.step1c_deployRoyaltySplitter(c, h, vm.envOr("WETH", PulseV2Migration.wethDefault()));
+        PulseV2Migration.verifyRoyalty(c, h, rs, false);
         PulseV2Migration.step2_registerLit(c, p);
         PulseV2Migration.step3_pointDialHook(c, p);
         PulseV2Migration.step4_igniteRouter(c, r);
@@ -307,6 +356,7 @@ contract MigratePulseV2 is Script {
         console.log("PulseDistributorV2", address(p));
         console.log("HopperRedirectRouter", address(r));
         console.log("TermMarketFeeForwarder", address(f));
+        console.log("RoyaltySplitterV2", address(rs));
     }
 
     function step1Deploy() external {
@@ -326,6 +376,36 @@ contract MigratePulseV2 is Script {
         TermMarketFeeForwarder f = PulseV2Migration.step1b_deployForwarder(c, h);
         vm.stopBroadcast();
         console.log("FORWARDER", address(f));
+    }
+
+    /// @dev WETH defaults to Robinhood Chain's canonical WETH; override with env WETH.
+    function step1cDeployRoyaltySplitter() external {
+        (uint256 pk, PulseV2Config memory c) = _signerCfg();
+        HopperV2 h = HopperV2(payable(vm.envAddress("HOPPER_V2")));
+        address weth = vm.envOr("WETH", PulseV2Migration.wethDefault());
+        vm.startBroadcast(pk);
+        RoyaltySplitterV2 r = PulseV2Migration.step1c_deployRoyaltySplitter(c, h, weth);
+        vm.stopBroadcast();
+        console.log("ROYALTY_SPLITTER_V2", address(r));
+    }
+
+    /// @notice OPTIONAL. Signer must be the collection owner. Run only after OpenSea Studio payout is switched.
+    function step10ZeroOnchainRoyalty() external {
+        (uint256 pk, PulseV2Config memory c) = _signerCfg();
+        HopperV2 h = HopperV2(payable(vm.envAddress("HOPPER_V2")));
+        RoyaltySplitterV2 r = RoyaltySplitterV2(payable(vm.envAddress("ROYALTY_SPLITTER_V2")));
+        PulseV2Migration.verifyRoyalty(c, h, r, false); // splitter must be correct before the on-chain signal is removed
+        vm.startBroadcast(pk);
+        PulseV2Migration.step10_zeroOnchainRoyalty(c);
+        vm.stopBroadcast();
+    }
+
+    /// @notice Read-only. `expectOnchainZero` is false before step 10 and true after.
+    function verifyRoyaltyState(bool expectOnchainZero) external view {
+        PulseV2Config memory c = _cfg(address(0));
+        HopperV2 h = HopperV2(payable(vm.envAddress("HOPPER_V2")));
+        RoyaltySplitterV2 r = RoyaltySplitterV2(payable(vm.envAddress("ROYALTY_SPLITTER_V2")));
+        PulseV2Migration.verifyRoyalty(c, h, r, expectOnchainZero);
     }
 
     function step2Register() external {
